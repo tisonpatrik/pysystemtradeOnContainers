@@ -11,6 +11,7 @@ logger = Logger()
 app = APIGatewayRestResolver()
 
 TABLE_NAME = os.environ["TABLE_NAME"]
+dynamodb_resource = boto3.resource("dynamodb")
 
 @app.post("/ewmac")
 def calculate_ewmac():   
@@ -18,7 +19,7 @@ def calculate_ewmac():
     instrument = data['instrument']
     speed = data['speed']
 
-    table = get_table_resource()
+    table = dynamodb_resource.Table(TABLE_NAME)
     # Retrieve the time series data for the instrument from the DynamoDB table
     time_series_data = get_time_series_data(instrument, table)
 
@@ -35,11 +36,6 @@ def calculate_ewmac():
         'instrument': instrument,
         'speed': speed
     }
-
-def get_table_resource():
-    dynamodb_resource = boto3.resource("dynamodb")
-    table_name = os.environ[TABLE_NAME]
-    return dynamodb_resource.Table(table_name)
 
 def get_time_series_data(instrument, table):
     # Connect to the DynamoDB table and retrieve the time series data for the instrument
@@ -69,8 +65,8 @@ def compute_ewmac(time_series_data, speed):
     # Calculate the EWMAC trading rule
     Lfast = speed
     Lslow = speed * 4
-    fast_ewma = time_series_data['price'].ewm(span=Lfast).mean()
-    slow_ewma = time_series_data['price'].ewm(span=Lslow).mean()
+    fast_ewma = time_series_data.ewm(span=Lfast,min_periods=1).mean()
+    slow_ewma = time_series_data.ewm(span=Lslow,min_periods=1).mean()
     ewmac = fast_ewma - slow_ewma
     return ewmac
 
