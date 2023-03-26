@@ -1,33 +1,30 @@
-import os
 import boto3
-import pandas as pd
-from boto3.dynamodb.conditions import Key
 from aws_lambda_powertools import Logger
-from aws_lambda_powertools.event_handler import APIGatewayRestResolver
-from aws_lambda_powertools.logging import correlation_paths
+from aws_lambda_powertools.utilities.batch import BatchProcessor, EventType, batch_processor
+from aws_lambda_powertools.utilities.data_classes.sqs_event import SQSRecord
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from dynamo_context import get_time_series, write_time_series
 
 logger = Logger()
-app = APIGatewayRestResolver()
+processor = BatchProcessor(event_type=EventType.SQS)
 
-TABLE_NAME = os.environ["TABLE_NAME"]
 dynamodb_resource = boto3.resource("dynamodb")
 
-@app.post("/ewmac")
-def calculate_ewmac():   
-    data = app.current_event.json_body
+
+def record_handler(record: SQSRecord):
+    data = record.body
     instrument = data['instrument']
     speed = data['speed']
 
-    table = dynamodb_resource.Table(TABLE_NAME)
+    table = dynamodb_resource.Table("multiple_prices")
     # Retrieve the time series data for the instrument from the DynamoDB table
-    time_series_data = get_time_series_data(instrument, table)
+    time_series_data = get_time_series.get_time_series_from_dynamodb(instrument, table)
 
     # Calculate the EWMAC trading rule using the time series data
     ewmac = compute_ewmac(time_series_data, speed)
 
     # Save the EWMAC list to DynamoDB
-    save_ewmac_to_dynamodb(table, ewmac, instrument, speed)
+    write_time_series.write_daily_prices(table, ewmac, instrument, speed)
 
     # Return a confirmation message and the input parameters as the result of the function
     return {
@@ -37,29 +34,6 @@ def calculate_ewmac():
         'speed': speed
     }
 
-def get_time_series_data(instrument, table):
-    # Connect to the DynamoDB table and retrieve the time series data for the instrument
-    response = table.query(
-        KeyConditionExpression=Key('instrument').eq(instrument)
-    )
-    items = response['Items']
-
-    # Convert the time series data to a Pandas DataFrame
-    df = pd.DataFrame(items, columns=['datetime', 'price'])
-    return df
-
-def save_ewmac_to_dynamodb(table,ewmac, instrument, speed):
-    # Convert the EWMAC list to a DynamoDB-compatible format
-    ewmac_items = [{'value': {'N': str(value)}} for value in ewmac]
-
-    # Define the primary key for the EWMAC item
-    primary_key = {
-        'instrument': {'S': instrument},
-        'speed': {'N': str(speed)}
-    }
-    
-    # Save the EWMAC item to the DynamoDB table
-    table.put_item(TableName='ewmac_table', Item=primary_key, EWMAC=ewmac_items)
 
 def compute_ewmac(time_series_data, speed):
     # Calculate the EWMAC trading rule
@@ -70,7 +44,7 @@ def compute_ewmac(time_series_data, speed):
     ewmac = fast_ewma - slow_ewma
     return ewmac
 
-@logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
-def lambda_handler(event: dict, context: LambdaContext) -> dict:
-    return app.resolve(event, context)
 
+@batch_processor(record_handler=record_handler, processor=processor)
+def lambda_handler(event, context: LambdaContext):
+    return processor.response()
