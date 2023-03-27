@@ -9,7 +9,6 @@ logger = Logger()
 
 dynamodb_resource = aioboto3.resource("dynamodb")
 
-
 async def process_record(record):
     data = record.body
     instrument = data['instrument']
