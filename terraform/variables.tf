@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "The AWS region to deploy the resources in"
-  default     = "us-west-2"
+  default     = "eu-central-1"
 }
 
 variable "dynamodb_table_name" {
@@ -11,9 +11,4 @@ variable "dynamodb_table_name" {
 variable "lambda_function_names" {
   description = "Names of the Lambda functions"
   type        = list(string)
-}
-
-variable "api_gateway_name" {
-  description = "Name of the API Gateway"
-  default     = "grayfox-api-gateway"
 }
