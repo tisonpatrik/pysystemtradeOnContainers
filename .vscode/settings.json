@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./src/shared/layers/dynamo_context/python"
+        "./src/shared/layers/dynamo_context/python",
+        "./src/forecasting/src/ewmac"
     ]
 }

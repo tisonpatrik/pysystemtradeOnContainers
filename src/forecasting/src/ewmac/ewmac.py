@@ -1,4 +1,5 @@
-import aioboto3
+import os
+from typing import Dict, Any, List
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.data_classes import event_source, SQSEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -7,25 +8,21 @@ from write_time_series import write_daily_prices
 
 logger = Logger()
 
-dynamodb_resource = aioboto3.resource("dynamodb")
+def get_config() -> Dict[str, str]:
+    return {
+        "RAW_DATA_TABLE": os.environ["RAW_DATA_TABLE"],
+        "RAW_FORECAST_TABLE": os.environ["RAW_FORECAST_TABLE"]
+    }
 
-async def process_record(record):
+config = get_config()
+
+async def process_record(record) -> Dict[str, Any]:
     data = record.body
     instrument = data['instrument']
     speed = data['speed']
 
-    table = dynamodb_resource.Table("multiple_prices")
-    # Retrieve the time series data for the instrument from the DynamoDB table
-    time_series_data = await get_time_series_from_dynamodb(table, instrument)
+    ewmac = await compute_and_save_ewmac(instrument, speed)
 
-    # Calculate the EWMAC trading rule using the time series data
-    ewmac = compute_ewmac(time_series_data, speed)
-
-    # Save the EWMAC list to DynamoDB
-    await write_daily_prices(table, ewmac, instrument, speed)
-
-    # Return a confirmation message and the input parameters
-        # Return a confirmation message and the input parameters as the result of the function
     return {
         'message': 'EWMAC calculation and save completed successfully',
         'rule': 'MAC',
@@ -33,8 +30,13 @@ async def process_record(record):
         'speed': speed
     }
 
-def compute_ewmac(time_series_data, speed):
-    # Calculate the EWMAC trading rule
+async def compute_and_save_ewmac(instrument: str, speed: int) -> List[float]:
+    time_series_data = await get_time_series_from_dynamodb(config["RAW_DATA_TABLE"], instrument)
+    ewmac = compute_ewmac(time_series_data, speed)
+    await write_daily_prices(config["RAW_FORECAST_TABLE"], ewmac, instrument, speed)
+    return ewmac
+
+def compute_ewmac(time_series_data, speed: int) -> List[float]:
     Lfast = speed
     Lslow = speed * 4
     fast_ewma = time_series_data.ewm(span=Lfast, min_periods=1).mean()
@@ -44,9 +46,4 @@ def compute_ewmac(time_series_data, speed):
 
 @event_source(data_class=SQSEvent)
 async def lambda_handler(event: SQSEvent, context: LambdaContext):
-    results = []
-    for record in event.records:
-        result = await process_record(record)
-        results.append(result)
-
-
+    results = [await process_record(record) for record in event.records]
