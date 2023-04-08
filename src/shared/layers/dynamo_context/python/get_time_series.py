@@ -2,7 +2,8 @@ import aioboto3
 from datetime import datetime
 from boto3.dynamodb.conditions import Key
 
-dynamodb = aioboto3.resource("dynamodb")
+session = aioboto3.Session()
+dynamodb = session.resource("dynamodb")
 
 def build_key_expression(instrument: str, start_time: int) -> Key:
     """
