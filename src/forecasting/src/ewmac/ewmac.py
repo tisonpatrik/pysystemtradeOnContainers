@@ -3,8 +3,7 @@ from typing import Dict, Any, List
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.data_classes import event_source, SQSEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from get_time_series import get_time_series_from_dynamodb
-from write_time_series import write_daily_prices
+from shared.layers.dynamo_context.python import time_series_layer
 
 logger = Logger()
 
@@ -31,9 +30,9 @@ async def process_record(record) -> Dict[str, Any]:
     }
 
 async def compute_and_save_ewmac(instrument: str, speed: int) -> List[float]:
-    time_series_data = await get_time_series_from_dynamodb(config["RAW_DATA_TABLE"], instrument)
+    time_series_data = await time_series_layer.get_time_series_from_dynamodb(config["RAW_DATA_TABLE"], instrument)
     ewmac = compute_ewmac(time_series_data, speed)
-    await write_daily_prices(config["RAW_FORECAST_TABLE"], ewmac, instrument, speed)
+    await time_series_layer.write_daily_prices(config["RAW_FORECAST_TABLE"], ewmac, instrument, speed)
     return ewmac
 
 def compute_ewmac(time_series_data, speed: int) -> List[float]:
