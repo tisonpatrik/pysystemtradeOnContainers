@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./src/shared/layers/dynamo_context/python"
+    ]
+}
