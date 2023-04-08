@@ -2,7 +2,7 @@ import pytest
 import asyncio
 from pandas import DataFrame
 from unittest.mock import MagicMock
-from app import compute_ewmac, process_record
+from ewmac import compute_ewmac, process_record
 
 @pytest.fixture
 def time_series_data():
