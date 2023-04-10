@@ -1,13 +1,11 @@
 from typing import Dict, Any, List
+import json
 from aws_lambda_powertools import Logger
-from aws_lambda_powertools.utilities.data_classes import event_source, SQSEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 logger = Logger()
-multiplier = 4
 
-def process_record(record) -> Dict[str, Any]:
-    data = record.body
+def process_data(data) -> Dict[str, Any]:
     instrument = data['instrument']
     speed = data['speed']
     raw_data = data['raw_data']
@@ -23,14 +21,22 @@ def process_record(record) -> Dict[str, Any]:
     }
 
 def compute_ewmac(time_series_data, speed: int) -> List[float]:
+    if speed <= 0:
+        raise ValueError("Speed should be a positive integer")
+
+    if time_series_data.empty:
+        raise ValueError("Time series data cannot be empty")
+
     Lfast = speed
-    Lslow = speed * multiplier
+    Lslow = speed * 4
     fast_ewma = time_series_data.ewm(span=Lfast, min_periods=1).mean()
     slow_ewma = time_series_data.ewm(span=Lslow, min_periods=1).mean()
     ewmac = fast_ewma - slow_ewma
     return ewmac
 
-@event_source(data_class=SQSEvent)
-def lambda_handler(event: SQSEvent, context: LambdaContext):
-    results = [process_record(record) for record in event.records]
-    logger.info({"message": "Processed SQS messages", "results": results})
+
+def lambda_handler(event: Dict[str, Any], context: LambdaContext):
+    data = json.loads(event['body'])
+    result = process_data(data)
+    logger.info({"message": "Processed input data", "result": result})
+    return result
