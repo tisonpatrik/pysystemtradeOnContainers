@@ -1,11 +1,12 @@
-from typing import Dict, Any, List
 import json
+import pandas as pd
+from typing import Dict, Any
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 logger = Logger()
 
-def process_data(data) -> Dict[str, Any]:
+def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
     instrument = data['instrument']
     speed = data['speed']
     raw_data = data['raw_data']
@@ -20,7 +21,8 @@ def process_data(data) -> Dict[str, Any]:
         'forecast': ewmac
     }
 
-def compute_ewmac(time_series_data, speed: int) -> List[float]:
+def compute_ewmac(time_series_data: pd.Series, speed: int) -> pd.Series:
+
     if speed <= 0:
         raise ValueError("Speed should be a positive integer")
 
@@ -34,9 +36,18 @@ def compute_ewmac(time_series_data, speed: int) -> List[float]:
     ewmac = fast_ewma - slow_ewma
     return ewmac
 
-
 def lambda_handler(event: Dict[str, Any], context: LambdaContext):
-    data = json.loads(event['body'])
-    result = process_data(data)
-    logger.info({"message": "Processed input data", "result": result})
-    return result
+    try:
+        data = json.loads(event['body'])
+        result = process_data(data)
+        logger.info({"message": "Processed input data", "result": result})
+        return {
+            'statusCode': 200,
+            'body': json.dumps(result)
+        }
+    except Exception as e:
+        logger.exception("Error processing input data")
+        return {
+            'statusCode': 500,
+            'body': json.dumps({"message": str(e)})
+        }
