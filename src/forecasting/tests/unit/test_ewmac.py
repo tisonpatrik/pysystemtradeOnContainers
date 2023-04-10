@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from ewmac import compute_ewmac
+from ewmac.ewmac_rule import compute_ewmac
 
 def test_compute_ewmac_valid_input():
     time_series_data = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
