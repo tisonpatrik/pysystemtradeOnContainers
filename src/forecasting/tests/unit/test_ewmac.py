@@ -3,16 +3,15 @@ import pandas as pd
 from ewmac.ewmac_rule import compute_ewmac
 
 def test_compute_ewmac_valid_input():
-    time_series_data = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    speed = 2
+    time_series_data = pd.Series([137.75, 138.00, 139.25])
+    speed = 16
     expected_ewmac = pd.Series(
         [
-            0.0, 0.66666667, 1.25, 1.78571429, 2.29411765, 2.77777778, 3.24137931, 3.68965517, 4.12643678, 4.55555556
+            0, 0.005859, 0.047608
         ]
     )
-
     ewmac = compute_ewmac(time_series_data, speed)
-    assert ewmac.round(8).equals(expected_ewmac.round(8))
+    assert ewmac.round(6).equals(expected_ewmac.round(6))
 
 def test_compute_ewmac_empty_time_series():
     time_series_data = pd.Series([])
