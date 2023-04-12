@@ -1,5 +1,4 @@
 import pytest
-import json
 import pandas as pd
 from ewmac.ewmac_rule import compute_ewmac, process_data, lambda_handler
 
@@ -13,7 +12,7 @@ def test_compute_ewmac_valid_input():
     assert ewmac.round(6).equals(expected_ewmac.round(6))
 
 def test_compute_ewmac_empty_time_series():
-    time_series_data = pd.Series([])
+    time_series_data = pd.Series()
     speed = 2
 
     with pytest.raises(ValueError):
