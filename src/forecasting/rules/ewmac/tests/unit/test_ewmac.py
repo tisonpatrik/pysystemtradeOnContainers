@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from ewmac.ewmac_rule import compute_ewmac, process_data, lambda_handler
+from ewmac_rule import compute_ewmac, process_data, lambda_handler
 
 time_series_data = pd.Series([137.75, 138.00, 139.25])
 speed = 16
