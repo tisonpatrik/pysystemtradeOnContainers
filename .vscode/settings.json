@@ -1,5 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "./src/forecasting/rules/ewmac/events"
-    ]
-}
