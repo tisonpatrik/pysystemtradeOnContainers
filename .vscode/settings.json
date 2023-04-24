@@ -1,6 +1,5 @@
 {
     "python.analysis.extraPaths": [
-        "./src/forecasting/src",
-        "./src/forecasting/rules/ewmac/src"
+        "./src/forecasting/rules/ewmac/events"
     ]
 }
