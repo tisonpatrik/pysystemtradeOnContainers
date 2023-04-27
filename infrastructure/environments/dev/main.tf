@@ -109,3 +109,29 @@ resource "aws_s3_object" "breakout_rule_zip" {
 
   etag = filemd5(data.archive_file.breakout_rule.output_path)
 }
+resource "aws_lambda_function" "breakout_rule" {
+  function_name = "breakout-rule-lambda"
+  handler       = "breakout_rule.handler"
+  runtime       = "python3.9"
+
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key    = aws_s3_object.breakout_rule_zip.key
+
+  role = aws_iam_role.forecasting_lambda_role.arn
+
+  environment {
+    variables = {
+      LOG_LEVEL = "INFO"
+    }
+  }
+
+  tags = {
+    Environment = var.enviroment_name
+  }
+
+  timeout = 60
+
+  tracing_config {
+    mode = "PassThrough"
+  }
+}
