@@ -49,6 +49,11 @@ resource "aws_security_group" "lambda" {
   vpc_id      = aws_vpc.grayfox_vpc.id
 }
 
+## S3
+resource "aws_s3_bucket" "lambda_bucket" {
+  bucket = "${var.app_name}-${var.enviroment_name}-lambda"
+}
+
 ## Rules Lambdas
 resource "aws_iam_role" "forecasting_lambda_role" {
   name = "${var.app_name}-${var.enviroment_name}-forecasting-lambda-role"
@@ -87,5 +92,20 @@ resource "aws_iam_role_policy" "forecasting_lambda_policy" {
 }
 resource "aws_cloudwatch_log_group" "forecasting_lambda_log_group" {
   name              = "/aws/lambda/${var.app_name}-${var.enviroment_name}-forecasting"
-  retention_in_days = 2
+  retention_in_days = 3
+}
+data "archive_file" "breakout_rule" {
+  type = "zip"
+
+  source_file  = "${path.root}/../../../src/forecasting/rules/breakout/breakout_rule.py"
+  output_path = "${path.root}/../../../dist/breakout_rule.zip"
+}
+
+resource "aws_s3_object" "breakout_rule_zip" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key    = "breakout_rule.zip"
+  source = data.archive_file.breakout_rule.output_path
+
+  etag = filemd5(data.archive_file.breakout_rule.output_path)
 }
