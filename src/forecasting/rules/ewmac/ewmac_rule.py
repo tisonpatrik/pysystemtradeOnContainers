@@ -9,8 +9,7 @@ logger = Logger()
 def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
     instrument = data['instrument']
     speed = data['speed']
-    raw_data = data['raw_data']
-
+    raw_data = data['raw_data']    
     ewmac = compute_ewmac(raw_data, speed)
 
     return {
@@ -22,13 +21,11 @@ def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 def compute_ewmac(time_series_data: pd.Series, speed: int) -> pd.Series:
-
     if speed <= 0:
         raise ValueError("Speed should be a positive integer")
 
     if time_series_data.empty:
         raise ValueError("Time series data cannot be empty")
-
     Lfast = speed
     Lslow = speed * 4
     fast_ewma = time_series_data.ewm(span=Lfast, min_periods=1).mean()

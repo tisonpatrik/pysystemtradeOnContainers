@@ -11,7 +11,6 @@ def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
     instrument = data['instrument']
     speed = data['speed']
     raw_data = data['raw_data']
-
     forecast = compute_breakdown(raw_data, speed)
 
     return {
@@ -23,7 +22,13 @@ def process_data(data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 def compute_breakdown(price: pd.Series, speed: int, smooth=None) -> pd.Series:
+   
+    if speed <= 0:
+        raise ValueError("Speed should be a positive integer")
 
+    if price.empty:
+        raise ValueError("Time series data cannot be empty")
+        
     if smooth is None:
         smooth = max(int(speed / 4.0), 1)
 

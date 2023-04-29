@@ -7,7 +7,3 @@ variable "app_name" {
   description = "Application name"
   default     = "grayfox"
 }
-variable "enviroment_name" {
-  description = "Enviroment name"
-  default     = "dev"
-}
