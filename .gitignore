@@ -131,4 +131,6 @@ dmypy.json
 # terraform
 infrastructure/environments/dev/.terraform.lock.hcl
 infrastructure/environments/dev/.terraform/
+infrastructure/environments/dev/builds
 infrastructure/environments/dev/terraform.tfstate.backup
+infrastructure/environments/dev/terraform.tfstate
