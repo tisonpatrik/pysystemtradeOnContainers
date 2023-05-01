@@ -6,7 +6,7 @@ time_series_data = pd.Series([137.75, 138.00, 139.25])
 speed = 16
 expected_ewmac = pd.Series([0, 0.005859, 0.047608])
 
-def test_compute_ewmac_valid_input():    
+def test_compute_ewmac_valid_input():
     
     ewmac = compute_ewmac(time_series_data, speed)
     assert ewmac.round(6).equals(expected_ewmac.round(6))
