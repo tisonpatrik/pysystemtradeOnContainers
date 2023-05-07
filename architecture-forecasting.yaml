@@ -1,0 +1,64 @@
+app:
+  name: serverless-data-processing-app
+
+components:
+  - data_input:
+      name: multiple_prices_table
+      type: database_table
+
+  - stream_trigger:
+      name: multiple_prices_table_stream
+      type: stream
+      source: multiple_prices_table
+      on_event: on_item_insert
+
+  - input_parser_function:
+      name: input_parser_lambda
+      type: function
+      input: multiple_prices_table_stream
+      action: invoke_step_function
+
+  - orchestration:
+      name: data_processing_workflow
+      type: state_machine
+      states:
+        - mac_rule_processing:
+            type: task
+            function: mac_rule
+            error_handling:
+              retries: 3
+              timeout: 300
+        - breakout_rule_processing:
+            type: task
+            function: breakout_rule
+            error_handling:
+              retries: 3
+              timeout: 300
+        - save_data:
+            type: task
+            function: save_to_forecast_table_function
+            error_handling:
+              retries: 3
+              timeout: 300
+
+  - data_output:
+      name: forecast_table
+      type: database_table
+
+  - functions:
+      - name: input_parser_lambda
+        type: code
+        runtime: python
+      - name: mac_rule
+        type: code
+        runtime: python
+      - name: breakout_rule
+        type: code
+        runtime: python
+      - name: save_to_forecast_table_function
+        type: code
+        runtime: python
+
+  - monitoring:
+      name: monitoring_service
+      type: monitoring_tool
