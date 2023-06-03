@@ -8,7 +8,7 @@ module "vpc" {
   azs           = ["eu-central-1a", "eu-central-1b"]
   intra_subnets = ["10.10.101.0/24", "10.10.102.0/24"]
 }
-//baf
+
 module "breakout_rule" {
   source = "terraform-aws-modules/lambda/aws"
 

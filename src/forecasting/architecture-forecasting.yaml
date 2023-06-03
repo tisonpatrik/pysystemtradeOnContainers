@@ -1,0 +1,76 @@
+app:
+  name: grayfox_forecast
+
+components:
+  - data_input:
+      name: multiple_prices_table # This is the input database table where data is inserted.
+
+  - stream_trigger:
+      name: multiple_prices_table_stream # This stream is triggered when a new item is inserted into the multiple_prices_table.
+      type: stream
+      source: multiple_prices_table
+      on_event: on_item_insert
+
+  - input_parser_function:
+      name: input_parser_lambda # This lambda function fetch 730 items of time series from multiple_prices_table and order them.
+      type: function
+      input: multiple_prices_table_stream
+      action: invoke_step_function
+
+  - orchestration:
+      name: data_processing_workflow # This is a state machine that organizes the workflow of the data processing tasks.
+      type: state_machine
+      states:
+        - rule_processing: # This state processes the different rules in parallel.
+            type: parallel
+            branches: # Each branch represents a rule variant to be processed concurrently.
+              - type: task
+                function: rule_function # This function processes a specific rule based on the input parameters.
+                error_handling:
+                  retries: 3
+                  timeout: 300
+        - save_data: # This state saves the processed data to the forecast_table.
+            type: task
+            function: save_to_forecast_table_function # This function saves the data to the forecast_table.
+            error_handling:
+              retries: 3
+              timeout: 300
+
+  - data_output:
+      name: forecast_table # This is the output database table where the processed data is saved.
+      type: database_table
+
+  - functions:
+      - name: input_parser_lambda # This function parses the incoming data from the stream.
+        type: code
+        runtime: python
+      - name: rule_function # This function processes a specific rule based on the input parameters.
+        type: code
+        runtime: python
+      - name: save_to_forecast_table_function # This function saves the processed data to the forecast_table.
+        type: code
+        runtime: python
+
+  - monitoring:
+      name: monitoring_service # This is the tool used for monitoring the application.
+      type: monitoring_tool
+
+# Example of input for the Step Function:
+# {
+#    "instrument": "Instrument_1",
+#    "rules": [
+#        {
+#            "rule_1": [parameters],
+#            "rule_2": [parameters],
+#            // more rules here..
+#        }
+#    ],
+#    "data": [
+#      {
+#        "unix_datetime": 1627474800,
+#        "price": 100.5,
+#        "forward": 1.02
+#      }
+#    ]
+# }
+# Each variant of a rule (represented by different parameters in the input) can run in parallel within the Step Function.
