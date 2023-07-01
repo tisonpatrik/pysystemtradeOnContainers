@@ -52,7 +52,7 @@ module "ewmac_rule" {
   memory_size = 512
   layers = [ "arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python39:6", 
              "arn:aws:lambda:eu-central-1:017000801446:layer:AWSLambdaPowertoolsPythonV2:31",
-              module.helper_layer_local.lambda_layer_arn, # Add your custom layer ARN
+              module.helper_layer.lambda_layer_arn, # Add your custom layer ARN
              ]
 
   putin_khuylo =  true
@@ -60,7 +60,7 @@ module "ewmac_rule" {
     Name = "ewmac_rule"
   }
 }
-module "helper_layer_local" {
+module "helper_layer" {
   source = "terraform-aws-modules/lambda/aws"
 
   create_layer = true
