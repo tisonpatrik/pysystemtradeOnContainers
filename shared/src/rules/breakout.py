@@ -1,23 +1,13 @@
 import pandas as pd
 import numpy as np
 from typing import Dict, Any
+from rule import Rule
 
-class BreakdownComputer:
+class BreakoutComputer(Rule):
     def __init__(self, data: Dict[str, Any], speed: int):
-        self.instrument = data['instrument']
-        self.raw_data = data['raw_data']
+        super().__init__(data)
         self.speed = speed
-
-        self.validate_speed()
-        self.validate_time_series_data()
-
-    def validate_speed(self):
-        if self.speed <= 0:
-            raise ValueError("Speed should be a positive integer")
-
-    def validate_time_series_data(self):
-        if self.raw_data.empty:
-            raise ValueError("Time series data cannot be empty")
+        self.validate_speed(speed)
 
     def compute_breakdown(self, smooth=None) -> pd.Series:
         if smooth is None:
@@ -40,12 +30,12 @@ class BreakdownComputer:
         return smoothed_output
 
     def process_data(self) -> Dict[str, Any]:
-        forecast = self.compute_breakdown()
+        breakdown = self.compute_breakdown()
 
         return {
             'message': 'Breakdown calculation and save completed successfully',
             'rule': 'Breakdown',
             'instrument': self.instrument,
             'speed': self.speed,
-            'forecast': forecast
+            'forecast': breakdown
         }

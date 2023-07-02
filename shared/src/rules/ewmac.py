@@ -1,42 +1,30 @@
 import pandas as pd
 from estimators.volatility import robust_vol_calc
 from typing import Dict, Any
+from rule import Rule
 
-class EWMAComputer:
+class EWMAComputer(Rule):
     def __init__(self, data: Dict[str, Any], speed: int):
-        self.instrument = data['instrument']
-        self.raw_data = data['raw_data']
+        super().__init__(data)
         self.speed = speed
-
-        self.validate_speed()
-        self.validate_time_series_data()
-
-        self.volatility = robust_vol_calc(self.raw_data)
-
-    def validate_speed(self):
-        if self.speed <= 0:
-            raise ValueError("Speed should be a positive integer")
-
-    def validate_time_series_data(self):
-        if self.raw_data.empty:
-            raise ValueError("Time series data cannot be empty")
+        self.validate_speed(speed)
 
     def compute_ewmac(self) -> pd.Series:
         Lfast = self.speed
         Lslow = self.speed * 4
         fast_ewma = self.raw_data.ewm(span=Lfast, min_periods=1).mean()
         slow_ewma = self.raw_data.ewm(span=Lslow, min_periods=1).mean()
-        ewmac = fast_ewma - slow_ewma
-
-        return ewmac / self.volatility.ffill()
+        return fast_ewma - slow_ewma
 
     def process_data(self) -> Dict[str, Any]:
         ewmac = self.compute_ewmac()
-
+        volatility = robust_vol_calc(self.raw_data)
+        forecast = ewmac / volatility.ffill()
+        
         return {
             'message': 'EWMAC calculation and save completed successfully',
             'rule': 'MAC',
             'instrument': self.instrument,
             'speed': self.speed,
-            'forecast': ewmac
+            'forecast': forecast
         }
