@@ -3,7 +3,7 @@ version: "3"
 services:
   web:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     image: grayfox-dockerapp-image
     depends_on:
@@ -13,8 +13,8 @@ services:
       - DB_PASSWORD=abc123
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./src:/src
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+      - ./backend/src:/app/src  # Update the volume mapping to /app/src
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000  # Update the command to use src.main:app
     ports:
       - "8000:8000"
 
