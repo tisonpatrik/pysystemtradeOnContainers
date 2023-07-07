@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: grayfox-dockerapp-image
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=abc123
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./src:/src
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=abc123
+    ports:
+      - "54321:5432"
