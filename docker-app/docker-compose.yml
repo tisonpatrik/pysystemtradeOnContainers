@@ -1,27 +1,26 @@
 version: "3"
 
 services:
-  web:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+  api:
     image: grayfox-dockerapp-image
     depends_on:
       - db
-    environment:
-      - DB_HOST=db
-      - DB_PASSWORD=abc123
-      - PYTHONUNBUFFERED=1
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    
+    env_file:
+      - .env  # Define environment variables using .env file
     volumes:
       - ./backend/src:/app/src  # Update the volume mapping to /app/src
+      - ./backend/tests:/app/tests
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000  # Update the command to use src.main:app
     ports:
       - "8000:8000"
 
   db:
     image: postgres:latest
-    environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=abc123
+    env_file:
+      - .env  # Define environment variables using .env file
     ports:
       - "54321:5432"

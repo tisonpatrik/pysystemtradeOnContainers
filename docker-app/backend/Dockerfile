@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire project to the working directory
 COPY . .
 
+# Set the PYTHONPATH environment variable
+ENV PYTHONPATH=/app
+
 # Expose the port that FastAPI will be running on (change if needed)
 EXPOSE 8000
 

@@ -1,1 +1,8 @@
+#app
 fastapi[all]
+psycopg2-binary
+
+#dev/tests
+pytest
+pytest-mock
+mypy
