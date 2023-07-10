@@ -1,8 +1,9 @@
 #app
 fastapi[all]
-psycopg2-binary
+psycopg2
 
 #dev/tests
 pytest
 pytest-mock
 mypy
+pytest_postgresql
