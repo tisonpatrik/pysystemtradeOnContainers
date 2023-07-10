@@ -1,0 +1,33 @@
+import pytest
+from src.database.database_manager import DatabaseConnection
+from psycopg2 import OperationalError
+
+def test_successful_connection(postgresql):
+    # Given a DatabaseConnection instance
+    db_conn = DatabaseConnection(
+        dbname=postgresql.info["dbname"],
+        user=postgresql.info["user"],
+        password=postgresql.info["password"],
+        host=postgresql.info["host"],
+        port=postgresql.info["port"],
+    )
+
+    # When establishing a connection
+    with db_conn.connection_cursor() as cursor:
+        # Then it should not raise any exceptions
+        cursor.execute("SELECT 1")
+
+def test_unsuccessful_connection():
+    # Given a DatabaseConnection instance with incorrect details
+    db_conn = DatabaseConnection(
+        dbname="wrong_dbname",
+        user="wrong_user",
+        password="wrong_password",
+        host="wrong_host",
+        port=5432,
+    )
+
+    # When trying to establish a connection, it should raise an OperationalError
+    with pytest.raises(OperationalError):
+        with db_conn.connection_cursor() as _:
+            pass
