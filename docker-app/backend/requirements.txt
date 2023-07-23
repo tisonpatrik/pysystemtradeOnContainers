@@ -1,9 +1,0 @@
-#app
-fastapi[all]
-psycopg2
-
-#dev/tests
-pytest
-pytest-mock
-mypy
-pytest_postgresql

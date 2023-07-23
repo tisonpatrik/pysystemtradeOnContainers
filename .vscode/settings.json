@@ -2,5 +2,4 @@
     "python.analysis.extraPaths": [
         "./src/shared/layers/helpers/python"
     ]
-
 }
