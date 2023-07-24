@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  docker-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    hostname: docker-app
+    container_name: docker-app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./:/home/app
