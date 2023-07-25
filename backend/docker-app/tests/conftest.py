@@ -55,8 +55,8 @@ def override_get_db(db_session: AsyncSession) -> Callable:
 
 @pytest.fixture()
 def app(override_get_db: Callable) -> FastAPI:
-    from api.dependencies.repositories import get_db
-    from main import app
+    from src.api.dependencies.repositories import get_db
+    from src.main import app
 
     app.dependency_overrides[get_db] = override_get_db
 

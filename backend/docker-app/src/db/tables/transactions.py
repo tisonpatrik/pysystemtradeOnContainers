@@ -1,6 +1,6 @@
 from sqlmodel import Field, SQLModel
 
-from db.tables.base_class import StatusEnum, TimestampModel, UUIDModel
+from src.db.tables.base_class import StatusEnum, TimestampModel, UUIDModel
 
 
 class TransactionBase(SQLModel):

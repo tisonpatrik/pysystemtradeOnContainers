@@ -4,10 +4,10 @@ from uuid import UUID
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.errors import EntityDoesNotExist
-from db.tables.base_class import StatusEnum
-from db.tables.transactions import Transaction
-from schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
+from src.db.errors import EntityDoesNotExist
+from src.db.tables.base_class import StatusEnum
+from src.db.tables.transactions import Transaction
+from src.schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
 
 
 class TransactionRepository:

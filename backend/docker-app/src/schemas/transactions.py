@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from db.tables.transactions import TransactionBase
+from src.db.tables.transactions import TransactionBase
 
 
 class TransactionCreate(TransactionBase):

@@ -3,8 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from core.config import settings
-from db.tables.transactions import Transaction
+from src.core.config import settings
+from src.db.tables.transactions import Transaction
 
 engine = create_engine(
     url=settings.sync_database_url,

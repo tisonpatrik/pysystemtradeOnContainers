@@ -3,10 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 
-from api.dependencies.repositories import get_repository
-from db.errors import EntityDoesNotExist
-from db.repositories.transactions import TransactionRepository
-from schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
+from src.api.dependencies.repositories import get_repository
+from src.db.errors import EntityDoesNotExist
+from src.db.repositories.transactions import TransactionRepository
+from src.schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
 
 router = APIRouter()
 

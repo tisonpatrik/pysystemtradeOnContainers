@@ -17,6 +17,18 @@ test = ["anyio", "coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "psutil (>=5.9)
 trio = ["trio (<0.22)"]
 
 [[package]]
+name = "asyncpg"
+version = "0.28.0"
+description = "An asyncio PostgreSQL driver"
+category = "main"
+optional = false
+python-versions = ">=3.7.0"
+
+[package.extras]
+docs = ["Sphinx (>=5.3.0,<5.4.0)", "sphinxcontrib-asyncio (>=0.3.0,<0.4.0)", "sphinx-rtd-theme (>=1.2.2)"]
+test = ["flake8 (>=5.0,<6.0)", "uvloop (>=0.15.3)"]
+
+[[package]]
 name = "certifi"
 version = "2023.7.22"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -163,6 +175,14 @@ python-versions = ">=3.7"
 [package.extras]
 dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
+
+[[package]]
+name = "psycopg2"
+version = "2.9.6"
+description = "psycopg2 - Python-PostgreSQL Database Adapter"
+category = "main"
+optional = false
+python-versions = ">=3.6"
 
 [[package]]
 name = "pydantic"
@@ -337,10 +357,11 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "aae1c9df3d9dc08089b26ce0c8c3eff9ac70884718e8a5f42e01f81b9c151359"
+content-hash = "5c8a15cd66d948f0bafe87ef1b7984b7489ed1981ced11bc7d81fdeb6029e071"
 
 [metadata.files]
 anyio = []
+asyncpg = []
 certifi = []
 click = []
 colorama = []
@@ -354,6 +375,7 @@ idna = []
 iniconfig = []
 packaging = []
 pluggy = []
+psycopg2 = []
 pydantic = []
 pytest = []
 pytest-asyncio = []
