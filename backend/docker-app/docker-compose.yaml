@@ -15,13 +15,11 @@ services:
       - .env
     volumes:
       - ./src:/home/app/src
-    networks:
-      - my-net
 
   db_postgres:
-    image: postgres:14.3-alpine
-    hostname: db_postgres
-    container_name: db_postgres
+    image: postgres:15.3
+    hostname: postgres
+    container_name: postgres
     restart: on-failure
     environment:
       - POSTGRES_USER=postgres
@@ -31,12 +29,18 @@ services:
     volumes:
       - db-postgres:/var/lib/postgresql/data
       - ./src/scripts/create_databases.sql:/docker-entrypoint-initdb.d/create_databases.sql
-    networks:
-      - my-net
+  
+  pg-admin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@email.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5050
+
+    ports:
+      - "5050:5050"
 
 volumes:
   db-postgres:
     driver: local
 
-networks:
-  my-net:
