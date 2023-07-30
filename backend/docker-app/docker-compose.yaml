@@ -18,7 +18,7 @@ services:
 
   db_postgres:
     image: postgres:15.3
-    hostname: postgres
+    hostname: db_postgres
     container_name: postgres
     restart: on-failure
     environment:
