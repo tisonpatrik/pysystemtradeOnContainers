@@ -21,6 +21,7 @@ class GlobalConfig(BaseConfig):
     postgres_server: str = os.environ.get("POSTGRES_SERVER", "localhost")
     postgres_port: int = int(os.environ.get("POSTGRES_PORT", 5432))
     postgres_db: str = os.environ.get("POSTGRES_DB", "transactions_db")
+    postgres_db: str = os.environ.get("POSTGRES_DB", "multiple_prices_db")
     
     postgres_db_tests: str = os.environ.get("POSTGRES_DB_TESTS", "test_transactions_db")
     db_echo_log: bool = debug

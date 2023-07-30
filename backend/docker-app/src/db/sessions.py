@@ -5,6 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import settings
 from src.db.tables.transactions import Transaction
+from src.db.tables.multiple_prices import MultiplePrices
 
 engine = create_engine(
     url=settings.sync_database_url,
@@ -29,8 +30,15 @@ def create_transaction():
         session.add(transaction)
         session.commit()
 
+def create_multiple_prices():
+    multiple_prices = MultiplePrices(amount=10, description="First transaction")
+
+    with Session(engine) as session:
+        session.add(multiple_prices)
+        session.commit()
 
 def create_tables():
     SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
     create_transaction()
+    create_multiple_prices()

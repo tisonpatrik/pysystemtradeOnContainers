@@ -2,5 +2,9 @@
 CREATE DATABASE transactions_db;
 CREATE DATABASE test_transactions_db;
 
+CREATE DATABASE multiple_prices_db;
+
 GRANT ALL PRIVILEGES ON DATABASE transactions_db to "postgres";
 GRANT ALL PRIVILEGES ON DATABASE test_transactions_db to "postgres";
+
+GRANT ALL PRIVILEGES ON DATABASE multiple_prices_db to "postgres";
