@@ -27,19 +27,6 @@ async_session = sessionmaker(
     bind=async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
-async def create_tables_async():
-    async with async_engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.drop_all)
-        await conn.run_sync(SQLModel.metadata.create_all)
-    await create_transaction_async()
-
-async def create_transaction_async():
-    transaction = Transaction(amount=10, description="First transaction")
-    async with async_session() as session:
-        session.add(transaction)
-        await session.commit()
-
-
 def transform_csv_to_schema(file_path, symbol):
     """Transforms a given CSV file to match the MultiplePrices schema."""
     df = pd.read_csv(file_path)
@@ -58,53 +45,58 @@ def transform_csv_to_schema(file_path, symbol):
 
     return df
 
+async def get_all_csv_files_async(directory_path: str):
+    return [file for file in os.listdir(directory_path) if file.endswith(".csv")]
+
+async def process_csv_file_async(file_path: str):
+    symbol = os.path.basename(file_path).split(".")[0]
+    logging.info(f"Processing file: {os.path.basename(file_path)}")
+    transformed_data = transform_csv_to_schema(file_path, symbol)
+    logging.info(f"Number of rows processed from {os.path.basename(file_path)}: {len(transformed_data)}")
+    return transformed_data
+
+async def save_data_to_db_async(data, session):
+    for _, row in data.iterrows():
+        multiple_price = MultiplePrices(**row.to_dict())
+        session.add(multiple_price)
+    await session.commit()
+    logging.info(f"Committing data")
+    logging.info("Data has been successfully written to the database.")
+
 async def seed_grayfox_db_async():
     directory_path = "/path/in/container" + "/multiple_prices_csv"
     logging.info("Seeding of multiple_prices table started.")
     async with async_session() as session:
         logging.info("Checking files in the directory.")
-        for file in os.listdir(directory_path):
-            if file.endswith(".csv"):
-                symbol = file.split(".")[0]
-                logging.info(f"Processing file: {file}")
-                transformed_data = transform_csv_to_schema(f"{directory_path}/{file}", symbol)
-                logging.info(f"Number of rows processed from {file}: {len(transformed_data)}")
-                
-                for _, row in transformed_data.iterrows():
-                    multiple_price = MultiplePrices(**row.to_dict())
-                    session.add(multiple_price)
-                
-                await session.commit()
-                logging.info(f"Committing data from file {file}")
-                logging.info(f"Data from file {file} has been successfully written to the database.")
-        logging.info("Finished processing all files.")
+        csv_files = await get_all_csv_files_async(directory_path)
+        for file in csv_files:
+            file_path = os.path.join(directory_path, file)
+            data = await process_csv_file_async(file_path)
+            await save_data_to_db_async(data, session)
+    logging.info("Finished processing all files.")
 
 async def init_db_async():
     # Check if tables exist
-    tables_exist = await check_tables_exist()
+    tables_exist = await check_tables_exist_async()
     
     # If tables don't exist, create them
     if not tables_exist:
-        await create_tables_async()
+        # await create_tables_async()
         await seed_grayfox_db_async()
     else:
         # Check if tables are empty
-        multiple_prices_empty = await check_table_empty(MultiplePrices)
-        transactions_empty = await check_table_empty(Transaction)
+        multiple_prices_empty = await check_table_empty_async(MultiplePrices)
         
         # If tables are empty, seed them
         if multiple_prices_empty:
             await seed_grayfox_db_async()
-        if transactions_empty:
-            await create_transaction_async()
 
 async def reset_db_async():
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.drop_all)
-    await create_tables_async()
     await seed_grayfox_db_async()
 
-async def check_tables_exist():
+async def check_tables_exist_async():
     async with async_engine.begin() as conn:
         try:
             # Try to fetch one row from the table to check its existence
@@ -113,7 +105,7 @@ async def check_tables_exist():
         except Exception:
             return False
         
-async def check_table_empty(table):
+async def check_table_empty_async(table):
     async with async_session() as session:
         count = await session.execute(select(func.count()).select_from(table))
         return count.scalar() == 0
