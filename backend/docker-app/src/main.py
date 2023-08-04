@@ -1,7 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks, status
 from src.api.router import router
 from src.core.config import settings
-from src.db.sessions import create_tables_async, seed_grayfox_db_async
+from src.db.sessions import create_tables_async, seed_grayfox_db_async, init_db_async, reset_db_async
 
 import logging
 
@@ -29,3 +29,18 @@ async def init_tables():
     await seed_grayfox_db_async()
     logging.info("Table initialization process completed.")
     return {"status": "Initialization completed"}
+
+
+@app.get("/init_db", status_code=status.HTTP_200_OK, name="init_db")
+async def initialize_db():
+    logging.info("Soft database initialization process started.")
+    await init_db_async()
+    logging.info("Soft database initialization process completed.")
+    return {"status": "Database softly initialized"}
+
+@app.get("/reset_db", status_code=status.HTTP_200_OK, name="reset_db")
+async def hard_reset_db():
+    logging.info("Hard reset of database started.")
+    await reset_db_async()
+    logging.info("Hard reset of database completed.")
+    return {"status": "Database hard reset completed"}

@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select, func
 from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -59,9 +60,6 @@ def transform_csv_to_schema(file_path, symbol):
 
 async def seed_grayfox_db_async():
     directory_path = "/path/in/container" + "/multiple_prices_csv"
-    logging.info(f"Directory path: {directory_path}")
-    logging.info(f"Total files in directory: {len(os.listdir(directory_path))}")
-    
     logging.info("Seeding of multiple_prices table started.")
     async with async_session() as session:
         logging.info("Checking files in the directory.")
@@ -80,4 +78,42 @@ async def seed_grayfox_db_async():
                 logging.info(f"Committing data from file {file}")
                 logging.info(f"Data from file {file} has been successfully written to the database.")
         logging.info("Finished processing all files.")
-                
+
+async def init_db_async():
+    # Check if tables exist
+    tables_exist = await check_tables_exist()
+    
+    # If tables don't exist, create them
+    if not tables_exist:
+        await create_tables_async()
+        await seed_grayfox_db_async()
+    else:
+        # Check if tables are empty
+        multiple_prices_empty = await check_table_empty(MultiplePrices)
+        transactions_empty = await check_table_empty(Transaction)
+        
+        # If tables are empty, seed them
+        if multiple_prices_empty:
+            await seed_grayfox_db_async()
+        if transactions_empty:
+            await create_transaction_async()
+
+async def reset_db_async():
+    async with async_engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
+    await create_tables_async()
+    await seed_grayfox_db_async()
+
+async def check_tables_exist():
+    async with async_engine.begin() as conn:
+        try:
+            # Try to fetch one row from the table to check its existence
+            await conn.execute(select(MultiplePrices).limit(1))
+            return True
+        except Exception:
+            return False
+        
+async def check_table_empty(table):
+    async with async_session() as session:
+        count = await session.execute(select(func.count()).select_from(table))
+        return count.scalar() == 0
