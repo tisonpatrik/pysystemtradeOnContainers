@@ -1,11 +1,15 @@
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import settings
 from src.db.tables.transactions import Transaction
 from src.db.tables.multiple_prices import MultiplePrices
+
+import pandas as pd
+import os
+import logging
 
 engine = create_engine(
     url=settings.sync_database_url,
@@ -22,23 +26,58 @@ async_session = sessionmaker(
     bind=async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
+async def create_tables_async():
+    async with async_engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.drop_all)
+        await conn.run_sync(SQLModel.metadata.create_all)
+    await create_transaction_async()
 
-def create_transaction():
+async def create_transaction_async():
     transaction = Transaction(amount=10, description="First transaction")
-
-    with Session(engine) as session:
+    async with async_session() as session:
         session.add(transaction)
-        session.commit()
+        await session.commit()
 
-def create_multiple_prices():
-    multiple_prices = MultiplePrices(amount=10, description="First transaction")
 
-    with Session(engine) as session:
-        session.add(multiple_prices)
-        session.commit()
+def transform_csv_to_schema(file_path, symbol):
+    """Transforms a given CSV file to match the MultiplePrices schema."""
+    df = pd.read_csv(file_path)
 
-def create_tables():
-    SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)
-    create_transaction()
-    create_multiple_prices()
+    # Transforming the DATETIME column into UNIX timestamp
+    df["UNIX_TIMESTAMP"] = pd.to_datetime(df["DATETIME"]).astype(int) // 10**9
+    
+    # Adding the SYMBOL column
+    df["SYMBOL"] = symbol
+
+    # Dropping the original DATETIME column
+    df.drop(columns=["DATETIME"], inplace=True)
+
+    # Reordering the columns to match the MultiplePrices schema
+    df = df[["UNIX_TIMESTAMP", "SYMBOL", "CARRY", "CARRY_CONTRACT", "PRICE", "PRICE_CONTRACT", "FORWARD", "FORWARD_CONTRACT"]]
+
+    return df
+
+async def seed_grayfox_db_async():
+    directory_path = "/path/in/container" + "/multiple_prices_csv"
+    logging.info(f"Directory path: {directory_path}")
+    logging.info(f"Total files in directory: {len(os.listdir(directory_path))}")
+    
+    logging.info("Seeding of multiple_prices table started.")
+    async with async_session() as session:
+        logging.info("Checking files in the directory.")
+        for file in os.listdir(directory_path):
+            if file.endswith(".csv"):
+                symbol = file.split(".")[0]
+                logging.info(f"Processing file: {file}")
+                transformed_data = transform_csv_to_schema(f"{directory_path}/{file}", symbol)
+                logging.info(f"Number of rows processed from {file}: {len(transformed_data)}")
+                
+                for _, row in transformed_data.iterrows():
+                    multiple_price = MultiplePrices(**row.to_dict())
+                    session.add(multiple_price)
+                
+                await session.commit()
+                logging.info(f"Committing data from file {file}")
+                logging.info(f"Data from file {file} has been successfully written to the database.")
+        logging.info("Finished processing all files.")
+                

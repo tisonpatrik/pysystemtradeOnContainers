@@ -1,15 +1,15 @@
 from uuid import UUID
 
-from src.db.tables.transactions import TransactionBase
+from src.db.tables.multiple_prices import MultiplePricesBase
 
 
-class MultiplePricesCreate(TransactionBase):
+class MultiplePricesCreate(MultiplePricesBase):
     ...
 
 
-class MultiplePricesRead(TransactionBase):
+class MultiplePricesRead(MultiplePricesBase):
     id: UUID
 
 
-class MultiplePricesPatch(TransactionBase):
+class MultiplePricesPatch(MultiplePricesBase):
     ...
