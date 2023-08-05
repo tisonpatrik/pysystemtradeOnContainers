@@ -30,6 +30,8 @@ async_session = sessionmaker(
 async def init_db_async():
     logger.info("Initializing database...")
     async with async_session() as session:
+        # Create tables if they don't exist
+        await create_tables_async()
         # Check if tables exist
         async with async_engine.begin() as conn:
             try:
@@ -42,7 +44,6 @@ async def init_db_async():
         # If tables don't exist, create them
         if not tables_exist:
             try:
-                # await create_tables_async()
                 await seed_grayfox_db_async(session)
                 logger.info("Seeded the database.")
             except Exception as e:
@@ -69,3 +70,7 @@ async def reset_db_async():
             logger.info("Seeded the database after reset.")
         except Exception as e:
             logger.error(f"Error seeding the database after reset: {e}")
+
+async def create_tables_async():
+    async with async_engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)

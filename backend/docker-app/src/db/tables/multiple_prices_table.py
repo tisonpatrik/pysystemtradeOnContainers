@@ -1,18 +1,16 @@
 from sqlmodel import Field, SQLModel
 
-from src.db.tables.base_class import StatusEnum, TimestampModel, UUIDModel
-from src.db.tables.base_class import StatusEnum
-from shared.src.entities.multiple_prices import MultiplePrices as BaseMultiplePrices
+# Define the base model
+class MultiplePricesTableBase(SQLModel):
+    UNIX_TIMESTAMP: int = Field(primary_key=True, index=True)
+    SYMBOL: str = Field(primary_key=True, index=True)
+    CARRY: float = Field(nullable=True)
+    CARRY_CONTRACT: int = Field(nullable=True)
+    PRICE: float = Field(nullable=True)
+    PRICE_CONTRACT: int = Field(nullable=True)
+    FORWARD: float = Field(nullable=True)
+    FORWARD_CONTRACT: int = Field(nullable=True)
 
-class MultiplePricesTableBase(SQLModel, BaseMultiplePrices):
-    status: StatusEnum = Field(default=StatusEnum.inactive)
-
-# Define the database table model with composite primary key
-class MultiplePricesTable(MultiplePricesTableBase, UUIDModel, TimestampModel, table=True):
-    UNIX_TIMESTAMP: int = Field(primary_key=True)
-    SYMBOL: str = Field(primary_key=True)
+# Define the table model
+class MultiplePricesTable(MultiplePricesTableBase, table=True):
     __tablename__ = "multiple_prices"
-
-    def __init__(self, **data):
-        super().__init__(**data)
-

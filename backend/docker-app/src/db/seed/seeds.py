@@ -1,7 +1,7 @@
 from sqlalchemy import select, func
 from sqlalchemy.future import Connection
 
-from src.db.tables.multiple_prices_table import MultiplePrices
+from src.db.tables.multiple_prices_table import MultiplePricesTable
 from src.db.seed.file_processing import get_all_csv_files_async, process_csv_file_async
 
 import os
@@ -23,8 +23,13 @@ async def seed_grayfox_db_async(session):
 
 async def save_data_to_db_async(data, session):
     """Save processed data to the database using bulk insert."""
-    session.bulk_insert_mappings(MultiplePrices, data.to_dict(orient="records"))
+    
+    records = data.to_dict(orient="records")
+    instances = [MultiplePricesTable(**record) for record in records]
+    
+    session.add_all(instances)
     await session.commit()
+
     logger.info("Data has been successfully written to the database.")
    
 async def seed_multiple_prices(session):
@@ -42,13 +47,12 @@ async def check_tables_exist_async(conn: Connection):
     """Check if the MultiplePrices table exists."""
     try:
         # Try to fetch one row from the table to check its existence
-        await conn.execute(select(MultiplePrices).limit(1))
+        await conn.execute(select(MultiplePricesTable).limit(1))
         return True
     except Exception as e:
         logger.error(f"Error checking if table exists: {e}")
         return False
         
 async def check_table_empty_async(session):
-    count = await session.execute(select(func.count()).select_from(MultiplePrices))
+    count = await session.execute(select(func.count()).select_from(MultiplePricesTable))
     return count.scalar() == 0
-
