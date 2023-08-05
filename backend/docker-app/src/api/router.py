@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.api.routes.transactions import router as transactions_router
+from src.api.routes.route_transactions import router as transactions_router
 
 router = APIRouter()
 

@@ -6,7 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
 from src.db.tables.base_class import StatusEnum
-from src.db.tables.transactions import Transaction
+from src.db.tables.transactions_tables import Transaction
 from src.schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
 
 

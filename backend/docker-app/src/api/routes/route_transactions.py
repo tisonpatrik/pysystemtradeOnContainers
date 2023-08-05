@@ -5,7 +5,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 
 from src.api.dependencies.repositories import get_repository
 from src.db.errors import EntityDoesNotExist
-from src.db.repositories.transactions import TransactionRepository
+from src.db.repositories.transactions_repository import TransactionRepository
 from src.schemas.transactions import TransactionCreate, TransactionPatch, TransactionRead
 
 router = APIRouter()

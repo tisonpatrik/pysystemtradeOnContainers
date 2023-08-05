@@ -1,11 +1,16 @@
 from typing import Optional, TypeVar, List, Union
 from uuid import UUID
 from sqlmodel import select, SQLModel
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
-from src.db.enums import StatusEnum
+from src.db.tables.base_class import StatusEnum
 from backend.shared.src.repository.base_repository import IDatabaseRepository
+
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
+from sqlmodel import SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession, sessionmaker
+from src.core.config import settings
 
 # Define the type variables
 Entity = TypeVar("Entity", bound=SQLModel)
@@ -13,10 +18,13 @@ EntityCreate = TypeVar("EntityCreate")
 EntityRead = TypeVar("EntityRead")
 EntityPatch = TypeVar("EntityPatch")
 
+
 class PostgreSQLRepository(IDatabaseRepository[Entity, EntityCreate, EntityRead, EntityPatch]):
 
-    def __init__(self, session: AsyncSession) -> None:
-        self.session = session
+    def __init__(self):
+        self.async_engine = create_async_engine(url=settings.async_database_url, echo=True)
+        self.SessionLocal = sessionmaker(bind=self.async_engine, class_=AsyncSession, expire_on_commit=False)
+        
 
     async def _get_instance(self, entity_id: Union[UUID, str]) -> Optional[Entity]:
         statement = (
