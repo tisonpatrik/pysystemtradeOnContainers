@@ -3,8 +3,8 @@ version: "3.9"
 services:
   docker-app:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker-app/Dockerfile
     hostname: docker-app
     container_name: docker-app
     depends_on:

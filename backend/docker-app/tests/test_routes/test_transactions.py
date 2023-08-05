@@ -3,7 +3,7 @@ from uuid import UUID
 import pytest
 from fastapi import status
 
-from src.db.repositories.transactions import TransactionRepository
+from src.db.repositories.transactions_repository import TransactionRepository
 
 
 @pytest.mark.asyncio

@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /home/app
 
 # Copying the poetry dependency files to the working directory
-COPY ./pyproject.toml ./poetry.lock* ./
+COPY docker-app/pyproject.toml docker-app/poetry.lock* ./
 
 # Installing poetry and the project dependencies
 RUN pip install poetry
@@ -19,7 +19,10 @@ RUN poetry config virtualenvs.create false --local
 RUN poetry install --no-dev
 
 # Copying the source code to the working directory
-COPY ./src ./src
+COPY docker-app/src ./src
+
+# Copying the shared directory into the container
+COPY ../shared /home/app/shared
 
 # Specifying the default command to run the FastAPI app with uvicorn
 CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -4,8 +4,8 @@ import pytest
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
-from src.db.repositories.transactions import TransactionRepository
-from src.schemas.transactions import TransactionPatch
+from src.db.repositories.transactions_repository import TransactionRepository
+from src.schemas.transactions_schema import TransactionPatch
 
 
 @pytest.mark.asyncio

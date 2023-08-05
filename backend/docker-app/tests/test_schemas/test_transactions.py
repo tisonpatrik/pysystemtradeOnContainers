@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.schemas.transactions import TransactionCreate
+from src.schemas.transactions_schema import TransactionCreate
 
 
 def test_transaction_instance_empty():
