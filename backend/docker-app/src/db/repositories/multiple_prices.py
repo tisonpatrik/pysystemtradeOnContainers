@@ -6,8 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
 from src.db.tables.base_class import StatusEnum
-from src.db.tables.multiple_prices import MultiplePrices
-from src.schemas.multiple_prices import MultiplePricesCreate, MultiplePricesPatch, MultiplePricesRead
+from src.db.tables.multiple_prices_table import MultiplePricesTable
+from src.schemas.multiple_prices_schema import MultiplePricesCreate, MultiplePricesPatch, MultiplePricesRead
 
 
 class MultiplePricesRepository:
@@ -16,16 +16,16 @@ class MultiplePricesRepository:
 
     async def _get_instance(self, MultiplePrices_id: UUID):
         statement = (
-            select(MultiplePrices)
-            .where(MultiplePrices.id == MultiplePrices_id)
-            .where(MultiplePrices.status != StatusEnum.deleted)
+            select(MultiplePricesTable)
+            .where(MultiplePricesTable.id == MultiplePrices_id)
+            .where(MultiplePricesTable.status != StatusEnum.deleted)
         )
         results = await self.session.exec(statement)
 
         return results.first()
 
     async def create(self, MultiplePrices_create: MultiplePricesCreate) -> MultiplePricesRead:
-        db_MultiplePrices = MultiplePrices.from_orm(MultiplePrices_create)
+        db_MultiplePrices = MultiplePricesTable.from_orm(MultiplePrices_create)
         self.session.add(db_MultiplePrices)
         await self.session.commit()
         await self.session.refresh(db_MultiplePrices)
@@ -34,7 +34,7 @@ class MultiplePricesRepository:
 
     async def list(self, limit: int = 10, offset: int = 0) -> list[MultiplePricesRead]:
         statement = (
-            (select(MultiplePrices).where(MultiplePrices.status != StatusEnum.deleted))
+            (select(MultiplePricesTable).where(MultiplePricesTable.status != StatusEnum.deleted))
             .offset(offset)
             .limit(limit)
         )

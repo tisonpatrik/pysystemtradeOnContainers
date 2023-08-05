@@ -1,7 +1,7 @@
 from sqlalchemy import select, func
 from sqlalchemy.future import Connection
 
-from src.db.tables.multiple_prices import MultiplePrices
+from src.db.tables.multiple_prices_table import MultiplePrices
 from src.db.seed.file_processing import get_all_csv_files_async, process_csv_file_async
 
 import os
