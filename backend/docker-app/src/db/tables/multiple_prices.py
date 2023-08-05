@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, Enum
+from sqlmodel import Field, SQLModel
 
 # Define the base model
 class MultiplePricesBase(SQLModel):
