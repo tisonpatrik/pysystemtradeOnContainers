@@ -1,5 +1,6 @@
 from sqlalchemy import select, func
 from sqlalchemy.future import Connection
+from sqlalchemy.exc import IntegrityError
 
 from src.db.tables.multiple_prices_table import MultiplePricesTable
 from src.db.tables.adjusted_prices_table import AdjustedPricesTable
@@ -15,9 +16,9 @@ logger = logging.getLogger(__name__)
 
 # Column mappings for each table
 MULTIPLE_PRICES_MAPPING = {'CARRY': 'CARRY', 'CARRY_CONTRACT': 'CARRY_CONTRACT', 'PRICE': 'PRICE', 'PRICE_CONTRACT': 'PRICE_CONTRACT', 'FORWARD': 'FORWARD', 'FORWARD_CONTRACT': 'FORWARD_CONTRACT'}
-ADJUSTED_PRICES_MAPPING = {'PRICE': 'PRICE'}
+ADJUSTED_PRICES_MAPPING = {'PRICE': 'price'}
 FX_PRICES_MAPPING = {'PRICE': 'PRICE'}
-rOLL_CALENDAR_MAPPING = {'CURRENT_CONTRACT': 'CURRENT_CONTRACT', 'NEXT_CONTRACT': 'NEXT_CONTRACT', 'CARRY_CONTRACT':'CARRY_CONTRACT'}
+ROLL_CALENDAR_MAPPING = {'CURRENT_CONTRACT': 'current_contract', 'NEXT_CONTRACT': 'next_contract', 'CARRY_CONTRACT':'carry_contract'}
 # TODO: Define mappings for other tables here...
 
 # Configuration for tables and their corresponding directories
@@ -25,7 +26,7 @@ TABLES_TO_SEED = [
     {"model": MultiplePricesTable, "directory": "/path/in/container/multiple_prices_csv", "mapping": MULTIPLE_PRICES_MAPPING},
     {"model": AdjustedPricesTable, "directory": "/path/in/container/adjusted_prices_csv", "mapping": ADJUSTED_PRICES_MAPPING},
     {"model": FxPricesTable, "directory": "/path/in/container/fx_prices_csv", "mapping": FX_PRICES_MAPPING},
-    {"model": RollCalendarsTable, "directory": "/path/in/container/roll_calendars_csv", "mapping": rOLL_CALENDAR_MAPPING}
+    {"model": RollCalendarsTable, "directory": "/path/in/container/roll_calendars_csv", "mapping": ROLL_CALENDAR_MAPPING}
     
 ]
 
