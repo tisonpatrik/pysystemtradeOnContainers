@@ -8,20 +8,24 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def transform_csv_to_schema_general(file_path: str, symbol: str, column_mapping: Dict[str, str]) -> Union[pd.DataFrame, None]:
-    """Transforms a given CSV file to a general schema based on column mapping."""
+    """Transforms a given CSV file to a general schema based on column mapping and deduplicates rows based on UNIX_TIMESTAMP."""
     try:
         df = pd.read_csv(file_path)
         datetime_col = "DATETIME" if "DATETIME" in df.columns else "DATE_TIME"
         df["UNIX_TIMESTAMP"] = pd.to_datetime(df[datetime_col]).astype(int) // 10**9
         df["SYMBOL"] = symbol
         df.drop(columns=[datetime_col], inplace=True)
+        
+        # Deduplicate rows based on UNIX_TIMESTAMP
+        df = df.groupby('UNIX_TIMESTAMP').first().reset_index()
+        
         for csv_col, schema_col in column_mapping.items():
             df.rename(columns={csv_col: schema_col}, inplace=True)
         desired_columns = ["UNIX_TIMESTAMP", "SYMBOL"] + list(column_mapping.values())
         df = df[desired_columns]
         return df
     except Exception as e:
-        logger.error(f"Error processing CSV file {file_path}: {e}")
+        logger.error(f"Error while transforming {file_path}: {e}")
         return None
 
 async def get_all_csv_files_async(directory_path: str) -> List[str]:
