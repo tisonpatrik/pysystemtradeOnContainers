@@ -2,6 +2,9 @@ from sqlalchemy import select, func
 from sqlalchemy.future import Connection
 
 from src.db.tables.multiple_prices_table import MultiplePricesTable
+from src.db.tables.adjusted_prices_table import AdjustedPricesTable
+from src.db.tables.fx_prices_table import FxPricesTable
+from src.db.tables.roll_calendars_table import RollCalendarsTable
 from src.db.seed.file_processing import get_all_csv_files_async, process_csv_file_async
 
 import os
@@ -12,8 +15,11 @@ logger = logging.getLogger(__name__)
 
 # Configuration for tables and their corresponding directories
 TABLES_TO_SEED = [
-    {"model": MultiplePricesTable, "directory": "/path/in/container/multiple_prices_csv"}
-    # Add more tables as needed
+    {"model": MultiplePricesTable, "directory": "/path/in/container/multiple_prices_csv",
+     "model": AdjustedPricesTable, "directory": "/path/in/container/adjusted_prices_csv",
+     "model": FxPricesTable, "directory": "/path/in/container/fx_prices_csv",
+     "model": RollCalendarsTable, "directory": "/path/in/container/roll_calendars_csv",
+    }
 ]
 
 async def is_table_empty_async(session, table_model):
