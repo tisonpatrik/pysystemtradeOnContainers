@@ -11,6 +11,7 @@ from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_co
 from src.db.seed.config_tables.instrument_metadata_seed import seed_instrumnent_metadata_table
 from src.db.seed.config_tables.rolling_config_seed import seed_roll_config_table
 from src.db.seed.config_tables.spread_cost_seed import seed_spread_cost_table
+from src.db.seed.business_data_tables.adjusted_prices_seed import seed_instrumnent_config_table
 
 import logging
 
@@ -47,5 +48,6 @@ async def seed_config_tables_async(session: AsyncSession):
 
 async def seed_business_data_tables_async(session: AsyncSession):
     logger.info(f"Seeding of business data tables started.")
+    await seed_instrumnent_config_table(session)
     
     logger.info(f"Seeding of business data tables is finished.")
