@@ -1,7 +1,7 @@
 from fastapi import FastAPI, status
 from src.api.router import router
 from src.core.config import settings
-from src.db.sessions import init_db_async, reset_db_async
+from src.db.sessions import init_db_async, drop_db_async
 
 import logging
 
@@ -29,10 +29,10 @@ async def initialize_db():
     logging.info("Soft database initialization process completed.")
     return {"status": "Database softly initialized"}
 
-@app.get("/reset_db", status_code=status.HTTP_200_OK, name="reset_db")
-async def hard_reset_db():
-    logging.info("Hard reset of database started.")
-    await reset_db_async()
-    logging.info("Hard reset of database completed.")
-    return {"status": "Database hard reset completed"}
+@app.get("/drop_db", status_code=status.HTTP_200_OK, name="drop_db")
+async def drop_db():
+    logging.info("Drop of database started.")
+    await drop_db_async()
+    logging.info("Drop of database completed.")
+    return {"status": "Database drop completed"}
 
