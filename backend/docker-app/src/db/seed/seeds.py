@@ -1,6 +1,5 @@
 from sqlalchemy import select, func
 from sqlalchemy.future import Connection
-from sqlalchemy.exc import IntegrityError
 
 from src.db.tables.multiple_prices_table import MultiplePricesTable
 from src.db.tables.adjusted_prices_table import AdjustedPricesTable
@@ -27,7 +26,12 @@ TABLES_TO_SEED = [
     {"model": AdjustedPricesTable, "directory": "/path/in/container/adjusted_prices_csv", "mapping": ADJUSTED_PRICES_MAPPING},
     {"model": FxPricesTable, "directory": "/path/in/container/fx_prices_csv", "mapping": FX_PRICES_MAPPING},
     {"model": RollCalendarsTable, "directory": "/path/in/container/roll_calendars_csv", "mapping": ROLL_CALENDAR_MAPPING}
-    
+]
+CONFIG_TO_SEED = [
+    {"model": MultiplePricesTable, "directory": "/path/in/container/multiple_prices_csv", "mapping": MULTIPLE_PRICES_MAPPING},
+    {"model": AdjustedPricesTable, "directory": "/path/in/container/adjusted_prices_csv", "mapping": ADJUSTED_PRICES_MAPPING},
+    {"model": FxPricesTable, "directory": "/path/in/container/fx_prices_csv", "mapping": FX_PRICES_MAPPING},
+    {"model": RollCalendarsTable, "directory": "/path/in/container/roll_calendars_csv", "mapping": ROLL_CALENDAR_MAPPING}
 ]
 
 async def is_table_empty_async(session, table_model):
