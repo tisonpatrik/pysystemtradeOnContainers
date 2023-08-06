@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import settings
-from src.db.seed.seeds import check_tables_exist_async, seed_grayfox_db_async, fill_empty_tables_async
+from src.db.seed.seeds import check_tables_exist_async, fill_empty_tables_config_based_async
 
 import logging
 
@@ -28,35 +28,32 @@ async_session = sessionmaker(
 )
 
 async def init_db_async():
-    logger.info("Initializing database...")
+    """Initialize the database by creating tables and seeding them."""
+    async with async_engine.begin() as conn:
+        # Create tables based on the models
+        await conn.run_sync(SQLModel.metadata.create_all)
+
+    # Seed tables if they're empty
     async with async_session() as session:
-        # Create tables if they don't exist
-        await create_tables_async()
-        # Check if tables exist
-        async with async_engine.begin() as conn:
-            try:
-                tables_exist = await check_tables_exist_async(conn)
-                logger.info(f"Tables exist: {tables_exist}")
-            except Exception as e:
-                logger.error(f"Error checking tables: {e}")
-                return
+        await fill_empty_tables_config_based_async(session)
+
+async def check_and_initialize_tables(session: AsyncSession):
+    """Check if tables exist and initialize them accordingly."""
+    async with async_engine.begin() as conn:
+        try:
+            tables_exist = await check_tables_exist_async(conn)
+            logger.info(f"Tables exist: {tables_exist}")
+        except Exception as e:
+            logger.error(f"Error checking tables: {e}")
+            return
         
-        # If tables don't exist, create them
         if not tables_exist:
-            try:
-                await seed_grayfox_db_async(session)
-                logger.info("Seeded the database.")
-            except Exception as e:
-                logger.error(f"Error seeding the database: {e}")
+            await init_db_async()
         else:
-            try:
-               await fill_empty_tables_async(session)
-               logger.info("Filled empty tables.")
-            except Exception as e:
-                logger.error(f"Error filling empty tables: {e}")
+            await fill_empty_tables_config_based_async(session)
 
 async def reset_db_async():
-    logger.info("Resetting database...")
+    """Reset the database by dropping tables and re-initializing."""
     async with async_engine.begin() as conn:
         try:
             await conn.run_sync(SQLModel.metadata.drop_all)
@@ -64,13 +61,9 @@ async def reset_db_async():
         except Exception as e:
             logger.error(f"Error dropping tables: {e}")
             return
-    async with async_session() as session:
-        try:
-            await seed_grayfox_db_async(session)
-            logger.info("Seeded the database after reset.")
-        except Exception as e:
-            logger.error(f"Error seeding the database after reset: {e}")
+    await init_db_async()
 
 async def create_tables_async():
+    """Create database tables based on the defined models."""
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)

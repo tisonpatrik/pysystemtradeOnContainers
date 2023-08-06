@@ -10,49 +10,43 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def fill_empty_tables_async(session):
-    # Check if tables are empty
-    multiple_prices_empty = await check_table_empty_async(session)
-    
-    # If tables are empty, seed them
-    if multiple_prices_empty:
-        await seed_grayfox_db_async(session)
-        
-async def seed_grayfox_db_async(session):
-    await seed_multiple_prices(session)
+# Configuration for tables and their corresponding directories
+TABLES_TO_SEED = [
+    {"model": MultiplePricesTable, "directory": "/path/in/container/multiple_prices_csv"}
+    # Add more tables as needed
+]
 
-async def save_data_to_db_async(data, session):
-    """Save processed data to the database using bulk insert."""
-    
-    records = data.to_dict(orient="records")
-    instances = [MultiplePricesTable(**record) for record in records]
-    
-    session.add_all(instances)
-    await session.commit()
+async def is_table_empty_async(session, table_model):
+    count = await session.execute(select(func.count()).select_from(table_model))
+    return count.scalar() == 0
 
-    logger.info("Data has been successfully written to the database.")
-   
-async def seed_multiple_prices(session):
-    directory_path = "/path/in/container" + "/multiple_prices_csv"
-    logging.info("Seeding of multiple_prices table started.")
-    logging.info("Checking files in the directory.")
+async def seed_table_async(session, table_model, directory_path: str):
+    logger.info(f"Seeding of {table_model.__name__} table started.")
+    logger.info("Checking files in the directory.")
+    
     csv_files = await get_all_csv_files_async(directory_path)
     for file in csv_files:
         file_path = os.path.join(directory_path, file)
         data = await process_csv_file_async(file_path)
-        await save_data_to_db_async(data, session)
-    logging.info("Finished processing all files.")
+        records = data.to_dict(orient="records")
+        instances = [table_model(**record) for record in records]
+        session.add_all(instances)
+        await session.commit()
+    
+    logger.info(f"Finished processing files for {table_model.__name__} table.")
 
-async def check_tables_exist_async(conn: Connection):
-    """Check if the MultiplePrices table exists."""
+async def fill_empty_tables_config_based_async(session):
+    for table_config in TABLES_TO_SEED:
+        table_empty = await is_table_empty_async(session, table_config["model"])
+        if table_empty:
+            await seed_table_async(session, table_config["model"], table_config["directory"])
+
+async def check_tables_exist_async(conn: Connection, table_model):
+    """Check if a given table exists."""
     try:
         # Try to fetch one row from the table to check its existence
-        await conn.execute(select(MultiplePricesTable).limit(1))
+        await conn.execute(select(table_model).limit(1))
         return True
     except Exception as e:
         logger.error(f"Error checking if table exists: {e}")
         return False
-        
-async def check_table_empty_async(session):
-    count = await session.execute(select(func.count()).select_from(MultiplePricesTable))
-    return count.scalar() == 0
