@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.db.tables.instrument_config_table import InstrumentConfigTableBase
+from src.db.tables.config_tables.instrument_config_table import InstrumentConfigTableBase
 
 
 class InstrumentConfigCreate(InstrumentConfigTableBase):

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.db.tables.spread_costs_table import SpreadCostTableBase
+from src.db.tables.config_tables.spread_costs_table import SpreadCostTableBase
 
 
 class SpreadCostCreate(SpreadCostTableBase):

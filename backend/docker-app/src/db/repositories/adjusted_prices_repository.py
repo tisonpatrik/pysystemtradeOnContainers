@@ -6,8 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
 from src.db.tables.base_class import StatusEnum
-from src.db.tables.adjusted_prices_table import AdjustedPricesTable
-from src.schemas.adjusted_prices_schema import AdjustedPricesCreate, AdjustedPricesPatch, AdjustedPricesRead
+from src.db.tables.business_data_tables.adjusted_prices_table import AdjustedPricesTable
+from src.schemas.business_data_schemas.adjusted_prices_schema import AdjustedPricesCreate, AdjustedPricesPatch, AdjustedPricesRead
 
 
 class AdjustedPricesRepository:

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.db.tables.adjusted_prices_table import AdjustedPricesTableBase
+from src.db.tables.business_data_tables.adjusted_prices_table import AdjustedPricesTableBase
 
 
 class AdjustedPricesCreate(AdjustedPricesTableBase):

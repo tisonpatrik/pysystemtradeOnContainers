@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.db.tables.roll_config_table import RollConfigTableBase
+from src.db.tables.config_tables.roll_config_table import RollConfigTableBase
 
 
 class RollConfigCreate(RollConfigTableBase):

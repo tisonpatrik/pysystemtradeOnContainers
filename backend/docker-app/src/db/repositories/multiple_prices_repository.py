@@ -6,8 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db.errors import EntityDoesNotExist
 from src.db.tables.base_class import StatusEnum
-from src.db.tables.multiple_prices_table import MultiplePricesTable
-from src.schemas.multiple_prices_schema import MultiplePricesCreate, MultiplePricesPatch, MultiplePricesRead
+from src.db.tables.business_data_tables.multiple_prices_table import MultiplePricesTable
+from src.schemas.business_data_schemas.multiple_prices_schema import MultiplePricesCreate, MultiplePricesPatch, MultiplePricesRead
 
 
 class MultiplePricesRepository:
