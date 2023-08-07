@@ -2,7 +2,7 @@ from sqlmodel import Field, SQLModel
 
 # Define the base model
 class RollConfigTableBase(SQLModel):
-    SYMBOL: str = Field(primary_key=True, index=True, foreign_key="instrument_config.SYMBOL")
+    SYMBOL: str = Field(primary_key=True, index=True)
     HOLD_ROLL_CYCLE: str = Field(nullable=True)
     ROLL_OFFSET_DAYS: int = Field(nullable=True)
     CARRY_OFFSET: int = Field(nullable=True)

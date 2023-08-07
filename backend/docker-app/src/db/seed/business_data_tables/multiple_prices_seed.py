@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from src.db.tables.business_data_tables.multiple_prices_table import MultiplePricesTable
+from src.db.tables.business_data_tables.raw_multiple_prices_table import RawMultiplePricesTable
 import pandas as pd
 import os
 import logging
@@ -44,7 +44,7 @@ async def seed_multiple_prices_table(async_session: sessionmaker):
             
             # Insert the processed data for the current file into the database
             async with async_session() as session:
-                session.add_all([MultiplePricesTable(**data) for data in data_for_file])
+                session.add_all([RawMultiplePricesTable(**data) for data in data_for_file])
                 await session.commit()
                 
             logger.info(f"Seeding of {filename} completed.")
