@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import settings
-from src.db.seed.seeds import seed_grayfox_db
+from src.db.seed.seeds import seed_grayfox_db, seed_daily_prices
 
 import logging
 
@@ -33,7 +33,8 @@ async def init_db_async():
         # Create tables based on the models
         await conn.run_sync(SQLModel.metadata.create_all)
 
-    await seed_grayfox_db(async_session)       
+    await seed_grayfox_db(async_session)
+    await seed_daily_prices(async_session)
 
 async def drop_db_async():
     """Reset the database by dropping tables and re-initializing."""

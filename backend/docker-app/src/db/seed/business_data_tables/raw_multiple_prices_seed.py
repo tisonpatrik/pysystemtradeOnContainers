@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from src.db.tables.business_data_tables.raw_adjusted_prices_table import RawAdjustedPricesTable
+from src.db.tables.business_data_tables.raw_multiple_prices_table import RawMultiplePricesTable
 import pandas as pd
 import os
 import logging
@@ -7,8 +7,6 @@ from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-COLUMN_MAPPING = {'price': 'PRICE'}
 
 def datetime_to_unix(dt_str):
     """Convert datetime string to unix timestamp (seconds since epoch)."""
@@ -20,9 +18,10 @@ def process_csv_file(filename, folder_path):
     symbol = filename.split('.')[0]
     csv_file_path = os.path.join(folder_path, filename)
     
+    logger.info(f"Seeding of {symbol} multiple prices started.")
+    
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
-    df.rename(columns=COLUMN_MAPPING, inplace=True)
     
     # Convert the DATETIME column to UNIX_TIMESTAMP and drop the original column
     df['UNIX_TIMESTAMP'] = df['DATETIME'].apply(datetime_to_unix)
@@ -33,10 +32,10 @@ def process_csv_file(filename, folder_path):
     
     return df.to_dict(orient='records')
 
-async def seed_adjusted_prices_table(async_session: sessionmaker):
-    """Seed the adjusted prices table from CSV files in the specified folder."""
-    logger.info(f"Seeding of instrument adjusted prices table started.")
-    folder_path = "/path/in/container/adjusted_prices_csv"
+async def seed_raw_multiple_prices_table(async_session: sessionmaker):
+    """Seed the multiple prices table from CSV files in the specified folder."""
+    logger.info(f"Seeding of instrument multiple prices table started.")
+    folder_path = "/path/in/container/multiple_prices_csv"
 
     # Iterate over all CSV files in the directory, process them, and insert into the database
     for filename in os.listdir(folder_path):
@@ -45,9 +44,10 @@ async def seed_adjusted_prices_table(async_session: sessionmaker):
             
             # Insert the processed data for the current file into the database
             async with async_session() as session:
-                session.add_all([RawAdjustedPricesTable(**data) for data in data_for_file])
+                session.add_all([RawMultiplePricesTable(**data) for data in data_for_file])
                 await session.commit()
                 
             logger.info(f"Seeding of {filename} completed.")
 
-    logger.info(f"Seeding of instrument adjusted prices table finished.")
+    logger.info(f"Seeding of instrument multiple prices table finished.")
+

@@ -6,10 +6,13 @@ from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_co
 from src.db.seed.config_tables.instrument_metadata_seed import seed_instrumnent_metadata_table
 from src.db.seed.config_tables.rolling_config_seed import seed_roll_config_table
 from src.db.seed.config_tables.spread_cost_seed import seed_spread_cost_table
-from src.db.seed.business_data_tables.adjusted_prices_seed import seed_adjusted_prices_table
-from src.db.seed.business_data_tables.multiple_prices_seed import seed_multiple_prices_table
+from src.db.seed.business_data_tables.raw_adjusted_prices_seed import seed_raw_adjusted_prices_table
+from src.db.seed.business_data_tables.raw_multiple_prices_seed import seed_raw_multiple_prices_table
 from src.db.seed.business_data_tables.fx_prices_seed import seed_fx_prices_table
 from src.db.seed.business_data_tables.roll_calendars_seed import seed_roll_calendars_table
+
+from src.db.seed.daily_prices_tables.adjusted_prices_seed import seed_daily_adjusted_prices_table
+from src.db.seed.daily_prices_tables.multiple_prices_seed import seed_daily_multiple_prices_table
 
 import logging
 
@@ -35,14 +38,20 @@ async def seed_config_tables_async(async_session: AsyncSession):
 async def seed_business_data_tables_async(async_session: AsyncSession):
     logger.info(f"Seeding of business data tables started.")
     tasks = [
-        handle_seeding(seed_multiple_prices_table, async_session, "Multiple Prices Table"),
-        handle_seeding(seed_adjusted_prices_table, async_session, "Adjusted Prices Table"),
+        handle_seeding(seed_raw_multiple_prices_table, async_session, "Raw Multiple Prices Table"),
+        handle_seeding(seed_raw_adjusted_prices_table, async_session, "Raw Adjusted Prices Table"),
         handle_seeding(seed_fx_prices_table, async_session, "FX Prices Table"),
         handle_seeding(seed_roll_calendars_table, async_session, "Roll Calendars Table")
     ]
     await asyncio.gather(*tasks)
     logger.info(f"Seeding of business data tables is finished.")
 
+async def seed_daily_prices(async_session: AsyncSession):
+    logger.info(f"Seeding of daily prices tables started.")
+    handle_seeding(seed_daily_multiple_prices_table, async_session, "Daily Multiple Prices Table"),
+    handle_seeding(seed_daily_adjusted_prices_table, async_session, "Daily Adjusted Prices Table"),
+    logger.info(f"Seeding of daily prices tables is finished.")
+ 
 async def handle_seeding(seed_function, session, table_name: str):
     try:
         await seed_function(session)
