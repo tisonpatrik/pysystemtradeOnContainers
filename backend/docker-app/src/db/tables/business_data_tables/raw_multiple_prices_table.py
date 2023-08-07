@@ -1,7 +1,7 @@
 from sqlmodel import Field, SQLModel
 
 # Define the base model
-class MultiplePricesTableBase(SQLModel):
+class RawMultiplePricesTableBase(SQLModel):
     UNIX_TIMESTAMP: int = Field(primary_key=True, index=True)
     SYMBOL: str = Field(primary_key=True, index=True)
     CARRY: float = Field(nullable=True)
@@ -12,5 +12,5 @@ class MultiplePricesTableBase(SQLModel):
     FORWARD_CONTRACT: int = Field(nullable=True)
 
 # Define the table model
-class RawMultiplePricesTable(MultiplePricesTableBase, table=True):
+class RawMultiplePricesTable(RawMultiplePricesTableBase, table=True):
     __tablename__ = "raw_multiple_prices"

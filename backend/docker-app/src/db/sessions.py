@@ -34,6 +34,8 @@ async def init_db_async():
         await conn.run_sync(SQLModel.metadata.create_all)
 
     await seed_grayfox_db(async_session)
+
+async def init_daily_prices_async():
     await seed_daily_prices(async_session)
 
 async def drop_db_async():

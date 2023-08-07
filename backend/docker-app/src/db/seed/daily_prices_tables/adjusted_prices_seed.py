@@ -1,4 +1,5 @@
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select
 from src.db.tables.business_data_tables.raw_adjusted_prices_table import RawAdjustedPricesTable
 from src.db.tables.daily_prices.adjusted_prices_table import AdjustedPricesTable
 import pandas as pd
@@ -13,7 +14,8 @@ async def seed_daily_adjusted_prices_table(async_session: sessionmaker):
 
     # Fetch all data from RawMultiplePricesTable
     async with async_session() as session:
-        raw_prices_data = await session.query(RawAdjustedPricesTable).all()
+        result = await session.execute(select(RawAdjustedPricesTable))
+        raw_prices_data = result.scalars().all()
 
     # Convert the data to a DataFrame for easy resampling
     df = pd.DataFrame([data.__dict__ for data in raw_prices_data])
@@ -21,7 +23,7 @@ async def seed_daily_adjusted_prices_table(async_session: sessionmaker):
     df.set_index('date', inplace=True)
 
     # Resample to daily data (taking the last entry for each day)
-    daily_data = df.resample('D').last().dropna()
+    daily_data = df.resample('D').mean().dropna()
 
     # Insert resampled data into MultiplePricesTable
     async with async_session() as session:

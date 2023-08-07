@@ -31,6 +31,9 @@ def process_csv_file(filename, folder_path):
     # Add SYMBOL column
     df['SYMBOL'] = symbol
     
+    # Drop duplicates based on 'UNIX_TIMESTAMP' and 'SYMBOL'
+    df.drop_duplicates(subset=['UNIX_TIMESTAMP', 'SYMBOL'], inplace=True)
+    
     return df.to_dict(orient='records')
 
 async def seed_raw_adjusted_prices_table(async_session: sessionmaker):

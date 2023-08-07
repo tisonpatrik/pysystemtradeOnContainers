@@ -33,12 +33,15 @@ def process_csv_file(filename, folder_path):
     # Add SYMBOL column
     df['SYMBOL'] = symbol
     
+    # Drop duplicates based on 'UNIX_TIMESTAMP' and 'SYMBOL'
+    df.drop_duplicates(subset=['UNIX_TIMESTAMP', 'SYMBOL'], inplace=True)
+        
     return df.to_dict(orient='records')
 
 async def seed_roll_calendars_table(async_session: sessionmaker):
     """Seed the roll calendars table from CSV files in the specified folder."""
     logger.info(f"Seeding of instrument roll calendars table started.")
-    folder_path = "/path/in/container/multiple_prices_csv"
+    folder_path = "/path/in/container/roll_calendars_csv"
 
     # Iterate over all CSV files in the directory, process them, and insert into the database
     for filename in os.listdir(folder_path):

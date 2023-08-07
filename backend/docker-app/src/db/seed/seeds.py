@@ -48,8 +48,11 @@ async def seed_business_data_tables_async(async_session: AsyncSession):
 
 async def seed_daily_prices(async_session: AsyncSession):
     logger.info(f"Seeding of daily prices tables started.")
-    handle_seeding(seed_daily_multiple_prices_table, async_session, "Daily Multiple Prices Table"),
-    handle_seeding(seed_daily_adjusted_prices_table, async_session, "Daily Adjusted Prices Table"),
+    tasks = [
+        handle_seeding(seed_daily_multiple_prices_table, async_session, "Daily Multiple Prices Table"),
+        handle_seeding(seed_daily_adjusted_prices_table, async_session, "Daily Adjusted Prices Table")
+    ]
+    await asyncio.gather(*tasks)
     logger.info(f"Seeding of daily prices tables is finished.")
  
 async def handle_seeding(seed_function, session, table_name: str):

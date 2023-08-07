@@ -2,8 +2,8 @@ from sqlmodel import Field, SQLModel
 
 # Define the base model
 class RollCalendarsTableBase(SQLModel):
-    UNIX_TIMESTAMP: int = Field(primary_key=True, index=True, foreign_key="multiple_prices.SYMBOL")
-    SYMBOL: str = Field(primary_key=True, index=True, foreign_key="instrument_config.SYMBOL")
+    UNIX_TIMESTAMP: int = Field(primary_key=True, index=True)
+    SYMBOL: str = Field(primary_key=True, index=True)
     CURRENT_CONTRACT: int = Field(nullable=True)
     NEXT_CONTRACT: int = Field(nullable=True)
     CARRY_CONTRACT: int = Field(nullable=True)

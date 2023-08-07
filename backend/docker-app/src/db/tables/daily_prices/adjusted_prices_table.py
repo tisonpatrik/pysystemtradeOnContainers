@@ -1,4 +1,11 @@
-from src.db.tables.business_data_tables.raw_adjusted_prices_table import AdjustedPricesTableBase
+from sqlmodel import Field, SQLModel
+from datetime import datetime
+
+# Define the base model
+class AdjustedPricesTableBase(SQLModel):
+    UNIX_TIMESTAMP: datetime = Field(primary_key=True, index=True)
+    SYMBOL: str = Field(primary_key=True, index=True)
+    PRICE: float = Field(nullable=True)
 
 # Define the table model
 class AdjustedPricesTable(AdjustedPricesTableBase, table=True):
