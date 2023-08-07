@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from src.db.tables.roll_calendars_table import RollCalendarsTable
+from src.db.tables.business_data_tables.roll_calendars_table import RollCalendarsTable
 import pandas as pd
 import os
 import logging

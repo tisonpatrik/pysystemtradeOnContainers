@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from src.db.tables.fx_prices_table import FxPricesTable
+from src.db.tables.business_data_tables.fx_prices_table import FxPricesTable
 import pandas as pd
 import os
 import logging

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import sessionmaker
-from src.db.tables.multiple_prices_table import MultiplePricesTable
+from src.db.tables.business_data_tables.multiple_prices_table import MultiplePricesTable
 import pandas as pd
 import os
 import logging

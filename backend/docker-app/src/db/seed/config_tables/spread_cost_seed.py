@@ -1,6 +1,6 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.tables.spread_costs_table import SpreadCostTable
+from src.db.tables.config_tables.spread_costs_table import SpreadCostTable
 
 import pandas as pd
 import logging

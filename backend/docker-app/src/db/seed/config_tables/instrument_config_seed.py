@@ -1,6 +1,6 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.tables.instrument_config_table import InstrumentConfigTable
+from src.db.tables.config_tables.instrument_config_table import InstrumentConfigTable
 
 import pandas as pd
 import logging

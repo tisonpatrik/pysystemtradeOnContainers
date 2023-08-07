@@ -1,6 +1,6 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.db.tables.roll_config_table import RollConfigTable
+from src.db.tables.config_tables.roll_config_table import RollConfigTable
 
 import pandas as pd
 import logging
