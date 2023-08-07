@@ -25,8 +25,8 @@ def process_csv_file(filename, folder_path):
     df.rename(columns=COLUMN_MAPPING, inplace=True)
     
     # Convert the DATETIME column to UNIX_TIMESTAMP and drop the original column
-    df['UNIX_TIMESTAMP'] = df['DATE_TIME'].apply(datetime_to_unix)
-    df.drop(columns=['DATE_TIME'], inplace=True)
+    df['UNIX_TIMESTAMP'] = df['DATETIME'].apply(datetime_to_unix)
+    df.drop(columns=['DATETIME'], inplace=True)
     
     # Add SYMBOL column
     df['SYMBOL'] = symbol
