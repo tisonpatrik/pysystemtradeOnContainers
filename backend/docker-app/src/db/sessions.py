@@ -33,10 +33,7 @@ async def init_db_async():
         # Create tables based on the models
         await conn.run_sync(SQLModel.metadata.create_all)
 
-    # Seed tables if they're empty
-    async with async_session() as session:
-        await seed_grayfox_db(session)
-
+    await seed_grayfox_db(async_session)       
 
 async def drop_db_async():
     """Reset the database by dropping tables and re-initializing."""
