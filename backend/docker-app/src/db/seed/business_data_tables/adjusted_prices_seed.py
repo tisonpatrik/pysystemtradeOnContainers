@@ -37,17 +37,17 @@ async def seed_adjusted_prices_table(async_session: sessionmaker):
     """Seed the adjusted prices table from CSV files in the specified folder."""
     logger.info(f"Seeding of instrument adjusted prices table started.")
     folder_path = "/path/in/container/adjusted_prices_csv"
-    all_data = []
 
-    # Iterate over all CSV files in the directory and process them
+    # Iterate over all CSV files in the directory, process them, and insert into the database
     for filename in os.listdir(folder_path):
         if filename.endswith('.csv'):
-            logger.info(f"Seeding of {filename.split('.')[0]} adjusted prices started.")
-            all_data.extend(process_csv_file(filename, folder_path))
-
-    # Insert all records into the database
-    async with async_session() as session:
-        session.add_all([AdjustedPricesTable(**data) for data in all_data])
-        await session.commit()
+            data_for_file = process_csv_file(filename, folder_path)
+            
+            # Insert the processed data for the current file into the database
+            async with async_session() as session:
+                session.add_all([AdjustedPricesTable(**data) for data in data_for_file])
+                await session.commit()
+                
+            logger.info(f"Seeding of {filename} completed.")
 
     logger.info(f"Seeding of instrument adjusted prices table finished.")

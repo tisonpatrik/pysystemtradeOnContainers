@@ -36,16 +36,17 @@ async def seed_fx_prices_table(async_session: sessionmaker):
     """Seed the fx prices table from CSV files in the specified folder."""
     logger.info(f"Seeding of instrument fx prices table started.")
     folder_path = "/path/in/container/fx_prices_csv"
-    all_data = []
 
-    # Iterate over all CSV files in the directory and process them
+    # Iterate over all CSV files in the directory, process them, and insert into the database
     for filename in os.listdir(folder_path):
         if filename.endswith('.csv'):
-            all_data.extend(process_csv_file(filename, folder_path))
-
-    # Insert all records into the database in bulk
-    async with async_session() as session:
-        session.add_all([FxPricesTable(**data) for data in all_data])
-        await session.commit()
+            data_for_file = process_csv_file(filename, folder_path)
+            
+            # Insert the processed data for the current file into the database
+            async with async_session() as session:
+                session.add_all([FxPricesTable(**data) for data in data_for_file])
+                await session.commit()
+                
+            logger.info(f"Seeding of {filename} completed.")
 
     logger.info(f"Seeding of instrument fx prices table finished.")
