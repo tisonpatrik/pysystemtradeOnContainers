@@ -18,7 +18,7 @@ def datetime_to_unix(dt_str):
 
 async def seed_roll_calendars_table(async_session: sessionmaker):
     logger.info(f"Seeding of instrument roll calendars table started.")
-    folder_path = "/path/in/container/multiple_prices_csv"
+    folder_path = "/path/in/container/roll_calendars_csv"
     async with async_session() as session:
         # Iterate over all CSV files in the directory
         for filename in os.listdir(folder_path):
@@ -26,6 +26,9 @@ async def seed_roll_calendars_table(async_session: sessionmaker):
                 symbol = filename.split('.')[0]
                 csv_file_path = os.path.join(folder_path, filename)
                 
+                logger.info(f"Seeding of {symbol} roll calelendars started.")
+
+                # Read the CSV file into a DataFrame
                 # Read the CSV file into a DataFrame
                 df = pd.read_csv(csv_file_path)
                 df.rename(columns=MAPPING, inplace=True)

@@ -23,6 +23,9 @@ async def seed_fx_prices_table(async_session: sessionmaker):
                 symbol = filename.split('.')[0]
                 csv_file_path = os.path.join(folder_path, filename)
                 
+                logger.info(f"Seeding of {symbol} fx prices started.")
+
+                # Read the CSV file into a DataFrame
                 # Read the CSV file into a DataFrame
                 df = pd.read_csv(csv_file_path)
                 

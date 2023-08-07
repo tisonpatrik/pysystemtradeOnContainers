@@ -25,20 +25,27 @@ async def seed_grayfox_db(async_session: sessionmaker):
 async def seed_config_tables_async(async_session: AsyncSession):
     logger.info(f"Seeding of config tables started.")
     async with async_session() as session:
-        await seed_instrumnent_config_table(session),
-        await seed_instrumnent_metadata_table(session),
-        await seed_roll_config_table(session),
-        await seed_spread_cost_table(session)
+        await handle_seeding(seed_instrumnent_config_table, session, "Instrument Config Table"),
+        await handle_seeding(seed_instrumnent_metadata_table, session, "Instrument Metadata Table"),
+        await handle_seeding(seed_roll_config_table, session, "Roll Config Table"),
+        await handle_seeding(seed_spread_cost_table, session, "Spread Cost Table")
     
     logger.info(f"Seeding of config tables is finished.")
 
 async def seed_business_data_tables_async(async_session: AsyncSession):
     logger.info(f"Seeding of business data tables started.")
     tasks = [
-        seed_multiple_prices_table(async_session),
-        seed_adjusted_prices_table(async_session),
-        seed_fx_prices_table(async_session),
-        seed_roll_calendars_table(async_session)
+        handle_seeding(seed_multiple_prices_table, async_session, "Multiple Prices Table"),
+        handle_seeding(seed_adjusted_prices_table, async_session, "Adjusted Prices Table"),
+        handle_seeding(seed_fx_prices_table, async_session, "FX Prices Table"),
+        handle_seeding(seed_roll_calendars_table, async_session, "Roll Calendars Table")
     ]
     await asyncio.gather(*tasks)
     logger.info(f"Seeding of business data tables is finished.")
+
+async def handle_seeding(seed_function, session, table_name: str):
+    try:
+        await seed_function(session)
+        logger.info(f"Seeding of {table_name} is successful.")
+    except Exception as e:
+        logger.error(f"Error seeding {table_name}: {e}")
