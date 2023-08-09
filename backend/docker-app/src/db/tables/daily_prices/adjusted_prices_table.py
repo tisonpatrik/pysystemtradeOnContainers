@@ -3,7 +3,7 @@ from datetime import datetime
 
 # Define the base model
 class AdjustedPricesTableBase(SQLModel):
-    UNIX_TIMESTAMP: datetime = Field(primary_key=True, index=True)
+    DATETIME: datetime = Field(primary_key=True, index=True)
     SYMBOL: str = Field(primary_key=True, index=True)
     PRICE: float = Field(nullable=True)
 

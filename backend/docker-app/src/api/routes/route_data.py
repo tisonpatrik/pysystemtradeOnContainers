@@ -14,7 +14,7 @@ async def initialize_db():
     return {"status": "Database softly initialized"}
 
 @router.get("/create_daily_prices", status_code=status.HTTP_200_OK, name="create_daily_prices")
-async def initialize_db():
+async def create_daily_prices():
     logging.info("Soft creation of daily prices tables process started.")
     await init_daily_prices_async()  # Assuming you have this function defined somewhere
     logging.info("Soft creation of daily prices tables process completed.")
