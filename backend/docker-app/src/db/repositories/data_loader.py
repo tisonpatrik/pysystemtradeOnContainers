@@ -12,7 +12,7 @@ class DataLoader:
     def __init__(self, database_url: str):
         self.database_url: str = database_url
 
-    async def fetch_data_as_dataframe(self, sql_template: str, parameters: dict = None) -> pd.DataFrame:
+    async def fetch_data_as_dataframe_async(self, sql_template: str, parameters: dict = None) -> pd.DataFrame:
         logger.info("Fetching data using provided SQL template.")
         pool = await self._create_connection_pool()
         try:

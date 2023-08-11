@@ -11,6 +11,7 @@ class MultiplePricesTableBase(SQLModel):
     PRICE_CONTRACT: int = Field(nullable=True)
     FORWARD: float = Field(nullable=True)
     FORWARD_CONTRACT: int = Field(nullable=True)
+    ADJUSTED_PRICES: float= Field(nullable=True)
 
 # Define the table model
 class MultiplePricesTable(MultiplePricesTableBase, table=True):

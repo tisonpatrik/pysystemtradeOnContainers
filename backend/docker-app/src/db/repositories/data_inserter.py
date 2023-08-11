@@ -11,7 +11,7 @@ class DataInserter:
     def __init__(self, database_url: str):
         self.database_url: str = database_url
 
-    async def insert_dataframe(self, df: pd.DataFrame, table_name: str) -> None:
+    async def insert_dataframe_async(self, df: pd.DataFrame, table_name: str) -> None:
         logger.info(f"Inserting data into {table_name}.")
         pool = await self._create_connection_pool()
         try:
