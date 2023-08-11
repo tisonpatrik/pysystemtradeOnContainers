@@ -1,8 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select
-from src.db.tables.business_data_tables.raw_multiple_prices_table import RawMultiplePricesTable
 from src.db.tables.daily_prices.multiple_prices_table import MultiplePricesTable
 from src.db.tables.config_tables.instrument_config_table import InstrumentConfigTable
+from src.db.repositories.repository import PostgresRepository
 import pandas as pd
 from pandas import DataFrame
 import logging
@@ -22,17 +22,13 @@ async def get_all_symbols(async_session: sessionmaker) -> List[str]:
         logger.error(f"Error fetching symbols: {e}")
         raise
 
-async def fetch_prices_for_symbol(async_session: sessionmaker, symbol: str) -> DataFrame:
+async def fetch_prices_for_symbol(symbol: str) -> DataFrame:
     """Fetch all prices for a given symbol from the raw_adjusted_prices table."""
     try:
-        async with async_session() as session:
-            prices_query = select(RawMultiplePricesTable).where(RawMultiplePricesTable.SYMBOL == symbol).order_by(RawMultiplePricesTable.UNIX_TIMESTAMP)
-            prices_result = await session.execute(prices_query)
-            
-            # Transforming the result into a list of dictionaries for DataFrame conversion
-            data = [dict(row) for row in prices_result]
-            
-            return DataFrame(data)
+        sql_template = "SELECT * FROM multiple_prices WHERE SYMBOL = :SYMBOL"
+        parameters = {'SYMBOL': symbol}
+        data = await PostgresRepository.load_data_async(sql_template, parameters)
+        return data
     except Exception as e:
         logger.error(f"Error fetching prices for instrument {symbol}: {e}")
         raise
@@ -56,9 +52,8 @@ async def seed_daily_multiple_prices_table(async_session: sessionmaker) -> None:
         symbols = await get_all_symbols(async_session)
         for symbol in symbols:
             logger.info(f"Processing instrument: {symbol} of adjusted prices table")
-            df = await fetch_prices_for_symbol(async_session, symbol)
+            df = await fetch_prices_for_symbol(symbol)
             if not df.empty:
-                print(df.columns.tolist())
                 daily_prices_df = transform_prices_to_daily(df)
                 async with async_session() as session:
                     await session.bulk_insert_mappings(MultiplePricesTable, daily_prices_df.to_dict(orient="records"))
