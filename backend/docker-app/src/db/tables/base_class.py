@@ -1,15 +1,8 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import Enum, text
+from sqlalchemy import text
 from sqlmodel import Field, SQLModel
-
-
-class StatusEnum(str, Enum):
-    active = "active"
-    inactive = "inactive"
-    deleted = "deleted"
-
 
 class UUIDModel(SQLModel):
     id: UUID = Field(

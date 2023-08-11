@@ -3,6 +3,7 @@ from sqlalchemy import select
 from src.db.tables.business_data_tables.raw_adjusted_prices_table import RawAdjustedPricesTable
 from src.db.tables.daily_prices.adjusted_prices_table import AdjustedPricesTable
 from src.db.tables.config_tables.instrument_config_table import InstrumentConfigTable
+from src.db.repositories.repository import PostgresRepository
 import pandas as pd
 from pandas import DataFrame
 import logging
@@ -31,7 +32,7 @@ async def fetch_prices_for_symbol(async_session: sessionmaker, symbol: str) -> D
             
             # Transforming the result into a list of dictionaries for DataFrame conversion
             data = [dict(row) for row in prices_result]
-            
+            test = PostgresRepository.load_data("raw_adjusted_prices", , [symbol])
             return DataFrame(data)
     except Exception as e:
         logger.error(f"Error fetching prices for instrument {symbol}: {e}")

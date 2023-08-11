@@ -1,7 +1,6 @@
 from sqlmodel import Field, SQLModel
 
-from src.db.tables.base_class import StatusEnum, TimestampModel, UUIDModel
-
+from src.db.tables.base_class import TimestampModel, UUIDModel
 
 class TransactionBase(SQLModel):
     amount: int = Field(nullable=False)
@@ -9,6 +8,4 @@ class TransactionBase(SQLModel):
 
 
 class Transaction(TransactionBase, UUIDModel, TimestampModel, table=True):
-    status: StatusEnum = Field(default=StatusEnum.inactive)
-
     __tablename__ = "transactions"
