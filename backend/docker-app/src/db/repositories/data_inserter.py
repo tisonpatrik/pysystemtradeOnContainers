@@ -30,16 +30,25 @@ class DataInserter:
     async def _bulk_insert(self, pool: asyncpg.pool.Pool, df: pd.DataFrame, table_name: str) -> None:
         async with pool.acquire() as conn:
             try:
-                logger.info("Performing bulk insert operation.")
-                buffer = df.to_csv(index=False, header=False)
-                copy_cmd = f"COPY {table_name} FROM STDIN WITH CSV"
-                await conn.copy_data(copy_cmd, buffer)
+                await self._insert_records(conn, df, table_name)
             except asyncpg.exceptions.UndefinedTableError as e:
                 logger.error(f"Table or column not defined in SQL: {e}")
                 raise TableOrColumnNotFoundError(f"Table or column not defined in SQL: {e}")
-            except asyncpg.exceptions.CopyError as e:
+            except asyncpg.exceptions.BadCopyFileFormatError as e:
                 logger.error(f"Error during bulk insert: {e}")
                 raise DatabaseInteractionError(f"Error during bulk insert: {e}")
             except Exception as e:
                 logger.error(f"Error inserting data: {e}")
                 raise DatabaseInteractionError(f"Error inserting data: {e}")
+            
+    async def _insert_records(self, conn: asyncpg.connection.Connection, df: pd.DataFrame, table_name: str) -> None:
+        # Convert DataFrame to a list of records
+        records = df.values.tolist()
+
+        # Define columns for the DataFrame
+        columns = df.columns.tolist()
+
+        # Insert data into the table
+        await conn.copy_records_to_table(table_name, records=records, columns=columns)
+
+

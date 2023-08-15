@@ -1,7 +1,6 @@
 from fastapi import APIRouter, status
-
 from src.db.sessions import init_db_async, drop_db_async, init_daily_prices_async
-
+from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_config_table_async
 import logging
 
 router = APIRouter()
@@ -26,3 +25,8 @@ async def drop_db():
     await drop_db_async()  # Assuming you have this function defined somewhere
     logging.info("Drop of database completed.")
     return {"status": "Database drop completed"}
+
+@router.post("/parse_csv/")
+async def parse_csv():
+    await seed_instrumnent_config_table_async()
+    return {"status": "files was loaded"}

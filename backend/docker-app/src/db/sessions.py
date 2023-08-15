@@ -36,7 +36,7 @@ async def init_db_async():
     await seed_grayfox_db(async_session)
 
 async def init_daily_prices_async():
-    await seed_daily_prices(async_session)
+    await seed_daily_prices()
 
 async def drop_db_async():
     """Reset the database by dropping tables and re-initializing."""

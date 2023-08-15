@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from src.api.router import router
 from src.core.config import settings
 
@@ -17,3 +17,6 @@ app = FastAPI(
 
 app.include_router(router, prefix=settings.api_prefix)
 
+@app.get("/ping")
+async def root():
+    return {"Ping": "Pong!"}

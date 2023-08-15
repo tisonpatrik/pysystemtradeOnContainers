@@ -2,7 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 import asyncio
 
-from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_config_table
+from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_config_table_async
 from src.db.seed.config_tables.instrument_metadata_seed import seed_instrumnent_metadata_table
 from src.db.seed.config_tables.rolling_config_seed import seed_roll_config_table
 from src.db.seed.config_tables.spread_cost_seed import seed_spread_cost_table
@@ -27,7 +27,7 @@ async def seed_grayfox_db(async_session: sessionmaker):
 async def seed_config_tables_async(async_session: AsyncSession):
     logger.info(f"Seeding of config tables started.")
     async with async_session() as session:
-        await handle_seeding(seed_instrumnent_config_table, session, "Instrument Config Table"),
+        await handle_seeding(seed_instrumnent_config_table_async,"Instrument Config Table"),
         await handle_seeding(seed_instrumnent_metadata_table, session, "Instrument Metadata Table"),
         await handle_seeding(seed_roll_config_table, session, "Roll Config Table"),
         await handle_seeding(seed_spread_cost_table, session, "Spread Cost Table")
@@ -45,12 +45,9 @@ async def seed_business_data_tables_async(async_session: AsyncSession):
     await asyncio.gather(*tasks)
     logger.info(f"Seeding of business data tables is finished.")
 
-async def seed_daily_prices(async_session: AsyncSession):
+async def seed_daily_prices():
     logger.info(f"Seeding of daily prices tables started.")
-    tasks = [
-        handle_seeding(seed_daily_multiple_prices_table, async_session, "Daily Multiple Prices Table"),
-    ]
-    await asyncio.gather(*tasks)
+    await seed_daily_multiple_prices_table()
     logger.info(f"Seeding of daily prices tables is finished.")
  
 async def handle_seeding(seed_function, session, table_name: str):
