@@ -1,6 +1,8 @@
 from fastapi import APIRouter, status
 from src.db.sessions import init_db_async, drop_db_async, init_daily_prices_async
 from src.db.seed.config_tables.instrument_config_seed import seed_instrumnent_config_table_async
+from src.db.seed.data_preprocessor import DataPreprocessor
+from src.db.schemas.config_schemas.instrument_config_schema import InstrumentConfigSchema
 import logging
 
 router = APIRouter()
@@ -29,4 +31,12 @@ async def drop_db():
 @router.post("/parse_csv/")
 async def parse_csv():
     await seed_instrumnent_config_table_async()
+    return {"status": "files was loaded"}
+
+@router.post("/parse_test/")
+async def parse_test():
+    schema = InstrumentConfigSchema()
+    preprocessor = DataPreprocessor(schema)
+    data = preprocessor._load_files()
+    preprocessor.process_data(data)
     return {"status": "files was loaded"}

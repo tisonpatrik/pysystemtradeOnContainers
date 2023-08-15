@@ -11,7 +11,7 @@ from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.core.config import settings
-from src.schemas.transactions_schema import TransactionCreate
+from src.db.schemas.transactions_schema import TransactionCreate
 
 test_db = (
     f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}"
