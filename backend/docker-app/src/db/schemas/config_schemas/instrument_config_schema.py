@@ -32,6 +32,7 @@ class InstrumentConfigSchema(BaseConfigSchema):
                         REGION VARCHAR(50)
                     )
                 """
+    
     @property
     def table_name(self) -> str:
         return "instrument_config"
