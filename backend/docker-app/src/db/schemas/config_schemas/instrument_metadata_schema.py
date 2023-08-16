@@ -1,15 +1,46 @@
-from uuid import UUID
+from src.db.schemas.config_schemas.base_config_schema import BaseConfigSchema
+from typing import Dict
 
-from src.db.tables.config_tables.instrument_metadata_table import InstrumentMetadataTableBase
+class InstrumentMetadataSchema(BaseConfigSchema):
 
+    @property
+    def column_mapping(self) -> Dict[str, str]:
+        return {
+            'Instrument': 'symbol',
+            'AssetClass': 'asset_class',
+            'SubClass': 'sub_class',
+            'SubSubClass':'sub_sub_class',
+            'Style': 'style',
+            'Country': 'country',
+            'Duration': 'duration',
+            'Description': 'description'
+            }
 
-class InstrumentMetadataCreate(InstrumentMetadataTableBase):
-    ...
-
-
-class InstrumentMetadataRead(InstrumentMetadataTableBase):
-    id: UUID
-
-
-class InstrumentMetadataPatch(InstrumentMetadataTableBase):
-    ...
+    @property
+    def sql_command(self) -> str:
+        return """
+                CREATE TABLE instrument_config (
+                SYMBOL VARCHAR(255) PRIMARY KEY,
+                ASSET_CLASS VARCHAR(255),
+                SUB_CLASS VARCHAR(255),
+                SUB_SUB_CLASS VARCHAR(255),
+                STYLE VARCHAR(255),
+                COUNTRY VARCHAR(255),
+                DURATION VARCHAR(255),
+                DESCRIPTION VARCHAR(255),
+                POINTSIZE FLOAT,
+                CURRENCY VARCHAR(10),
+                PER_BLOCK FLOAT,
+                PERCENTAGE FLOAT,
+                PER_TRADE INTEGER,
+                REGION VARCHAR(50)
+            )
+                """
+    
+    @property
+    def table_name(self) -> str:
+        return "instrument_metadata"
+    
+    @property
+    def origin_csv_file_path(self) -> str:
+        return "/path/in/container/csvconfig/moreinstrumentinfo.csv"

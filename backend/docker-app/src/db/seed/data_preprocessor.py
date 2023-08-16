@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class DataPreprocessor:
     def __init__(self, schema: BaseConfigSchema):
         self.schema = schema
-        self.temp_folder = "/tmp"
 
     def _load_files(self) -> pd.DataFrame:
         try:
@@ -29,7 +28,7 @@ class DataPreprocessor:
 
     def process_data(self, df: pd.DataFrame):
         try:
-            temp_file_path = os.path.join(self.temp_folder, f"{self.schema.table_name}.csv")
+            temp_file_path = os.path.join(self.schema.temp_folder, f"{self.schema.table_name}.csv")
             df.to_csv(temp_file_path, index=False)
             logger.info(f"Data saved to {temp_file_path}")
             return temp_file_path

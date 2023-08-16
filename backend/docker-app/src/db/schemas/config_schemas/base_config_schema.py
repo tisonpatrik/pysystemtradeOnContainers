@@ -26,5 +26,5 @@ class BaseConfigSchema(ABC):
         pass
 
     @property
-    def temp_csv_file_path(self) -> str:
-        return f"/tmp/{self.tablename}"
+    def temp_folder(self) -> str:
+        return f"/tmp"

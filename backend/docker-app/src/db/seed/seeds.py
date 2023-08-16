@@ -56,5 +56,3 @@ async def handle_seeding(seed_function, session, table_name: str):
         logger.info(f"Seeding of {table_name} is successful.")
     except Exception as e:
         logger.error(f"Error seeding {table_name}: {e}")
-
-        
