@@ -1,11 +1,6 @@
 from fastapi import APIRouter, status
 from src.db.sessions import init_db_async, drop_db_async, init_daily_prices_async
-from src.db.seed.data_preprocessor import DataPreprocessor
-from src.db.schemas.config_schemas.instrument_config_schema import InstrumentConfigSchema
-from src.db.schemas.config_schemas.instrument_metadata_schema import InstrumentMetadataSchema
-from src.db.schemas.config_schemas.roll_config_schema import RollConfigSchema
-from src.db.schemas.config_schemas.spread_cost_schema import SpreadCostSchema
-
+from src.handlers.data_handler import DataHandler
 import logging
 
 router = APIRouter()
@@ -31,16 +26,10 @@ async def drop_db():
     logging.info("Drop of database completed.")
     return {"status": "Database drop completed"}
 
-@router.post("/parse_files/")
-async def parse_files():
-    instrument_config_schema = InstrumentConfigSchema()
-    instrument_metadata  = InstrumentMetadataSchema()
-    roll_config = RollConfigSchema()
-    spread_cost = SpreadCostSchema()
-    schemas = [instrument_config_schema,instrument_metadata,roll_config,spread_cost]
-    for schema in schemas:
-        preprocessor = DataPreprocessor(schema)
-        data = preprocessor._load_files()
-        preprocessor.process_data(data)
-
-    return {"status": "files was preprocessed and stored in temp folder"}
+@router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
+def parse_files():
+    logging.info("File parsing started.")
+    handler = DataHandler()
+    handler.handle_data_processing()
+    logging.info("File parsing completed.")
+    return {"status": "files were preprocessed and stored in the temp folder"}

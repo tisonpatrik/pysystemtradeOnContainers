@@ -26,4 +26,4 @@ class SpreadCostSchema(BaseConfigSchema):
     
     @property
     def origin_csv_file_path(self) -> str:
-        return "/path/in/container/csvconfig/spreadcost.csv"
+        return "/path/in/container/csvconfig/spreadcosts.csv"
