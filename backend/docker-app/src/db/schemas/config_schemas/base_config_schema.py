@@ -22,5 +22,9 @@ class BaseConfigSchema(ABC):
 
     @property
     @abstractmethod
-    def csv_file_path(self) -> str:
+    def origin_csv_file_path(self) -> str:
         pass
+
+    @property
+    def temp_csv_file_path(self) -> str:
+        return f"/tmp/{self.tablename}"

@@ -13,7 +13,7 @@ class ConfigSeeder:
         self.logger = logging.getLogger(__name__)
 
     def _load_files(self) -> pd.DataFrame:
-        df = pd.read_csv(self.schema.csv_file_path)
+        df = pd.read_csv(self.schema.origin_csv_file_path)
         df.rename(columns=self.schema.column_mapping, inplace=True)
         return df
     

@@ -38,5 +38,5 @@ class InstrumentConfigSchema(BaseConfigSchema):
         return "instrument_config"
     
     @property
-    def csv_file_path(self) -> str:
+    def origin_csv_file_path(self) -> str:
         return "/path/in/container/csvconfig/instrumentconfig.csv"

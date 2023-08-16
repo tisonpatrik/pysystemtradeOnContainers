@@ -14,8 +14,8 @@ class DataPreprocessor:
 
     def _load_files(self) -> pd.DataFrame:
         try:
-            logger.info(f"Loading CSV file from {self.schema.csv_file_path}")
-            df = pd.read_csv(self.schema.csv_file_path)
+            logger.info(f"Loading CSV file from {self.schema.origin_csv_file_path}")
+            df = pd.read_csv(self.schema.origin_csv_file_path)
             logger.info("CSV file loaded successfully.")
             
             if self.schema.column_mapping:
@@ -29,7 +29,7 @@ class DataPreprocessor:
 
     def process_data(self, df: pd.DataFrame):
         try:
-            temp_file_path = os.path.join(self.temp_folder, "temp_data.csv")
+            temp_file_path = os.path.join(self.temp_folder, f"{self.schema.table_name}.csv")
             df.to_csv(temp_file_path, index=False)
             logger.info(f"Data saved to {temp_file_path}")
             return temp_file_path
