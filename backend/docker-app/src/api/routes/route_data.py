@@ -1,30 +1,9 @@
 from fastapi import APIRouter, status
-from src.db.sessions import init_db_async, drop_db_async, init_daily_prices_async
 from src.handlers.data_handler import DataHandler
+from src.handlers.database_handler import DatabaseHandler
 import logging
 
 router = APIRouter()
-
-@router.get("/init_db", status_code=status.HTTP_200_OK, name="init_db")
-async def initialize_db():
-    logging.info("Soft database initialization process started.")
-    await init_db_async()  # Assuming you have this function defined somewhere
-    logging.info("Soft database initialization process completed.")
-    return {"status": "Database softly initialized"}
-
-@router.get("/create_daily_prices", status_code=status.HTTP_200_OK, name="create_daily_prices")
-async def create_daily_prices():
-    logging.info("Soft creation of daily prices tables process started.")
-    await init_daily_prices_async()  # Assuming you have this function defined somewhere
-    logging.info("Soft creation of daily prices tables process completed.")
-    return {"status": "Creation of daily prices tables is done"}
-
-@router.get("/drop_db", status_code=status.HTTP_200_OK, name="drop_db")
-async def drop_db():
-    logging.info("Drop of database started.")
-    await drop_db_async()  # Assuming you have this function defined somewhere
-    logging.info("Drop of database completed.")
-    return {"status": "Database drop completed"}
 
 @router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
 def parse_files():
@@ -33,3 +12,14 @@ def parse_files():
     handler.handle_data_processing()
     logging.info("File parsing completed.")
     return {"status": "files were preprocessed and stored in the temp folder"}
+
+@router.post("/create_and_fill_db/", status_code=status.HTTP_200_OK, name="create_and_fill_db")
+async def create_and_fill_db():
+    logging.info("Database table creation and filling started.")
+    
+    handler = DatabaseHandler()
+    await handler.insert_data_from_csv()
+    
+    logging.info("Database table creation and filling completed.")
+    
+    return {"status": "Table was created and filled with data from temp folder"}
