@@ -14,7 +14,7 @@ class SpreadCostSchema(BaseConfigSchema):
     @property
     def sql_command(self) -> str:
         return """
-                CREATE TABLE roll_config (
+                CREATE TABLE spread_cost (
                     SYMBOL VARCHAR(255),
                     SPREAD_COST FLOAT
                 )

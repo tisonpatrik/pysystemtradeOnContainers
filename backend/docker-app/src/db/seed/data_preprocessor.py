@@ -1,8 +1,7 @@
 from src.db.schemas.config_schemas.base_config_schema import BaseConfigSchema
 import pandas as pd
 import logging
-import os
-
+import csv
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,8 +18,10 @@ class DataPreprocessor:
             
             if self.schema.column_mapping:
                 df.rename(columns=self.schema.column_mapping, inplace=True)
-                logger.info("Columns renamed according to provided mapping.")
-            
+                df.fillna("")
+                # Replace empty cells with an empty string
+                df = df.applymap(lambda x: "" if x == "" else x)
+                logger.info("Columns renamed according to provided mapping.")            
             return df
         except Exception as e:
             logger.error(f"Error loading CSV file: {e}")
@@ -28,7 +29,6 @@ class DataPreprocessor:
 
     def process_data(self, df: pd.DataFrame):
         try:
-            df.to_csv(self.schema.file_path, index=False)
             logger.info(f"Data saved to {self.schema.file_path}")
             return self.schema.file_path
         except Exception as e:

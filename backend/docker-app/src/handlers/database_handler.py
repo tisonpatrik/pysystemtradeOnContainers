@@ -18,23 +18,20 @@ class DatabaseHandler:
         if schemas is None:
             # Default schemas if none provided
             self.schemas = [
-                InstrumentConfigSchema(),
+                #InstrumentConfigSchema(),
                 InstrumentMetadataSchema(),
-                RollConfigSchema(),
-                SpreadCostSchema()
+                #RollConfigSchema(),
+                #SpreadCostSchema()
             ]
         else:
             self.schemas = schemas
 
-    async def insert_data_from_csv(self):
+    async def insert_data_from_csv(self) -> None:
         repository = PostgresRepository()
 
         async def process_schema_async(schema):
             # Load CSV file
-            df = pd.read_csv(schema.origin_csv_file_path)
-
-            # Create table
-            repository.create_table(schema.sql_command)
+            df = pd.read_csv(schema.file_path)
 
             # Insert data asynchronously
             await repository.insert_data_async(df, schema.table_name)
@@ -44,3 +41,7 @@ class DatabaseHandler:
         await asyncio.gather(*tasks)
 
     
+    def init_tables(self)-> None:
+        repository = PostgresRepository()
+        for schema in self.schemas:
+            repository.create_table(schema.sql_command)

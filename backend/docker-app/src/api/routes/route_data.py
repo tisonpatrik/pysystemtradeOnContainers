@@ -13,13 +13,21 @@ def parse_files():
     logging.info("File parsing completed.")
     return {"status": "files were preprocessed and stored in the temp folder"}
 
-@router.post("/create_and_fill_db/", status_code=status.HTTP_200_OK, name="create_and_fill_db")
+@router.post("/init_tables/", status_code=status.HTTP_200_OK, name="init_tables")
+def parse_files():
+    logging.info("Init of tables has started.")
+    handler = DatabaseHandler()
+    handler.init_tables()
+    logging.info("Init of tables was completed.")
+    return {"status": "tables of db was created"}
+
+@router.post("/fill_db/", status_code=status.HTTP_200_OK, name="fill_db")
 async def create_and_fill_db():
-    logging.info("Database table creation and filling started.")
+    logging.info("Database table filling started.")
     
     handler = DatabaseHandler()
     await handler.insert_data_from_csv()
     
-    logging.info("Database table creation and filling completed.")
+    logging.info("Database table filling completed.")
     
-    return {"status": "Table was created and filled with data from temp folder"}
+    return {"status": "Table was filled with data from temp folder"}
