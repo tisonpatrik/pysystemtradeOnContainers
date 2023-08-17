@@ -21,13 +21,13 @@ class InstrumentMetadataSchema(BaseConfigSchema):
         return """
                 CREATE TABLE instrument_metadata (
                     SYMBOL VARCHAR(255) PRIMARY KEY,
-                    ASSET_CLASS VARCHAR(255) NULL,
-                    SUB_CLASS VARCHAR(255) NULL,
-                    SUB_SUB_CLASS VARCHAR(255) NULL,
-                    STYLE VARCHAR(255) NULL,
-                    COUNTRY VARCHAR(255) NULL,
-                    DURATION VARCHAR NULL,
-                    DESCRIPTION VARCHAR(255) NULL
+                    ASSET_CLASS VARCHAR(255),
+                    SUB_CLASS VARCHAR(255),
+                    SUB_SUB_CLASS VARCHAR(255),
+                    STYLE VARCHAR(255),
+                    COUNTRY VARCHAR(255),
+                    DURATION FLOAT,
+                    DESCRIPTION VARCHAR(255)
                 )
                 """
     

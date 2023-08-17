@@ -15,7 +15,7 @@ class DataInserter:
         logger.info(f"Inserting data into {table_name}.")
         pool = await self._create_connection_pool()
         try:
-            await self._bulk_insert(pool, df, table_name)
+            await self._individual_insert(pool, df, table_name)
         finally:
             await pool.close()
 
@@ -40,7 +40,38 @@ class DataInserter:
             except Exception as e:
                 logger.error(f"Error inserting data: {e}")
                 raise DatabaseInteractionError(f"Error inserting data: {e}")
-            
+    
+    async def _individual_insert(self, pool: asyncpg.pool.Pool, df: pd.DataFrame, table_name: str) -> None:
+        async with pool.acquire() as conn:
+
+            rows = await conn.fetch("""
+                    SELECT column_name 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'instrument_metadata' 
+                    ORDER BY ordinal_position;
+                """)
+            db_columns = [row['column_name'] for row in rows]
+            print(db_columns)
+
+            columns = df.columns.tolist()
+            print(columns)
+            for idx, row in df.iterrows():
+                try:
+                    print(row)
+                    await conn.copy_records_to_table(table_name, records=[row.tolist()], columns=columns)
+                except Exception as e:
+                    # If there's an error with the entire row, attempt to insert each column value individually 
+                    # to identify the problematic column
+                    for col, value in row.items():
+                        try:
+                            await conn.copy_records_to_table(table_name, records=[[value]], columns=[col])
+                        except Exception as column_error:
+                            logger.error(f"Error inserting Row {idx + 1}, Column '{col}' with value '{value}': {column_error}")
+                            raise DatabaseInteractionError(f"Error inserting Row {idx + 1}, Column '{col}' with value '{value}': {column_error}")
+                    logger.error(f"Error inserting row {idx + 1}: {e}")
+                    raise DatabaseInteractionError(f"Error inserting row {idx + 1}: {e}")
+
+
     async def _insert_records(self, conn: asyncpg.connection.Connection, df: pd.DataFrame, table_name: str) -> None:
         # Convert DataFrame to a list of records
         records = df.values.tolist()

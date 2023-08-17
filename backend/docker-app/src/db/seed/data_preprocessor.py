@@ -29,6 +29,7 @@ class DataPreprocessor:
 
     def process_data(self, df: pd.DataFrame):
         try:
+            df.to_csv(self.schema.file_path, index=False)
             logger.info(f"Data saved to {self.schema.file_path}")
             return self.schema.file_path
         except Exception as e:

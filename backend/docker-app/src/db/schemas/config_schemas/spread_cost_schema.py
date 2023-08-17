@@ -15,7 +15,7 @@ class SpreadCostSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE spread_cost (
-                    SYMBOL VARCHAR(255),
+                    SYMBOL VARCHAR(255) PRIMARY KEY,
                     SPREAD_COST FLOAT
                 )
                 """
