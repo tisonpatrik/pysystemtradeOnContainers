@@ -18,10 +18,10 @@ class DatabaseHandler:
         if schemas is None:
             # Default schemas if none provided
             self.schemas = [
-                #InstrumentConfigSchema(),
+                InstrumentConfigSchema(),
                 InstrumentMetadataSchema(),
-                #RollConfigSchema(),
-                #SpreadCostSchema()
+                RollConfigSchema(),
+                SpreadCostSchema()
             ]
         else:
             self.schemas = schemas

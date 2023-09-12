@@ -15,7 +15,7 @@ class DataInserter:
         logger.info(f"Inserting data into {table_name}.")
         pool = await self._create_connection_pool()
         try:
-            await self._individual_insert(pool, df, table_name)
+            await self._bulk_insert(pool, df, table_name)
         finally:
             await pool.close()
 

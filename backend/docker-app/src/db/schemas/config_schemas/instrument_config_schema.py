@@ -21,15 +21,15 @@ class InstrumentConfigSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE instrument_config (
-                        SYMBOL VARCHAR(255) PRIMARY KEY, 
-                        DESCRIPTION TEXT, 
-                        POINTSIZE FLOAT, 
-                        CURRENCY VARCHAR(10), 
-                        ASSET_CLASS VARCHAR(50), 
-                        PER_BLOCK FLOAT, 
-                        PERCENTAGE FLOAT, 
-                        PER_TRADE INTEGER, 
-                        REGION VARCHAR(50)
+                        symbol VARCHAR(255) PRIMARY KEY, 
+                        description TEXT, 
+                        pointsize FLOAT, 
+                        currency VARCHAR(10), 
+                        asset_class VARCHAR(50), 
+                        per_block FLOAT, 
+                        percentage FLOAT, 
+                        per_trade INTEGER, 
+                        region VARCHAR(50)
                     )
                 """
     

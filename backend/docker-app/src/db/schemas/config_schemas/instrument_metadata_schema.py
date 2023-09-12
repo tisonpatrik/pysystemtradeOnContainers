@@ -20,14 +20,14 @@ class InstrumentMetadataSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE instrument_metadata (
-                    SYMBOL VARCHAR(255) PRIMARY KEY,
-                    ASSET_CLASS VARCHAR(255),
-                    SUB_CLASS VARCHAR(255),
-                    SUB_SUB_CLASS VARCHAR(255),
-                    STYLE VARCHAR(255),
-                    COUNTRY VARCHAR(255),
-                    DURATION FLOAT,
-                    DESCRIPTION VARCHAR(255)
+                    symbol VARCHAR(255) PRIMARY KEY,
+                    asset_class VARCHAR(255),
+                    sub_class VARCHAR(255),
+                    sub_sub_class VARCHAR(255),
+                    style VARCHAR(255),
+                    country VARCHAR(255),
+                    duration FLOAT NULL,
+                    description VARCHAR(255)
                 )
                 """
     
