@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class DatabaseHandler:
 
-    def __init__(self, schemas=None):
+    def __init__(self, schemas=None, ):
         if schemas is None:
             # Default schemas if none provided
             self.schemas = [
@@ -45,3 +45,15 @@ class DatabaseHandler:
         repository = PostgresRepository()
         for schema in self.schemas:
             repository.create_table(schema.sql_command)
+
+    def reset_tables(self) -> None:
+        """
+        Reset the database by dropping tables and re-initializing.
+        """
+        repository = PostgresRepository()
+
+        try:
+            repository.reset_db()
+        except Exception as e:
+            logging.error(f"Failed to reset the database: {str(e)}")
+            raise e 

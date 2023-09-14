@@ -37,13 +37,3 @@ async def init_db_async():
 
 async def init_daily_prices_async():
     await seed_daily_prices()
-
-async def drop_db_async():
-    """Reset the database by dropping tables and re-initializing."""
-    async with async_engine.begin() as conn:
-        try:
-            await conn.run_sync(SQLModel.metadata.drop_all)
-            logger.info("Dropped all tables.")
-        except Exception as e:
-            logger.error(f"Error dropping tables: {e}")
-            return

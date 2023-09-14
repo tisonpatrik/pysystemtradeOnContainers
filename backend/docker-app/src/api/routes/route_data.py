@@ -31,3 +31,14 @@ async def create_and_fill_db():
     logging.info("Database table filling completed.")
     
     return {"status": "Table was filled with data from temp folder"}
+
+@router.post("/reset_db/", status_code=status.HTTP_200_OK, name="reset_db")
+def create_and_fill_db():
+    logging.info("Database table filling started.")
+    
+    handler = DatabaseHandler()
+    handler.reset_tables()
+    
+    logging.info("Database table reset is complete.")
+    
+    return {"status": "Database was reseted."}
