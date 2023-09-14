@@ -1,7 +1,6 @@
 from src.db.schemas.config_schemas.base_config_schema import BaseConfigSchema
 import pandas as pd
 import logging
-import csv
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
