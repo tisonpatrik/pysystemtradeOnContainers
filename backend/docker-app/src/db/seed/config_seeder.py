@@ -1,4 +1,4 @@
-from src.db.schemas.config_schemas.base_config_schema import BaseConfigSchema
+from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.db.repositories.repository import PostgresRepository
 import pandas as pd
 import logging

@@ -1,4 +1,4 @@
-from src.db.schemas.config_schemas.base_config_schema import BaseConfigSchema
+from src.db.schemas.base_config_schema import BaseConfigSchema
 import pandas as pd
 import logging
 # Set up logging
@@ -9,7 +9,7 @@ class DataPreprocessor:
     def __init__(self, schema: BaseConfigSchema):
         self.schema = schema
 
-    def load_files(self) -> pd.DataFrame:
+    def load_file(self) -> pd.DataFrame:
         try:
             logger.info(f"Loading CSV file from {self.schema.origin_csv_file_path}")
             df = pd.read_csv(self.schema.origin_csv_file_path)
