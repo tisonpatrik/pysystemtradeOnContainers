@@ -24,9 +24,6 @@ class InstrumentMetadataSchema(BaseConfigSchema):
                     asset_class VARCHAR(255),
                     sub_class VARCHAR(255),
                     sub_sub_class VARCHAR(255),
-                    style VARCHAR(255),
-                    country VARCHAR(255),
-                    duration FLOAT NULL,
                     description VARCHAR(255)
                 )
                 """
