@@ -1,12 +1,16 @@
 import logging
 from src.db.schemas.data_schemas.multiple_prices_schema import MultiplePricesSchema
 from src.db.seed.data_preprocessor import DataPreprocessor
+from src.db.repositories.repository import PostgresRepository 
+
+import pandas as pd
+import asyncio
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class DataHandler:
+class RawDataHandler:
 
     def __init__(self, data_schemas=None):        
         if data_schemas is None:
@@ -31,3 +35,18 @@ class DataHandler:
         preprocessor = DataPreprocessor(schema)
         data = preprocessor.load_file()  # Assuming visibility of load_files is public
         preprocessor.process_data(data)
+
+    async def _process_schema_async(self, schema, repository):
+        """
+        Process a single schema: Read the CSV file and insert the data.
+        """
+        df = pd.read_csv(schema.file_path)
+        await repository.insert_data_async(df, schema.table_name)
+
+    async def insert_data_from_csv(self) -> None:
+        """
+        Insert data from CSV files for all schemas.
+        """
+        repository = PostgresRepository()
+        tasks = [self._process_schema_async(schema, repository) for schema in self.schemas]
+        await asyncio.gather(*tasks)

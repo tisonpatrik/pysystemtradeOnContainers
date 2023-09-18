@@ -5,9 +5,6 @@ from src.db.schemas.config_schemas.roll_config_schema import RollConfigSchema
 from src.db.schemas.config_schemas.spread_cost_schema import SpreadCostSchema
 from src.db.repositories.repository import PostgresRepository
 
-import pandas as pd
-import asyncio
-
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,21 +21,6 @@ class DatabaseHandler:
     def __init__(self, config_schemas=None):
         """Initialize the handler with default or provided config schemas."""
         self.config_schemas = config_schemas or self.DEFAULT_SCHEMAS
-
-    async def _process_schema_async(self, schema, repository):
-        """
-        Process a single schema: Read the CSV file and insert the data.
-        """
-        df = pd.read_csv(schema.file_path)
-        await repository.insert_data_async(df, schema.table_name)
-
-    async def insert_data_from_csv(self) -> None:
-        """
-        Insert data from CSV files for all schemas.
-        """
-        repository = PostgresRepository()
-        tasks = [self._process_schema_async(schema, repository) for schema in self.schemas]
-        await asyncio.gather(*tasks)
 
     def init_tables(self) -> None:
         """
