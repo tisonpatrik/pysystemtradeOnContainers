@@ -1,5 +1,6 @@
 from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.data_processing.csv_handler import CSVHandler
+from src.data_processing.data_frame_transformer import DataFrameTransformer
 import pandas as pd
 import logging
 
@@ -7,28 +8,16 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class DataPreprocessor:
+class RawDataPreprocessor:
     def __init__(self, schema: BaseConfigSchema):
         self.schema = schema
         self.csv_handler = CSVHandler()
+        self.df_transformer = DataFrameTransformer(column_mapping=self.schema.column_mapping)
 
     async def load_file(self):
         df = self.csv_handler.load_csv(self.schema.origin_csv_file_path)
-        df = self._rename_columns_if_needed(df)
-        df = self._handle_empty_values(df)
-        return df
-
-    def _rename_columns_if_needed(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Rename DataFrame columns based on schema column mapping."""
-        if self.schema.column_mapping:
-            df.rename(columns=self.schema.column_mapping, inplace=True)
-            logger.info("Columns renamed according to provided mapping.")
-        return df
-
-    def _handle_empty_values(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Handle empty values within the DataFrame."""
-        df.fillna("", inplace=True)  # Note: inplace=True for inplace operation
-        df = df.applymap(lambda x: "" if x == "" else x)
+        df = self.df_transformer.rename_columns_if_needed(df)
+        df = self.df_transformer.handle_empty_values(df)
         return df
 
     def process_data(self, df: pd.DataFrame):

@@ -1,6 +1,6 @@
 import logging
 from src.db.schemas.schemas import get_configs_schemas
-from src.data_processing.data_preprocessor import DataPreprocessor
+from src.data_processing.config_data_preprocessor import ConfigDataPreprocessor
 from src.db.repositories.repository import PostgresRepository 
 
 import pandas as pd
@@ -35,12 +35,12 @@ class ConfigDataHandler:
 
     async def _load_data_for_schema(self, schema):
         """Asynchronously load data for a given schema using DataPreprocessor."""
-        preprocessor = DataPreprocessor(schema)
+        preprocessor = ConfigDataPreprocessor(schema)
         return await preprocessor.load_file()
 
     async def _process_data_for_schema(self, schema, data):
         """Asynchronously process data for a given schema using DataPreprocessor."""
-        preprocessor = DataPreprocessor(schema)
+        preprocessor = ConfigDataPreprocessor(schema)
         await preprocessor.process_data(data)
 
     async def insert_data_from_csv(self) -> None:
