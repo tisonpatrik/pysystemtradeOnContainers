@@ -1,6 +1,6 @@
 import logging
 from src.db.schemas.schemas import get_raw_data_schemas
-from src.db.seed.data_preprocessor import DataPreprocessor
+from src.data_processing.data_preprocessor import DataPreprocessor
 
 import pandas as pd
 import asyncio

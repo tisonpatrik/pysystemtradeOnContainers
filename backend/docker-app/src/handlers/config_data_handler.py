@@ -1,6 +1,6 @@
 import logging
 from src.db.schemas.schemas import get_configs_schemas
-from src.db.seed.data_preprocessor import DataPreprocessor
+from src.data_processing.data_preprocessor import DataPreprocessor
 from src.db.repositories.repository import PostgresRepository 
 
 import pandas as pd
