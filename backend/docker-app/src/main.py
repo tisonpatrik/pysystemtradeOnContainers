@@ -17,6 +17,6 @@ app = FastAPI(
 
 app.include_router(router, prefix=settings.api_prefix)
 
-@app.get("/ping")
+@app.get("/")
 async def root():
     return {"Ping": "Pong!"}
