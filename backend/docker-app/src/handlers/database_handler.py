@@ -1,5 +1,4 @@
 import logging
-from fastapi import Depends
 from src.db.schemas.schemas import get_schemas
 from src.db.repositories.repository import PostgresRepository
 
@@ -8,9 +7,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DatabaseHandler:
-    def __init__(self, config_schemas: list = Depends(get_schemas)):
+    def __init__(self, config_schemas: list = None):
         """Initialize the handler with injected or provided config schemas."""
-        self.config_schemas = config_schemas
+        self.config_schemas = config_schemas if config_schemas else get_schemas()
 
     def init_tables(self) -> None:
         """
@@ -22,7 +21,7 @@ class DatabaseHandler:
 
     def reset_tables(self) -> None:
         """
-        Reset the database by dropping tables and re-initializing.
+        Reset the database by dropping tables and indexes.
         """
         repository = PostgresRepository()
         try:

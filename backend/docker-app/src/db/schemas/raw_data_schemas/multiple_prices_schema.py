@@ -19,15 +19,16 @@ class MultiplePricesSchema(BaseConfigSchema):
     @property
     def sql_command(self) -> str:
         return """
-                CREATE TABLE instrument_config (
-                        unix_date_time INTEGER PRIMARY KEY,
-                        symbol VARCHAR(50) PRIMARY KEY,
+                CREATE TABLE multiple_prices (
+                        unix_date_time INTEGER,
+                        symbol VARCHAR(50),
                         carry FLOAT, 
                         carry_contract INTEGER, 
                         price FLOAT, 
                         price_contract INTEGER, 
                         forward FLOAT, 
-                        forward_contract INTEGER
+                        forward_contract INTEGER,
+                        PRIMARY KEY (unix_date_time, symbol)
                     )
                 """
     

@@ -17,11 +17,12 @@ class RollCalendarsSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE roll_calendars (
-                        unix_date_time TIMESTAMP PRIMARY KEY,
-                        symbol VARCHAR(50) PRIMARY KEY,
+                        unix_date_time INTEGER,
+                        symbol VARCHAR(50),
                         current_contract INTEGER,
                         next_contract INTEGER,
-                        carry_contract INTEGER
+                        carry_contract INTEGER,
+                        PRIMARY KEY (unix_date_time, symbol)
                     )
                 """
     

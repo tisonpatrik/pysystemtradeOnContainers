@@ -15,9 +15,10 @@ class AdjustedPricesSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE adjusted_prices (
-                        unix_date_time INTEGER PRIMARY KEY,
-                        symbol VARCHAR(50) PRIMARY KEY,
-                        price FLOAT
+                        unix_date_time INTEGER,
+                        symbol VARCHAR(50),
+                        price FLOAT,
+                        PRIMARY KEY (unix_date_time, symbol)
                     )
                 """
     
