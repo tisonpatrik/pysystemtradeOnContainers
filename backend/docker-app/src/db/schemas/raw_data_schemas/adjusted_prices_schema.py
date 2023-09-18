@@ -8,7 +8,7 @@ class AdjustedPricesSchema(BaseConfigSchema):
         return {
             'DateTime': 'unix_date_time',
             'Instrument': 'symbol',
-            'Price': 'price'
+            'Adjusted_Price': 'price'
         }
 
     @property
@@ -17,7 +17,7 @@ class AdjustedPricesSchema(BaseConfigSchema):
                 CREATE TABLE adjusted_prices (
                         unix_date_time INTEGER,
                         symbol VARCHAR(50),
-                        price FLOAT,
+                        adjusted_price FLOAT,
                         PRIMARY KEY (unix_date_time, symbol)
                     )
                 """

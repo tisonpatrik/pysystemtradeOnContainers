@@ -19,3 +19,17 @@ def get_schemas():
         MultiplePricesSchema(),
         RollCalendarsSchema()
     ]
+def get_configs_schemas():
+    return [
+        InstrumentConfigSchema(),
+        InstrumentMetadataSchema(),
+        RollConfigSchema(),
+        SpreadCostSchema(),
+    ]
+def get_raw_data_schemas():
+    return [
+        AdjustedPricesSchema(),
+        FxPricesSchema(),
+        MultiplePricesSchema(),
+        RollCalendarsSchema()
+    ]

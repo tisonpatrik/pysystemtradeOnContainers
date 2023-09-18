@@ -1,7 +1,6 @@
 import logging
-from src.db.schemas.raw_data_schemas.multiple_prices_schema import MultiplePricesSchema
+from src.db.schemas.schemas import get_raw_data_schemas
 from src.db.seed.data_preprocessor import DataPreprocessor
-from src.db.repositories.repository import PostgresRepository 
 
 import pandas as pd
 import asyncio
@@ -12,41 +11,31 @@ logger = logging.getLogger(__name__)
 
 class RawDataHandler:
 
-    def __init__(self, data_schemas=None):        
-        if data_schemas is None:
-            # Default schemas if none provided
-            self.data_schemas = [
-                MultiplePricesSchema(),
-            ]
-        else:
-            self.data_schemas = data_schemas
+    def __init__(self, schemas: list = None):
+        """Initialize the handler with injected or provided config schemas."""
+        self.schemas = schemas if schemas else get_raw_data_schemas()
 
-    def handle_data_processing(self):       
-        for schema in self.config_schemas:
-            try:
-                self._process_config_schema(schema)
-                logger.info(f"Data processing completed for schema: {schema.__class__.__name__}")
-            except Exception as e:
-                logger.error(f"Error processing data for schema {schema.__class__.__name__}: {e}")
-                # You can choose to raise the exception or continue with the next schema
-                continue
+    async def handle_data_processing(self):
+        """Process each configuration schema asynchronously."""
+        for schema in self.schemas:
+            await self._try_process_config_schema(schema)
 
-    def _process_config_schema(self, schema):
-        preprocessor = DataPreprocessor(schema)
-        data = preprocessor.load_file()  # Assuming visibility of load_files is public
-        preprocessor.process_data(data)
-
-    async def _process_schema_async(self, schema, repository):
+    async def _try_process_config_schema(self, schema):
         """
-        Process a single schema: Read the CSV file and insert the data.
+        Asynchronously attempt to process a given config schema, log errors if any.
         """
-        df = pd.read_csv(schema.file_path)
-        await repository.insert_data_async(df, schema.table_name)
+        try:
+            data = await self._load_data_for_schema(schema)
+            await self._process_data_for_schema(schema, data)
+            logger.info(f"Data processing completed for schema: {schema.__class__.__name__}")
+        except Exception as e:
+            logger.error(f"Error processing data for schema {schema.__class__.__name__}: {e}")
+
+    async def _load_data_for_schema(self, schema):
+        """Asynchronously load data for a given schema using DataPreprocessor."""
+
 
     async def insert_data_from_csv(self) -> None:
         """
         Insert data from CSV files for all schemas.
         """
-        repository = PostgresRepository()
-        tasks = [self._process_schema_async(schema, repository) for schema in self.schemas]
-        await asyncio.gather(*tasks)
