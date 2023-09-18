@@ -6,17 +6,17 @@ router = APIRouter()
 db_handler = DatabaseHandler()
 
 @router.post("/init_tables/", status_code=status.HTTP_200_OK, name="init_tables")
-async def initialize_tables():
+def initialize_tables():
     """Initialize tables in the database."""
-    await execute_with_logging(db_handler.init_tables,
+    execute_with_logging(db_handler.init_tables,
                                start_msg="Init of tables has started.",
                                end_msg="Init of tables was completed.")
     return {"status": "tables of db were created"}
 
 @router.post("/reset_db/", status_code=status.HTTP_200_OK, name="reset_db")
-async def reset_database():
+def reset_database():
     """Reset the database tables."""
-    await execute_with_logging(db_handler.reset_tables,
+    execute_with_logging(db_handler.reset_tables,
                                start_msg="Database table reset started.",
                                end_msg="Database table reset is complete.")
     return {"status": "Database was reset."}

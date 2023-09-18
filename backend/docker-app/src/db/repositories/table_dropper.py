@@ -32,6 +32,9 @@ class TableDropper:
             for sql_command in sql_commands:
                 cur.execute(sql_command)
 
+            # Committing the changes to the database
+            conn.commit()
+
             # Log successful table and index drop
             logger.info(f"Successfully dropped all tables and indexes from the database")
 

@@ -1,8 +1,6 @@
 import logging
-from src.db.schemas.config_schemas.instrument_config_schema import InstrumentConfigSchema
-from src.db.schemas.config_schemas.instrument_metadata_schema import InstrumentMetadataSchema
-from src.db.schemas.config_schemas.roll_config_schema import RollConfigSchema
-from src.db.schemas.config_schemas.spread_cost_schema import SpreadCostSchema
+from fastapi import Depends
+from src.db.schemas.schemas import get_schemas
 from src.db.repositories.repository import PostgresRepository
 
 # Initialize logger
@@ -10,24 +8,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DatabaseHandler:
-
-    DEFAULT_SCHEMAS = [
-        InstrumentConfigSchema(),
-        InstrumentMetadataSchema(),
-        RollConfigSchema(),
-        SpreadCostSchema()
-    ]
-
-    def __init__(self, config_schemas=None):
-        """Initialize the handler with default or provided config schemas."""
-        self.config_schemas = config_schemas or self.DEFAULT_SCHEMAS
+    def __init__(self, config_schemas: list = Depends(get_schemas)):
+        """Initialize the handler with injected or provided config schemas."""
+        self.config_schemas = config_schemas
 
     def init_tables(self) -> None:
         """
         Initialize tables in the database using schemas.
         """
         repository = PostgresRepository()
-        for schema in self.schemas:
+        for schema in self.config_schemas:
             repository.create_table(schema.sql_command)
 
     def reset_tables(self) -> None:

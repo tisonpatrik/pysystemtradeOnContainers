@@ -1,5 +1,5 @@
 import logging
-from src.db.schemas.data_schemas.multiple_prices_schema import MultiplePricesSchema
+from src.db.schemas.raw_data_schemas.multiple_prices_schema import MultiplePricesSchema
 from src.db.seed.data_preprocessor import DataPreprocessor
 from src.db.repositories.repository import PostgresRepository 
 
