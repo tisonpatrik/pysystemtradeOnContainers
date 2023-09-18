@@ -6,7 +6,7 @@ class MultiplePricesSchema(BaseConfigSchema):
     @property
     def column_mapping(self) -> Dict[str, str]:
         return {
-            'DateTime': 'date_time',
+            'DateTime': 'unix_date_time',
             'Instrument': 'symbol', 
             'Carry': 'carry', 
             'CarryContract': 'carry_contract', 
@@ -20,7 +20,7 @@ class MultiplePricesSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE instrument_config (
-                        date_time INTEGER PRIMARY KEY,
+                        unix_date_time INTEGER PRIMARY KEY,
                         symbol VARCHAR(50) PRIMARY KEY,
                         carry FLOAT, 
                         carry_contract INTEGER, 
