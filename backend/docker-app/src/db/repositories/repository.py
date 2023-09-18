@@ -18,7 +18,13 @@ class PostgresRepository:
         self.dropper = TableDropper(self.database_url)
 
     async def insert_data_async(self, df: pd.DataFrame, table_name: str) -> None:
-        """Inserts data from a DataFrame into a specified table asynchronously."""
+        """
+        Asynchronously inserts data from a DataFrame into a specified table.
+
+        Args:
+        - df: The DataFrame containing the data to insert.
+        - table_name: The name of the table where the data will be inserted.
+        """
         try:
             await self.inserter.insert_dataframe_async(df, table_name)
         except Exception as e:
@@ -26,7 +32,16 @@ class PostgresRepository:
             raise
 
     async def load_data_async(self, sql_template: str, parameters: dict = None) -> pd.DataFrame:
-        """Loads data asynchronously based on the provided SQL template and parameters."""
+        """
+        Asynchronously loads data based on the provided SQL template and parameters.
+
+        Args:
+        - sql_template: The SQL query template.
+        - parameters: A dictionary of parameters to be used in the SQL template.
+
+        Returns:
+        A DataFrame containing the loaded data.
+        """
         try:
             return await self.loader.fetch_data_as_dataframe_async(sql_template, parameters)
         except Exception as e:
@@ -34,7 +49,12 @@ class PostgresRepository:
             raise
 
     def create_table(self, sql_command: str) -> None:
-        """Creates a table using the provided SQL command."""
+        """
+        Creates a table in the database using the provided SQL command.
+
+        Args:
+        - sql_command: The SQL command to create a table.
+        """
         try:
             self.creator.create_table(sql_command=sql_command)
         except Exception as e:
@@ -42,7 +62,7 @@ class PostgresRepository:
             raise
 
     def reset_db(self) -> None:
-        """Resets the database by dropping it and re-initializing."""
+        """Drops all tables in the database to reset it."""
         try:
             self.dropper.dropAllTables()
         except Exception as e:
