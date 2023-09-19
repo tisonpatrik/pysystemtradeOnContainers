@@ -6,8 +6,8 @@ class AdjustedPricesSchema(BaseConfigSchema):
     @property
     def column_mapping(self) -> Dict[str, str]:
         return {
-            'DateTime': 'unix_date_time',
-            'Adjusted_Price': 'price'
+            'DATETIME': 'unix_date_time',
+            'price': 'price'
         }
 
     @property

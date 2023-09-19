@@ -4,8 +4,9 @@ import pandas as pd
 from typing import List
 from src.db.schemas.schemas import get_raw_data_schemas
 from src.db.schemas.base_config_schema import BaseConfigSchema
-from src.data_processing.data_preprocessor import rename_columns_and_handle_empty_values, load_all_csv_files_from_directory
+from src.data_processing.data_preprocessor import load_all_csv_files_from_directory
 from src.data_processing.csv_helper import save_to_csv
+from src.data_processing.data_frame_helper import rename_columns_if_needed
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -33,7 +34,7 @@ class RawDataHandler:
             if isinstance(result, Exception):
                 logger.error(f"Error processing data for schema {schema.__class__.__name__}: {result}")  
 
-    def _process_and_save_dataframes(self, dataframes: List[pd.DataFrame], save_path: str) -> bool:
+    def _process_and_save_dataframes(self, dataframes: List[pd.DataFrame], schema: BaseConfigSchema) -> bool:
         """
         Concatenates and processes a list of dataframes and saves the result to a specified path.
 
@@ -46,7 +47,8 @@ class RawDataHandler:
         """
         try:
             df = pd.concat(dataframes, ignore_index=True)
-            save_to_csv(df, save_path)
+            renamed = rename_columns_if_needed(df, schema.column_mapping)
+            save_to_csv(renamed, schema.file_path)
             return True
         except Exception as e:
             logger.error(f"Error during concatenation or data processing: {e}")
@@ -65,5 +67,5 @@ class RawDataHandler:
             logger.warning(f"No valid CSV files found in {schema.origin_csv_file_path}")
             return
 
-        if not self._process_and_save_dataframes(dataframes, schema.file_path):
+        if not self._process_and_save_dataframes(dataframes, schema):
             logger.error(f"Failed to process and save data for schema: {schema.__class__.__name__}")

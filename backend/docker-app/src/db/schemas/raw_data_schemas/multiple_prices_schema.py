@@ -6,13 +6,13 @@ class MultiplePricesSchema(BaseConfigSchema):
     @property
     def column_mapping(self) -> Dict[str, str]:
         return {
-            'DateTime': 'unix_date_time',
-            'Carry': 'carry', 
-            'CarryContract': 'carry_contract', 
-            'Price': 'price', 
-            'PriceContract': 'price_contract',
-            'Forward': 'forward',
-            'ForwardContract': 'forward_contract'
+            'DATETIME': 'unix_date_time',
+            'CARRY': 'carry', 
+            'CARRY_CONTRACT': 'carry_contract', 
+            'PRICE': 'price', 
+            'PRICE_CONTRACT': 'price_contract',
+            'FORWARD': 'forward',
+            'FORWARD_CONTRACT': 'forward_contract'
             }
 
     @property

@@ -6,8 +6,8 @@ class FxPricesSchema(BaseConfigSchema):
     @property
     def column_mapping(self) -> Dict[str, str]:
         return {
-            'DateTime': 'unix_date_time',
-            'Price': 'price'
+            'DATETIME': 'unix_date_time',
+            'PRICE': 'price'
         }
 
     @property
