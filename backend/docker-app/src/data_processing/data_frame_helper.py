@@ -17,3 +17,4 @@ def handle_empty_values(df: pd.DataFrame) -> pd.DataFrame:
     df.fillna("", inplace=True)  # inplace=True for inplace operation
     df = df.applymap(lambda x: "" if x == "" else x)
     return df
+
