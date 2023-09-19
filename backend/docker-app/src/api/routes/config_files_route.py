@@ -8,7 +8,7 @@ config_handler = ConfigDataHandler()
 @router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
 async def parse_files():
     """Parse files and store them in temp."""
-    await execute_with_logging_async(config_handler.handle_data_processing, 
+    await execute_with_logging_async(config_handler.handle_data_processing_async, 
                                start_msg="File parsing started.",
                                end_msg="File parsing completed.")
     return {"status": "files were preprocessed and stored in the temp folder"}
@@ -16,7 +16,7 @@ async def parse_files():
 @router.post("/seed_config_files/", status_code=status.HTTP_200_OK, name="seed_config_files")
 async def fill_database():
     """Fill the database tables with data."""
-    await execute_with_logging_async(config_handler.insert_data_from_csv,
+    await execute_with_logging_async(config_handler.insert_data_from_csv_async,
                                start_msg="Database table filling started.",
                                end_msg="Database table filling completed.")
     return {"status": "Table was filled with data from temp folder"}

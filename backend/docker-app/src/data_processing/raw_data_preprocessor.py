@@ -15,12 +15,9 @@ class RawDataPreprocessor:
         self.df_transformer = DataFrameTransformer(column_mapping=self.schema.column_mapping)
 
     async def load_file(self):
-        df = self.csv_handler.load_csv(self.schema.origin_csv_file_path)
-        df = self.df_transformer.rename_columns_if_needed(df)
-        df = self.df_transformer.handle_empty_values(df)
-        return df
+        """Load files from schema folder, """
 
-    def process_data(self, df: pd.DataFrame):
+    def save_data(self, df: pd.DataFrame):
         """Save the processed DataFrame to the defined path."""
         try:
             self.csv_handler.save_to_csv(df, self.schema.file_path)

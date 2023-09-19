@@ -1,4 +1,3 @@
-from fastapi import Depends
 from src.db.schemas.config_schemas.instrument_config_schema import InstrumentConfigSchema
 from src.db.schemas.config_schemas.instrument_metadata_schema import InstrumentMetadataSchema
 from src.db.schemas.config_schemas.roll_config_schema import RollConfigSchema

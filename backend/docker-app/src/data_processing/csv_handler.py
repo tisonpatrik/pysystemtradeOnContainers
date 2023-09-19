@@ -5,9 +5,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class CSVHandler:
-    def __init__(self, base_path: str = "."):
-        self.base_path = base_path
-
     def load_csv(self, path: str) -> pd.DataFrame:
         """Load CSV file from the given path.
         Args:
