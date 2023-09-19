@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def process_config_data(df: pd.DataFrame, column_mapping: dict = None) -> pd.DataFrame:
+def process_data(df: pd.DataFrame, column_mapping: dict = None) -> pd.DataFrame:
     """
     Process the given DataFrame by renaming columns and handling empty values.
     

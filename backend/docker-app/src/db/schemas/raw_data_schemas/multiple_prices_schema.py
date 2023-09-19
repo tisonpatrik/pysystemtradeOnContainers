@@ -7,7 +7,6 @@ class MultiplePricesSchema(BaseConfigSchema):
     def column_mapping(self) -> Dict[str, str]:
         return {
             'DateTime': 'unix_date_time',
-            'Instrument': 'symbol', 
             'Carry': 'carry', 
             'CarryContract': 'carry_contract', 
             'Price': 'price', 
@@ -28,6 +27,7 @@ class MultiplePricesSchema(BaseConfigSchema):
                         price_contract INTEGER, 
                         forward FLOAT, 
                         forward_contract INTEGER,
+                        adjusted_price FLOAT
                         PRIMARY KEY (unix_date_time, symbol)
                     )
                 """

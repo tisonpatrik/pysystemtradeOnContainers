@@ -2,28 +2,22 @@ import logging
 from typing import List
 from src.db.schemas.schemas import get_configs_schemas
 from src.db.schemas.base_config_schema import BaseConfigSchema
-from src.data_processing.data_preprocessor import process_config_data
+from src.data_processing.data_preprocessor import process_data
 from src.data_processing.csv_helper import load_csv, save_to_csv
-from src.db.repositories.repository import PostgresRepository 
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class ConfigDataHandler:
-    def __init__(self, 
-                 schemas: List[BaseConfigSchema] = None, 
-                 repository: PostgresRepository = None):
+    def __init__(self, schemas: List[BaseConfigSchema] = None):
         """
-        Initializes the ConfigDataHandler with the given schemas and database repository, 
-        or defaults if none provided.
+        Initializes the ConfigDataHandler with the given schemas, or defaults if none provided.
         
         Parameters:
         - schemas: List of configuration schemas to be processed.
-        - repository: Repository for database operations.
         """
         self.schemas = schemas if schemas else get_configs_schemas()
-        self.repository = repository if repository else PostgresRepository()
 
     def handle_data_processing(self) -> None:
         """
@@ -49,8 +43,8 @@ class ConfigDataHandler:
         - schema: The configuration schema detailing how the data should be processed.
         """
         try:
-            data = load_csv(schema.file_path)
-            data = process_config_data(data, schema.column_mapping)
+            data = load_csv(schema.origin_csv_file_path)
+            data = process_data(data, schema.column_mapping)
             save_to_csv(data, schema.file_path)
             logger.info(f"Data processing completed for schema: {schema.__class__.__name__}")
         except Exception as e:

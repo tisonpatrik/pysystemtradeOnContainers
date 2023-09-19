@@ -1,40 +1,48 @@
 import logging
-from src.db.schemas.schemas import get_raw_data_schemas
-
+import os
 import pandas as pd
-import asyncio
+from typing import List
+from src.db.schemas.schemas import get_raw_data_schemas
+from src.db.schemas.base_config_schema import BaseConfigSchema
+from src.data_processing.data_preprocessor import process_data
+from src.data_processing.csv_helper import load_csv, save_to_csv
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class RawDataHandler:
-
-    def __init__(self, schemas: list = None):
-        """Initialize the handler with injected or provided config schemas."""
+    def __init__(self, schemas: List[BaseConfigSchema] = None):
+        """
+        Initializes the RawDataHandler with the given schemas, or defaults if none provided.
+        
+        Parameters:
+        - schemas: List of configuration schemas to be processed.
+        """
         self.schemas = schemas if schemas else get_raw_data_schemas()
 
-    async def handle_data_processing(self):
-        """Process each configuration schema asynchronously."""
+    def handle_data_processing(self) -> None:
         for schema in self.schemas:
-            await self._try_process_config_schema(schema)
+            self._process_config_schema(schema)
 
-    async def _try_process_config_schema(self, schema):
-        """
-        Asynchronously attempt to process a given config schema, log errors if any.
-        """
-        try:
-            data = await self._load_data_for_schema(schema)
-            await self._process_data_for_schema(schema, data)
-            logger.info(f"Data processing completed for schema: {schema.__class__.__name__}")
-        except Exception as e:
-            logger.error(f"Error processing data for schema {schema.__class__.__name__}: {e}")
-
-    async def _load_data_for_schema(self, schema):
-        """Asynchronously load data for a given schema using DataPreprocessor."""
-
-
-    async def insert_data_from_csv(self) -> None:
-        """
-        Insert data from CSV files for all schemas.
-        """
+    def _process_config_schema(self, schema: BaseConfigSchema) -> None:
+        dataframes = []
+        
+        # Iterate over all CSV files in the folder
+        for file_name in os.listdir(schema.origin_csv_file_path):
+            if file_name.endswith('.csv'):
+                # Load the CSV file
+                file_path = os.path.join(schema.origin_csv_file_path, file_name)
+                df = load_csv(file_path)
+                
+                # Add "symbol" column
+                symbol = os.path.splitext(file_name)[0]  # Remove the .csv extension to get the symbol
+                df['symbol'] = symbol
+                
+                dataframes.append(df)
+        
+        # Concatenate all dataframes into one
+        df = pd.concat(dataframes, ignore_index=True)
+        
+        df = process_data(df)
+        save_to_csv(df, schema.file_path)
