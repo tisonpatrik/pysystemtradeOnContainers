@@ -82,18 +82,18 @@ def aggregate_to_day_based_prices(df: pd.DataFrame, index_column: str, price_col
         pd.DataFrame: DataFrame with dates as index and daily average prices.
     """
     try:
-        # Set datetime index using UNIX timestamps
+        # Set datetime index
         df[index_column] = pd.to_datetime(df[index_column])
         df.set_index(index_column, inplace=True)
 
         # Ensure price column is in numeric format
         df[price_column] = pd.to_numeric(df[price_column])
 
-        # Drop rows where price_column is NaN
-        df.dropna(subset=[price_column], inplace=True)
-
         # Aggregate daily mean prices
         daily_summary = df.resample('D').mean()
+
+        # Drop rows where price_column is NaN
+        daily_summary.dropna(subset=[price_column], inplace=True)
 
         logger.info(f"Successfully aggregated raw prices to daily averages.")
         return daily_summary.reset_index()
