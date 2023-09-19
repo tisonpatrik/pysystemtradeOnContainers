@@ -2,8 +2,8 @@ import logging
 from typing import List, Union
 from src.db.schemas.schemas import get_configs_schemas
 from src.db.schemas.base_config_schema import BaseConfigSchema
-from src.data_processing.data_preprocessor import process_data
-from src.data_processing.csv_helper import load_csv, save_to_csv
+from src.data_processing.data_preprocessor import rename_columns_and_handle_empty_values
+from src.data_processing.csv_helper import save_to_csv
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -43,8 +43,7 @@ class ConfigDataHandler:
         - schema: The configuration schema detailing how the data should be processed.
         """
         try:
-            data = load_csv(schema.origin_csv_file_path)
-            data = process_data(data, schema.column_mapping)
+            data = rename_columns_and_handle_empty_values(schema.origin_csv_file_path, schema.column_mapping)
             save_to_csv(data, schema.file_path)
             logger.info(f"Data processing completed for schema: {schema.__class__.__name__}")
             return True

@@ -4,8 +4,8 @@ import pandas as pd
 from typing import List
 from src.db.schemas.schemas import get_raw_data_schemas
 from src.db.schemas.base_config_schema import BaseConfigSchema
-from src.data_processing.data_preprocessor import process_data
-from src.data_processing.csv_helper import load_csv, save_to_csv
+from src.data_processing.data_preprocessor import rename_columns_and_handle_empty_values, load_all_csv_files_from_directory
+from src.data_processing.csv_helper import save_to_csv
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -31,45 +31,7 @@ class RawDataHandler:
         # Log any exceptions that occurred during processing
         for schema, result in zip(self.schemas, results):
             if isinstance(result, Exception):
-                logger.error(f"Error processing data for schema {schema.__class__.__name__}: {result}")
-
-    def _load_and_add_symbol(self, file_path: str) -> pd.DataFrame:
-        """
-        Loads the CSV data, extracts the symbol from the filename, and appends it to the dataframe.
-
-        Parameters:
-        - file_path: Path to the CSV file.
-
-        Returns:
-        - DataFrame with appended symbol column.
-        """
-        df = load_csv(file_path)
-        symbol = os.path.splitext(os.path.basename(file_path))[0]
-        df['symbol'] = symbol
-        return df
-
-    def _load_all_csvs_from_directory(self, directory_path: str) -> List[pd.DataFrame]:
-        """
-        Loads all CSV files from a directory, extracts the symbol from the filename, 
-        and appends it to each dataframe.
-
-        Parameters:
-        - directory_path: Path to the directory containing the CSV files.
-
-        Returns:
-        - List of DataFrames with appended symbol columns.
-        """
-        dataframes = []
-
-        for file_name in os.listdir(directory_path):
-            if file_name.endswith('.csv'):
-                file_path = os.path.join(directory_path, file_name)
-                try:
-                    dataframes.append(self._load_and_add_symbol(file_path))
-                except Exception as e:
-                    logger.error(f"Error loading data from {file_path}: {e}")
-
-        return dataframes
+                logger.error(f"Error processing data for schema {schema.__class__.__name__}: {result}")  
 
     def _process_and_save_dataframes(self, dataframes: List[pd.DataFrame], save_path: str) -> bool:
         """
@@ -84,7 +46,6 @@ class RawDataHandler:
         """
         try:
             df = pd.concat(dataframes, ignore_index=True)
-            df = process_data(df)
             save_to_csv(df, save_path)
             return True
         except Exception as e:
@@ -97,7 +58,7 @@ class RawDataHandler:
             logger.warning(f"Directory not found: {schema.origin_csv_file_path}")
             return
 
-        dataframes = self._load_all_csvs_from_directory(schema.origin_csv_file_path)
+        dataframes = load_all_csv_files_from_directory(schema.origin_csv_file_path)
 
         # Return if no valid CSV files were found or loaded
         if not dataframes:

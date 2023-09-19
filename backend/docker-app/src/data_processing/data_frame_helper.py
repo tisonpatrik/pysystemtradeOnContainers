@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import logging
 
 # Set up logging
@@ -18,3 +19,28 @@ def handle_empty_values(df: pd.DataFrame) -> pd.DataFrame:
     df = df.applymap(lambda x: "" if x == "" else x)
     return df
 
+def add_symbol_by_file_name(df: pd.DataFrame, file_path: str) -> pd.DataFrame:
+    """
+    Adds a 'symbol' column to the DataFrame by extracting the file name from the provided file path.
+    
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+        file_path (str): Path to the file.
+
+    Returns:
+        pd.DataFrame: DataFrame with appended symbol column.
+    """
+    try:
+        # Extract the file name (without extension) from the file path
+        symbol = os.path.splitext(os.path.basename(file_path))[0]
+        
+        # Add the 'symbol' column to the DataFrame
+        df['symbol'] = symbol
+        
+        logger.info(f"Successfully added symbol '{symbol}' from file path '{file_path}'.")
+
+    except Exception as e:
+        logger.error(f"Error adding symbol from file path '{file_path}': {e}")
+        raise
+
+    return df
