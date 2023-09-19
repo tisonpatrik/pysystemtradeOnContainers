@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 from src.handlers.config_data_handler import ConfigDataHandler
-from src.api.routes.utils import execute_with_logging, execute_with_logging_async
+from src.api.routes.utils import execute_with_logging
 
 router = APIRouter()
 config_handler = ConfigDataHandler()
@@ -12,11 +12,3 @@ def parse_files():
                                start_msg="File parsing started.",
                                end_msg="File parsing completed.")
     return {"status": "files were preprocessed and stored in the temp folder"}
-
-@router.post("/seed_config_files/", status_code=status.HTTP_200_OK, name="seed_config_files")
-async def fill_database():
-    """Fill the database tables with data."""
-    await execute_with_logging_async(config_handler.insert_data_from_csv_async,
-                               start_msg="Database table filling started.",
-                               end_msg="Database table filling completed.")
-    return {"status": "Table was filled with data from temp folder"}
