@@ -17,7 +17,7 @@ class RollCalendarsSchema(BaseConfigSchema):
         return """
                 CREATE TABLE roll_calendars (
                         unix_date_time INTEGER,
-                        symbol VARCHAR(50),
+                        symbol VARCHAR(50) REFERENCES instrument_config(symbol),
                         current_contract INTEGER,
                         next_contract INTEGER,
                         carry_contract INTEGER,

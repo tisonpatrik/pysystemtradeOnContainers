@@ -18,19 +18,19 @@ class MultiplePricesSchema(BaseConfigSchema):
     @property
     def sql_command(self) -> str:
         return """
-                CREATE TABLE multiple_prices (
-                        unix_date_time INTEGER,
-                        symbol VARCHAR(50),
-                        carry FLOAT, 
-                        carry_contract INTEGER, 
-                        price FLOAT, 
-                        price_contract INTEGER, 
-                        forward FLOAT, 
-                        forward_contract INTEGER,
-                        adjusted_price FLOAT
-                        PRIMARY KEY (unix_date_time, symbol)
-                    )
-                """
+            CREATE TABLE multiple_prices (
+                    unix_date_time INTEGER,
+                    symbol VARCHAR(50) REFERENCES instrument_config(symbol),
+                    carry FLOAT, 
+                    carry_contract INTEGER, 
+                    price FLOAT, 
+                    price_contract INTEGER, 
+                    forward FLOAT, 
+                    forward_contract INTEGER,
+                    adjusted_price FLOAT,  -- Added the missing comma here
+                    PRIMARY KEY (unix_date_time, symbol)
+                )
+            """
     
     @property
     def table_name(self) -> str:

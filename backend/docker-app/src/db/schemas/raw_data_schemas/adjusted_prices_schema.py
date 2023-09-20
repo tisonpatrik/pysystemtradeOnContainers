@@ -13,7 +13,12 @@ class AdjustedPricesSchema(BaseConfigSchema):
     @property
     def sql_command(self) -> str:
         return """
-               
+                CREATE TABLE adjusted_prices (
+                        unix_date_time INTEGER,
+                        symbol VARCHAR(50) REFERENCES instrument_config(symbol),
+                        price FLOAT,
+                        PRIMARY KEY (unix_date_time, symbol)
+                    )
                 """
     
     @property
