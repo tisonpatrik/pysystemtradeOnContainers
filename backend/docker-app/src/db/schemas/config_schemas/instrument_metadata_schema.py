@@ -24,7 +24,7 @@ class InstrumentMetadataSchema(BaseConfigSchema):
                     asset_class VARCHAR(50),
                     sub_class VARCHAR(50),
                     sub_sub_class VARCHAR(50),
-                    description VARCHAR(50)
+                    description VARCHAR(100)
                 )
                 """
     

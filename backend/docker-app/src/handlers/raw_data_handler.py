@@ -32,27 +32,7 @@ class RawDataHandler:
         # Log any exceptions that occurred during processing
         for schema, result in zip(self.schemas, results):
             if isinstance(result, Exception):
-                logger.error(f"Error processing data for schema {schema.__class__.__name__}: {result}")  
-
-    def _process_and_save_dataframes(self, dataframes: List[pd.DataFrame], schema: BaseConfigSchema) -> bool:
-        """
-        Concatenates and processes a list of dataframes and saves the result to a specified path.
-
-        Parameters:
-        - dataframes: List of DataFrames to be processed.
-        - save_path: Path to save the processed data.
-
-        Returns:
-        - True if processing was successful, False otherwise.
-        """
-        try:
-            df = pd.concat(dataframes, ignore_index=True)
-            renamed = rename_columns_if_needed(df, schema.column_mapping)
-            save_to_csv(renamed, schema.file_path)
-            return True
-        except Exception as e:
-            logger.error(f"Error during concatenation or data processing: {e}")
-            return False
+                logger.error(f"Error processing data for schema {schema.__class__.__name__}: {result}")
 
     def _process_raw_data_schema(self, schema: BaseConfigSchema) -> None:
         # Ensure directory exists
@@ -69,3 +49,27 @@ class RawDataHandler:
 
         if not self._process_and_save_dataframes(dataframes, schema):
             logger.error(f"Failed to process and save data for schema: {schema.__class__.__name__}")
+    
+    def _process_and_save_dataframes(self, dataframes: List[pd.DataFrame], schema: BaseConfigSchema) -> bool:
+        """
+        Concatenates and processes a list of dataframes and saves the result to a specified path.
+
+        Parameters:
+        - dataframes: List of DataFrames to be processed.
+        - save_path: Path to save the processed data.
+
+        Returns:
+        - True if processing was successful, False otherwise.
+        """
+        try:
+            df = pd.concat(dataframes, ignore_index=True)
+            
+            # Drop columns that have 'Unnamed' in their name
+            df = df.drop(columns=[col for col in df.columns if 'Unnamed' in col])
+            
+            renamed = rename_columns_if_needed(df, schema.column_mapping)
+            save_to_csv(renamed, schema.file_path)
+            return True
+        except Exception as e:
+            logger.error(f"Error during concatenation or data processing: {e}")
+            return False
