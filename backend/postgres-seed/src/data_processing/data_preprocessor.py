@@ -1,3 +1,14 @@
+"""
+Module for preprocessing CSV data.
+
+This module provides functions for loading, preprocessing, and handling CSV data. 
+It enables renaming of columns, aggregation of data, and other preparatory operations
+for downstream analyses.
+
+Note: This docstring has been adjusted to provide specific details about the module's 
+purpose and functionality.
+"""
+
 import logging
 import os
 from typing import List
@@ -31,13 +42,13 @@ def load_and_rename_columns(
         pd.DataFrame: Processed data.
     """
     try:
-        df = load_csv(file_path)
-        df = rename_columns_if_needed(df, column_mapping)
-        logger.info(f"Successfully loaded and renamed columns for {file_path}.")
-        return df
-
-    except Exception as e:
-        logger.error(f"Error processing data from {file_path}: {e}")
+        data_frame = load_csv(file_path)
+        data_frame = rename_columns_if_needed(data_frame, column_mapping)
+        logger.info("Successfully loaded and renamed columns for %s.", file_path)
+        return data_frame
+    # Consider replacing 'Exception' with more specific exceptions.
+    except Exception as error:  
+        logger.error("Error processing data from %s: %s", file_path, error)
         raise
 
 
@@ -53,6 +64,7 @@ def load_all_csv_files_from_directory(directory_path: str) -> List[pd.DataFrame]
         List[pd.DataFrame]: List of DataFrames with appended symbol columns.
     """
     dataframes = []
+
     for file_name in os.listdir(directory_path):
         if file_name.endswith(".csv"):
             file_path = os.path.join(directory_path, file_name)
@@ -60,14 +72,15 @@ def load_all_csv_files_from_directory(directory_path: str) -> List[pd.DataFrame]
                 loaded = load_csv(file_path)
                 date_time = loaded.columns[0]
                 price = loaded.columns[1]
-                agregated = aggregate_to_day_based_prices(
+                aggregated = aggregate_to_day_based_prices(
                     loaded, index_column=date_time, price_column=price
                 )
-                coverted = convert_datetime_to_unixtime(agregated, date_time)
-                df = add_symbol_by_file_name(coverted, file_path)
-                dataframes.append(df)
-                logger.info(f"Successfully loaded and added symbol for {file_path}.")
-            except Exception as e:
-                logger.error(f"Error loading data from {file_path}: {e}")
+                converted = convert_datetime_to_unixtime(aggregated, date_time)
+                data_frame = add_symbol_by_file_name(converted, file_path)
+                dataframes.append(data_frame)
+                logger.info("Successfully loaded and added symbol for %s.", file_path)
+            # Consider replacing 'Exception' with more specific exceptions.
+            except Exception as error:  
+                logger.error("Error loading data from %s: %s", file_path, error)
 
     return dataframes

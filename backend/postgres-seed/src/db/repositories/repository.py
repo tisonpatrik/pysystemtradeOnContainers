@@ -1,5 +1,11 @@
-import logging
+"""
+Postgres Repository module.
 
+This module provides an interface to interact with a PostgreSQL database, allowing 
+operations such as data insertion, loading, table creation, and database reset.
+"""
+
+import logging
 import pandas as pd
 
 from src.core.config import settings
@@ -10,32 +16,36 @@ from src.db.repositories.table_dropper import TableDropper
 
 logger = logging.getLogger(__name__)
 
-
 class PostgresRepository:
+    """
+    Represents a repository to interact with a PostgreSQL database.
+    """
+
     def __init__(self):
+        """
+        Initializes the PostgresRepository with necessary database utilities.
+        """
         self.database_url: str = settings.sync_database_url
         self.inserter = DataInserter(self.database_url)
         self.loader = DataLoader(self.database_url)
         self.creator = TableCreator(self.database_url)
         self.dropper = TableDropper(self.database_url)
 
-    async def insert_data_async(self, df: pd.DataFrame, table_name: str) -> None:
+    async def insert_data_async(self, data_frame: pd.DataFrame, table_name: str) -> None:
         """
         Asynchronously inserts data from a DataFrame into a specified table.
 
         Args:
-        - df: The DataFrame containing the data to insert.
+        - data_frame: The DataFrame containing the data to insert.
         - table_name: The name of the table where the data will be inserted.
         """
         try:
-            await self.inserter.insert_dataframe_async(df, table_name)
-        except Exception as e:
-            logger.error(f"Error inserting data into {table_name}: {e}")
+            await self.inserter.insert_dataframe_async(data_frame, table_name)
+        except Exception as error:
+            logger.error("Error inserting data into %s: %s", table_name, error)
             raise
 
-    async def load_data_async(
-        self, sql_template: str, parameters: dict = None
-    ) -> pd.DataFrame:
+    async def load_data_async(self, sql_template: str, parameters: dict = None) -> pd.DataFrame:
         """
         Asynchronously loads data based on the provided SQL template and parameters.
 
@@ -47,11 +57,9 @@ class PostgresRepository:
         A DataFrame containing the loaded data.
         """
         try:
-            return await self.loader.fetch_data_as_dataframe_async(
-                sql_template, parameters
-            )
-        except Exception as e:
-            logger.error(f"Error loading data with SQL template {sql_template}: {e}")
+            return await self.loader.fetch_data_as_dataframe_async(sql_template, parameters)
+        except Exception as error:
+            logger.error("Error loading data with SQL template %s: %s", sql_template, error)
             raise
 
     def create_table(self, sql_command: str) -> None:
@@ -63,14 +71,16 @@ class PostgresRepository:
         """
         try:
             self.creator.create_table(sql_command=sql_command)
-        except Exception as e:
-            logger.error(f"Error creating table with SQL command {sql_command}: {e}")
+        except Exception as error:
+            logger.error("Error creating table with SQL command %s: %s", sql_command, error)
             raise
 
     def reset_db(self) -> None:
-        """Drops all tables in the database to reset it."""
+        """
+        Drops all tables in the database to reset it.
+        """
         try:
-            self.dropper.dropAllTables()
-        except Exception as e:
-            logger.error(f"Error resetting the database: {e}")
+            self.dropper.drop_all_tables()
+        except Exception as error:
+            logger.error("Error resetting the database: %s", error)
             raise
