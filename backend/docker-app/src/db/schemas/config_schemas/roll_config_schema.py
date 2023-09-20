@@ -19,7 +19,7 @@ class RollConfigSchema(BaseConfigSchema):
     def sql_command(self) -> str:
         return """
                 CREATE TABLE roll_config (
-                    symbol VARCHAR(50) REFERENCES instrument_config(symbol),
+                    symbol VARCHAR(50) PRIMARY KEY,
                     hold_roll_cycle VARCHAR(50),
                     roll_offset_days INTEGER,
                     carry_offset INTEGER,

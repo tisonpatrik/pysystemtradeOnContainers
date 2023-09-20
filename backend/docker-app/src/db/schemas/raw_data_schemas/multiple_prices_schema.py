@@ -20,7 +20,7 @@ class MultiplePricesSchema(BaseConfigSchema):
         return """
             CREATE TABLE multiple_prices (
                     unix_date_time INTEGER,
-                    symbol VARCHAR(50) REFERENCES instrument_config(symbol),
+                    symbol VARCHAR(50),
                     carry FLOAT, 
                     carry_contract INTEGER, 
                     price FLOAT, 
