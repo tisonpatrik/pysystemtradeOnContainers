@@ -47,7 +47,7 @@ def load_and_rename_columns(
         logger.info("Successfully loaded and renamed columns for %s.", file_path)
         return data_frame
     # Consider replacing 'Exception' with more specific exceptions.
-    except Exception as error:  
+    except Exception as error:
         logger.error("Error processing data from %s: %s", file_path, error)
         raise
 
@@ -80,7 +80,7 @@ def load_all_csv_files_from_directory(directory_path: str) -> List[pd.DataFrame]
                 dataframes.append(data_frame)
                 logger.info("Successfully loaded and added symbol for %s.", file_path)
             # Consider replacing 'Exception' with more specific exceptions.
-            except Exception as error:  
+            except Exception as error:
                 logger.error("Error loading data from %s: %s", file_path, error)
 
     return dataframes
