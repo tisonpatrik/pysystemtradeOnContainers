@@ -1,3 +1,9 @@
+"""
+Module for handling database related routes.
+This module provides API endpoints for operations on the database such as 
+initializing tables and resetting the database.
+"""
+
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging

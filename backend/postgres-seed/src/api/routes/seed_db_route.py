@@ -1,3 +1,9 @@
+"""
+Module for handling the seeding of the database.
+This module provides an API endpoint for filling the database tables with data 
+from preprocessed files stored in the temporary folder.
+"""
+
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging_async

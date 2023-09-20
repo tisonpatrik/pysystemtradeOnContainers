@@ -1,3 +1,9 @@
+"""
+Module for handling config file routes.
+This module provides API endpoints related to config file operations such as parsing 
+and preprocessing the files before storing them in the temp folder.
+"""
+
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging

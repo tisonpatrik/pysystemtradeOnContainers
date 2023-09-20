@@ -1,10 +1,15 @@
+"""
+Module for handling raw data file routes.
+This module provides an API endpoint for parsing raw data files and 
+storing the preprocessed data in a temporary folder.
+"""
+
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging
 from src.handlers.raw_data_handler import RawDataHandler
 
 router = APIRouter()
-
 data_handler = RawDataHandler()
 
 

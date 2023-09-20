@@ -1,3 +1,9 @@
+"""
+Module for centralized and dedicated routing.
+This module is responsible for including all specific routers and managing the
+primary routing of the application.
+"""
+
 from fastapi import APIRouter
 
 from src.api.routes.config_files_route import router as config_files_router
@@ -7,7 +13,14 @@ from src.api.routes.seed_db_route import router as seed_db_router
 
 router = APIRouter()
 
-router.include_router(database_router, prefix="/database")
-router.include_router(config_files_router, prefix="/config_files")
-router.include_router(raw_data_router, prefix="/raw_data")
-router.include_router(seed_db_router, prefix="/seed_db")
+def initialize_routers():
+    """
+    Include all specific routes into the main router.
+    This ensures organized and effective data management as the application scales.
+    """
+    router.include_router(database_router, prefix="/database")
+    router.include_router(config_files_router, prefix="/config_files")
+    router.include_router(raw_data_router, prefix="/raw_data")
+    router.include_router(seed_db_router, prefix="/seed_db")
+
+initialize_routers()
