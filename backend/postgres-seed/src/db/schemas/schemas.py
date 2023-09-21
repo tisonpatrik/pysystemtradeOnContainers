@@ -1,3 +1,13 @@
+"""
+Module for Managing Schemas.
+
+This module consolidates the various schemas for configurations and raw data tables.
+It offers utility functions to get these schemas either collectively or based on their 
+type (config or raw data).
+
+Note: This docstring provides specific details about the module's purpose and functionalities.
+"""
+
 from src.db.schemas.config_schemas.instrument_config_schema import (
     InstrumentConfigSchema,
 )
@@ -13,6 +23,14 @@ from src.db.schemas.raw_data_schemas.roll_calendars_schema import RollCalendarsS
 
 
 def get_schemas():
+    """
+    Get all schemas.
+
+    This function returns a list of instantiated schema objects for both configuration and raw data.
+
+    Returns:
+        list: A list of schema objects.
+    """
     return [
         InstrumentConfigSchema(),
         InstrumentMetadataSchema(),
@@ -26,6 +44,14 @@ def get_schemas():
 
 
 def get_configs_schemas():
+    """
+    Get configuration schemas.
+
+    This function returns a list of instantiated schema objects that are specifically for configurations.
+
+    Returns:
+        list: A list of schema objects related to configurations.
+    """
     return [
         InstrumentConfigSchema(),
         InstrumentMetadataSchema(),
@@ -35,6 +61,14 @@ def get_configs_schemas():
 
 
 def get_raw_data_schemas():
+    """
+    Get raw data schemas.
+
+    This function returns a list of instantiated schema objects that are specifically for raw data tables.
+
+    Returns:
+        list: A list of schema objects related to raw data tables.
+    """
     return [
         AdjustedPricesSchema(),
         FxPricesSchema(),

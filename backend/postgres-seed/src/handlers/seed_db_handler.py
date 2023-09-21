@@ -1,23 +1,16 @@
 import asyncio
 import logging
-from typing import List
 
 from src.data_processing.csv_helper import load_csv
 from src.db.repositories.repository import PostgresRepository
-from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.db.schemas.schemas import get_schemas
 
-# Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class SeedDBHandler:
-    def __init__(
-        self,
-        schemas: List[BaseConfigSchema] = None,
-        repository: PostgresRepository = None,
-    ):
+    def __init__(self):
         """
         Initializes the SeedDBHandler with the given schemas and database repository,
         or defaults if none provided.
@@ -26,10 +19,10 @@ class SeedDBHandler:
         - schemas: List of configuration schemas to be processed.
         - repository: Repository for database operations.
         """
-        self.schemas = schemas if schemas else get_schemas()
-        self.repository = repository if repository else PostgresRepository()
+        self.schemas = get_schemas()
+        self.repository = PostgresRepository()
 
-    async def insert_data_from_csv_async(self) -> None:
+    async def insert_data_from_csv_async(self):
         """
         Asynchronously inserts data from CSV files into the database for all given schemas.
 
@@ -48,9 +41,7 @@ class SeedDBHandler:
             if isinstance(result, Exception):
                 logger.error(f"Error occurred while inserting data from CSV: {result}")
 
-    async def _load_csv_and_insert_data_to_db_async(
-        self, schema: BaseConfigSchema
-    ) -> None:
+    async def _load_csv_and_insert_data_to_db_async(self, schema):
         """
         Asynchronously loads data from a CSV file specified in a given schema and inserts it into the database.
 

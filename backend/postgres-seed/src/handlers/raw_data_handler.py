@@ -1,13 +1,11 @@
 import logging
 import os
-from typing import List
 
 import pandas as pd
 
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import rename_columns_if_needed
 from src.data_processing.data_preprocessor import load_all_csv_files_from_directory
-from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.db.schemas.schemas import get_raw_data_schemas
 
 # Initialize logger
@@ -16,14 +14,14 @@ logger = logging.getLogger(__name__)
 
 
 class RawDataHandler:
-    def __init__(self, schemas: List[BaseConfigSchema] = None):
+    def __init__(self):
         """
         Initializes the RawDataHandler with provided schemas or defaults.
 
         Parameters:
         - schemas: List of raw data schemas to be processed.
         """
-        self.schemas = schemas if schemas else get_raw_data_schemas()
+        self.schemas = get_raw_data_schemas()
 
     def handle_data_processing(self) -> None:
         """
@@ -39,7 +37,7 @@ class RawDataHandler:
                     f"Error processing data for schema {schema.__class__.__name__}: {result}"
                 )
 
-    def _process_raw_data_schema(self, schema: BaseConfigSchema) -> None:
+    def _process_raw_data_schema(self, schema):
         # Ensure directory exists
         if not os.path.isdir(schema.origin_csv_file_path):
             logger.warning(f"Directory not found: {schema.origin_csv_file_path}")
@@ -57,9 +55,7 @@ class RawDataHandler:
                 f"Failed to process and save data for schema: {schema.__class__.__name__}"
             )
 
-    def _process_and_save_dataframes(
-        self, dataframes: List[pd.DataFrame], schema: BaseConfigSchema
-    ) -> bool:
+    def _process_and_save_dataframes(self, dataframes, schema):
         """
         Concatenates and processes a list of dataframes and saves the result to a specified path.
 

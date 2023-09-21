@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseHandler:
-    def __init__(self, config_schemas: list = None):
+    def __init__(self):
         """Initialize the handler with injected or provided config schemas."""
-        self.config_schemas = config_schemas if config_schemas else get_schemas()
+        self.config_schemas = get_schemas()
 
     def init_tables(self) -> None:
         """
