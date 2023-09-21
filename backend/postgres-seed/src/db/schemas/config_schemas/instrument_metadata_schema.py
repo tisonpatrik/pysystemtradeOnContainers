@@ -7,14 +7,16 @@ related to instrument metadata.
 """
 
 from typing import Dict
+
 from src.db.schemas.base_config_schema import BaseConfigSchema
+
 
 class InstrumentMetadataSchema(BaseConfigSchema):
     """
     Configuration schema for instrument metadata.
-    
+
     This schema is a concrete implementation of the BaseConfigSchema for instrument metadata.
-    It defines the necessary properties and methods required to interact with 
+    It defines the necessary properties and methods required to interact with
     the metadata related to instruments.
     """
 

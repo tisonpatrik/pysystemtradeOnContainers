@@ -13,6 +13,7 @@ from src.api.routes.seed_db_route import router as seed_db_router
 
 router = APIRouter()
 
+
 def initialize_routers():
     """
     Include all specific routes into the main router.
@@ -22,5 +23,6 @@ def initialize_routers():
     router.include_router(config_files_router, prefix="/config_files")
     router.include_router(raw_data_router, prefix="/raw_data")
     router.include_router(seed_db_router, prefix="/seed_db")
+
 
 initialize_routers()

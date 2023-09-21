@@ -16,7 +16,7 @@ load_dotenv()
 class GlobalConfig(BaseConfig):
     """
     Global configuration class.
-    This class fetches the values from environment variables using `os.getenv` 
+    This class fetches the values from environment variables using `os.getenv`
     and defines properties to build database connection strings.
     """
 

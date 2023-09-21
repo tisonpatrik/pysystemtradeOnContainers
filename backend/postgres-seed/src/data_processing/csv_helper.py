@@ -8,10 +8,12 @@ to get the full path to a file by combining the base and provided paths.
 """
 
 import logging
+
 import pandas as pd
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 def load_csv(path: str, base_path: str = "") -> pd.DataFrame:
     """Load CSV file from the given path.
@@ -30,9 +32,10 @@ def load_csv(path: str, base_path: str = "") -> pd.DataFrame:
         logger.error("Error loading CSV file from %s: %s", full_path, error)
         raise
 
+
 def save_to_csv(data_frame: pd.DataFrame, path: str, base_path: str = ""):
     """Save dataframe to the given CSV path.
-    
+
     Args:
         data_frame (pd.DataFrame): Dataframe to save.
         path (str): Path to save the CSV file to.
@@ -45,6 +48,7 @@ def save_to_csv(data_frame: pd.DataFrame, path: str, base_path: str = ""):
     except Exception as error:
         logger.error("Error saving data to %s: %s", full_path, error)
         raise
+
 
 def _get_full_path(base_path: str, path: str) -> str:
     """Get the full path to a file, combining base and provided path."""

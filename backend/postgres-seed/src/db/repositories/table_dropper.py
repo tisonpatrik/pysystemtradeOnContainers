@@ -5,11 +5,13 @@ This module provides an interface to drop all tables and indexes from a PostgreS
 """
 
 import logging
+
 import psycopg2
 
 # Setting up the logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class TableDropper:
     """

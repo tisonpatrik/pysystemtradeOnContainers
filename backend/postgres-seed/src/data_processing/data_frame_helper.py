@@ -40,24 +40,34 @@ def add_symbol_by_file_name(data_frame: pd.DataFrame, file_path: str) -> pd.Data
     try:
         symbol = os.path.splitext(os.path.basename(file_path))[0]
         data_frame["symbol"] = symbol
-        logger.info("Successfully added symbol '%s' from file path '%s'.", symbol, file_path)
+        logger.info(
+            "Successfully added symbol '%s' from file path '%s'.", symbol, file_path
+        )
     except Exception as error:
         logger.error("Error adding symbol from file path '%s': %s", file_path, error)
         raise
     return data_frame
 
 
-def convert_datetime_to_unixtime(data_frame: pd.DataFrame, date_time_name: str) -> pd.DataFrame:
+def convert_datetime_to_unixtime(
+    data_frame: pd.DataFrame, date_time_name: str
+) -> pd.DataFrame:
     """
     Convert a datetime column in the DataFrame to UNIX timestamp.
     """
     try:
         data_frame[date_time_name] = pd.to_datetime(data_frame[date_time_name])
-        data_frame[date_time_name] = data_frame[date_time_name].apply(lambda x: int(x.timestamp()))
-        logger.info("Successfully converted column '%s' to UNIX timestamp.", date_time_name)
+        data_frame[date_time_name] = data_frame[date_time_name].apply(
+            lambda x: int(x.timestamp())
+        )
+        logger.info(
+            "Successfully converted column '%s' to UNIX timestamp.", date_time_name
+        )
         return data_frame
     except Exception as error:
-        logger.error("Error converting column '%s' to UNIX timestamp: %s", date_time_name, error)
+        logger.error(
+            "Error converting column '%s' to UNIX timestamp: %s", date_time_name, error
+        )
         raise
 
 
@@ -79,6 +89,7 @@ def aggregate_to_day_based_prices(
     except Exception as error:
         logger.error("Error aggregating to day-based prices: %s", error)
         raise
+
 
 def convert_to_dataframe(rows: list) -> pd.DataFrame:
     """Converts fetched rows into a DataFrame."""

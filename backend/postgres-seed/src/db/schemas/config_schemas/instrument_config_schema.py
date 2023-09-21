@@ -7,12 +7,14 @@ related to instrument data.
 """
 
 from typing import Dict
+
 from src.db.schemas.base_config_schema import BaseConfigSchema
+
 
 class InstrumentConfigSchema(BaseConfigSchema):
     """
     Configuration schema for instrument data.
-    
+
     This schema is a concrete implementation of the BaseConfigSchema for instrument data.
     It defines the necessary properties and methods required to interact with the instrument data.
     """

@@ -12,11 +12,12 @@ from typing import Dict
 
 logging.basicConfig(level=logging.INFO)
 
+
 class BaseConfigSchema(ABC):
     """
     Abstract Base Class representing a configuration schema.
-    
-    The purpose of this schema is to define standardized structures for configuring 
+
+    The purpose of this schema is to define standardized structures for configuring
     data loading and management operations, particularly for database interactions.
     """
 
@@ -27,13 +28,15 @@ class BaseConfigSchema(ABC):
         Abstract method that should return a dictionary mapping
         from source columns to target columns.
         """
+
     @property
     @abstractmethod
     def sql_command(self) -> str:
         """
-        Abstract method that should return the SQL command 
+        Abstract method that should return the SQL command
         associated with the specific configuration.
         """
+
     @property
     @abstractmethod
     def table_name(self) -> str:
@@ -41,6 +44,7 @@ class BaseConfigSchema(ABC):
         Abstract method that should return the table name
         associated with the specific configuration.
         """
+
     @property
     @abstractmethod
     def origin_csv_file_path(self) -> str:
@@ -48,6 +52,7 @@ class BaseConfigSchema(ABC):
         Abstract method that should return the original CSV file path
         from which data will be sourced for the specific configuration.
         """
+
     @property
     def file_path(self) -> str:
         """

@@ -7,13 +7,14 @@ related to spread cost data.
 """
 
 from typing import Dict
+
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
 
 class SpreadCostSchema(BaseConfigSchema):
     """
     Configuration schema for spread cost data.
-    
+
     This schema is a concrete implementation of the BaseConfigSchema for spread cost data.
     It defines the necessary properties and methods required to interact with the spread cost data.
     """

@@ -6,6 +6,7 @@ operations such as data insertion, loading, table creation, and database reset.
 """
 
 import logging
+
 import pandas as pd
 
 from src.core.config import settings
@@ -15,6 +16,7 @@ from src.db.repositories.table_creator import TableCreator
 from src.db.repositories.table_dropper import TableDropper
 
 logger = logging.getLogger(__name__)
+
 
 class PostgresRepository:
     """
@@ -31,7 +33,9 @@ class PostgresRepository:
         self.creator = TableCreator(self.database_url)
         self.dropper = TableDropper(self.database_url)
 
-    async def insert_data_async(self, data_frame: pd.DataFrame, table_name: str) -> None:
+    async def insert_data_async(
+        self, data_frame: pd.DataFrame, table_name: str
+    ) -> None:
         """
         Asynchronously inserts data from a DataFrame into a specified table.
 
@@ -45,7 +49,9 @@ class PostgresRepository:
             logger.error("Error inserting data into %s: %s", table_name, error)
             raise
 
-    async def load_data_async(self, sql_template: str, parameters: dict = None) -> pd.DataFrame:
+    async def load_data_async(
+        self, sql_template: str, parameters: dict = None
+    ) -> pd.DataFrame:
         """
         Asynchronously loads data based on the provided SQL template and parameters.
 
@@ -57,9 +63,13 @@ class PostgresRepository:
         A DataFrame containing the loaded data.
         """
         try:
-            return await self.loader.fetch_data_as_dataframe_async(sql_template, parameters)
+            return await self.loader.fetch_data_as_dataframe_async(
+                sql_template, parameters
+            )
         except Exception as error:
-            logger.error("Error loading data with SQL template %s: %s", sql_template, error)
+            logger.error(
+                "Error loading data with SQL template %s: %s", sql_template, error
+            )
             raise
 
     def create_table(self, sql_command: str) -> None:
@@ -72,7 +82,9 @@ class PostgresRepository:
         try:
             self.creator.create_table(sql_command=sql_command)
         except Exception as error:
-            logger.error("Error creating table with SQL command %s: %s", sql_command, error)
+            logger.error(
+                "Error creating table with SQL command %s: %s", sql_command, error
+            )
             raise
 
     def reset_db(self) -> None:

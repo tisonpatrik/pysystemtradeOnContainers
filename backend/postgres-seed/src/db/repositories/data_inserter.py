@@ -7,6 +7,7 @@ handles database connection and error handling related to database interactions.
 """
 
 import logging
+
 import asyncpg
 import pandas as pd
 
@@ -31,7 +32,9 @@ class DataInserter:
         """
         self.database_url: str = database_url
 
-    async def insert_dataframe_async(self, dataframe: pd.DataFrame, table_name: str) -> None:
+    async def insert_dataframe_async(
+        self, dataframe: pd.DataFrame, table_name: str
+    ) -> None:
         """
         Insert data from a DataFrame into a given table.
         """
@@ -51,7 +54,9 @@ class DataInserter:
             return await asyncpg.create_pool(dsn=self.database_url)
         except asyncpg.exceptions.ConnectionDoesNotExistError as error:
             logger.error("Failed to connect to the database.")
-            raise DatabaseConnectionError("Failed to connect to the database.") from error
+            raise DatabaseConnectionError(
+                "Failed to connect to the database."
+            ) from error
 
     async def _bulk_insert(
         self, pool: asyncpg.pool.Pool, dataframe: pd.DataFrame, table_name: str
@@ -61,16 +66,25 @@ class DataInserter:
                 await self._insert_records(conn, dataframe, table_name)
             except asyncpg.exceptions.UndefinedTableError as error:
                 logger.error("Table or column not defined in SQL: %s", error)
-                raise TableOrColumnNotFoundError(f"Table or column not defined: {error}") from error
+                raise TableOrColumnNotFoundError(
+                    f"Table or column not defined: {error}"
+                ) from error
             except asyncpg.exceptions.BadCopyFileFormatError as error:
                 logger.error("Error during bulk insert: %s", error)
-                raise DatabaseInteractionError(f"Error during bulk insert: {error}") from error
+                raise DatabaseInteractionError(
+                    f"Error during bulk insert: {error}"
+                ) from error
             except Exception as error:
                 logger.error("Error inserting data: %s", error)
-                raise DatabaseInteractionError(f"Error inserting data: {error}") from error
+                raise DatabaseInteractionError(
+                    f"Error inserting data: {error}"
+                ) from error
 
     async def _insert_records(
-        self, conn: asyncpg.connection.Connection, dataframe: pd.DataFrame, table_name: str
+        self,
+        conn: asyncpg.connection.Connection,
+        dataframe: pd.DataFrame,
+        table_name: str,
     ) -> None:
         # Convert DataFrame to a list of records
         records = dataframe.values.tolist()

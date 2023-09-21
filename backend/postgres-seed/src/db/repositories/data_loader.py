@@ -8,6 +8,7 @@ and conversion to DataFrame.
 """
 
 import logging
+
 import asyncpg
 import pandas as pd
 
@@ -28,6 +29,7 @@ class DataLoader:
     """
     Class responsible for fetching data from a database.
     """
+
     def __init__(self, database_url: str):
         """
         Initializes the DataLoader with a given database URL.
@@ -79,13 +81,18 @@ class DataLoader:
 
             except asyncpg.exceptions.SyntaxOrAccessError as exc:
                 logger.error("Syntax error or access violation in SQL: %s", exc)
-                raise SQLSyntaxError(f"Syntax error or access violation in SQL: {exc}") from exc
+                raise SQLSyntaxError(
+                    f"Syntax error or access violation in SQL: {exc}"
+                ) from exc
 
             except asyncpg.exceptions.DataError as exc:
                 logger.error("Parameter mismatch or data error: %s", exc)
-                raise ParameterMismatchError(f"Parameter mismatch or data error: {exc}") from exc
+                raise ParameterMismatchError(
+                    f"Parameter mismatch or data error: {exc}"
+                ) from exc
 
             except Exception as exc:
                 logger.error("Error executing SQL statement: %s", exc)
-                raise DatabaseInteractionError(f"Error executing SQL statement: {exc}") from exc
-            
+                raise DatabaseInteractionError(
+                    f"Error executing SQL statement: {exc}"
+                ) from exc
