@@ -7,93 +7,76 @@ datetime columns to UNIX timestamp, and aggregate raw prices to daily averages.
 """
 
 import logging
-import os
 
 import pandas as pd
-
+from src.data_processing.errors import (
+    ColumnRenameError,
+    EmptyValueFillError,
+    DataAggregationError,
+    SymbolAdditionError,
+    DateTimeConversionError,
+    EmptyDataFrameError
+)
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-def rename_columns_if_needed(
-    data_frame: pd.DataFrame, column_mapping: dict = None
-) -> pd.DataFrame:
-    """Rename DataFrame columns based on the provided column mapping."""
-    if column_mapping:
-        data_frame.rename(columns=column_mapping, inplace=True)
-        logger.info("Columns renamed according to provided mapping.")
-    return data_frame
-
-
-def fill_empty_values(data_frame: pd.DataFrame) -> pd.DataFrame:
-    """Handle empty values within the DataFrame."""
-    data_frame.fillna("", inplace=True)
-    data_frame = data_frame.applymap(lambda x: "" if x == "" else x)
-    return data_frame
-
-
-def add_symbol_by_file_name(data_frame: pd.DataFrame, file_path: str) -> pd.DataFrame:
+def rename_columns_if_needed(data_frame, new_column_names):
     """
-    Adds a 'symbol' column to the DataFrame by extracting the file name from the provided file path.
+    Renames DataFrame columns based on the provided dictionary.
     """
     try:
-        symbol = os.path.splitext(os.path.basename(file_path))[0]
-        data_frame["symbol"] = symbol
-        logger.info(
-            "Successfully added symbol '%s' from file path '%s'.", symbol, file_path
-        )
+        return data_frame.rename(columns=new_column_names)
     except Exception as error:
-        logger.error("Error adding symbol from file path '%s': %s", file_path, error)
-        raise
-    return data_frame
+        logger.error("Error during column renaming: %s", error)
+        raise ColumnRenameError from error
 
-
-def convert_datetime_to_unixtime(
-    data_frame: pd.DataFrame, date_time_name: str
-) -> pd.DataFrame:
+def fill_empty_values(data_frame, fill_value):
     """
-    Convert a datetime column in the DataFrame to UNIX timestamp.
+    Fills empty values in the DataFrame with the provided fill_value.
     """
     try:
-        data_frame[date_time_name] = pd.to_datetime(data_frame[date_time_name])
-        data_frame[date_time_name] = data_frame[date_time_name].apply(
-            lambda x: int(x.timestamp())
-        )
-        logger.info(
-            "Successfully converted column '%s' to UNIX timestamp.", date_time_name
-        )
+        return data_frame.fillna(fill_value)
+    except Exception as error:
+        logger.error("Error during filling empty values: %s", error)
+        raise EmptyValueFillError from error
+
+def add_symbol_by_file_name(data_frame, symbol):
+    """
+    Adds a 'symbol' column to the DataFrame with the provided symbol.
+    """
+    try:
+        data_frame['symbol'] = symbol
         return data_frame
     except Exception as error:
-        logger.error(
-            "Error converting column '%s' to UNIX timestamp: %s", date_time_name, error
-        )
-        raise
+        logger.error("Error during symbol addition: %s", error)
+        raise SymbolAdditionError from error
 
-
-def aggregate_to_day_based_prices(
-    data_frame: pd.DataFrame, index_column: str, price_column: str
-) -> pd.DataFrame:
+def convert_datetime_to_unixtime(data_frame, date_column):
     """
-    Convert a dictionary of raw prices to a DataFrame, set a datetime index,
-    and aggregate to provide average daily prices.
+    Converts the date_column to UNIX time.
     """
     try:
-        data_frame[index_column] = pd.to_datetime(data_frame[index_column])
-        data_frame.set_index(index_column, inplace=True)
-        data_frame[price_column] = pd.to_numeric(data_frame[price_column])
-        daily_summary = data_frame.resample("D").mean()
-        daily_summary.dropna(subset=[price_column], inplace=True)
-        logger.info("Successfully aggregated raw prices to daily averages.")
-        return daily_summary.reset_index()
+        data_frame[date_column] = pd.to_datetime(data_frame[date_column]).astype(int) / 10**9
+        return data_frame
     except Exception as error:
-        logger.error("Error aggregating to day-based prices: %s", error)
-        raise
+        logger.error("Error during date-time conversion: %s", error)
+        raise DateTimeConversionError from error
 
+def aggregate_to_day_based_prices(data_frame, aggregation_column):
+    """
+    Aggregates data based on the provided aggregation_column.
+    """
+    try:
+        return data_frame.groupby(aggregation_column).mean().reset_index()
+    except Exception as error:
+        logger.error("Error during data aggregation: %s", error)
+        raise DataAggregationError from error
 
-def convert_to_dataframe(rows: list) -> pd.DataFrame:
-    """Converts fetched rows into a DataFrame."""
-    logger.info("Converting fetched rows to DataFrame.")
-    if not rows:
-        return pd.DataFrame()
-    return pd.DataFrame(rows, columns=[desc[0] for desc in rows[0].keys()])
+def handle_empty_dataframe(data_frame):
+    """
+    Handles empty DataFrame, if needed.
+    """
+    if data_frame.empty:
+        raise EmptyDataFrameError("DataFrame is empty.")
+    return data_frame

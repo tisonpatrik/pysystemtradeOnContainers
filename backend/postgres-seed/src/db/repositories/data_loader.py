@@ -10,9 +10,7 @@ and conversion to DataFrame.
 import logging
 
 import asyncpg
-import pandas as pd
 
-from src.data_processing.data_frame_helper import convert_to_dataframe
 from src.db.errors import (
     DatabaseConnectionError,
     DatabaseInteractionError,
@@ -30,15 +28,15 @@ class DataLoader:
     Class responsible for fetching data from a database.
     """
 
-    def __init__(self, database_url: str):
+    def __init__(self, database_url):
         """
         Initializes the DataLoader with a given database URL.
         """
         self.database_url = database_url
 
     async def fetch_data_as_dataframe_async(
-        self, sql_template: str, parameters: dict = None
-    ) -> pd.DataFrame:
+        self, sql_template, parameters
+    ):
         """
         Fetches data using provided SQL template and returns it as a DataFrame.
         """
@@ -46,11 +44,11 @@ class DataLoader:
         pool = await self._create_connection_pool()
         try:
             rows = await self._execute_sql(pool, sql_template, parameters)
-            return convert_to_dataframe(rows)
+            return rows
         finally:
             await pool.close()
 
-    async def _create_connection_pool(self) -> asyncpg.pool.Pool:
+    async def _create_connection_pool(self):
         try:
             logger.info("Creating connection pool.")
             return await asyncpg.create_pool(dsn=self.database_url)
@@ -59,8 +57,8 @@ class DataLoader:
             raise DatabaseConnectionError("Failed to connect to the database.") from exc
 
     async def _execute_sql(
-        self, pool: asyncpg.pool.Pool, sql_template: str, parameters: dict
-    ) -> list:
+        self, pool, sql_template, parameters
+    ):
         async with pool.acquire() as conn:
             try:
                 logger.info("Preparing and executing SQL statement.")
