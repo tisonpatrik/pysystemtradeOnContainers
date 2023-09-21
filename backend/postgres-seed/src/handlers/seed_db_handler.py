@@ -1,3 +1,5 @@
+"""Module to handle seeding the database asynchronously."""
+
 import asyncio
 import logging
 
@@ -8,17 +10,16 @@ from src.db.schemas.schemas import get_schemas
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class SeedDBHandler:
-    def __init__(self):
-        """
-        Initializes the SeedDBHandler with the given schemas and database repository,
-        or defaults if none provided.
+    """
+    Initializes the SeedDBHandler with the given schemas and database repository,
+    or defaults if none provided.
 
-        Parameters:
-        - schemas: List of configuration schemas to be processed.
-        - repository: Repository for database operations.
-        """
+    Parameters:
+    - schemas: List of configuration schemas to be processed.
+    - repository: Repository for database operations.
+    """
+    def __init__(self):
         self.schemas = get_schemas()
         self.repository = PostgresRepository()
 
@@ -29,17 +30,13 @@ class SeedDBHandler:
         This involves loading the data from each CSV file and inserting it into the database according to the table name
         specified in each schema.
         """
-        tasks = [
-            self._load_csv_and_insert_data_to_db_async(schema)
-            for schema in self.schemas
-        ]
-        results = await asyncio.gather(
-            *tasks, return_exceptions=True
-        )  # Change here to capture exceptions
+        tasks = [self._load_csv_and_insert_data_to_db_async(schema) for schema in self.schemas]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
 
         for result in results:
             if isinstance(result, Exception):
-                logger.error(f"Error occurred while inserting data from CSV: {result}")
+                logger.error("Error occurred while inserting data from CSV: %s", result)
+
 
     async def _load_csv_and_insert_data_to_db_async(self, schema):
         """
@@ -49,10 +46,8 @@ class SeedDBHandler:
         - schema: The configuration schema detailing the CSV file path and target table name.
         """
         try:
-            df = load_csv(schema.file_path)
-            await self.repository.insert_data_async(df, schema.table_name)
-        except Exception as e:
-            logger.error(
-                f"Error occurred while processing the CSV file {schema.file_path}: {e}"
-            )
-            raise e  # Re-raise the exception for the gather method to capture
+            data_frame = load_csv(schema.file_path)
+            await self.repository.insert_data_async(data_frame, schema.table_name)
+        except Exception as error:
+            logger.error("Error occurred while processing the CSV file %s: %s", schema.file_path, error)
+            raise error

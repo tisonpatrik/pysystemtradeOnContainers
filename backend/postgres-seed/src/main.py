@@ -1,3 +1,5 @@
+"""Main FastAPI application setup and configuration."""
+
 import logging
 
 from fastapi import FastAPI
@@ -21,4 +23,5 @@ app.include_router(router, prefix=settings.api_prefix)
 
 @app.get("/")
 async def root():
+    """A simple ping endpoint for checking the API's status."""
     return {"Ping": "Pong!"}
