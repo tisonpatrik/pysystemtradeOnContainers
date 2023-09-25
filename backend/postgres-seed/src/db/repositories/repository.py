@@ -7,8 +7,6 @@ operations such as data insertion, loading, table creation, and database reset.
 
 import logging
 
-import pandas as pd
-
 from src.core.config import settings
 from src.db.repositories.data_inserter import DataInserter
 from src.db.repositories.data_loader import DataLoader
@@ -27,15 +25,12 @@ class PostgresRepository:
         """
         Initializes the PostgresRepository with necessary database utilities.
         """
-        self.database_url: str = settings.sync_database_url
-        self.inserter = DataInserter(self.database_url)
-        self.loader = DataLoader(self.database_url)
-        self.creator = TableCreator(self.database_url)
-        self.dropper = TableDropper(self.database_url)
+        self.inserter = DataInserter(settings.database_url)
+        self.loader = DataLoader(settings.database_url)
+        self.creator = TableCreator(settings.database_url)
+        self.dropper = TableDropper(settings.database_url)
 
-    async def insert_data_async(
-        self, data_frame: pd.DataFrame, table_name: str
-    ) -> None:
+    async def insert_data_async(self, data_frame, table_name):
         """
         Asynchronously inserts data from a DataFrame into a specified table.
 
@@ -49,9 +44,7 @@ class PostgresRepository:
             logger.error("Error inserting data into %s: %s", table_name, error)
             raise
 
-    async def load_data_async(
-        self, sql_template: str, parameters: dict = None
-    ) -> pd.DataFrame:
+    async def load_data_async(self, sql_template, parameters ):
         """
         Asynchronously loads data based on the provided SQL template and parameters.
 
@@ -63,7 +56,7 @@ class PostgresRepository:
         A DataFrame containing the loaded data.
         """
         try:
-            return await self.loader.fetch_data_as_dataframe_async(
+            return await self.loader.fetch_data_async(
                 sql_template, parameters
             )
         except Exception as error:
@@ -72,7 +65,7 @@ class PostgresRepository:
             )
             raise
 
-    def create_table(self, sql_command: str) -> None:
+    def create_table(self, sql_command):
         """
         Creates a table in the database using the provided SQL command.
 
@@ -87,7 +80,7 @@ class PostgresRepository:
             )
             raise
 
-    def reset_db(self) -> None:
+    def reset_db(self):
         """
         Drops all tables in the database to reset it.
         """

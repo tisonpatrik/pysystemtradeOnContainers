@@ -34,7 +34,7 @@ class DataLoader:
         """
         self.database_url = database_url
 
-    async def fetch_data_as_dataframe_async(
+    async def fetch_data_async(
         self, sql_template, parameters
     ):
         """

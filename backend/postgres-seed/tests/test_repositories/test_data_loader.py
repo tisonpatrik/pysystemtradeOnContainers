@@ -23,7 +23,7 @@ async def test_fetch_data_as_dataframe_async():
         DataLoader, "_convert_to_dataframe", return_value=pd.DataFrame(mock_rows)
     ):
         loader = DataLoader("test_db_url")
-        df = await loader.fetch_data_as_dataframe_async(sql_template, parameters)
+        df = await loader.fetch_data_async(sql_template, parameters)
 
     assert not df.empty
     assert df.iloc[0]["name"] == "test_name_1"

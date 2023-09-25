@@ -40,20 +40,10 @@ class GlobalConfig(BaseConfig):
     db_echo_log: bool = debug
 
     @property
-    def sync_database_url(self) -> str:
+    def database_url(self) -> str:
         """Return the synchronous database connection URL."""
         return (
             f"postgresql://{self.postgres_user}:{self.postgres_password}@"
             f"{self.postgres_server}:{self.postgres_port}/{self.postgres_db}"
         )
-
-    @property
-    def async_database_url(self) -> str:
-        """Return the asynchronous database connection URL."""
-        return (
-            f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@"
-            f"{self.postgres_server}:{self.postgres_port}/{self.postgres_db}"
-        )
-
-
 settings = GlobalConfig()
