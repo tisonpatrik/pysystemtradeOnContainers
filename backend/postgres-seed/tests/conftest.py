@@ -3,21 +3,22 @@ import pytest
 import asyncpg
 import pytest_asyncio
 from fastapi import FastAPI
+from typing import AsyncGenerator
 from httpx import AsyncClient
-
 from src.core.config import settings
+from src.db.repositories.repository import PostgresRepository
 
-test_db = (
-    f"postgresql://{settings.postgres_user}:{settings.postgres_password}"
-    f"@{settings.postgres_server}:{settings.postgres_port}/{settings.postgres_db_tests}"
-)
-
+@pytest_asyncio.fixture(scope="session")
+def event_loop(request):
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
 @pytest.fixture(scope='function')
-async def db_connection():
-    conn = await asyncpg.connect(test_db)
-    yield conn
-    await conn.close()
+@pytest.mark.asyncio
+async def postgres_repository(event_loop):
+    repo = PostgresRepository(settings.test_database_url)
+    yield repo
 
 # @pytest.fixture()
 # def override_get_db(db_session: AsyncSession) -> Callable:
@@ -37,10 +38,10 @@ async def db_connection():
 #     return app
 
 
-# @pytest_asyncio.fixture()
-# async def async_client(app: FastAPI) -> AsyncGenerator:
-#     async with AsyncClient(app=app, base_url="http://test") as ac:
-#         yield ac
+@pytest_asyncio.fixture()
+async def async_client(app: FastAPI) -> AsyncGenerator:
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        yield ac
 
 
 # @pytest.fixture()

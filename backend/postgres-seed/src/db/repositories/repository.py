@@ -8,7 +8,6 @@ operations such as data insertion, loading, table creation, and database reset.
 import logging
 import asyncpg
 
-from src.core.config import settings
 from src.db.repositories.data_inserter import DataInserter
 from src.db.repositories.data_loader import DataLoader
 from src.db.repositories.table_creator import TableCreator
@@ -22,16 +21,16 @@ class PostgresRepository:
     Represents a repository to interact with a PostgreSQL database.
     """
 
-    def __init__(self):
+    def __init__(self, database_url):
         """
         Initializes the PostgresRepository with necessary database utilities.
         """
-        self.database_url = settings.database_url
-        self.inserter = DataInserter(settings.database_url)
-        self.loader = DataLoader(settings.database_url)
-        self.creator = TableCreator(settings.database_url)
+        self.database_url = database_url
+        self.inserter = DataInserter(database_url)
+        self.loader = DataLoader(database_url)
+        self.creator = TableCreator(database_url)
 
-    async def _connect(self):
+    async def connect(self):
         try:
             conn = await asyncpg.connect(self.database_url)
             logger.info("Successfully connected to the database")
@@ -40,7 +39,7 @@ class PostgresRepository:
             logger.error(f"Failed to connect to database due to: {error}")
             return None
         
-    async def _disconnect(self, conn):
+    async def disconnect(self, conn):
         if conn is not None:
             await conn.close()
             logger.info("Database connection closed.")
@@ -80,30 +79,15 @@ class PostgresRepository:
             )
             raise
 
-    def create_table(self, sql_command):
-        """
-        Creates a table in the database using the provided SQL command.
-
-        Args:
-        - sql_command: The SQL command to create a table.
-        """
-        try:
-            self.creator.create_table(sql_command=sql_command)
-        except Exception as error:
-            logger.error(
-                "Error creating table with SQL command %s: %s", sql_command, error
-            )
-            raise
-
     async def reset_db_async(self):
         """
         
         """
         try:
-            connection = await self._connect()
+            connection = await self.connect()
             dropper = TableDropper(connection)            
             await dropper.drop_all_tables()
-            await self._disconnect(connection)
+            await self.disconnect(connection)
         except Exception as error:
             logger.error("Error resetting the database: %s", error)
             raise
