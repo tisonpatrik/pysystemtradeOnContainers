@@ -6,8 +6,6 @@ This module provides an interface to create tables in a PostgreSQL database.
 
 import logging
 
-import asyncpg
-
 # Setting up the logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
