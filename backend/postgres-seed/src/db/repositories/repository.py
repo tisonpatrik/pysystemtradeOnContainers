@@ -6,7 +6,7 @@ operations such as data insertion, loading, table creation, and database reset.
 """
 
 import logging
-import psycopg2
+import asyncpg
 
 from src.core.config import settings
 from src.db.repositories.data_inserter import DataInserter
@@ -30,20 +30,19 @@ class PostgresRepository:
         self.inserter = DataInserter(settings.database_url)
         self.loader = DataLoader(settings.database_url)
         self.creator = TableCreator(settings.database_url)
-        self.dropper = TableDropper()
 
-    def _connect(self):
+    async def _connect(self):
         try:
-            conn = psycopg2.connect(self.database_url)
+            conn = await asyncpg.connect(self.database_url)
             logger.info("Successfully connected to the database")
             return conn
-        except psycopg2.DatabaseError as error:
-            logger.error("Failed to connect to database due to: %s", error)
+        except Exception as error:  # or use the specific error type from `asyncpg`
+            logger.error(f"Failed to connect to database due to: {error}")
             return None
         
-    def _disconnect(self, conn):
+    async def _disconnect(self, conn):
         if conn is not None:
-            conn.close()
+            await conn.close()
             logger.info("Database connection closed.")
 
     async def insert_data_async(self, data_frame, table_name):
@@ -96,14 +95,15 @@ class PostgresRepository:
             )
             raise
 
-    def reset_db(self):
+    async def reset_db_async(self):
         """
-        Drops all tables in the database to reset it.
+        
         """
         try:
-            connection = self._connect()
-            self.dropper.drop_all_tables(connection)
-            self._disconnect(connection)
+            connection = await self._connect()
+            dropper = TableDropper(connection)            
+            await dropper.drop_all_tables()
+            await self._disconnect(connection)
         except Exception as error:
             logger.error("Error resetting the database: %s", error)
             raise

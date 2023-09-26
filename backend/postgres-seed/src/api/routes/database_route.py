@@ -7,6 +7,7 @@ initializing tables and resetting the database.
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging
+from src.api.routes.utils import execute_with_logging_async
 from src.handlers.database_handler import DatabaseHandler
 
 router = APIRouter()
@@ -25,9 +26,9 @@ def initialize_tables():
 
 
 @router.post("/reset_db/", status_code=status.HTTP_200_OK, name="reset_db")
-def reset_database():
+async def reset_database():
     """Reset the database tables."""
-    execute_with_logging(
+    await execute_with_logging_async(
         db_handler.reset_tables,
         start_msg="Database table reset started.",
         end_msg="Database table reset is complete.",

@@ -1,6 +1,7 @@
+import pytest
 from src.db.repositories.repository import PostgresRepository
 
-def test_db_connection(db_connection):
+@pytest.mark.asyncio
+async def test_db_connection(db_connection):
     repo = PostgresRepository()
-    assert repo._connect() is not None
-    repo._disconnect(db_connection)
+    assert (await repo._connect()) is not None

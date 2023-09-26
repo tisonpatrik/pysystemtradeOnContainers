@@ -28,13 +28,13 @@ class DatabaseHandler:
         for schema in self.config_schemas:
             repository.create_table(schema.sql_command)
 
-    def reset_tables(self) -> None:
+    async def reset_tables(self) -> None:
         """
         Reset the database by dropping tables and indexes.
         """
         repository = PostgresRepository()
         try:
-            repository.reset_db()
+           await repository.reset_db_async()
         except Exception as error:
             logger.error("Failed to reset the database: %s", str(error))
             raise DatabaseError("Failed to reset the database.") from error

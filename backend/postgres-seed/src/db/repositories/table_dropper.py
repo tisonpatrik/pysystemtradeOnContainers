@@ -14,16 +14,16 @@ class TableDropper:
     """
     Represents an interface to drop all tables and indexes from a PostgreSQL database.
     """
+    def __init__(self, connection):
+        self.connection = connection
 
-    def drop_all_tables(connection):
+    async def drop_all_tables(self):
         """
         Drop all tables and indexes from the connected PostgreSQL database.
 
         Returns:
         - None
         """
-        # Connect to the PostgreSQL server
-        cursor = connection.cursor()
 
         # Generate the SQL command to drop all tables
         drop_tables_command = (
@@ -42,14 +42,11 @@ class TableDropper:
 
         sql_commands = [drop_tables_command, drop_indexes_command]
 
-        for sql_command in sql_commands:
-            cursor.execute(sql_command)
-
-        # Committing the changes to the database
-        connection.commit()
+        async with self.connection.transaction():
+            for sql_command in sql_commands:
+                await self.connection.execute(sql_command)
 
         # Log successful table and index drop
         logger.info("Successfully dropped all tables and indexes from the database")
 
         # Close communication with the PostgreSQL database server
-        cursor.close()

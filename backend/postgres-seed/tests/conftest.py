@@ -8,21 +8,16 @@ from httpx import AsyncClient
 from src.core.config import settings
 
 test_db = (
-    f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}"
+    f"postgresql://{settings.postgres_user}:{settings.postgres_password}"
     f"@{settings.postgres_server}:{settings.postgres_port}/{settings.postgres_db_tests}"
 )
 
 
 @pytest.fixture(scope='function')
-def db_connection():
-    try:
-        conn = asyncpg.connect(settings.database_url)
-    except asyncpg.DatabaseError as e:
-        pytest.fail(f"Failed to connect to database: {e}")
-    
+async def db_connection():
+    conn = await asyncpg.connect(test_db)
     yield conn
-    
-    conn.close()
+    await conn.close()
 
 # @pytest.fixture()
 # def override_get_db(db_session: AsyncSession) -> Callable:
