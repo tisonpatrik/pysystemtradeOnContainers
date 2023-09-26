@@ -8,6 +8,7 @@ db = Database(settings.database_url)
 
 @asynccontextmanager 
 async def get_db():
+    await db.connect()
     conn = await db.get_conn()
     try:
         yield conn

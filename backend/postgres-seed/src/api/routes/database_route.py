@@ -6,16 +6,16 @@ initializing tables and resetting the database.
 
 from fastapi import APIRouter, status, Depends
 
-from src.api.routes.utils import execute_with_logging, execute_with_logging_async
+from src.api.routes.utils import execute_with_logging_async
 from src.handlers.database_handler import DatabaseHandler
 from src.api.dependencies.repositories import get_repository
 
 router = APIRouter()
 
 @router.post("/init_tables/", status_code=status.HTTP_200_OK, name="init_tables")
-def initialize_tables(db_handler: DatabaseHandler = Depends(get_repository(DatabaseHandler))):
+async def initialize_tables(db_handler: DatabaseHandler = Depends(get_repository(DatabaseHandler))):
     """Initialize tables in the database."""
-    execute_with_logging(
+    await execute_with_logging_async(
         db_handler.init_tables,
         start_msg="Init of tables has started.",
         end_msg="Init of tables was completed.",

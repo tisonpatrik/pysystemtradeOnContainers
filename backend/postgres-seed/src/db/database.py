@@ -1,8 +1,8 @@
 import asyncpg
 
 class Database:
-    def __init__(self, test_database_url):
-        self.test_database_url = test_database_url
+    def __init__(self, database_url):
+        self.test_database_url = database_url
         self.pool = None
 
     async def connect(self):

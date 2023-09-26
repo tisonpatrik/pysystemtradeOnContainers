@@ -3,7 +3,8 @@ Module to handle database operations like table initialization and reset.
 """
 
 import logging
-from src.db.repositories.repository import TableCreator, TableDropper
+from src.db.repositories.table_creator import TableCreator
+from src.db.repositories.table_dropper import TableDropper
 from src.db.schemas.schemas import get_schemas
 from src.handlers.errors import DatabaseError
 
@@ -21,14 +22,14 @@ class DatabaseHandler:
         self.config_schemas = get_schemas()
         self.connection = conn
 
-    def init_tables(self) -> None:
+    async def init_tables(self) -> None:
         """
         Initialize tables in the database using the SQL commands defined in the schemas.
         """
-        creator = TableCreator()
+        creator = TableCreator(self.connection)
         for schema in self.config_schemas:
             try:
-                creator.create_table(schema.sql_command)
+                await creator.create_table(schema.sql_command)
             except Exception as error:
                 logger.error(
                     "Error creating table with SQL command %s: %s", schema.sql_command, error
@@ -39,7 +40,7 @@ class DatabaseHandler:
         """
         Reset the database by dropping tables and indexes.
         """
-        dropper = TableDropper()
+        dropper = TableDropper(self.connection)
         try:
            await dropper.drop_all_tables()
         except Exception as error:
