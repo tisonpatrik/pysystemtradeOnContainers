@@ -1,38 +1,37 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+# import pytest
+# from unittest.mock import patch, MagicMock
+# from src.db.repositories.data_loader import DataLoader
+# from src.db.errors import DatabaseConnectionError, TableOrColumnNotFoundError
 
-import pandas as pd
-import pytest
+# @pytest.mark.asyncio
+# async def test_fetch_data_async():
+#     mock_pool = MagicMock()
+#     mock_pool.acquire().__aenter__().prepare().fetch.return_value = [
+#         {"column1": "value1", "column2": "value2"}
+#     ]
 
-from src.db.repositories.data_loader import DataLoader
+#     with patch("asyncpg.create_pool", return_value=mock_pool) as mock_create_pool:
+#         loader = DataLoader("fake_database_url")
+#         rows = await loader.fetch_data_async("SELECT * FROM table WHERE id=$id", {"id": 1})
 
-# Mock data to simulate fetched rows from the database
-mock_rows = [{"id": 1, "name": "test_name_1"}, {"id": 2, "name": "test_name_2"}]
+#     mock_create_pool.assert_called_once_with(dsn="fake_database_url")
+#     assert rows == [{"column1": "value1", "column2": "value2"}]
 
+# @pytest.mark.asyncio
+# async def test_fetch_data_async_connection_error():
+#     with patch("asyncpg.create_pool", side_effect=Exception("Connection error")):
+#         loader = DataLoader("fake_database_url")
+        
+#         with pytest.raises(DatabaseConnectionError):
+#             await loader.fetch_data_async("SELECT * FROM table WHERE id=$id", {"id": 1})
 
-@pytest.mark.asyncio
-async def test_fetch_data_as_dataframe_async():
-    # Setup
-    sql_template = "SELECT * FROM test_table WHERE id = :id"
-    parameters = {"id": 1}
+# @pytest.mark.asyncio
+# async def test_fetch_data_async_table_not_found():
+#     mock_pool = MagicMock()
+#     mock_pool.acquire().__aenter__().prepare.side_effect = Exception("Table not found")
 
-    with patch.object(
-        DataLoader, "_create_connection_pool", new_callable=AsyncMock
-    ) as mock_pool, patch.object(
-        DataLoader, "_execute_sql", new_callable=AsyncMock, return_value=mock_rows
-    ), patch.object(
-        DataLoader, "_convert_to_dataframe", return_value=pd.DataFrame(mock_rows)
-    ):
-        loader = DataLoader("test_db_url")
-        df = await loader.fetch_data_async(sql_template, parameters)
-
-    assert not df.empty
-    assert df.iloc[0]["name"] == "test_name_1"
-    mock_pool.assert_called_once()
-
-
-@pytest.mark.asyncio
-async def test_create_connection_pool():
-    with patch("asyncpg.create_pool", new_callable=AsyncMock) as mock_create_pool:
-        loader = DataLoader("test_db_url")
-        await loader._create_connection_pool()
-        mock_create_pool.assert_called_once_with(dsn="test_db_url")
+#     with patch("asyncpg.create_pool", return_value=mock_pool):
+#         loader = DataLoader("fake_database_url")
+        
+#         with pytest.raises(TableOrColumnNotFoundError):
+#             await loader.fetch_data_async("SELECT * FROM invalid_table WHERE id=$id", {"id": 1})

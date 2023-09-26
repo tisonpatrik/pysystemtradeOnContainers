@@ -1,7 +1,6 @@
 import asyncio
-from typing import AsyncGenerator, Callable, Generator
-
 import pytest
+import asyncpg
 import pytest_asyncio
 from fastapi import FastAPI
 from httpx import AsyncClient
@@ -12,22 +11,13 @@ test_db = (
     f"postgresql+asyncpg://{settings.postgres_user}:{settings.postgres_password}"
     f"@{settings.postgres_server}:{settings.postgres_port}/{settings.postgres_db_tests}"
 )
-@pytest_asyncio.fixture(scope="session")
-def event_loop(request) -> Generator:
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
 
 
-# @pytest_asyncio.fixture()
-# async def db_session() -> AsyncSession:
-#     async with engine.begin() as connection:
-#         await connection.run_sync(SQLModel.metadata.drop_all)
-#         await connection.run_sync(SQLModel.metadata.create_all)
-#         async with async_session(bind=connection) as session:
-#             yield session
-#             await session.flush()
-#             await session.rollback()
+@pytest.fixture(scope='function')
+async def db_connection():
+    conn = await asyncpg.connect(test_db)
+    yield conn
+    await conn.close()
 
 
 # @pytest.fixture()
