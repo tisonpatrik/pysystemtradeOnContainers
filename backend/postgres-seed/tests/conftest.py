@@ -14,11 +14,15 @@ test_db = (
 
 
 @pytest.fixture(scope='function')
-async def db_connection():
-    conn = await asyncpg.connect(test_db)
+def db_connection():
+    try:
+        conn = asyncpg.connect(settings.database_url)
+    except asyncpg.DatabaseError as e:
+        pytest.fail(f"Failed to connect to database: {e}")
+    
     yield conn
-    await conn.close()
-
+    
+    conn.close()
 
 # @pytest.fixture()
 # def override_get_db(db_session: AsyncSession) -> Callable:
