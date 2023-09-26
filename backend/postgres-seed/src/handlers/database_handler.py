@@ -34,7 +34,6 @@ class DatabaseHandler:
                 logger.error(
                     "Error creating table with SQL command %s: %s", schema.sql_command, error
                     )
-            raise
 
     async def reset_tables(self) -> None:
         """

@@ -31,7 +31,7 @@ class TableCreator:
         try:
             await self.connection.execute(sql_command)
             logger.info("Successfully executed the following SQL command: %s", sql_command)
-        except asyncpg.DatabaseError as error:
+        except Exception as error:
             logger.error("Failed to execute the SQL command due to: %s", error)
         finally:
             logger.info("Database connection closed.")
