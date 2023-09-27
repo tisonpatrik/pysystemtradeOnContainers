@@ -1,6 +1,6 @@
 import asyncpg
 
-class Database:
+class Db_client:
     def __init__(self, database_url):
         self.test_database_url = database_url
         self.pool = None

@@ -1,10 +1,10 @@
 import asyncpg
 from fastapi import Depends, HTTPException
 from contextlib import asynccontextmanager
-from src.db.database import Database
+from src.db.db_client import Db_client
 from src.core.config import settings
 
-db = Database(settings.database_url)
+db = Db_client(settings.database_url)
 
 @asynccontextmanager 
 async def get_db():

@@ -11,7 +11,7 @@ async def test_create_table_integration(db_connection):
     );
     """
     await table_creator.create_table(create_table_sql)
-
+    
     # Verify that the table was actually created
     async with db_connection.transaction():
         row = await db_connection.fetchrow("SELECT to_regclass('public.test_table');")
