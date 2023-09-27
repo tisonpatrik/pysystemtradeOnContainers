@@ -6,19 +6,12 @@ from fastapi import FastAPI
 from typing import AsyncGenerator
 from httpx import AsyncClient
 from src.core.config import settings
-from src.db.repositories.repository import PostgresRepository
+from src.db.database import Database
 
-@pytest_asyncio.fixture(scope="session")
-def event_loop(request):
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
 
-@pytest.fixture(scope='function')
-@pytest.mark.asyncio
-async def postgres_repository(event_loop):
-    repo = PostgresRepository(settings.test_database_url)
-    yield repo
+@pytest.fixture
+def mock_connection(mocker):
+    return mocker.Mock()
 
 # @pytest.fixture()
 # def override_get_db(db_session: AsyncSession) -> Callable:

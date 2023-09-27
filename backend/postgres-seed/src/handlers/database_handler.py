@@ -3,8 +3,8 @@ Module to handle database operations like table initialization and reset.
 """
 
 import logging
-from src.db.repositories.table_creator import TableCreator
-from src.db.repositories.table_dropper import TableDropper
+from src.db.table_creator import TableCreator
+from src.db.table_dropper import TableDropper
 from src.db.schemas.schemas import get_schemas
 from src.handlers.errors import DatabaseError
 

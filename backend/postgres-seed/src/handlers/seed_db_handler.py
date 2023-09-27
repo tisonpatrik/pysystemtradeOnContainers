@@ -4,7 +4,6 @@ import asyncio
 import logging
 
 from src.data_processing.csv_helper import load_csv
-from src.db.repositories.repository import PostgresRepository
 from src.db.schemas.schemas import get_schemas
 
 logging.basicConfig(level=logging.INFO)
