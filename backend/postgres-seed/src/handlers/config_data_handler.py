@@ -5,7 +5,7 @@ Module to handle configuration data processing.
 import logging
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import fill_empty_values
-from src.data_processing.data_preprocessor import load_and_rename_columns
+from src.data_processing.data_preprocessor import load_csv , rename_columns
 from src.db.schemas.schemas import get_configs_schemas
 from src.handlers.errors import ProcessingError
 # Initialize logger
@@ -45,9 +45,10 @@ class ConfigDataHandler:
         - schema: The configuration schema detailing how the data should be processed.
         """
         try:
-            data = load_and_rename_columns(schema.origin_csv_file_path, schema.column_mapping)
-            data = fill_empty_values(data, fill_value=0)  # Assuming you want to fill with 0
-            save_to_csv(data, schema.file_path)
+            data = load_csv(schema.origin_csv_file_path)
+            renamed = rename_columns(data,schema.column_mapping)
+            filled = fill_empty_values(renamed, fill_value=0)  # Assuming you want to fill with 0
+            save_to_csv(filled, schema.file_path)
             logger.info("Data processing completed for schema: %s", schema.__class__.__name__)
             return True
         except Exception as error:  # More specific exceptions are advisable

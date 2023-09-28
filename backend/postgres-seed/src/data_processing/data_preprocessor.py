@@ -8,66 +8,50 @@ for downstream analyses.
 
 import logging
 import os
+import pandas as pd
 
-from src.data_processing.csv_helper import load_csv
+from src.data_processing.csv_helper import load_csv, save_to_csv
 from src.data_processing.errors import (
-    CSVFileNotFoundError,
-    ColumnRenamingError,
-    DataAggregationError
+    ProcessingError
 )
 from src.data_processing.data_frame_helper import (
     add_symbol_by_file_name,
     aggregate_to_day_based_prices,
     convert_datetime_to_unixtime,
-    rename_columns_if_needed,
+    rename_columns,
 )
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def load_and_rename_columns(file_path, column_mapping):
-    """
-    Load and process the CSV data from the given path and rename the columns.
-    """
+def load_and_process_raw_data_csv(file_path, column_mapping):
     try:
-        data_frame = load_csv(file_path)
-        data_frame = rename_columns_if_needed(data_frame, column_mapping)
-        logger.info("Successfully loaded and renamed columns for %s.", file_path)
-        return data_frame
-    except FileNotFoundError as exc:
-        logger.error("CSV file not found: %s", file_path)
-        raise CSVFileNotFoundError from exc
-    except Exception as error:
-        logger.error("Error processing data from %s: %s", file_path, error)
-        raise ColumnRenamingError from error
+        df = load_csv(file_path)
+        df = rename_columns(df, column_mapping)
+        
+        # Check if 'price' column is present before aggregation
+        if 'price' in df.columns:
+            df = aggregate_to_day_based_prices(df)
+        
+        df = convert_datetime_to_unixtime(df)
+        df = add_symbol_by_file_name(df, file_path)
+        return df
+    except ProcessingError as e:
+        logger.error(f"Error processing {file_path}: {e}")
+        return None
 
-def process_single_csv_file(file, file_path):
-    try:
-        date_column_name = file.columns[0]
-        aggregated = aggregate_to_day_based_prices(file, date_column_name)
-        converted = convert_datetime_to_unixtime(aggregated, date_column_name)
-        data_frame = add_symbol_by_file_name(converted, file_path)
-        logger.info("Successfully loaded and added symbol for %s.", file_path)
-        return data_frame
-    except FileNotFoundError as exc:
-        logger.error("CSV file not found: %s", file_path)
-        raise CSVFileNotFoundError from exc
-    except Exception as error:
-        logger.error("Error loading data from %s: %s", file_path, error)
-        raise DataAggregationError from error
+    
+def process_all_csv_in_directory(directory_path, column_mapping):
+    processed_dfs = []
+    for file_name in os.listdir(directory_path):
+        if file_name.endswith('.csv'):
+            file_path = os.path.join(directory_path, file_name)
+            processed_df = load_and_process_raw_data_csv(file_path, column_mapping)
+            if processed_df is not None:
+                processed_dfs.append(processed_df)
+    return processed_dfs
 
-def load_all_csv_files_from_directory(directory_path):
-    dataframes = []
-    csv_files = [f for f in os.listdir(directory_path) if f.endswith('.csv')]
-
-    for file_name in csv_files:
-        file_path = os.path.join(directory_path, file_name)
-        try:
-            file = load_csv(file_path)
-            data_frame = process_single_csv_file(file, file_path)
-            dataframes.append(data_frame)
-        except (CSVFileNotFoundError, DataAggregationError):
-            continue
-
-    return dataframes
+def save_concatenated_dataframes(data_frames, save_path):
+    concatenated_df = pd.concat(data_frames, ignore_index=True)
+    save_to_csv(concatenated_df, save_path)

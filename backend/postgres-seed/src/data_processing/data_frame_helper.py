@@ -14,14 +14,13 @@ from src.data_processing.errors import (
     EmptyValueFillError,
     DataAggregationError,
     SymbolAdditionError,
-    DateTimeConversionError,
-    EmptyDataFrameError
-)
+    DateTimeConversionError,)
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def rename_columns_if_needed(data_frame, new_column_names):
+def rename_columns(data_frame, new_column_names):
     """
     Renames DataFrame columns based on the provided dictionary.
     """
@@ -52,36 +51,32 @@ def add_symbol_by_file_name(data_frame, symbol):
         logger.error("Error during symbol addition: %s", error)
         raise SymbolAdditionError from error
 
-def convert_datetime_to_unixtime(data_frame, date_column):
+def convert_datetime_to_unixtime(data_frame):
     """
     Converts the date_column to UNIX time.
     """
     try:
-        data_frame[date_column] = pd.to_datetime(data_frame[date_column]).astype(int) / 10**9
+        data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time']).astype(int) / 10**9
         return data_frame
     except Exception as error:
         logger.error("Error during date-time conversion: %s", error)
         raise DateTimeConversionError from error
 
-def aggregate_to_day_based_prices(data_frame, aggregation_column):
+def aggregate_to_day_based_prices(data_frame):
     try:
         # Convert DATETIME to datetime format
-        data_frame = convert_to_datetime_format(data_frame, 'DATETIME')
+        data_frame = convert_to_datetime_format(data_frame, 'unix_date_time')
 
         # Ensure the aggregation_column is of a numeric type
-        data_frame[aggregation_column] = pd.to_numeric(data_frame[aggregation_column], errors='coerce')
+        data_frame['price'] = pd.to_numeric(data_frame['price'], errors='coerce')
 
         # Set DATETIME as index
-        data_frame.set_index('DATETIME', inplace=True)
+        data_frame.set_index('unix_date_time', inplace=True)
 
         # Resample to daily frequency using the mean of the prices for each day
         result = data_frame.resample('D').mean().dropna().reset_index()
 
         return result
-    except Exception as error:
-        logger.error("Error during data aggregation: %s", error)
-        raise DataAggregationError from error
-    
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
@@ -91,13 +86,4 @@ def convert_to_datetime_format(data_frame, column_name):
     Convert the specified column in the DataFrame to datetime format.
     """
     data_frame[column_name] = pd.to_datetime(data_frame[column_name])
-    return data_frame
-
-
-def handle_empty_dataframe(data_frame):
-    """
-    Handles empty DataFrame, if needed.
-    """
-    if data_frame.empty:
-        raise EmptyDataFrameError("DataFrame is empty.")
     return data_frame
