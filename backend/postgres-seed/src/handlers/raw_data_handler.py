@@ -1,28 +1,30 @@
+"""
+Module to handle raw data processing.
+"""
+
 import logging
 import os
-from typing import List
 
 import pandas as pd
 
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import rename_columns_if_needed
 from src.data_processing.data_preprocessor import load_all_csv_files_from_directory
-from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.db.schemas.schemas import get_raw_data_schemas
+from src.handlers.errors import ProcessingError
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class RawDataHandler:
-    def __init__(self):
-        """
-        Initializes the RawDataHandler with provided schemas or defaults.
+    """
+    Initializes the RawDataHandler with provided schemas or defaults.
 
-        Parameters:
-        - schemas: List of raw data schemas to be processed.
-        """
+    Parameters:
+    - schemas: List of raw data schemas to be processed.
+    """
+    def __init__(self):
         self.schemas = get_raw_data_schemas()
 
     def handle_data_processing(self) -> None:
@@ -36,30 +38,29 @@ class RawDataHandler:
         for schema, result in zip(self.schemas, results):
             if isinstance(result, Exception):
                 logger.error(
-                    f"Error processing data for schema {schema.__class__.__name__}: {result}"
+                    "Error processing data for schema %s: %s",
+                    schema.__class__.__name__,
+                    result
                 )
 
-    def _process_raw_data_schema(self, schema: BaseConfigSchema) -> None:
-        # Ensure directory exists
+    def _process_raw_data_schema(self, schema):
         if not os.path.isdir(schema.origin_csv_file_path):
-            logger.warning(f"Directory not found: {schema.origin_csv_file_path}")
+            logger.warning("Directory not found: %s", schema.origin_csv_file_path)
             return
 
-        dataframes = load_all_csv_files_from_directory(schema.origin_csv_file_path)
+        data_frames = load_all_csv_files_from_directory(schema.origin_csv_file_path)
 
-        # Return if no valid CSV files were found or loaded
-        if not dataframes:
-            logger.warning(f"No valid CSV files found in {schema.origin_csv_file_path}")
+        if not data_frames:
+            logger.warning("No valid CSV files found in %s", schema.origin_csv_file_path)
             return
 
-        if not self._process_and_save_dataframes(dataframes, schema):
+        if not self._process_and_save_dataframes(data_frames, schema):
             logger.error(
-                f"Failed to process and save data for schema: {schema.__class__.__name__}"
+                "Failed to process and save data for schema: %s",
+                schema.__class__.__name__
             )
 
-    def _process_and_save_dataframes(
-        self, dataframes: List[pd.DataFrame], schema: BaseConfigSchema
-    ) -> bool:
+    def _process_and_save_dataframes(self, data_frames, schema):
         """
         Concatenates and processes a list of dataframes and saves the result to a specified path.
 
@@ -71,14 +72,12 @@ class RawDataHandler:
         - True if processing was successful, False otherwise.
         """
         try:
-            df = pd.concat(dataframes, ignore_index=True)
-
+            concatenated_df = pd.concat(data_frames, ignore_index=True)
             # Drop columns that have 'Unnamed' in their name
-            df = df.drop(columns=[col for col in df.columns if "Unnamed" in col])
-
-            renamed = rename_columns_if_needed(df, schema.column_mapping)
-            save_to_csv(renamed, schema.file_path)
+            cleaned_df = concatenated_df.drop(columns=[col for col in concatenated_df.columns if "Unnamed" in col])
+            renamed_df = rename_columns_if_needed(cleaned_df, schema.column_mapping)
+            save_to_csv(renamed_df, schema.file_path)
             return True
-        except Exception as e:
-            logger.error(f"Error during concatenation or data processing: {e}")
-            return False
+        except Exception as generic_exception:
+            logger.error("Error during concatenation or data processing: %s", generic_exception)
+            raise ProcessingError from generic_exception
