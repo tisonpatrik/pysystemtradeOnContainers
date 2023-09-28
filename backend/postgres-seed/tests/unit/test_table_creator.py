@@ -17,7 +17,7 @@ async def test_create_table_success(mock_connection, mocker):
 
     mock_logger = mocker.patch('src.db.table_creator.logger')
     table_creator = TableCreator(mock_connection)
-    await table_creator.create_table(sql_command)
+    await table_creator.create_table_async(sql_command)
 
     mock_logger.info.assert_has_calls([
         mocker.call("Successfully executed the following SQL command: %s", sql_command),
@@ -35,7 +35,7 @@ async def test_create_table_fail(mock_connection, mocker):
 
     mock_logger = mocker.patch('src.db.table_creator.logger')
     table_creator = TableCreator(mock_connection)
-    await table_creator.create_table(sql_command)
+    await table_creator.create_table_async(sql_command)
 
     # Get the last call's arguments
     args, kwargs = mock_logger.error.call_args
@@ -57,6 +57,6 @@ async def test_create_table_finally(mock_connection, mocker):
 
     mock_logger = mocker.patch('src.db.table_creator.logger')
     table_creator = TableCreator(mock_connection)
-    await table_creator.create_table(sql_command)
+    await table_creator.create_table_async(sql_command)
 
     mock_logger.info.assert_called_with("Database connection closed.")

@@ -22,26 +22,26 @@ class DatabaseHandler:
         self.config_schemas = get_schemas()
         self.connection = conn
 
-    async def init_tables(self) -> None:
+    async def init_tables_async(self) -> None:
         """
         Initialize tables in the database using the SQL commands defined in the schemas.
         """
         creator = TableCreator(self.connection)
         for schema in self.config_schemas:
             try:
-                await creator.create_table(schema.sql_command)
+                await creator.create_table_async(schema.sql_command)
             except Exception as error:
                 logger.error(
                     "Error creating table with SQL command %s: %s", schema.sql_command, error
                     )
 
-    async def reset_tables(self) -> None:
+    async def reset_tables_async(self) -> None:
         """
         Reset the database by dropping tables and indexes.
         """
         dropper = TableDropper(self.connection)
         try:
-           await dropper.drop_all_tables()
+           await dropper.drop_all_tables_async()
         except Exception as error:
             logger.error("Failed to reset the database: %s", str(error))
             raise DatabaseError("Failed to reset the database.") from error

@@ -17,7 +17,7 @@ async def test_drop_all_tables_success(mock_connection, mocker, async_context_ma
 
     mock_logger = mocker.patch('src.db.table_dropper.logger')
     table_dropper = TableDropper(mock_connection)
-    await table_dropper.drop_all_tables()
+    await table_dropper.drop_all_tables_async()
 
     mock_logger.info.assert_called_with("Successfully dropped all tables and indexes from the database")
 
@@ -34,7 +34,7 @@ async def test_drop_all_tables_fail(mock_connection, mocker, async_context_manag
 
     with pytest.raises(Exception):  # Expecting an exception to be raised
         table_dropper = TableDropper(mock_connection)
-        await table_dropper.drop_all_tables()
+        await table_dropper.drop_all_tables_async()
 
     call_args = mock_logger.error.call_args
     if call_args is not None:

@@ -25,7 +25,7 @@ class TableCreator:
         """
         self.connection = connection
 
-    async def create_table(self, sql_command: str):
+    async def create_table_async(self, sql_command: str):
         try:
             await self.connection.execute(sql_command)
             logger.info("Successfully executed the following SQL command: %s", sql_command)

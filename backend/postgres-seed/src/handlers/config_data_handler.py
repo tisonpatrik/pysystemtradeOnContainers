@@ -6,10 +6,9 @@ import logging
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import fill_empty_values
 from src.data_processing.data_preprocessor import load_and_rename_columns
-from src.db.schemas.schemas import get_configs_schemas
-from src.handlers.errors import(
-    ProcessingError
-)
+from src.db.schemas.schemas import get_schemas
+from src.handlers.errors import ProcessingError
+
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,16 +21,18 @@ class ConfigDataHandler:
     Parameters:
     - schemas: List of configuration schemas to be processed.
     """
-    def __init__(self):
-        self.schemas = get_configs_schemas()
+    def __init__(self, conn):
+        """Initialize the handler with schemas fetched from get_schemas."""
+        self.config_schemas = get_schemas()
+        self.connection = conn
 
     def handle_data_processing(self) -> None:
         """
         Processes each configuration schema provided to the handler synchronously.
         This includes loading, transforming, and saving the data for each schema.
         """
-        results = [self._process_config_schema(schema) for schema in self.schemas]
-        for schema, result in zip(self.schemas, results):
+        results = [self._process_config_schema(schema) for schema in self.config_schemas]
+        for schema, result in zip(self.config_schemas, results):
             if isinstance(result, Exception):
                 logger.error("Error processing data for schema %s: %s", schema.__class__.__name__, result)
 

@@ -33,7 +33,7 @@ def get_schemas():
     """
     return [
         InstrumentConfigSchema(),
-        InstrumentMetadataSchema(),
+        #InstrumentMetadataSchema(),
         RollConfigSchema(),
         SpreadCostSchema(),
         AdjustedPricesSchema(),
@@ -54,7 +54,7 @@ def get_configs_schemas():
     """
     return [
         InstrumentConfigSchema(),
-        InstrumentMetadataSchema(),
+        #InstrumentMetadataSchema(),
         RollConfigSchema(),
         SpreadCostSchema(),
     ]

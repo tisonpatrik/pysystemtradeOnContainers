@@ -25,6 +25,7 @@ def load_csv(path: str, base_path: str = "") -> pd.DataFrame:
         pd.DataFrame: Loaded dataframe.
     """
     full_path = _get_full_path(base_path, path)
+    print(full_path)
     try:
         logger.info("Loading CSV file from %s", full_path)
         return pd.read_csv(full_path)

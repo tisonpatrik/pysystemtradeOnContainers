@@ -17,7 +17,7 @@ class TableDropper:
     def __init__(self, connection):
         self.connection = connection
 
-    async def drop_all_tables(self):
+    async def drop_all_tables_async(self):
         """
         Drop all tables and indexes from the connected PostgreSQL database.
 

@@ -16,7 +16,7 @@ router = APIRouter()
 async def initialize_tables(db_handler: DatabaseHandler = Depends(get_repository(DatabaseHandler))):
     """Initialize tables in the database."""
     await execute_with_logging_async(
-        db_handler.init_tables,
+        db_handler.init_tables_async,
         start_msg="Init of tables has started.",
         end_msg="Init of tables was completed.",
     )
@@ -26,7 +26,7 @@ async def initialize_tables(db_handler: DatabaseHandler = Depends(get_repository
 async def reset_database(db_handler: DatabaseHandler = Depends(get_repository(DatabaseHandler))):
     """Reset the database tables."""
     await execute_with_logging_async(
-        db_handler.reset_tables,
+        db_handler.reset_tables_async,
         start_msg="Database table reset started.",
         end_msg="Database table reset is complete.",
     )
