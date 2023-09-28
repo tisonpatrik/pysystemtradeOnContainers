@@ -5,6 +5,7 @@ import logging
 
 from src.data_processing.csv_helper import load_csv
 from src.db.schemas.schemas import get_schemas
+from src.db.data_inserter import DataInserter
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -18,9 +19,11 @@ class SeedDBHandler:
     - schemas: List of configuration schemas to be processed.
     - repository: Repository for database operations.
     """
-    def __init__(self):
+    def __init__(self, conn):
+        """Initialize the handler with schemas fetched from get_schemas."""
         self.schemas = get_schemas()
-        self.repository = PostgresRepository()
+        self.connection = conn
+        self.repository = DataInserter(self.connection)
 
     async def insert_data_from_csv_async(self):
         """
@@ -29,6 +32,7 @@ class SeedDBHandler:
         This involves loading the data from each CSV file and inserting it into the database according to the table name
         specified in each schema.
         """
+        
         tasks = [self._load_csv_and_insert_data_to_db_async(schema) for schema in self.schemas]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -44,9 +48,10 @@ class SeedDBHandler:
         Parameters:
         - schema: The configuration schema detailing the CSV file path and target table name.
         """
+        
         try:
             data_frame = load_csv(schema.file_path)
-            await self.repository.insert_data_async(data_frame, schema.table_name)
+            await self.repository.insert_dataframe_async(data_frame, schema.table_name)
         except Exception as error:
             logger.error("Error occurred while processing the CSV file %s: %s", schema.file_path, error)
             raise error

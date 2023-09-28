@@ -24,8 +24,10 @@ class RawDataHandler:
     Parameters:
     - schemas: List of raw data schemas to be processed.
     """
-    def __init__(self):
+    def __init__(self, conn):
+        """Initialize the handler with schemas fetched from get_schemas."""
         self.schemas = get_raw_data_schemas()
+        self.connection = conn
 
     def handle_data_processing(self) -> None:
         """
