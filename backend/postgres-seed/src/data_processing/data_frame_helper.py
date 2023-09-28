@@ -64,23 +64,35 @@ def convert_datetime_to_unixtime(data_frame, date_column):
         raise DateTimeConversionError from error
 
 def aggregate_to_day_based_prices(data_frame, aggregation_column):
-    """
-    Aggregates data based on the provided aggregation_column to daily frequency.
-    """
     try:
-        # Convert Unix timestamp to datetime format
-        data_frame[aggregation_column] = pd.to_datetime(data_frame[aggregation_column])
-        
-        # Set date as index
-        data_frame.set_index(aggregation_column, inplace=True)
-        
+        # Convert DATETIME to datetime format
+        data_frame = convert_to_datetime_format(data_frame, 'DATETIME')
+
+        # Ensure the aggregation_column is of a numeric type
+        data_frame[aggregation_column] = pd.to_numeric(data_frame[aggregation_column], errors='coerce')
+
+        # Set DATETIME as index
+        data_frame.set_index('DATETIME', inplace=True)
+
         # Resample to daily frequency using the mean of the prices for each day
-        daily_data = data_frame.resample('D').mean()
-        
-        return daily_data.reset_index()
+        result = data_frame.resample('D').mean().dropna().reset_index()
+
+        return result
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
+    
+    except Exception as error:
+        logger.error("Error during data aggregation: %s", error)
+        raise DataAggregationError from error
+
+def convert_to_datetime_format(data_frame, column_name):
+    """
+    Convert the specified column in the DataFrame to datetime format.
+    """
+    data_frame[column_name] = pd.to_datetime(data_frame[column_name])
+    return data_frame
+
 
 def handle_empty_dataframe(data_frame):
     """

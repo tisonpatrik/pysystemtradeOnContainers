@@ -44,9 +44,9 @@ def load_and_rename_columns(file_path, column_mapping):
 
 def process_single_csv_file(file, file_path):
     try:
-        time_column_name = file.columns[0]
-        aggregated = aggregate_to_day_based_prices(file, time_column_name)
-        converted = convert_datetime_to_unixtime(aggregated, time_column_name)
+        date_column_name = file.columns[0]
+        aggregated = aggregate_to_day_based_prices(file, date_column_name)
+        converted = convert_datetime_to_unixtime(aggregated, date_column_name)
         data_frame = add_symbol_by_file_name(converted, file_path)
         logger.info("Successfully loaded and added symbol for %s.", file_path)
         return data_frame

@@ -1,20 +1,29 @@
-# fixture.py
-import pytest_asyncio
+import pandas as pd
+import pytest
 
-@pytest_asyncio.fixture
-def mock_connection(mocker):
-    return mocker.Mock()
+# Fixture for sample DataFrame
+@pytest.fixture(scope='module')
+def sample_df():
+    sample_data = {
+        'DATETIME': ['2022-01-01 23:00:00', '2022-01-01 23:10:00', '2022-01-02 23:00:00'],
+        'price': [100, 110, 120]
+    }
+    return pd.DataFrame(sample_data)
 
-# Define AsyncContextManagerMock as a pytest fixture
-@pytest_asyncio.fixture
-def async_context_manager_mock():
-    class AsyncContextManagerMock:
-        async def __aenter__(self):
-            return self
+@pytest.fixture(scope='module')
+def expected_df():
+    expected_data = {
+        'DATETIME': pd.to_datetime(['2022-01-01', '2022-01-02']),  # Ensure datetime dtype
+        'price': [105.0, 120.0]  # Changed to float to match the dtype in result_df
+    }
+    return pd.DataFrame(expected_data)
 
-        async def __aexit__(self, exc_type, exc_value, traceback):
-            pass
 
-        def __call__(self):
-            return self
-    return AsyncContextManagerMock()
+# Fixture for DataFrame with string-formatted datetime
+@pytest.fixture(scope='module')
+def string_datetime_df():
+    sample_data = {
+        'DATETIME': ['2022-01-01 23:00:00', '2022-01-01 23:10:00', '2022-01-02 23:00:00'],
+        'price': [100, 110, 120]
+    }
+    return pd.DataFrame(sample_data)
