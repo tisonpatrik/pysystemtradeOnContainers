@@ -1,32 +1,11 @@
-"""
-Module for Roll Calendars Schema.
-
-This module defines the schema for the roll calendars table, extending from the BaseConfigSchema. 
-It provides the SQL command for creating the table, a mapping of columns from the original CSV 
-files to the database table, the table name, and the path where the origin CSV files are located.
-
-Note: This docstring provides specific details about the module's purpose and functionalities.
-"""
+from typing import Dict
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class RollCalendarsSchema(BaseConfigSchema):
-    """
-    RollCalendarsSchema Class
-
-    This class defines the schema for the 'roll_calendars' table. It includes properties
-    to obtain the SQL command for table creation, the table's name, and a mapping of columns 
-    from the original CSV files to the database table, as well as the path where the origin 
-    CSV files can be found.
-
-    Attributes:
-        column_mapping (Dict[str, str]): Mapping from original CSV column names to DB column names.
-        sql_command (str): SQL command for creating the table.
-        table_name (str): Name of the table.
-        origin_csv_file_path (str): Path to the original CSV file.
-    """
     @property
-    def column_mapping(self):
+    def column_mapping(self) -> Dict[str, str]:
         return {
             "DATE_TIME": "unix_date_time",
             "current_contract": "current_contract",
@@ -35,7 +14,7 @@ class RollCalendarsSchema(BaseConfigSchema):
         }
 
     @property
-    def sql_command(self):
+    def sql_command(self) -> str:
         return """
                 CREATE TABLE roll_calendars (
                         unix_date_time INTEGER,
@@ -48,9 +27,9 @@ class RollCalendarsSchema(BaseConfigSchema):
                 """
 
     @property
-    def table_name(self):
+    def table_name(self) -> str:
         return "roll_calendars"
 
     @property
-    def origin_csv_file_path(self):
+    def origin_csv_file_path(self) -> str:
         return "/path/in/container/roll_calendars_csv/"

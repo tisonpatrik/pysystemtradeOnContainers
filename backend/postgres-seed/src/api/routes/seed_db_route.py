@@ -1,19 +1,14 @@
-"""
-Module for handling the seeding of the database.
-This module provides an API endpoint for filling the database tables with data 
-from preprocessed files stored in the temporary folder.
-"""
-
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging_async
 from src.handlers.seed_db_handler import SeedDBHandler
-from src.api.dependencies.repositories import get_repository
+from src.core.config import settings
 
 router = APIRouter()
+seed_db_handler = SeedDBHandler(settings.database_url)
 
 @router.post("/seed_db/", status_code=status.HTTP_200_OK, name="seed_db")
-async def fill_database(seed_db_handler:SeedDBHandler=Depends(get_repository(SeedDBHandler))):
+async def fill_database():
     """Fill the database tables with data."""
     await execute_with_logging_async(
         seed_db_handler.insert_data_from_csv_async,

@@ -1,10 +1,3 @@
-"""
-Configuration module for the application.
-
-This module defines the configuration class `GlobalConfig` which reads configuration values
-from environment variables.
-"""
-
 import os
 
 from dotenv import load_dotenv
@@ -14,12 +7,6 @@ load_dotenv()
 
 
 class GlobalConfig(BaseConfig):
-    """
-    Global configuration class.
-    This class fetches the values from environment variables using `os.getenv`
-    and defines properties to build database connection strings.
-    """
-
     title: str = os.environ.get("TITLE", "Default Title")
     version: str = "1.0.0"
     description: str = os.environ.get("DESCRIPTION", "Default Description")
@@ -41,16 +28,6 @@ class GlobalConfig(BaseConfig):
 
     @property
     def database_url(self) -> str:
-        """Return the asynchronous database connection URL."""
-        return (
-            f"postgresql://{self.postgres_user}:{self.postgres_password}@"
-            f"{self.postgres_server}:{self.postgres_port}/{self.postgres_db}"
-        )
-    @property
-    def test_database_url(self) -> str:
-        """Return the asynchronous database connection URL."""
-        return (
-            f"postgresql://{self.postgres_user}:{self.postgres_password}@"
-            f"{self.postgres_server}:{self.postgres_port}/{self.postgres_db_tests}"
-        )
+        return f"postgresql://{self.postgres_user}:{self.postgres_password}@{self.postgres_server}:{self.postgres_port}/{self.postgres_db}"
+
 settings = GlobalConfig()

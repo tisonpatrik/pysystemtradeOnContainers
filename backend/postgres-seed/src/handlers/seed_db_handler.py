@@ -1,57 +1,63 @@
-"""Module to handle seeding the database asynchronously."""
-
 import asyncio
 import logging
 
 from src.data_processing.csv_helper import load_csv
+from src.db.repositories.data_inserter import DataInserter
+from src.db.schemas.base_config_schema import BaseConfigSchema
 from src.db.schemas.schemas import get_schemas
-from src.db.data_inserter import DataInserter
 
+# Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class SeedDBHandler:
-    """
-    Initializes the SeedDBHandler with the given schemas and database repository,
-    or defaults if none provided.
+    def __init__(self, database_url):
+        """
+        Initializes the SeedDBHandler with the given schemas and database repository,
+        or defaults if none provided.
 
-    Parameters:
-    - schemas: List of configuration schemas to be processed.
-    - repository: Repository for database operations.
-    """
-    def __init__(self, conn):
-        """Initialize the handler with schemas fetched from get_schemas."""
+        Parameters:
+        - schemas: List of configuration schemas to be processed.
+        - repository: Repository for database operations.
+        """
         self.schemas = get_schemas()
-        self.connection = conn
-        self.repository = DataInserter(self.connection)
+        self.database_url = database_url
 
-    async def insert_data_from_csv_async(self):
+    async def insert_data_from_csv_async(self) -> None:
         """
         Asynchronously inserts data from CSV files into the database for all given schemas.
 
         This involves loading the data from each CSV file and inserting it into the database according to the table name
         specified in each schema.
         """
-        
-        tasks = [self._load_csv_and_insert_data_to_db_async(schema) for schema in self.schemas]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        tasks = [
+            self._load_csv_and_insert_data_to_db_async(schema)
+            for schema in self.schemas
+        ]
+        results = await asyncio.gather(
+            *tasks, return_exceptions=True
+        )  # Change here to capture exceptions
 
         for result in results:
             if isinstance(result, Exception):
-                logger.error("Error occurred while inserting data from CSV: %s", result)
+                logger.error(f"Error occurred while inserting data from CSV: {result}")
 
-
-    async def _load_csv_and_insert_data_to_db_async(self, schema):
+    async def _load_csv_and_insert_data_to_db_async(
+        self, schema: BaseConfigSchema
+    ) -> None:
         """
         Asynchronously loads data from a CSV file specified in a given schema and inserts it into the database.
 
         Parameters:
         - schema: The configuration schema detailing the CSV file path and target table name.
         """
-        
+        data_seeder = DataInserter(self.database_url)
         try:
-            data_frame = load_csv(schema.file_path)
-            await self.repository.insert_dataframe_async(data_frame, schema.table_name)
-        except Exception as error:
-            logger.error("Error occurred while processing the CSV file %s: %s", schema.file_path, error)
-            raise error
+            df = load_csv(schema.file_path)
+            await data_seeder.insert_dataframe_async(df, schema.table_name)
+        except Exception as e:
+            logger.error(
+                f"Error occurred while processing the CSV file {schema.file_path}: {e}"
+            )
+            raise e  # Re-raise the exception for the gather method to capture

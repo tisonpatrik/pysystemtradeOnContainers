@@ -1,10 +1,5 @@
-"""
-Table Dropper module.
-
-This module provides an interface to drop all tables and indexes from a PostgreSQL database.
-"""
-
 import logging
+import asyncpg
 
 # Setting up the logger
 logging.basicConfig(level=logging.INFO)
@@ -14,8 +9,8 @@ class TableDropper:
     """
     Represents an interface to drop all tables and indexes from a PostgreSQL database.
     """
-    def __init__(self, connection):
-        self.connection = connection
+    def __init__(self, database_url):
+        self.database_url = database_url
 
     async def drop_all_tables_async(self):
         """
@@ -24,7 +19,6 @@ class TableDropper:
         Returns:
         - None
         """
-
         # Generate the SQL command to drop all tables
         drop_tables_command = (
             "DO $$ DECLARE r RECORD; "
@@ -40,13 +34,14 @@ class TableDropper:
             "END LOOP; END $$;"
         )
 
-        sql_commands = [drop_tables_command, drop_indexes_command]
+        # Connect to the database
+        conn = await asyncpg.connect(self.database_url)
 
-        async with self.connection.transaction():
-            for sql_command in sql_commands:
-                await self.connection.execute(sql_command)
+        try:
+            async with conn.transaction():
+                await conn.execute(drop_tables_command)
+                await conn.execute(drop_indexes_command)
+        finally:
+            await conn.close()
 
-        # Log successful table and index drop
         logger.info("Successfully dropped all tables and indexes from the database")
-
-        # Close communication with the PostgreSQL database server
