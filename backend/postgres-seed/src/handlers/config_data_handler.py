@@ -6,7 +6,7 @@ import logging
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import fill_empty_values
 from src.data_processing.data_preprocessor import load_and_rename_columns
-from src.db.schemas.schemas import get_schemas
+from src.db.schemas.schemas import get_configs_schemas
 from src.handlers.errors import ProcessingError
 
 # Initialize logger
@@ -23,7 +23,7 @@ class ConfigDataHandler:
     """
     def __init__(self, conn):
         """Initialize the handler with schemas fetched from get_schemas."""
-        self.config_schemas = get_schemas()
+        self.config_schemas = get_configs_schemas()
         self.connection = conn
 
     def handle_data_processing(self) -> None:
