@@ -76,6 +76,8 @@ def aggregate_to_day_based_prices(data_frame):
         # Resample to daily frequency using the mean of the prices for each day
         result = data_frame.resample('D').mean().dropna().reset_index()
 
+        # Round the price to 1 decimal place
+        result['price'] = result['price'].round(1)
         return result
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
