@@ -7,8 +7,9 @@ datetime columns to UNIX timestamp, and aggregate raw prices to daily averages.
 """
 
 import logging
-
 import pandas as pd
+
+from datetime import datetime
 from src.data_processing.errors import (
     ColumnRenameError,
     EmptyValueFillError,
@@ -56,7 +57,8 @@ def convert_datetime_to_unixtime(data_frame):
     Converts the date_column to UNIX time.
     """
     try:
-        data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time']).astype(int) / 10**9
+        data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time']).astype(int) // 10**9
+        data_frame = data_frame.dropna()
         return data_frame
     except Exception as error:
         logger.error("Error during date-time conversion: %s", error)
@@ -64,9 +66,7 @@ def convert_datetime_to_unixtime(data_frame):
 
 def aggregate_to_day_based_prices(data_frame):
     try:
-        # Convert DATETIME to datetime format
-        data_frame = convert_to_datetime_format(data_frame, 'unix_date_time')
-
+        data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time'])
         # Ensure the aggregation_column is of a numeric type
         data_frame['price'] = pd.to_numeric(data_frame['price'], errors='coerce')
 
@@ -80,10 +80,3 @@ def aggregate_to_day_based_prices(data_frame):
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
-
-def convert_to_datetime_format(data_frame, column_name):
-    """
-    Convert the specified column in the DataFrame to datetime format.
-    """
-    data_frame[column_name] = pd.to_datetime(data_frame[column_name])
-    return data_frame

@@ -8,9 +8,6 @@ class RollCalendarsSchema(BaseConfigSchema):
     def column_mapping(self) -> Dict[str, str]:
         return {
             "DATE_TIME": "unix_date_time",
-            "current_contract": "current_contract",
-            "next_contract": "next_contract",
-            "carry_contract": "carry_contract",
         }
 
     @property
