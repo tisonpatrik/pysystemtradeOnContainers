@@ -24,3 +24,5 @@ class ColumnRenameError(Exception):
     """Raised when there's an error while renaming DataFrame columns."""
 class ProcessingError(Exception):
     """An error occurred while processing the data."""
+class DuplicateRowsError(Exception):
+    """Raised when there are duplicate rows based on specified columns."""

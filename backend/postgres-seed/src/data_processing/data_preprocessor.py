@@ -8,7 +8,6 @@ for downstream analyses.
 
 import logging
 import os
-import pandas as pd
 
 from src.data_processing.csv_helper import load_csv, save_to_csv
 from src.data_processing.errors import (
@@ -19,6 +18,7 @@ from src.data_processing.data_frame_helper import (
     aggregate_to_day_based_prices,
     convert_datetime_to_unixtime,
     rename_columns,
+    concat_dataframes
 )
 
 # Set up logging
@@ -52,7 +52,7 @@ def process_all_csv_in_directory(directory_path, column_mapping):
     return processed_dfs
 
 def save_concatenated_dataframes(data_frames, save_path):
-    concatenated_df = pd.concat(data_frames, ignore_index=True)
+    concatenated_df = concat_dataframes(data_frames)
     drop_unnamed_column(concatenated_df)
     save_to_csv(concatenated_df, save_path)
 

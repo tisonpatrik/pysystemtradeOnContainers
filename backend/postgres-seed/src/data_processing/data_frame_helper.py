@@ -9,13 +9,14 @@ datetime columns to UNIX timestamp, and aggregate raw prices to daily averages.
 import logging
 import pandas as pd
 
-from datetime import datetime
 from src.data_processing.errors import (
     ColumnRenameError,
     EmptyValueFillError,
     DataAggregationError,
     SymbolAdditionError,
-    DateTimeConversionError,)
+    DateTimeConversionError,
+    DuplicateRowsError
+    )
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -82,3 +83,11 @@ def aggregate_to_day_based_prices(data_frame):
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
+    
+def concat_dataframes(data_frames):
+    concatenated_df = pd.concat(data_frames, ignore_index=True)
+    duplicate_rows = concatenated_df.duplicated(subset=['unix_date_time', 'symbol'], keep=False)
+    if any(duplicate_rows):
+        raise DuplicateRowsError(f"Found duplicate rows based on 'unix_date_time' and 'symbol': {concatenated_df[duplicate_rows]}")
+    return concatenated_df
+    
