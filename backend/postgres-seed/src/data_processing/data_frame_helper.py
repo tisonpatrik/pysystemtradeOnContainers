@@ -26,6 +26,13 @@ def rename_columns(data_frame, new_column_names):
     """
     Renames DataFrame columns based on the provided dictionary.
     """
+    missing_columns = set(new_column_names.keys()) - set(data_frame.columns)
+    
+    if missing_columns:
+        missing_columns_str = ', '.join(missing_columns)
+        logger.error(f"Columns {missing_columns_str} do not exist in the DataFrame")
+        raise ColumnRenameError(f"Columns {missing_columns_str} do not exist")
+    
     try:
         return data_frame.rename(columns=new_column_names)
     except Exception as error:
@@ -36,11 +43,17 @@ def fill_empty_values(data_frame, fill_value):
     """
     Fills empty values in the DataFrame with the provided fill_value.
     """
+    if isinstance(fill_value, dict):
+        missing_columns = set(fill_value.keys()) - set(data_frame.columns)
+        if missing_columns:
+            raise EmptyValueFillError(f"Columns {', '.join(missing_columns)} do not exist")
+
     try:
         return data_frame.fillna(fill_value)
     except Exception as error:
         logger.error("Error during filling empty values: %s", error)
         raise EmptyValueFillError from error
+
 
 def add_symbol_by_file_name(data_frame, symbol):
     """
@@ -90,4 +103,4 @@ def concat_dataframes(data_frames):
     if any(duplicate_rows):
         raise DuplicateRowsError(f"Found duplicate rows based on 'unix_date_time' and 'symbol': {concatenated_df[duplicate_rows]}")
     return concatenated_df
-    
+
