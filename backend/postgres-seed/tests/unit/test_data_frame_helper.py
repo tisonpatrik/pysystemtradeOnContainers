@@ -6,8 +6,7 @@ from src.data_processing.data_frame_helper import (
     add_symbol_by_file_name,
     convert_datetime_to_unixtime,
     aggregate_to_day_based_prices,
-    convert_column_to_datetime,
-    convert_column_to_numeric
+    convert_column_to_datetime
     )
 from src.data_processing.errors import(
     ColumnRenameError,
@@ -16,7 +15,6 @@ from src.data_processing.errors import(
     DateTimeConversionError,
     DataAggregationError,
     InvalidDatetimeColumnError,
-    InvalidNumericColumnError
 )
 
 # Mock logger for testing

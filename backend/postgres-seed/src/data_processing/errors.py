@@ -38,6 +38,3 @@ class DuplicateRowsError(Exception):
 
 class InvalidDatetimeColumnError(Exception):
     """Raised when the specified column cannot be converted to datetime."""
-
-class InvalidNumericColumnError(Exception):
-    """Raised when the specified column cannot be converted to numeric."""

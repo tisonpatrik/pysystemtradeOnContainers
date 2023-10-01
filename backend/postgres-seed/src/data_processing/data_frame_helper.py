@@ -17,7 +17,6 @@ from src.data_processing.errors import (
     DateTimeConversionError,
     DuplicateRowsError,
     InvalidDatetimeColumnError,
-    InvalidNumericColumnError
     )
 
 # Set up logging
