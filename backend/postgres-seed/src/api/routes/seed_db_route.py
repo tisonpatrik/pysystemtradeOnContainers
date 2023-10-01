@@ -1,3 +1,8 @@
+"""
+This module defines the API routes for seeding the database.
+It includes a POST endpoint to fill the database tables with data from a temporary folder.
+"""
+
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging_async
