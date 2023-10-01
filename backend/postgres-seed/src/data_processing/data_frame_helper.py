@@ -15,7 +15,9 @@ from src.data_processing.errors import (
     DataAggregationError,
     SymbolAdditionError,
     DateTimeConversionError,
-    DuplicateRowsError
+    DuplicateRowsError,
+    InvalidDatetimeColumnError,
+    InvalidNumericColumnError
     )
 
 # Set up logging
@@ -78,21 +80,15 @@ def convert_datetime_to_unixtime(data_frame):
         logger.error("Error during date-time conversion: %s", error)
         raise DateTimeConversionError from error
 
-def aggregate_to_day_based_prices(data_frame):
+def aggregate_to_day_based_prices(df):
     try:
-        data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time'])
-        # Ensure the aggregation_column is of a numeric type
-        data_frame['price'] = pd.to_numeric(data_frame['price'], errors='coerce')
-    
-        if data_frame['price'].isna().any():
-            logger.error("Non-numeric price values found")
-            raise DataAggregationError("Non-numeric price values found")
-
+        coverted_date = convert_column_to_datetime(df,'unix_date_time' )
+        converted_price = convert_column_to_numeric(coverted_date, 'price')
         # Set DATETIME as index
-        data_frame.set_index('unix_date_time', inplace=True)
+        converted_price.set_index('unix_date_time', inplace=True)
 
         # Resample to daily frequency using the mean of the prices for each day
-        result = data_frame.resample('D').mean().dropna().reset_index()
+        result = converted_price.resample('D').mean().dropna().reset_index()
 
         # Round the price to 1 decimal place
         result['price'] = result['price'].round(1)
@@ -100,7 +96,31 @@ def aggregate_to_day_based_prices(data_frame):
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
-    
+
+def convert_column_to_datetime(df, column_name):
+    new_df = df.copy()  # Create a new DataFrame
+    try:
+        # Ensure the column is of a datetime type
+        new_df[column_name] = pd.to_datetime(new_df[column_name], errors='coerce')
+        if new_df[column_name].isna().any():
+            raise InvalidDatetimeColumnError(f"Failed to convert all values in '{column_name}' to datetime.")
+    except Exception as e:
+        logger.error(f"Error converting column '{column_name}' to datetime: {str(e)}")
+        raise
+    return new_df
+
+def convert_column_to_numeric(df, column_name):
+    new_df = df.copy()  # Create a new DataFrame
+    try:
+        # Ensure the column is of a numeric type
+        new_df[column_name] = pd.to_numeric(new_df[column_name], errors='coerce')
+        if new_df[column_name].isna().any():
+            raise InvalidNumericColumnError(f"Failed to convert all values in '{column_name}' to numeric.")
+    except Exception as e:
+        logger.error(f"Error converting column '{column_name}' to numeric: {str(e)}")
+        raise
+    return new_df
+
 def concat_dataframes(data_frames):
     concatenated_df = pd.concat(data_frames, ignore_index=True)
     duplicate_rows = concatenated_df.duplicated(subset=['unix_date_time', 'symbol'], keep=False)

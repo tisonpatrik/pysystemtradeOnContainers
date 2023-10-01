@@ -43,7 +43,7 @@ def mock_dataframe_for_datetime():
 def mock_dataframe_for_aggregation_success():
     data = {
         'unix_date_time': ['2022-01-01 01:00:00', '2022-01-01 02:00:00', '2022-01-02 01:00:00'],
-        'price': [1, 2, 3]
+        'price': [1.0, 2.0, 3.0]
     }
     return pd.DataFrame(data)
 
@@ -62,4 +62,28 @@ def mock_dataframe_for_aggregation_fail():
         'unix_date_time': ['2022-01-01 01:00:00', '2022-01-01 02:00:00'],
         'price': ['not_a_number', 'another_non_number']
     }
+    return pd.DataFrame(data)
+
+# Mock DataFrame for successful datetime conversion
+@pytest.fixture
+def mock_dataframe_for_datetime_success():
+    data = {'datetime_column': ['2022-01-01', '2022-01-02']}
+    return pd.DataFrame(data)
+
+# Mock DataFrame for failed datetime conversion
+@pytest.fixture
+def mock_dataframe_for_datetime_fail():
+    data = {'datetime_column': ['not_a_datetime', 'another_not_datetime']}
+    return pd.DataFrame(data)
+
+# Mock DataFrame for successful numeric conversion
+@pytest.fixture
+def mock_dataframe_for_numeric_success():
+    data = {'numeric_column': [1, 2]}
+    return pd.DataFrame(data)
+
+# Mock DataFrame for failed numeric conversion
+@pytest.fixture
+def mock_dataframe_for_numeric_fail():
+    data = {'numeric_column': ['not_a_number', 'another_not_number']}
     return pd.DataFrame(data)

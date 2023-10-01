@@ -26,3 +26,7 @@ class ProcessingError(Exception):
     """An error occurred while processing the data."""
 class DuplicateRowsError(Exception):
     """Raised when there are duplicate rows based on specified columns."""
+class InvalidDatetimeColumnError(Exception):
+    """Raised when the specified column cannot be converted to datetime."""
+class InvalidNumericColumnError(Exception):
+    """Raised when the specified column cannot be converted to numeric."""

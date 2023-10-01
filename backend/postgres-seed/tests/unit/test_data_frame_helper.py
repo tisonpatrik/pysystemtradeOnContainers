@@ -5,14 +5,18 @@ from src.data_processing.data_frame_helper import (
     fill_empty_values,
     add_symbol_by_file_name,
     convert_datetime_to_unixtime,
-    aggregate_to_day_based_prices
+    aggregate_to_day_based_prices,
+    convert_column_to_datetime,
+    convert_column_to_numeric
     )
 from src.data_processing.errors import(
     ColumnRenameError,
     EmptyValueFillError,
     SymbolAdditionError,
     DateTimeConversionError,
-    DataAggregationError
+    DataAggregationError,
+    InvalidDatetimeColumnError,
+    InvalidNumericColumnError
 )
 
 # Mock logger for testing
@@ -78,3 +82,23 @@ def test_aggregate_to_day_based_prices_success(mock_dataframe_for_aggregation_su
 def test_aggregate_to_day_based_prices_fail(mock_dataframe_for_aggregation_fail):
     with pytest.raises(DataAggregationError):
         aggregate_to_day_based_prices(mock_dataframe_for_aggregation_fail)
+
+# Test for successful datetime conversion
+def test_convert_column_to_datetime_success(mock_dataframe_for_datetime_success):
+    result = convert_column_to_datetime(mock_dataframe_for_datetime_success, 'datetime_column')
+    assert result['datetime_column'].dtype == 'datetime64[ns]'
+
+# Test for failed datetime conversion
+def test_convert_column_to_datetime_fail(mock_dataframe_for_datetime_fail):
+    with pytest.raises(InvalidDatetimeColumnError):
+        convert_column_to_datetime(mock_dataframe_for_datetime_fail, 'datetime_column')
+
+# Test for successful numeric conversion
+def test_convert_column_to_numeric_success(mock_dataframe_for_numeric_success):
+    convert_column_to_numeric(mock_dataframe_for_numeric_success, 'numeric_column')
+    assert mock_dataframe_for_numeric_success['numeric_column'].dtype == 'int64'
+
+# Test for failed numeric conversion
+def test_convert_column_to_numeric_fail(mock_dataframe_for_numeric_fail):
+    with pytest.raises(InvalidNumericColumnError):
+        convert_column_to_numeric(mock_dataframe_for_numeric_fail, 'numeric_column')
