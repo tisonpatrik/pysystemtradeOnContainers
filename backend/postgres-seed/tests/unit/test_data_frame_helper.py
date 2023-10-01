@@ -92,13 +92,3 @@ def test_convert_column_to_datetime_success(mock_dataframe_for_datetime_success)
 def test_convert_column_to_datetime_fail(mock_dataframe_for_datetime_fail):
     with pytest.raises(InvalidDatetimeColumnError):
         convert_column_to_datetime(mock_dataframe_for_datetime_fail, 'datetime_column')
-
-# Test for successful numeric conversion
-def test_convert_column_to_numeric_success(mock_dataframe_for_numeric_success):
-    convert_column_to_numeric(mock_dataframe_for_numeric_success, 'numeric_column')
-    assert mock_dataframe_for_numeric_success['numeric_column'].dtype == 'int64'
-
-# Test for failed numeric conversion
-def test_convert_column_to_numeric_fail(mock_dataframe_for_numeric_fail):
-    with pytest.raises(InvalidNumericColumnError):
-        convert_column_to_numeric(mock_dataframe_for_numeric_fail, 'numeric_column')

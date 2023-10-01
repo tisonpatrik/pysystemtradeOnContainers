@@ -75,15 +75,3 @@ def mock_dataframe_for_datetime_success():
 def mock_dataframe_for_datetime_fail():
     data = {'datetime_column': ['not_a_datetime', 'another_not_datetime']}
     return pd.DataFrame(data)
-
-# Mock DataFrame for successful numeric conversion
-@pytest.fixture
-def mock_dataframe_for_numeric_success():
-    data = {'numeric_column': [1, 2]}
-    return pd.DataFrame(data)
-
-# Mock DataFrame for failed numeric conversion
-@pytest.fixture
-def mock_dataframe_for_numeric_fail():
-    data = {'numeric_column': ['not_a_number', 'another_not_number']}
-    return pd.DataFrame(data)

@@ -90,11 +90,10 @@ def aggregate_to_day_based_prices(data_frame):
     """
     try:
         converted_date = convert_column_to_datetime(data_frame, 'unix_date_time')
-        converted_price = convert_column_to_numeric(converted_date, 'price')
         # Set DATETIME as index
-        converted_price.set_index('unix_date_time', inplace=True)
+        converted_date.set_index('unix_date_time', inplace=True)
         # Resample to daily frequency using the mean of the prices for each day
-        result = converted_price.resample('D').mean().dropna().reset_index()
+        result = converted_date.resample('D').mean().dropna().reset_index()
         # Round the price to 1 decimal place
         result['price'] = result['price'].round(1)
         return result
@@ -124,30 +123,6 @@ def convert_column_to_datetime(data_frame, column_name):
         logger.error("Error converting column '%s' to datetime: %s", column_name, str(exc))
         raise
     return new_df
-
-def convert_column_to_numeric(data_frame, column_name):
-    """
-    Converts a specified column in the DataFrame to numeric format.
-    
-    Parameters:
-        data_frame (pd.DataFrame): The DataFrame containing the column to convert.
-        column_name (str): The name of the column to convert to numeric.
-        
-    Returns:
-        pd.DataFrame: A new DataFrame with the specified column converted to numeric.
-    """
-    new_df = data_frame.copy()  # Create a new DataFrame
-    try:
-        # Ensure the column is of a numeric type
-        new_df[column_name] = pd.to_numeric(new_df[column_name], errors='coerce')
-        # Check for any NA/NaN values in the column
-        if new_df[column_name].isna().any():
-            raise InvalidNumericColumnError(f"Failed to convert all values in '{column_name}' to numeric.")
-    except Exception as exc:
-        logger.error("Error converting column '%s' to numeric: %s", column_name, str(exc))
-        raise
-    return new_df
-
 
 def concat_dataframes(data_frames):
     """
