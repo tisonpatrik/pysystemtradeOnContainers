@@ -83,6 +83,10 @@ def aggregate_to_day_based_prices(data_frame):
         data_frame['unix_date_time'] = pd.to_datetime(data_frame['unix_date_time'])
         # Ensure the aggregation_column is of a numeric type
         data_frame['price'] = pd.to_numeric(data_frame['price'], errors='coerce')
+    
+        if data_frame['price'].isna().any():
+            logger.error("Non-numeric price values found")
+            raise DataAggregationError("Non-numeric price values found")
 
         # Set DATETIME as index
         data_frame.set_index('unix_date_time', inplace=True)
