@@ -18,7 +18,6 @@ from src.db.errors import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class DataLoader:
     """
     Class responsible for loading data from a database into a Pandas DataFrame.

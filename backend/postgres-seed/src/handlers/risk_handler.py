@@ -41,8 +41,8 @@ class RiskHandler:
 
         for symbol in symbols:
             try:
-                sql_template = "SELECT * FROM adjusted_prices WHERE symbol = %s"  # Using %s as placeholder
-                parameters = [symbol]  # Parameters should be a list
+                sql_template = "SELECT * FROM adjusted_prices WHERE symbol = $1;"
+                parameters = {"symbol": symbol}
 
                 adjusted_prices_data = await data_loader.fetch_data_as_dataframe_async(sql_template, parameters)
                 
