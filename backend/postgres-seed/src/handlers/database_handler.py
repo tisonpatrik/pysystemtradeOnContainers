@@ -12,7 +12,6 @@ from src.handlers.errors import DatabaseError
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class DatabaseHandler:
     """
     A class for handling database-related tasks such as table creation and reset.
@@ -30,10 +29,12 @@ class DatabaseHandler:
         for schema in self.config_schemas:
             try:
                 await creator.create_table_async(schema.sql_command)
-            except Exception as error:
+            except DatabaseError as db_error:  # Catching a more specific exception
                 logger.error(
-                    "Error creating table with SQL command %s: %s", schema.sql_command, error
-                    )
+                    "Database error while creating table with SQL command %s: %s",
+                    schema.sql_command,
+                    db_error,
+                )
 
     async def reset_tables_async(self) -> None:
         """
@@ -41,7 +42,7 @@ class DatabaseHandler:
         """
         dropper = TableDropper(self.connection)
         try:
-           await dropper.drop_all_tables_async()
-        except Exception as error:
-            logger.error("Failed to reset the database: %s", str(error))
-            raise DatabaseError("Failed to reset the database.") from error
+            await dropper.drop_all_tables_async()
+        except DatabaseError as db_error:  # Catching a more specific exception
+            logger.error("Database error while resetting the database: %s", db_error)
+            raise DatabaseError("Failed to reset the database.") from db_error

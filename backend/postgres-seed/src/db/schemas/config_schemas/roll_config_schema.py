@@ -2,7 +2,6 @@
 This module defines the schema for configuring the 'roll_config' database table and its associated CSV file.
 """
 
-from typing import Dict
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
 class RollConfigSchema(BaseConfigSchema):
