@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'instrument_config' database 
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class InstrumentConfigSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'instrument_config' database table.

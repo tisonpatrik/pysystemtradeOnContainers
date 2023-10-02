@@ -2,16 +2,19 @@
 This module contains a class for dropping all tables and indexes from a PostgreSQL database.
 """
 import logging
+
 import asyncpg
 
 # Setting up the logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class TableDropper:
     """
     Represents an interface to drop all tables and indexes from a PostgreSQL database.
     """
+
     def __init__(self, database_url):
         self.database_url = database_url
 

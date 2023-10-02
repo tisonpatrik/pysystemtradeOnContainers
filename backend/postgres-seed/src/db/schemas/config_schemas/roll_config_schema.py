@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'roll_config' database table 
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class RollConfigSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'roll_config' database table.

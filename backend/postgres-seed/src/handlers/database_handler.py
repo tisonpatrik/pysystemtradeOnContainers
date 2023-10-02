@@ -3,6 +3,7 @@ Module to handle database operations like table initialization and reset.
 """
 
 import logging
+
 from src.db.repositories.table_creator import TableCreator
 from src.db.repositories.table_dropper import TableDropper
 from src.db.schemas.schemas import get_schemas
@@ -12,10 +13,12 @@ from src.handlers.errors import DatabaseError
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DatabaseHandler:
     """
     A class for handling database-related tasks such as table creation and reset.
     """
+
     def __init__(self, conn):
         """Initialize the handler with schemas fetched from get_schemas."""
         self.config_schemas = get_schemas()

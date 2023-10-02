@@ -14,10 +14,12 @@ from src.db.schemas.schemas import get_schemas
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class SeedDBHandler:
     """
     This class provides methods to seed the database asynchronously from CSV files according to given schemas.
     """
+
     def __init__(self, database_url):
         """
         Initialize the SeedDBHandler with database URL and fetch all relevant schemas.
@@ -48,5 +50,9 @@ class SeedDBHandler:
             data_frame = load_csv(schema.file_path)
             await data_seeder.insert_dataframe_async(data_frame, schema.table_name)
         except Exception as error:
-            logger.error("Error occurred while processing the CSV file %s: %s", schema.file_path, error)
+            logger.error(
+                "Error occurred while processing the CSV file %s: %s",
+                schema.file_path,
+                error,
+            )
             raise error

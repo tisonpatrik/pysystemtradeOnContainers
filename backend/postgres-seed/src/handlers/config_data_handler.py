@@ -3,11 +3,13 @@ Module to handle configuration data processing.
 """
 
 import logging
+
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import fill_empty_values
-from src.data_processing.data_preprocessor import load_csv , rename_columns
+from src.data_processing.data_preprocessor import load_csv, rename_columns
 from src.db.schemas.schemas import get_configs_schemas
 from src.handlers.errors import ProcessingError
+
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,6 +22,7 @@ class ConfigDataHandler:
     Parameters:
     - schemas: List of configuration schemas to be processed.
     """
+
     def __init__(self):
         self.schemas = get_configs_schemas()
 
@@ -31,7 +34,11 @@ class ConfigDataHandler:
         results = [self._process_config_schema(schema) for schema in self.schemas]
         for schema, result in zip(self.schemas, results):
             if isinstance(result, Exception):
-                logger.error("Error processing data for schema %s: %s", schema.__class__.__name__, result)
+                logger.error(
+                    "Error processing data for schema %s: %s",
+                    schema.__class__.__name__,
+                    result,
+                )
 
     def _process_config_schema(self, schema):
         """
@@ -46,11 +53,19 @@ class ConfigDataHandler:
         """
         try:
             data = load_csv(schema.origin_csv_file_path)
-            renamed = rename_columns(data,schema.column_mapping)
-            filled = fill_empty_values(renamed, fill_value=0)  # Assuming you want to fill with 0
+            renamed = rename_columns(data, schema.column_mapping)
+            filled = fill_empty_values(
+                renamed, fill_value=0
+            )  # Assuming you want to fill with 0
             save_to_csv(filled, schema.file_path)
-            logger.info("Data processing completed for schema: %s", schema.__class__.__name__)
+            logger.info(
+                "Data processing completed for schema: %s", schema.__class__.__name__
+            )
             return True
         except Exception as error:  # More specific exceptions are advisable
-            logger.error("Error processing data for schema %s: %s", schema.__class__.__name__, error)
+            logger.error(
+                "Error processing data for schema %s: %s",
+                schema.__class__.__name__,
+                error,
+            )
             raise ProcessingError from error

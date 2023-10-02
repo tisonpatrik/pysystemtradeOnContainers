@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'spread_cost' database table 
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class SpreadCostSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'spread_cost' database table.

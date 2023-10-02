@@ -1,10 +1,12 @@
 """This module contains a class for creating tables in a PostgreSQL database."""
 
 import logging
+
 import asyncpg
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class TableCreator:
     """A class to create tables in a PostgreSQL database."""
@@ -31,7 +33,9 @@ class TableCreator:
             await conn.execute(sql_command)
 
             # Log successful table creation
-            logger.info("Successfully executed the following SQL command: %s", sql_command)
+            logger.info(
+                "Successfully executed the following SQL command: %s", sql_command
+            )
 
         except asyncpg.PostgresError as error:  # Be specific about the exception
             logger.error("Failed to execute the SQL command due to: %s", error)

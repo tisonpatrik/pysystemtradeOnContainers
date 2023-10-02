@@ -23,6 +23,7 @@ class DataLoader:
     """
     Class responsible for loading data from a database into a Pandas DataFrame.
     """
+
     def __init__(self, database_url):
         """
         Initialize DataLoader with a database URL.
@@ -71,16 +72,24 @@ class DataLoader:
                 return await statement.fetch(**params_copy)
             except asyncpg.exceptions.UndefinedTableError as exc:
                 logger.error("Table or column not defined in SQL: %s", exc)
-                raise TableOrColumnNotFoundError(f"Table or column not defined in SQL: {exc}") from exc
+                raise TableOrColumnNotFoundError(
+                    f"Table or column not defined in SQL: {exc}"
+                ) from exc
             except asyncpg.exceptions.SyntaxOrAccessError as exc:
                 logger.error("Syntax error or access violation in SQL: %s", exc)
-                raise SQLSyntaxError(f"Syntax error or access violation in SQL: {exc}") from exc
+                raise SQLSyntaxError(
+                    f"Syntax error or access violation in SQL: {exc}"
+                ) from exc
             except asyncpg.exceptions.DataError as exc:
                 logger.error("Parameter mismatch or data error: %s", exc)
-                raise ParameterMismatchError(f"Parameter mismatch or data error: {exc}") from exc
+                raise ParameterMismatchError(
+                    f"Parameter mismatch or data error: {exc}"
+                ) from exc
             except Exception as exc:
                 logger.error("Error executing SQL statement: %s", exc)
-                raise DatabaseInteractionError(f"Error executing SQL statement: {exc}") from exc
+                raise DatabaseInteractionError(
+                    f"Error executing SQL statement: {exc}"
+                ) from exc
 
     def _convert_to_dataframe(self, rows):
         logger.info("Converting fetched rows to DataFrame.")

@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'fx_prices' database table an
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class FxPricesSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'fx_prices' database table.

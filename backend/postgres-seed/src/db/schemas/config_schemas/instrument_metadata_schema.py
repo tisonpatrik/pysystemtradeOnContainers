@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'instrument_metadata' databas
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class InstrumentMetadataSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'instrument_metadata' database table.

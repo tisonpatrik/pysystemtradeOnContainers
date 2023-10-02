@@ -11,6 +11,7 @@ from src.handlers.config_data_handler import ConfigDataHandler
 router = APIRouter()
 config_handler = ConfigDataHandler()
 
+
 @router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
 def parse_files():
     """Parse files and store them in temp."""

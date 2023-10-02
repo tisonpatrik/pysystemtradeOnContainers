@@ -4,7 +4,9 @@ These functions are used to handle both asynchronous and synchronous operations.
 """
 
 import logging
+
 from fastapi import HTTPException, status
+
 
 async def execute_with_logging_async(task, *args, start_msg, end_msg):
     """Helper function to wrap asynchronous task execution with logging."""

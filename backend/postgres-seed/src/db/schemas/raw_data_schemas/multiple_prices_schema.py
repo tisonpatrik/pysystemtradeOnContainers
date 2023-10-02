@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'multiple_prices' database ta
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class MultiplePricesSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'multiple_prices' database table.

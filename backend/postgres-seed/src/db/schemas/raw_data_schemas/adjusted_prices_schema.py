@@ -4,6 +4,7 @@ This module defines the schema for configuring the 'adjusted_prices' database ta
 
 from src.db.schemas.base_config_schema import BaseConfigSchema
 
+
 class AdjustedPricesSchema(BaseConfigSchema):
     """
     Concrete class that implements the BaseConfigSchema for the 'adjusted_prices' database table.

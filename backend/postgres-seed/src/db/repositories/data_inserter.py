@@ -1,9 +1,11 @@
 """
 This module provides functionalities for inserting data into a database asynchronously.
 """
-from contextlib import asynccontextmanager
 import logging
+from contextlib import asynccontextmanager
+
 import asyncpg
+
 from src.db.errors import (
     DatabaseConnectionError,
     DatabaseInteractionError,
@@ -14,10 +16,12 @@ from src.db.errors import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DataInserter:
     """
     Class for inserting data into a database table asynchronously.
     """
+
     def __init__(self, database_url):
         """
         Initialize the DataInserter with a database URL.
@@ -56,11 +60,12 @@ class DataInserter:
                 await self._insert_records_async(conn, data_frame, table_name)
             except asyncpg.exceptions.UndefinedTableError as exc:
                 logger.error("Table or column not defined in SQL: %s", exc)
-                raise TableOrColumnNotFoundError(f"Table or column not defined in SQL: {exc}") from exc
+                raise TableOrColumnNotFoundError(
+                    f"Table or column not defined in SQL: {exc}"
+                ) from exc
             except Exception as exc:
                 logger.error("Error inserting data: %s", exc)
                 raise DatabaseInteractionError(f"Error inserting data: {exc}") from exc
-
 
     async def _insert_records_async(self, conn, data_frame, table_name):
         records = data_frame.values.tolist()

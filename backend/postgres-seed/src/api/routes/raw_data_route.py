@@ -11,6 +11,7 @@ from src.handlers.raw_data_handler import RawDataHandler
 router = APIRouter()
 data_handler = RawDataHandler()
 
+
 @router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
 def parse_raw_data_files():
     """Parse raw data files and store them in temp."""
