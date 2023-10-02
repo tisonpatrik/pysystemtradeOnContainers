@@ -17,10 +17,9 @@ class RiskHandler:
         """
         Asynchronously seed the risk values for all dataset.
        """
-        data_loader = DataLoader(self.database_url)
         data_inserter = DataInserter(self.database_url)
         risk_schema = RobustVolatility()
-        symbols = await self.get_all_symbols(data_loader)
+        symbols = await self.get_all_symbols()
         adjusted_prices = await self.fetch_datasets_for_symbols(symbols)
         
         for data in adjusted_prices.items():
@@ -29,28 +28,30 @@ class RiskHandler:
             # Insert the volatility into the database
             await data_inserter.insert_dataframe_async(volatility, risk_schema.table_name)
     
-    async def get_all_symbols(self, data_loader):
-        sql_template = "SELECT symbol FROM instrument_config"
-        parameters = {}
-        symbols = await data_loader.fetch_data_as_dataframe_async(sql_template, parameters)
-        return symbols
-    
+    async def get_all_symbols(self):
+        data_loader = DataLoader(self.database_url)
+        query = "SELECT symbol FROM instrument_config"
+        symbols_df = await data_loader.fetch_data_as_dataframe_async(query)
+        return symbols_df
+
     async def fetch_datasets_for_symbols(self, symbols):
         datasets = {}
         data_loader = DataLoader(self.database_url)
+        for symbol in symbols.items():
+            
+            query = f"SELECT * FROM adjusted_prices WHERE symbol = '{symbol}'"
+            logger.debug(f"Executing query: {query}")
 
-        for symbol in symbols:
             try:
-                sql_template = "SELECT * FROM adjusted_prices WHERE symbol = $1;"
-                parameters = {"symbol": symbol}
-
-                adjusted_prices_data = await data_loader.fetch_data_as_dataframe_async(sql_template, parameters)
+                adjusted_prices_data = await data_loader.fetch_data_as_dataframe_async(query)
                 
-                if not adjusted_prices_data.empty:
-                    datasets[symbol] = adjusted_prices_data
-                else:
+                if adjusted_prices_data.empty:
                     logger.info(f"No data found for symbol: {symbol}")
+                else:
+                    datasets[symbol] = adjusted_prices_data
+                    
             except Exception as e:
                 logger.error(f"Error fetching data for symbol {symbol}: {e}")
 
         return datasets
+
