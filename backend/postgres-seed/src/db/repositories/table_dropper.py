@@ -1,3 +1,6 @@
+"""
+This module contains a class for dropping all tables and indexes from a PostgreSQL database.
+"""
 import logging
 import asyncpg
 
