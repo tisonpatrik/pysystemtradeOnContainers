@@ -8,9 +8,8 @@ import logging
 from src.data_processing.csv_helper import load_csv
 from src.db.repositories.data_inserter import DataInserter
 from src.db.schemas.base_config_schema import BaseConfigSchema
-from src.db.schemas.schemas import get_schemas
+from src.db.schemas.schemas import get_data_schemas
 
-# Initialize logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class SeedDBHandler:
         """
         Initialize the SeedDBHandler with database URL and fetch all relevant schemas.
         """
-        self.schemas = get_schemas()
+        self.schemas = get_data_schemas()
         self.database_url = database_url
 
     async def insert_data_from_csv_async(self):

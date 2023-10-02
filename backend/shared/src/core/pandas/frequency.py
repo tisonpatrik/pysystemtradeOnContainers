@@ -3,8 +3,8 @@ from typing import Union, List
 import numpy as np
 import pandas as pd
 
-from core.constants import missing_data
-from core.dateutils import (
+from shared.src.core.constants import missing_data
+from shared.src.core.dateutils import (
     NOTIONAL_CLOSING_TIME_AS_PD_OFFSET,
     check_time_matches_closing_time_to_second,
     BUSINESS_DAYS_IN_YEAR,
@@ -12,7 +12,7 @@ from core.dateutils import (
     MONTHS_IN_YEAR,
     CALENDAR_DAYS_IN_YEAR,
 )
-from core.pandas.pdutils import uniquets
+from shared.src.core.pandas.pdutils import uniquets
 
 
 def closing_date_rows_in_pd_object(

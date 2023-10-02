@@ -11,7 +11,7 @@ from src.db.schemas.raw_data_schemas.adjusted_prices_schema import AdjustedPrice
 from src.db.schemas.raw_data_schemas.fx_prices_schema import FxPricesSchema
 from src.db.schemas.raw_data_schemas.multiple_prices_schema import MultiplePricesSchema
 from src.db.schemas.raw_data_schemas.roll_calendars_schema import RollCalendarsSchema
-
+from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
 
 def get_schemas():
     """
@@ -20,8 +20,16 @@ def get_schemas():
     Returns:
         list: A list containing all schema objects.
     """
-    return get_configs_schemas() + get_raw_data_schemas()
+    return get_configs_schemas() + get_raw_data_schemas() + get_risk_schemas()
 
+def get_data_schemas():
+    """
+    Aggregates and returns all data schema objects.
+
+    Returns:
+        list: A list containing all data schema objects.
+    """
+    return get_configs_schemas() + get_raw_data_schemas()
 
 def get_configs_schemas():
     """
@@ -51,3 +59,8 @@ def get_raw_data_schemas():
         MultiplePricesSchema(),
         RollCalendarsSchema(),
     ]
+
+def get_risk_schemas():
+    return[
+        RobustVolatility(),
+    ]    
