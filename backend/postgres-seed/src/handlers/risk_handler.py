@@ -36,7 +36,6 @@ class RiskHandler:
         # Insert the volatility into the database  
         await data_inserter.insert_dataframe_async(volatilities, risk_schema.table_name)
 
-
     async def calculate_volatility_for_instrument(self, instrument_name, price_series):
         volatility = robust_vol_calc(price_series).dropna()
         vol_df = volatility.reset_index()
@@ -61,7 +60,6 @@ class RiskHandler:
 
         except Exception as e:
             logger.error(f"Method get_adujsted_prices encountered an error: {e}")
-
 
     def split_dataframe_by_column(self, df):
         # Use groupby to create a grouped object
