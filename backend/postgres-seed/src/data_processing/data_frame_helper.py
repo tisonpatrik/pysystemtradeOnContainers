@@ -161,3 +161,15 @@ def concat_dataframes(data_frames):
             f"Found duplicate rows based on 'unix_date_time' and 'symbol': {concatenated_df[duplicate_rows]}"
         )
     return concatenated_df
+
+def convert_datetime_to_unixtime(data_frame):
+    """
+    Converts the date_column to UNIX time.
+    """
+    try:
+        data_frame["unix_date_time"] = data_frame['date_time'].astype(int) // 10**9
+        data_frame.drop(columns=['date_time'], inplace=True)
+        return data_frame
+    except Exception as error:
+        logger.error("Error during unix_date_time conversion: %s", error)
+        raise DateTimeConversionError from error

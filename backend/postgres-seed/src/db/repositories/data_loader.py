@@ -11,7 +11,6 @@ from src.db.errors import (
     DatabaseInteractionError,
     ParameterMismatchError,
     SQLSyntaxError,
-    TableOrColumnNotFoundError,
 )
 
 # Setting up the logger
@@ -23,7 +22,6 @@ class DataLoader:
         self.database_url = database_url
 
     async def fetch_data_as_dataframe_async(self, sql_query):
-        logger.info(f"Fetching data using SQL query: {sql_query}.")
         
         conn = await asyncpg.connect(dsn=self.database_url)
         try:
@@ -42,15 +40,12 @@ class DataLoader:
 
         return self._convert_to_dataframe(rows)
 
-    def _convert_to_dataframe(self, rows):
-        logger.info("Converting fetched rows to DataFrame.")
-        
+    def _convert_to_dataframe(self, rows):        
         if not rows:
-            logger.warning("No rows fetched. Returning an empty DataFrame.")
             return pd.DataFrame()
 
         try:
-            columns = [desc[0] for desc in rows[0].keys()]
+            columns = [desc for desc in rows[0].keys()]
         except IndexError:
             logger.error("Could not determine DataFrame column names.")
             raise ParameterMismatchError("No column names found.")
