@@ -183,4 +183,3 @@ def split_dataframe(df, group_by_column):
         series_dict[name] = series
 
     return series_dict
-

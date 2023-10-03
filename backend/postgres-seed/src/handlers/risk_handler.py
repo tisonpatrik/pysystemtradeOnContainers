@@ -5,7 +5,7 @@ import pandas as pd
 from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
 from src.db.repositories.data_loader import DataLoader
 from src.db.repositories.data_inserter import DataInserter
-from src.data_processing.data_frame_helper import convert_datetime_to_unixtime, concat_dataframes, split_dataframe, convert_column_to_datetime
+from src.data_processing.data_frame_helper import convert_datetime_to_unixtime, concat_dataframes, split_dataframe
 from shared.src.estimators.volatility import robust_vol_calc
 
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +22,7 @@ class RiskHandler:
        """
         data_inserter = DataInserter(self.database_url)
         risk_schema = RobustVolatility()
-        adjusted_prices = await self.get_adjusted_prices_async()
+        adjusted_prices = await self.get_adujsted_prices_async()
         prices_by_symbol = self.split_dataframe_by_column(adjusted_prices)
         tasks = []
 
@@ -44,21 +44,27 @@ class RiskHandler:
         vol_df = convert_datetime_to_unixtime(vol_df)
         return vol_df
 
-    async def get_adjusted_prices_async(self) -> pd.DataFrame:
-        """Fetches adjusted prices from the database."""
-        logger.info("Method get_adjusted_prices called.")
+    async def get_adujsted_prices_async(self):
+        logger.info("Method get_adujsted_prices called.")
+        
         data_loader = DataLoader(self.database_url)
         query = "SELECT * FROM adjusted_prices"
+        
         try:
             df = await data_loader.fetch_data_as_dataframe_async(query)
-            df = convert_column_to_datetime(df, 'unix_date_time')
-            logger.info("Method get_adjusted_prices finished successfully.")
+             # Convert unix_date_time to datetime format
+            df['datetime'] = pd.to_datetime(df['unix_date_time'], unit='s')
+            
+            logger.info("Method get_adujsted_prices finished successfully.")
             return df
+
         except Exception as e:
-            logger.error(f"Method get_adjusted_prices encountered an error: {e}")
-            raise
+            logger.error(f"Method get_adujsted_prices encountered an error: {e}")
 
     def split_dataframe_by_column(self, df):
+        # Convert unix_date_time to datetime format
+        df['datetime'] = pd.to_datetime(df['unix_date_time'], unit='s')
+        
         # Set datetime as the index
         df.set_index('datetime', inplace=True)
         
