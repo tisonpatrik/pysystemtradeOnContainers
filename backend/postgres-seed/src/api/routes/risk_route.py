@@ -11,7 +11,7 @@ seed_db_handler = RiskHandler(settings.database_url)
 @router.post("/risk_calculator/", status_code=status.HTTP_200_OK, name="risk_calculator")
 async def fill_database():
     await execute_with_logging_async(
-        seed_db_handler.calculate_and_insert_risk_for_all_dataset,
+        seed_db_handler.calculate_and_insert_risk_for_all_dataset_async,
         start_msg="Database table filling started.",
         end_msg="Database table filling completed.",
     )
