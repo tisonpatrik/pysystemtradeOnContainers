@@ -173,3 +173,13 @@ def convert_datetime_to_unixtime(data_frame):
     except Exception as error:
         logger.error("Error during unix_date_time conversion: %s", error)
         raise DateTimeConversionError from error
+
+def split_dataframe(df, group_by_column):
+    grouped = df.groupby(group_by_column)
+    series_dict = {}
+    
+    for name, group in grouped:
+        series = pd.Series(group['price'].values, index=group.index)
+        series_dict[name] = series
+
+    return series_dict

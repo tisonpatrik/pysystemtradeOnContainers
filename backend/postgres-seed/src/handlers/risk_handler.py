@@ -5,7 +5,7 @@ import pandas as pd
 from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
 from src.db.repositories.data_loader import DataLoader
 from src.db.repositories.data_inserter import DataInserter
-from src.data_processing.data_frame_helper import convert_datetime_to_unixtime, concat_dataframes
+from src.data_processing.data_frame_helper import convert_datetime_to_unixtime, concat_dataframes, split_dataframe
 from shared.src.estimators.volatility import robust_vol_calc
 
 logging.basicConfig(level=logging.INFO)
@@ -62,22 +62,13 @@ class RiskHandler:
             logger.error(f"Method get_adujsted_prices encountered an error: {e}")
 
     def split_dataframe_by_column(self, df):
-        # Use groupby to create a grouped object
-        grouped = df.groupby('symbol')
+        # Convert unix_date_time to datetime format
+        df['datetime'] = pd.to_datetime(df['unix_date_time'], unit='s')
         
-        # Create an empty dictionary to store the resulting Series
-        series_dict = {}
+        # Set datetime as the index
+        df.set_index('datetime', inplace=True)
         
-        for name, group in grouped:
-            # Convert unix_date_time to datetime format
-            group['datetime'] = pd.to_datetime(group['unix_date_time'], unit='s')
-            
-            # Set datetime as the index
-            group.set_index('datetime', inplace=True)
-            
-            # Convert the 'price' column to a Pandas Series with datetime index
-            price_series = pd.Series(group['price'].values, index=group.index)
-            # Store this Series in the dictionary with symbol name as the key
-            series_dict[name] = price_series
-
+        # Use helper function to perform the generic task
+        series_dict = split_dataframe(df, 'symbol')
+        
         return series_dict
