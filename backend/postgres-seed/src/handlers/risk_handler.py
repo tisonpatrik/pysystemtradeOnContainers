@@ -1,4 +1,5 @@
 import logging
+import asyncio
 
 import pandas as pd
 from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
@@ -6,6 +7,7 @@ from src.db.repositories.data_loader import DataLoader
 from src.db.repositories.data_inserter import DataInserter
 from src.data_processing.data_frame_helper import convert_datetime_to_unixtime, concat_dataframes
 from shared.src.estimators.volatility import robust_vol_calc
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -22,19 +24,27 @@ class RiskHandler:
         risk_schema = RobustVolatility()
         adjusted_prices = await self.get_adujsted_prices()
         prices_by_symbol = self.split_dataframe_by_column(adjusted_prices)
-        list_of_dfs = []
+        tasks = []
+
         for instrument_name, price_series in prices_by_symbol.items():
-            # Calculate robust volatility
-            volatility = robust_vol_calc(price_series).dropna()
-            vol_df = volatility.reset_index()
-            vol_df.columns = ['date_time', 'volatility']
-            vol_df['symbol'] = instrument_name
-            vol_df = convert_datetime_to_unixtime(vol_df)
-            list_of_dfs.append(vol_df)
+            task = asyncio.create_task(self.calculate_volatility_for_instrument(instrument_name, price_series))
+            tasks.append(task)
+
+        list_of_dfs = await asyncio.gather(*tasks)
 
         volatilities = concat_dataframes(list_of_dfs)
         # Insert the volatility into the database  
         await data_inserter.insert_dataframe_async(volatilities, risk_schema.table_name)
+
+
+    async def calculate_volatility_for_instrument(self, instrument_name, price_series):
+        volatility = robust_vol_calc(price_series).dropna()
+        vol_df = volatility.reset_index()
+        vol_df.columns = ['date_time', 'volatility']
+        vol_df['symbol'] = instrument_name
+        vol_df = convert_datetime_to_unixtime(vol_df)
+        return vol_df
+
     async def get_adujsted_prices(self):
         logger.info("Method get_adujsted_prices called.")
         
