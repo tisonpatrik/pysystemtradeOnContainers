@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     Class for application-wide configuration settings.
     Reads environment variables and provides default values.
     """
-    title: str = os.environ.get("TITLE", "Default Title")
-    version: str = "1.0.0"
-    description: str = os.environ.get("DESCRIPTION", "Default Description")
+    title: str = os.environ.get("TITLE", "Слава Україні!")
+    version: str = "1.0.2"
+    description: str = os.environ.get("DESCRIPTION", "Postgres-seeder")
     openapi_prefix: str = os.environ.get("OPENAPI_PREFIX", "/")
     docs_url: str = "/docs"
     openapi_url: str = "/openapi.json"

@@ -2,14 +2,13 @@
 Main entry point for the FastAPI application.
 """
 
-import logging
-
 from fastapi import FastAPI
 
 from src.api.router import router
 from src.config import settings
+from src.utils.logging import AppLogger
 
-logging.basicConfig(level=logging.INFO)
+logger = AppLogger.__call__().get_logger()
 
 app = FastAPI(
     title=settings.title,
