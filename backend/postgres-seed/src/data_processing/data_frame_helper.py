@@ -59,12 +59,20 @@ def fill_empty_values(data_frame, fill_value):
         raise EmptyValueFillError from error
 
 
-def add_symbol_by_file_name(data_frame, symbol):
+def add_column_and_populate_it_by_value(data_frame, column_name, column_value):
     """
-    Adds a 'symbol' column to the DataFrame with the provided symbol.
+    Adds a new column to a given pandas DataFrame and populates it with a specified value.
+    
+    Parameters:
+    - data_frame (pd.DataFrame): The DataFrame to which the column will be added.
+    - column_name (str): The name of the new column to be added.
+    - column_value: The value to populate the new column with. This could be a single value or a Series.
+    
+    Returns:
+    - pd.DataFrame: The DataFrame with the newly added column.
     """
     try:
-        data_frame["symbol"] = symbol
+        data_frame[column_name] = column_value
         return data_frame
     except Exception as error:
         logger.error("Error during symbol addition: %s", error)
@@ -76,14 +84,12 @@ def convert_datetime_to_unixtime(data_frame):
     Converts the date_column to UNIX time.
     """
     try:
-        data_frame["unix_date_time"] = (
-            pd.to_datetime(data_frame["unix_date_time"]).astype(int) // 10**9
-        )
-        data_frame = data_frame.dropna()
+        data_frame["unix_date_time"] = data_frame['unix_date_time'].astype(int) // 10**9
         return data_frame
     except Exception as error:
-        logger.error("Error during date-time conversion: %s", error)
+        logger.error("Error during unix_date_time conversion: %s", error)
         raise DateTimeConversionError from error
+
 
 
 def aggregate_to_day_based_prices(data_frame):
@@ -162,17 +168,17 @@ def concat_dataframes(data_frames):
         )
     return concatenated_df
 
-def convert_datetime_to_unixtime(data_frame):
-    """
-    Converts the date_column to UNIX time.
-    """
-    try:
-        data_frame["unix_date_time"] = data_frame['date_time'].astype(int) // 10**9
-        data_frame.drop(columns=['date_time'], inplace=True)
-        return data_frame
-    except Exception as error:
-        logger.error("Error during unix_date_time conversion: %s", error)
-        raise DateTimeConversionError from error
+# def convert_datetime_to_unixtime(data_frame):
+#     """
+#     Converts the date_column to UNIX time.
+#     """
+#     try:
+#         data_frame["unix_date_time"] = data_frame['date_time'].astype(int) // 10**9
+#         data_frame.drop(columns=['date_time'], inplace=True)
+#         return data_frame
+#     except Exception as error:
+#         logger.error("Error during unix_date_time conversion: %s", error)
+#         raise DateTimeConversionError from error
 
 def split_dataframe(df, group_by_column):
     grouped = df.groupby(group_by_column)

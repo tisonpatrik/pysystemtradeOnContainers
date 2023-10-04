@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from src.data_processing.data_frame_helper import (
-    add_symbol_by_file_name,
+    add_column_and_populate_it_by_value,
     aggregate_to_day_based_prices,
     convert_column_to_datetime,
     convert_datetime_to_unixtime,
@@ -54,16 +54,18 @@ def test_fill_empty_values_fail(mock_dataframe_with_empty_values):
         fill_empty_values(mock_dataframe_with_empty_values, fill_value)
 
 
-def test_add_symbol_by_file_name(mock_dataframe_for_symbol):
-    symbol = "AAPL"
-    df_with_symbol = add_symbol_by_file_name(mock_dataframe_for_symbol, symbol)
-    assert "symbol" in df_with_symbol.columns
-    assert all(df_with_symbol["symbol"] == symbol)
+def test_add_column_and_populate_it_by_value_success(mock_dataframe_for_symbol):
+    column_name = "NewColumn"
+    column_value = "Value"
+    df_with_new_column = add_column_and_populate_it_by_value(mock_dataframe_for_symbol, column_name, column_value)
+    
+    assert column_name in df_with_new_column.columns
+    assert all(df_with_new_column[column_name] == column_value)
 
 
-def test_add_symbol_by_file_name_fail():
+def test_add_column_and_populate_it_by_value_fail():
     with pytest.raises(SymbolAdditionError):
-        add_symbol_by_file_name(None, "AAPL")  # Passing None instead of a DataFrame
+        add_column_and_populate_it_by_value(None, "NewColumn", "Value")
 
 
 def test_convert_datetime_to_unixtime(mock_dataframe_for_datetime):

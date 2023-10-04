@@ -11,7 +11,7 @@ import os
 
 from src.data_processing.csv_helper import load_csv, save_to_csv
 from src.data_processing.data_frame_helper import (
-    add_symbol_by_file_name,
+    add_column_and_populate_it_by_value,
     aggregate_to_day_based_prices,
     concat_dataframes,
     convert_datetime_to_unixtime,
@@ -44,7 +44,7 @@ def load_and_process_raw_data_csv(file_path, column_mapping, file_name):
             data_frame = aggregate_to_day_based_prices(data_frame)
 
         data_frame = convert_datetime_to_unixtime(data_frame)
-        data_frame = add_symbol_by_file_name(data_frame, file_name)
+        data_frame = add_column_and_populate_it_by_value(data_frame,column_name= file_name, column_value='symbol')
         return data_frame
     except ProcessingError as error:  # Renamed 'e' to 'error'
         logger.error(

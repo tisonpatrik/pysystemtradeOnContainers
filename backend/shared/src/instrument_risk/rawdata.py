@@ -2,12 +2,10 @@ from copy import copy
 
 import pandas as pd
 
-from systems.stage import SystemStage
 from syscore.objects import resolve_function
-from syscore.dateutils import ROOT_BDAYS_INYEAR
-from syscore.genutils import list_intersection
-from syscore.exceptions import missingData
-from systems.system_cache import input, diagnostic, output
+from shared.src.core.dateutils import ROOT_BDAYS_INYEAR
+from shared.src.core.genutils import list_intersection
+from shared.src.core.exceptions import missingData
 
 from sysdata.sim.futures_sim_data import futuresSimData
 from sysdata.config.configdata import Config
@@ -15,34 +13,7 @@ from sysdata.config.configdata import Config
 from sysobjects.carry_data import rawCarryData
 
 
-class RawData(SystemStage):
-    """
-        A SystemStage that does some fairly common calculations before we do
-        forecasting and which gives access to some widely used methods.
-
-            This is optional; forecasts can go straight to system.data
-            The advantages of using RawData are:
-                   - preliminary calculations that are reused can be cached, to
-                     save time (eg volatility)
-                   - preliminary calculations are available for inspection when
-                     diagnosing what is going on
-
-    Name: rawdata
-    """
-
-    @property
-    def name(self):
-        return "rawdata"
-
-    @property
-    def data_stage(self) -> futuresSimData:
-        return self.parent.data
-
-    @property
-    def config(self) -> Config:
-        return self.parent.config
-
-    @input
+class RawData():
     def get_daily_prices(self, instrument_code) -> pd.Series:
         """
         Gets daily prices
@@ -68,7 +39,6 @@ class RawData(SystemStage):
 
         return dailyprice
 
-    @input
     def get_natural_frequency_prices(self, instrument_code: str) -> pd.Series:
         self.log.debug(
             "Retrieving natural prices for %s" % instrument_code,
@@ -84,13 +54,11 @@ class RawData(SystemStage):
 
         return natural_prices
 
-    @input
     def get_hourly_prices(self, instrument_code: str) -> pd.Series:
         hourly_prices = self.data_stage.hourly_prices(instrument_code)
 
         return hourly_prices
 
-    @output()
     def daily_returns(self, instrument_code: str) -> pd.Series:
         """
         Gets daily returns (not % returns)
@@ -99,24 +67,12 @@ class RawData(SystemStage):
         :type trading_rules: str
 
         :returns: Tx1 pd.DataFrame
-
-
-        >>> from systems.tests.testdata import get_test_object
-        >>> from systems.basesystem import System
-        >>>
-        >>> (rawdata, data, config)=get_test_object()
-        >>> system=System([rawdata], data)
-        >>> system.rawdata.daily_returns("SOFR").tail(2)
-                     price
-        2015-12-10 -0.0650
-        2015-12-11  0.1075
         """
         instrdailyprice = self.get_daily_prices(instrument_code)
         dailyreturns = instrdailyprice.diff()
 
         return dailyreturns
 
-    @output()
     def hourly_returns(self, instrument_code: str) -> pd.Series:
         """
         Gets hourly returns (not % returns)
@@ -133,13 +89,11 @@ class RawData(SystemStage):
 
         return hourly_returns
 
-    @output()
     def annualised_returns_volatility(self, instrument_code: str) -> pd.Series:
         daily_returns_volatility = self.daily_returns_volatility(instrument_code)
 
         return daily_returns_volatility * ROOT_BDAYS_INYEAR
 
-    @output()
     def daily_returns_volatility(self, instrument_code: str) -> pd.Series:
         """
         Gets volatility of daily returns (not % returns)
@@ -156,39 +110,7 @@ class RawData(SystemStage):
         :type trading_rules: str
 
         :returns: Tx1 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object
-        >>> from systems.basesystem import System
-        >>>
-        >>> (rawdata, data, config)=get_test_object()
-        >>> system=System([rawdata], data)
-        >>> ## uses defaults
-        >>> system.rawdata.daily_returns_volatility("SOFR").tail(2)
-                         vol
-        2015-12-10  0.054145
-        2015-12-11  0.058522
-        >>>
-        >>> from sysdata.config.configdata import Config
-        >>> config=Config("systems.provided.example.exampleconfig.yaml")
-        >>> system=System([rawdata], data, config)
-        >>> system.rawdata.daily_returns_volatility("SOFR").tail(2)
-                         vol
-        2015-12-10  0.054145
-        2015-12-11  0.058522
-        >>>
-        >>> config=Config(dict(volatility_calculation=dict(func="sysquant.estimators.vol.robust_vol_calc", days=200)))
-        >>> system2=System([rawdata], data, config)
-        >>> system2.rawdata.daily_returns_volatility("SOFR").tail(2)
-                         vol
-        2015-12-10  0.057946
-        2015-12-11  0.058626
-
         """
-        self.log.debug(
-            "Calculating daily volatility for %s" % instrument_code,
-            instrument_code=instrument_code,
-        )
-
         volconfig = copy(self.config.volatility_calculation)
 
         which_returns = volconfig.pop("name_returns_attr_in_rawdata")
@@ -207,7 +129,6 @@ class RawData(SystemStage):
 
         return vol
 
-    @output()
     def get_daily_percentage_returns(self, instrument_code: str) -> pd.Series:
         """
         Get percentage returns
@@ -228,7 +149,6 @@ class RawData(SystemStage):
 
         return perc_returns
 
-    @output()
     def get_daily_percentage_volatility(self, instrument_code: str) -> pd.Series:
         """
         Get percentage returns normalised by recent vol
@@ -240,16 +160,6 @@ class RawData(SystemStage):
         :type trading_rules: str
 
         :returns: Tx1 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object
-        >>> from systems.basesystem import System
-        >>>
-        >>> (rawdata, data, config)=get_test_object()
-        >>> system=System([rawdata], data)
-        >>> system.rawdata.get_daily_percentage_volatility("SOFR").tail(2)
-                         vol
-        2015-12-10  0.055281
-        2015-12-11  0.059789
         """
         denom_price = self.daily_denominator_price(instrument_code)
         return_vol = self.daily_returns_volatility(instrument_code)
@@ -258,7 +168,6 @@ class RawData(SystemStage):
 
         return perc_vol
 
-    @diagnostic()
     def get_daily_vol_normalised_returns(self, instrument_code: str) -> pd.Series:
         """
         Get returns normalised by recent vol
@@ -270,29 +179,13 @@ class RawData(SystemStage):
         :type trading_rules: str
 
         :returns: Tx1 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object
-        >>> from systems.basesystem import System
-        >>>
-        >>> (rawdata, data, config)=get_test_object()
-        >>> system=System([rawdata], data)
-        >>> system.rawdata.get_daily_vol_normalised_returns("SOFR").tail(2)
-                    norm_return
-        2015-12-10    -1.219510
-        2015-12-11     1.985413
         """
-        self.log.debug(
-            "Calculating normalised return for %s" % instrument_code,
-            instrument_code=instrument_code,
-        )
-
         returnvol = self.daily_returns_volatility(instrument_code).shift(1)
         dailyreturns = self.daily_returns(instrument_code)
         norm_return = dailyreturns / returnvol
 
         return norm_return
 
-    @diagnostic()
     def get_cumulative_daily_vol_normalised_returns(
         self, instrument_code: str
     ) -> pd.Series:
@@ -315,7 +208,6 @@ class RawData(SystemStage):
 
         return cum_norm_returns
 
-    @diagnostic()
     def _aggregate_daily_vol_normalised_returns_for_list_of_instruments(
         self, list_of_instruments: list
     ) -> pd.Series:
@@ -341,7 +233,6 @@ class RawData(SystemStage):
 
         return median_returns
 
-    @diagnostic()
     def _daily_vol_normalised_price_for_list_of_instruments(
         self, list_of_instruments: list
     ) -> pd.Series:
@@ -355,7 +246,6 @@ class RawData(SystemStage):
 
         return norm_price
 
-    @diagnostic()
     def _by_asset_class_daily_vol_normalised_price_for_asset_class(
         self, asset_class: str
     ) -> pd.Series:
@@ -374,14 +264,11 @@ class RawData(SystemStage):
 
         return norm_price
 
-    @output()
     def normalised_price_for_asset_class(self, instrument_code: str) -> pd.Series:
         """
-
         :param instrument_code:
         :return:
         """
-
         asset_class = self.data_stage.asset_class_for_instrument(instrument_code)
         normalised_price_for_asset_class = (
             self._by_asset_class_daily_vol_normalised_price_for_asset_class(asset_class)
@@ -400,7 +287,6 @@ class RawData(SystemStage):
 
         return normalised_price_for_asset_class_aligned
 
-    @diagnostic()
     def rolls_per_year(self, instrument_code: str) -> int:
         ## an input but we cache to avoid spamming with errors
         try:
@@ -414,7 +300,6 @@ class RawData(SystemStage):
 
         return rolls_per_year
 
-    @input
     def get_instrument_raw_carry_data(self, instrument_code: str) -> rawCarryData:
         """
         Returns the 4 columns PRICE, CARRY, PRICE_CONTRACT, CARRY_CONTRACT
@@ -425,16 +310,6 @@ class RawData(SystemStage):
         :returns: Tx4 pd.DataFrame
 
         KEY INPUT
-
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>> system.rawdata.get_instrument_raw_carry_data("SOFR").tail(2)
-                               PRICE  CARRY CARRY_CONTRACT PRICE_CONTRACT
-        2015-12-11 17:08:14  97.9675    NaN         201812         201903
-        2015-12-11 19:33:39  97.9875    NaN         201812         201903
         """
 
         instrcarrydata = self.data_stage.get_instrument_raw_carry_data(instrument_code)
@@ -448,7 +323,6 @@ class RawData(SystemStage):
 
         return instrcarrydata
 
-    @diagnostic()
     def raw_futures_roll(self, instrument_code: str) -> pd.Series:
         """
         Returns the raw difference between price and carry
@@ -457,23 +331,12 @@ class RawData(SystemStage):
         :type instrument_code: str
 
         :returns: Tx4 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>> system.rawdata.raw_futures_roll("SOFR").ffill().tail(2)
-        2015-12-11 17:08:14   -0.07
-        2015-12-11 19:33:39   -0.07
-        dtype: float64
         """
-
         carrydata = self.get_instrument_raw_carry_data(instrument_code)
         raw_roll = carrydata.raw_futures_roll()
 
         return raw_roll
 
-    @diagnostic()
     def roll_differentials(self, instrument_code: str) -> pd.Series:
         """
         Work out the annualisation factor
@@ -482,22 +345,12 @@ class RawData(SystemStage):
         :type instrument_code: str
 
         :returns: Tx4 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>> system.rawdata.roll_differentials("SOFR").ffill().tail(2)
-        2015-12-11 17:08:14   -0.246407
-        2015-12-11 19:33:39   -0.246407
-        dtype: float64
         """
         carrydata = self.get_instrument_raw_carry_data(instrument_code)
         roll_diff = carrydata.roll_differentials()
 
         return roll_diff
 
-    @diagnostic()
     def annualised_roll(self, instrument_code: str) -> pd.Series:
         """
         Work out annualised futures roll
@@ -506,22 +359,7 @@ class RawData(SystemStage):
         :type instrument_code: str
 
         :returns: Tx4 pd.DataFrame
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>> system.rawdata.annualised_roll("SOFR").ffill().tail(2)
-        2015-12-11 17:08:14    0.284083
-        2015-12-11 19:33:39    0.284083
-        dtype: float64
-        >>> system.rawdata.annualised_roll("US10").ffill().tail(2)
-        2015-12-11 16:06:35    2.320441
-        2015-12-11 17:24:06    2.320441
-        dtype: float64
-
         """
-
         rolldiffs = self.roll_differentials(instrument_code)
         rawrollvalues = self.raw_futures_roll(instrument_code)
 
@@ -529,7 +367,6 @@ class RawData(SystemStage):
 
         return annroll
 
-    @diagnostic()
     def daily_annualised_roll(self, instrument_code: str) -> pd.Series:
         """
         Resample annualised roll to daily frequency
@@ -540,17 +377,6 @@ class RawData(SystemStage):
         :type instrument_code: str
 
         :returns: Tx1 pd.DataFrame
-
-
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>> system.rawdata.daily_annualised_roll("SOFR").ffill().tail(2)
-        2015-12-10    0.284083
-        2015-12-11    0.284083
-        Freq: B, dtype: float64
         """
 
         annroll = self.annualised_roll(instrument_code)
@@ -558,7 +384,6 @@ class RawData(SystemStage):
 
         return annroll
 
-    @output()
     def raw_carry(self, instrument_code: str) -> pd.Series:
         """
         Returns the raw carry (annualised roll, divided by annualised vol)
@@ -579,7 +404,6 @@ class RawData(SystemStage):
 
         return raw_carry
 
-    @output()
     def smoothed_carry(self, instrument_code: str, smooth_days: int = 90) -> pd.Series:
         """
         Returns the smoothed raw carry
@@ -595,7 +419,6 @@ class RawData(SystemStage):
 
         return smooth_carry
 
-    @diagnostic()
     def _by_asset_class_median_carry_for_asset_class(
         self, asset_class: str, smooth_days: int = 90
     ) -> pd.Series:
@@ -626,12 +449,9 @@ class RawData(SystemStage):
 
         return median_carry
 
-    @output()
     def median_carry_for_asset_class(self, instrument_code: str) -> pd.Series:
         """
         Median carry for the asset class relating to a given instrument
-
-
         :param instrument_code: str
         :return: pd.Series
         """
@@ -648,7 +468,6 @@ class RawData(SystemStage):
 
     # sys.data.get_instrument_asset_classes()
 
-    @output()
     def daily_denominator_price(self, instrument_code: str) -> pd.Series:
         """
         Gets daily prices for use with % volatility
@@ -660,16 +479,6 @@ class RawData(SystemStage):
         :returns: Tx1 pd.DataFrame
 
         KEY OUTPUT
-
-        >>> from systems.tests.testdata import get_test_object_futures
-        >>> from systems.basesystem import System
-        >>> (data, config)=get_test_object_futures()
-        >>> system=System([RawData()], data)
-        >>>
-        >>> system.rawdata.daily_denominator_price("SOFR").ffill().tail(2)
-        2015-12-10    97.8800
-        2015-12-11    97.9875
-        Freq: B, Name: PRICE, dtype: float64
         """
         try:
             prices = self.get_instrument_raw_carry_data(instrument_code).PRICE
@@ -698,9 +507,3 @@ class RawData(SystemStage):
     def instrument_list(self) -> list:
         instrument_list = self.parent.get_instrument_list()
         return instrument_list
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()

@@ -31,8 +31,9 @@ def mock_dataframe_for_symbol():
 # Fixture to mock a DataFrame suitable for convert_datetime_to_unixtime
 @pytest.fixture
 def mock_dataframe_for_datetime():
-    data = {"unix_date_time": ["2022-01-01 00:00:00", "2022-01-02 00:00:00"]}
+    data = {"date_time": ["2022-01-01 00:00:00", "2022-01-02 00:00:00"]}
     return pd.DataFrame(data)
+
 
 
 # Mock DataFrame for successful aggregation
