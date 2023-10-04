@@ -5,7 +5,7 @@ It includes a POST endpoint for parsing files and storing them in a temporary lo
 
 from fastapi import APIRouter, status
 
-from src.api.routes.utils import execute_with_logging
+from src.api.utils import execute_with_logging
 from src.handlers.config_data_handler import ConfigDataHandler
 
 router = APIRouter()

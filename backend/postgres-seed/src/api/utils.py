@@ -7,7 +7,6 @@ import logging
 
 from fastapi import HTTPException, status
 
-
 async def execute_with_logging_async(task, *args, start_msg, end_msg):
     """Helper function to wrap asynchronous task execution with logging."""
     logging.info(start_msg)

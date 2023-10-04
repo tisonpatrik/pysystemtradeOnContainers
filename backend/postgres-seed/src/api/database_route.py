@@ -5,7 +5,7 @@ It includes POST endpoints for initializing and resetting database tables.
 
 from fastapi import APIRouter, status
 
-from src.api.routes.utils import execute_with_logging_async
+from src.api.utils import execute_with_logging_async
 from src.config import settings
 from src.handlers.database_handler import DatabaseHandler
 

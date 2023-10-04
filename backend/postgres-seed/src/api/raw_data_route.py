@@ -5,7 +5,7 @@ It includes a POST endpoint for parsing raw data files and storing them in a tem
 
 from fastapi import APIRouter, status
 
-from src.api.routes.utils import execute_with_logging
+from src.api.utils import execute_with_logging
 from src.handlers.raw_data_handler import RawDataHandler
 
 router = APIRouter()
