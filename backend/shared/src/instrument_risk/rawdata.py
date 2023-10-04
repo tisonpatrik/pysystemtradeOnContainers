@@ -24,10 +24,7 @@ def get_daily_prices(self, instrument_code) -> pd.Series:
 
     KEY OUTPUT
     """
-    self.log.debug(
-        "Calculating daily prices for %s" % instrument_code,
-        instrument_code=instrument_code,
-    )
+
     dailyprice = self.data_stage.daily_prices(instrument_code)
 
     if len(dailyprice) == 0:
@@ -40,10 +37,6 @@ def get_daily_prices(self, instrument_code) -> pd.Series:
 
 
 def get_natural_frequency_prices(self, instrument_code: str) -> pd.Series:
-    self.log.debug(
-        "Retrieving natural prices for %s" % instrument_code,
-        instrument_code=instrument_code,
-    )
 
     natural_prices = self.data_stage.get_raw_price(instrument_code)
 
@@ -206,12 +199,6 @@ def get_cumulative_daily_vol_normalised_returns(
     :param instrument_code: str
     :return: pd.Series
     """
-
-    self.log.debug(
-        "Calculating cumulative normalised return for %s" % instrument_code,
-        instrument_code=instrument_code,
-    )
-
     norm_returns = self.get_daily_vol_normalised_returns(instrument_code)
 
     cum_norm_returns = norm_returns.cumsum()

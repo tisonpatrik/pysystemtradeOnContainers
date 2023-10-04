@@ -6,27 +6,19 @@ This module uses Pydantic's BaseConfig for parsing and validation of configurati
 import os
 
 from dotenv import load_dotenv
-from pydantic import BaseConfig
-
+from pydantic import PostgresDsn
+from pydantic_settings import BaseSettings
 # Load environment variables from a .env file.
 load_dotenv()
 
 
-class GlobalConfig(BaseConfig):
+class GlobalConfig(BaseSettings):
     """
     Class for application-wide configuration settings.
     Reads environment variables and provides default values.
     """
-
-    title: str = os.environ.get("TITLE", "Default Title")
-    version: str = "1.0.0"
-    description: str = os.environ.get("DESCRIPTION", "Default Description")
-    openapi_prefix: str = os.environ.get("OPENAPI_PREFIX", "/")
-    docs_url: str = "/docs"
-    redoc_url: str = "/redoc"
     openapi_url: str = "/openapi.json"
     api_prefix: str = "/api"
-    debug: bool = os.environ.get("DEBUG", "False") == "True"
 
     postgres_user: str = os.getenv("DB_USER")
     postgres_password: str = os.getenv("DB_PASSWORD")
@@ -35,7 +27,6 @@ class GlobalConfig(BaseConfig):
     postgres_db: str = os.getenv("DB_NAME")
 
     postgres_db_tests: str = os.environ.get("POSTGRES_DB_TESTS", "test_grayfox_db")
-    db_echo_log: bool = debug
 
     @property
     def database_url(self) -> str:
