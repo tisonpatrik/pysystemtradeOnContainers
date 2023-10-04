@@ -6,7 +6,7 @@ It includes a POST endpoint to fill the database tables with data from a tempora
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging_async
-from src.core.config import settings
+from src.config import settings
 from src.handlers.seed_db_handler import SeedDBHandler
 
 router = APIRouter()

@@ -2,7 +2,7 @@
 from fastapi import APIRouter, status
 
 from src.api.routes.utils import execute_with_logging_async
-from src.core.config import settings
+from src.config import settings
 from src.handlers.risk_handler import RiskHandler
 
 router = APIRouter()
