@@ -1,6 +1,6 @@
 # backend/postgres-seed/db/Dockerfile
 # pull official base image
-FROM postgres:16-alpine
+FROM postgres:15.3
 
 # run create.sql on init
 ADD create.sql /docker-entrypoint-initdb.d

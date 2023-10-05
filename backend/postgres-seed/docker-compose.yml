@@ -2,14 +2,14 @@
 version: "3.9"
 
 services:
-  grayfox:
+  postgres-seed:
     build:
       context: ..
-      dockerfile: grayfox/Dockerfile
-    hostname: grayfox
-    container_name: grayfox
+      dockerfile: postgres-seed/Dockerfile
+    hostname: postgres-seed
+    container_name: postgres-seed
     depends_on:
-      - db
+      - db_postgres
     ports:
       - "8000:8000"
     env_file:
@@ -18,22 +18,25 @@ services:
       - ${SRC_PATH}:/home/app/src
       - ${DATA_PATH}:/path/in/container:rw
 
-  db:
+  db_postgres:
+    container_name: postgres
     build:
       context: ./db
       dockerfile: Dockerfile
-    container_name: grayfox_DB
-
+      
     hostname: db_postgres
     restart: on-failure
+    env_file:
+      - .env
     environment:
-      - POSTGRES_USER=$(DB_USER)
-      - POSTGRES_PASSWORD=$(DB_PASSWORD)
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
       - ${DATA_PATH}:/path/in/container
+    
 
   pg-admin:
     image: dpage/pgadmin4
