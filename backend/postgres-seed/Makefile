@@ -2,16 +2,16 @@ cheers:
 	@echo "Na zdraví! 🍺"
 
 dev:
-	@docker compose -f docker-compose.yaml up --build
+	@docker compose -f docker-compose.yml up --build
 
 run:
-	@docker compose -f docker-compose.yaml up --build -d
+	@docker compose -f docker-compose.yml up --build -d
 
 stop:
-	@docker compose -f docker-compose.yaml down
+	@docker compose -f docker-compose.yml down
 
 down:
-	@docker compose -f ./docker-compose.yaml down --remove-orphans
+	@docker compose -f ./docker-compose.yml down --remove-orphans
 
 tests: run
 	@docker exec -it postgres-seed poetry run pytest

@@ -1,3 +1,4 @@
+# backend/postgres-seed/docker-compose.yml
 version: "3.9"
 
 services:
@@ -18,7 +19,11 @@ services:
       - ${DATA_PATH}:/path/in/container:rw
 
   db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     container_name: grayfox_DB
+
     hostname: db_postgres
     restart: on-failure
     environment:
@@ -28,7 +33,6 @@ services:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
-      - ${SQL_SCRIPT_PATH}:/docker-entrypoint-initdb.d/create_databases.sql
       - ${DATA_PATH}:/path/in/container
 
   pg-admin:
