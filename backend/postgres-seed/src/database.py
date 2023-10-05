@@ -18,7 +18,6 @@ engine = create_async_engine(
 # after commit.
 AsyncSessionFactory = async_sessionmaker(engine, autoflush=False, expire_on_commit=False,)
 
-
 # Dependency
 async def get_db() -> AsyncGenerator:
     async with AsyncSessionFactory() as session:
