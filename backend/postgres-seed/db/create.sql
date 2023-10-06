@@ -9,3 +9,4 @@ CREATE DATABASE grayfox_db;
 \connect grayfox_db;
 
 GRANT ALL PRIVILEGES ON DATABASE grayfox_db to "postgres";
+
