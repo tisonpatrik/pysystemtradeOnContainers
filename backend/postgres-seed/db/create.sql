@@ -10,3 +10,6 @@ CREATE DATABASE grayfox_db;
 
 GRANT ALL PRIVILEGES ON DATABASE grayfox_db to "postgres";
 
+\i /home/app/db/config_schemas.sql
+\i /home/app/db/raw_data_schemas.sql
+\i /home/app/db/risk_schemas.sql
