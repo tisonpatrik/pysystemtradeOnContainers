@@ -4,9 +4,7 @@ Module to handle database operations like table initialization and reset.
 
 import logging
 
-from src.db.repositories.table_creator import TableCreator
-from src.db.repositories.table_dropper import TableDropper
-from src.db.schemas.schemas import get_schemas
+from src.db.repositories.database_cleaner import DatabaseCleaner
 from src.handlers.errors import DatabaseError
 
 # Initialize logger
@@ -21,31 +19,15 @@ class DatabaseHandler:
 
     def __init__(self, conn):
         """Initialize the handler with schemas fetched from get_schemas."""
-        self.config_schemas = get_schemas()
         self.connection = conn
-
-    async def init_tables_async(self) -> None:
-        """
-        Initialize tables in the database using the SQL commands defined in the schemas.
-        """
-        creator = TableCreator(self.connection)
-        for schema in self.config_schemas:
-            try:
-                await creator.create_table_async(schema.sql_command)
-            except DatabaseError as db_error:  # Catching a more specific exception
-                logger.error(
-                    "Database error while creating table with SQL command %s: %s",
-                    schema.sql_command,
-                    db_error,
-                )
 
     async def reset_tables_async(self) -> None:
         """
         Reset the database by dropping tables and indexes.
         """
-        dropper = TableDropper(self.connection)
+        dropper = DatabaseCleaner(self.connection)
         try:
-            await dropper.drop_all_tables_async()
+            await dropper.reset_tables_and_indexes_async()
         except DatabaseError as db_error:  # Catching a more specific exception
             logger.error("Database error while resetting the database: %s", db_error)
             raise DatabaseError("Failed to reset the database.") from db_error
