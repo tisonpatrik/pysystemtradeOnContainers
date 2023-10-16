@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     openapi_url: str = "/openapi.json"
     api_prefix: str = "/api"
 
-    database_url: PostgresDsn = os.getenv("DB_URL")
-    test_database_url: PostgresDsn = os.getenv("TEST_DB_URL")
+    database_url: PostgresDsn = os.getenv("DB_URL")  # type: ignore
+    test_database_url: PostgresDsn = os.getenv("TEST_DB_URL")  # type: ignore
 
 
 # Create an instance of the GlobalConfig class.
