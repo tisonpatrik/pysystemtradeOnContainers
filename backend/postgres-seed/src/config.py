@@ -10,9 +10,6 @@ from pydantic_settings import BaseSettings
 
 # Load environment variables from a .env file.
 
-database_url: PostgresDsn
-postgres_db_tests: PostgresDsn
-
 
 class Settings(BaseSettings):
     """
@@ -28,8 +25,8 @@ class Settings(BaseSettings):
     openapi_url: str = "/openapi.json"
     api_prefix: str = "/api"
 
-    database_url = os.getenv("DB_URL")
-    test_database_url = os.getenv("TEST_DB_URL")
+    database_url: PostgresDsn = os.getenv("DB_URL")
+    test_database_url: PostgresDsn = os.getenv("TEST_DB_URL")
 
 
 # Create an instance of the GlobalConfig class.

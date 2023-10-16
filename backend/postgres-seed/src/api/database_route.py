@@ -1,23 +1,30 @@
 """
-This module defines the API routes for database interactions.
-It includes POST endpoints for initializing and resetting database tables.
+This module defines the reset_database API route for a FastAPI application.
+It includes a POST endpoint that resets all database tables to their initial state.
 """
 
-from fastapi import APIRouter, status
+# FastAPI and SQLAlchemy dependencies
+from fastapi import APIRouter, Depends, status, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.utils import execute_with_logging_async
-from src.config import settings
+# Application-specific dependencies
+from src.database import get_db
 from src.handlers.database_handler import DatabaseHandler
 
+# Create a FastAPI router instance
 router = APIRouter()
-db_handler = DatabaseHandler(settings.database_url)
 
-@router.post("/reset_db/", status_code=status.HTTP_200_OK, name="reset_db")
-async def reset_database():
-    """Reset the database tables."""
-    await execute_with_logging_async(
-        db_handler.reset_tables_async,
-        start_msg="Database table reset started.",
-        end_msg="Database table reset is complete.",
-    )
-    return {"status": "Database was reset."}
+
+@router.post("/reset_db/", status_code=status.HTTP_201_CREATED, name="Reset Database")
+async def reset_database(db_session: AsyncSession = Depends(get_db)):
+    """
+    Resets all tables in the database to their initial state.
+    """
+    try:
+        db_handler = DatabaseHandler(db_session)
+        await db_handler.reset_tables_async()
+        return {"status": "success", "message": "Database was reset."}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        ) from e

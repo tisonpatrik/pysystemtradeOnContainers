@@ -14,8 +14,10 @@ class DatabaseCleaner:
     Represents an interface to delete all data from tables in a PostgreSQL database.
     """
 
-    def __init__(self, database_url):
-        self.database_url = database_url
+    def __init__(self):
+        """
+        shit
+        """
 
     async def _get_table_names(self, conn):
         query = "SELECT tablename FROM pg_tables WHERE schemaname = current_schema();"

@@ -20,7 +20,7 @@ if global_settings.database_url is None:
     raise ValueError("Database URL must be set")
 
 engine = create_async_engine(
-    global_settings.database_url,
+    global_settings.database_url.unicode_string(),
     future=True,
     echo=True,
 )
