@@ -1,5 +1,5 @@
 """
-Module to handle database operations like table initialization and reset.
+Module to handle database operations like truncate of tables and returning of list of tables.
 """
 
 import logging
@@ -23,9 +23,10 @@ class DatabaseHandler:
         """Initialize the handler with schemas fetched from get_schemas."""
         self.db_session = db_session
 
-    async def reset_tables_async(self) -> None:
+    async def truncate_tables_async(self) -> None:
         """
-        Reset the database by dropping tables and indexes.
+        Truncate all tables in the database,
+        effectively deleting all records but keeping the schema.
         """
         try:
             # Get the list of all tables
@@ -37,17 +38,39 @@ class DatabaseHandler:
             tables = await self.db_session.execute(query)
             table_list = tables.fetchall()
 
-            # Drop each table
+            # Truncate each table
             for table in table_list:
-                drop_query = text(f"DROP TABLE IF EXISTS {table[0]} CASCADE;")
-                await self.db_session.execute(drop_query)
+                truncate_query = text(
+                    f"TRUNCATE TABLE {table[0]} RESTART IDENTITY CASCADE;"
+                )
+                await self.db_session.execute(truncate_query)
 
             # Commit the changes
             await self.db_session.commit()
 
-            logger.info("Successfully dropped all tables.")
+            logger.info("Successfully truncated all tables.")
 
         except Exception as e:
-            logger.error("Failed to drop tables: %s", e)
+            logger.error("Failed to truncate tables: %s", e)
             await self.db_session.rollback()
-            raise DatabaseError("Failed to reset database.") from e
+            raise DatabaseError("Failed to truncate tables.") from e
+
+    async def list_tables_async(self) -> list:
+        """
+        Returns a list of all table names in the database.
+        """
+        try:
+            query = text(
+                "SELECT tablename FROM pg_catalog.pg_tables "
+                "WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';"
+            )
+            result = await self.db_session.execute(query)
+            tables = [row[0] for row in result.fetchall()]
+
+            logger.info(
+                "Successfully fetched %d table names from the database.", len(tables)
+            )
+            return tables
+        except Exception as e:
+            logger.error("Failed to fetch table names: %s", e)
+            raise DatabaseError("Failed to fetch table names from the database.") from e
