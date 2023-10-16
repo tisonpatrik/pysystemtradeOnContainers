@@ -12,7 +12,7 @@ from src.api.data_processing_route import router as parse_csv_files
 from src.api.seed_db_route import router as seed_db_router
 from src.api.risk_route import router as risk_router
 
-logger = AppLogger.__call__().get_logger()
+logger = AppLogger.get_instance().get_logger()
 
 app = FastAPI(
     title=settings.title,

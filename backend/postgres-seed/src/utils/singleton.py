@@ -1,4 +1,13 @@
+"""
+Singleton Meta Module
+---------------------
+This module contains the SingletonMeta class, a thread-safe implementation of
+the Singleton design pattern. The SingletonMeta class ensures that a class
+has only one instance and provides a global point to access it.
+"""
+
 from threading import Lock
+
 
 class SingletonMeta(type):
     """
