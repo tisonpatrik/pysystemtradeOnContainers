@@ -62,12 +62,12 @@ def fill_empty_values(data_frame, fill_value):
 def add_column_and_populate_it_by_value(data_frame, column_name, column_value):
     """
     Adds a new column to a given pandas DataFrame and populates it with a specified value.
-    
+
     Parameters:
     - data_frame (pd.DataFrame): The DataFrame to which the column will be added.
     - column_name (str): The name of the new column to be added.
     - column_value: The value to populate the new column with. This could be a single value or a Series.
-    
+
     Returns:
     - pd.DataFrame: The DataFrame with the newly added column.
     """
@@ -84,12 +84,13 @@ def convert_datetime_to_unixtime(data_frame):
     Converts the date_column to UNIX time.
     """
     try:
-        data_frame["unix_date_time"] = data_frame['unix_date_time'].astype(int) // 10**9
+        data_frame["unix_date_time"] = (
+            data_frame["unix_date_time"].astype(int) // 10**9
+        )
         return data_frame
     except Exception as error:
         logger.error("Error during unix_date_time conversion: %s", error)
         raise DateTimeConversionError from error
-
 
 
 def aggregate_to_day_based_prices(data_frame):
@@ -105,9 +106,9 @@ def aggregate_to_day_based_prices(data_frame):
     try:
         converted_date = convert_column_to_datetime(data_frame, "unix_date_time")
         # Set DATETIME as index
-        converted_date.set_index("unix_date_time", inplace=True)
+        series = converted_date.set_index("unix_date_time")
         # Resample to daily frequency using the mean of the prices for each day
-        result = converted_date.resample("D").mean().dropna().reset_index()
+        result = series.resample("D").mean().dropna().reset_index()
         # Round the price to 1 decimal place
         result["price"] = result["price"].round(1)
         return result
@@ -157,16 +158,27 @@ def concat_dataframes(data_frames):
     Raises:
         DuplicateRowsError: If duplicate rows are found based on 'unix_date_time' and 'symbol'.
     """
-    concatenated_df = pd.concat(data_frames, ignore_index=True)
+    try:
+        concatenated_df = pd.concat(data_frames, ignore_index=True)
+    except ValueError as e:
+        raise ValueError(
+            f"Failed to concatenate DataFrames: {e}"
+        ) from e  # Added 'from e' to address the Pylint warning
+
     # Check for duplicate rows based on 'unix_date_time' and 'symbol'
-    duplicate_rows = concatenated_df.duplicated(
-        subset=["unix_date_time", "symbol"], keep=False
-    )
+    try:
+        duplicate_rows = concatenated_df.duplicated(
+            subset=["unix_date_time", "symbol"], keep=False
+        )
+    except KeyError as e:
+        raise KeyError(f"Columns required for duplicate check are missing: {e}") from e
+
     if any(duplicate_rows):
         raise DuplicateRowsError(
             f"Found duplicate rows based on 'unix_date_time' and 'symbol': {concatenated_df[duplicate_rows]}"
         )
     return concatenated_df
+
 
 # def convert_datetime_to_unixtime(data_frame):
 #     """
@@ -180,12 +192,13 @@ def concat_dataframes(data_frames):
 #         logger.error("Error during unix_date_time conversion: %s", error)
 #         raise DateTimeConversionError from error
 
+
 def split_dataframe(df, group_by_column):
     grouped = df.groupby(group_by_column)
     series_dict = {}
-    
+
     for name, group in grouped:
-        series = pd.Series(group['price'].values, index=group.index)
+        series = pd.Series(group["price"].values, index=group.index)
         series_dict[name] = series
 
     return series_dict

@@ -94,16 +94,17 @@ def apply_vol_floor(
     floor_days: int = 500,
 ) -> pd.Series:
     # Find the rolling 5% quantile point to set as a minimum
-    vol_min = vol.rolling(min_periods=floor_min_periods, window=floor_days).quantile(q=floor_min_quant)
-
+    vol_min = vol.rolling(min_periods=floor_min_periods, window=floor_days).quantile(
+        q=floor_min_quant
+    )
 
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
     vol_min.iloc[0] = 0.0
-    vol_min.ffill(inplace=True)
+    filled_vol = vol_min.ffill()
 
     # apply the vol floor
-    vol_floored = np.maximum(vol, vol_min)
+    vol_floored = np.maximum(vol, filled_vol)
 
     return vol_floored
 
@@ -184,7 +185,6 @@ def mixed_vol_calc(
 def simple_ewvol_calc(
     daily_returns: pd.Series, days: int = 35, min_periods: int = 10, **ignored_kwargs
 ) -> pd.Series:
-
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
 
@@ -194,7 +194,6 @@ def simple_ewvol_calc(
 def simple_vol_calc(
     daily_returns: pd.Series, days: int = 25, min_periods: int = 10, **ignored_kwargs
 ) -> pd.Series:
-
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.rolling(days, min_periods=min_periods).std()
 

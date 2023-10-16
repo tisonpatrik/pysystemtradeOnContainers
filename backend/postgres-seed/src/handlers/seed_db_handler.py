@@ -46,12 +46,21 @@ class SeedDBHandler:
         """
         data_seeder = DataInserter(self.database_url)
         try:
-            data_frame = load_csv(schema.file_path)
+            # Using the refactored load_csv_file_and_filename method
+            loaded_data = load_csv(schema.file_path)
+            
+            # Extract DataFrame and file name from the returned dictionary
+            data_frame = loaded_data['dataframe']
+            file_name = loaded_data['file_name']
+
+            # Log the action
+            logger.info(f"Processing CSV file: {file_name}")
+
+            # Insert the DataFrame into the database
             await data_seeder.insert_dataframe_async(data_frame, schema.table_name)
+
         except Exception as error:
             logger.error(
-                "Error occurred while processing the CSV file %s: %s",
-                schema.file_path,
-                error,
+                f"Error occurred while processing the CSV file {schema.file_path}: {error}"
             )
             raise error

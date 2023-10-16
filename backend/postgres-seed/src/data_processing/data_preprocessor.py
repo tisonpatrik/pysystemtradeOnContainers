@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def load_and_process_raw_data_csv(file_path, column_mapping, file_name):
+def load_and_process_raw_data_csv(file_path, column_mapping):
     """
     Loads and processes raw data from a CSV file.
 
@@ -38,13 +38,17 @@ def load_and_process_raw_data_csv(file_path, column_mapping, file_name):
     """
     try:
         data_frame = load_csv(file_path)
+        data_frame = data_frame["dataframe"]
+        file_name = data_frame["file_name"]
         data_frame = rename_columns(data_frame, column_mapping)
         # Check if 'price' column is present before aggregation
         if "price" in data_frame.columns:
             data_frame = aggregate_to_day_based_prices(data_frame)
 
         data_frame = convert_datetime_to_unixtime(data_frame)
-        data_frame = add_column_and_populate_it_by_value(data_frame,column_name= file_name, column_value='symbol')
+        data_frame = add_column_and_populate_it_by_value(
+            data_frame, column_name=file_name, column_value="symbol"
+        )
         return data_frame
     except ProcessingError as error:  # Renamed 'e' to 'error'
         logger.error(
@@ -84,15 +88,41 @@ def save_concatenated_dataframes(data_frames, save_path):
         data_frames (list): A list of DataFrames to concatenate.
         save_path (str): The path to save the concatenated DataFrame.
     """
-    concatenated_df = concat_dataframes(data_frames)
-    drop_unnamed_column(concatenated_df)
-    save_to_csv(concatenated_df, save_path)
+    try:
+        # Check if data_frames list is empty or None
+        if not data_frames:
+            raise ValueError("The list of DataFrames should not be empty or None.")
+
+        # Concatenate dataframes
+        try:
+            concatenated_df = concat_dataframes(data_frames)
+        except Exception as e:
+            raise Exception(f"Failed to concatenate DataFrames: {e}")
+
+        # Check if concatenated_df is empty
+        if concatenated_df.empty:
+            raise ValueError("The concatenated DataFrame is empty.")
+
+        # Drop unnamed columns
+        try:
+            drop_unnamed_column(concatenated_df)
+        except Exception as e:
+            raise Exception(f"Failed to drop unnamed columns: {e}")
+
+        # Save to CSV
+        try:
+            save_to_csv(concatenated_df, save_path)
+        except Exception as e:
+            raise Exception(f"Failed to save DataFrame to CSV: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 def drop_unnamed_column(data_frame):
     """
     Drops the column 'Unnamed: 4' from the DataFrame if it exists.
     """
+    df = data_frame
     if "Unnamed: 4" in data_frame.columns:
-        data_frame.drop("Unnamed: 4", axis=1, inplace=True)
-    return data_frame
+        df = data_frame.drop("Unnamed: 4", axis=1)
+    return df

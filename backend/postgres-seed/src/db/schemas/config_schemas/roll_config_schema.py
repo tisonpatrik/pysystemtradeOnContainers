@@ -57,11 +57,11 @@ class RollConfigSchema(BaseConfigSchema):
         return "roll_config"
 
     @property
-    def origin_csv_file_path(self):
+    def origin_csv_directory_path(self):
         """
         Returns the file path of the original CSV file for the 'roll_config' table.
 
         Returns:
             str: File path of the original CSV.
         """
-        return "/path/in/container/csvconfig/rollconfig.csv"
+        return "/path/in/container/csvconfig"

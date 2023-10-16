@@ -61,7 +61,7 @@ class MultiplePricesSchema(BaseConfigSchema):
         return "multiple_prices"
 
     @property
-    def origin_csv_file_path(self):
+    def origin_csv_directory_path(self):
         """
         Returns the file path of the original CSV file for the 'multiple_prices' table.
 

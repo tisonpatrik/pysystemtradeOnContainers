@@ -6,13 +6,13 @@ It includes a POST endpoint for parsing raw data files and storing them in a tem
 from fastapi import APIRouter, status
 
 from src.api.utils import execute_with_logging
-from src.handlers.raw_data_handler import RawDataHandler
+from src.handlers.data_processing_handler import DataProcessingHandler
 
 router = APIRouter()
-data_handler = RawDataHandler()
+data_handler = DataProcessingHandler()
 
 
-@router.post("/parse_files/", status_code=status.HTTP_200_OK, name="parse_files")
+@router.post("/parse_csv_files/", status_code=status.HTTP_200_OK, name="parse_csv_files")
 def parse_raw_data_files():
     """Parse raw data files and store them in temp."""
     execute_with_logging(

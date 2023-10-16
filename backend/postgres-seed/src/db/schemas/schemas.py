@@ -45,7 +45,6 @@ def get_configs_schemas():
         SpreadCostSchema(),
     ]
 
-
 def get_raw_data_schemas():
     """
     Returns a list of schema objects related to raw data.

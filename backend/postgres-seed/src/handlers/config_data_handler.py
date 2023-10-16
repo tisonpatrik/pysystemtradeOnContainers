@@ -53,7 +53,7 @@ class ConfigDataHandler:
         """
         try:
             data = load_csv(schema.origin_csv_file_path)
-            renamed = rename_columns(data, schema.column_mapping)
+            renamed = rename_columns(data["dataframe"], schema.column_mapping)
             filled = fill_empty_values(
                 renamed, fill_value=0
             )  # Assuming you want to fill with 0

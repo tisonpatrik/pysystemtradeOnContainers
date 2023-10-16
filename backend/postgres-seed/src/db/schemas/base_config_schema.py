@@ -45,12 +45,12 @@ class BaseConfigSchema(ABC):
 
     @property
     @abstractmethod
-    def origin_csv_file_path(self):
+    def origin_csv_directory_path(self):
         """
-        Abstract property that should return the file path of the original CSV file.
+        Abstract property that should return the directory path of the original CSV file.
 
         Returns:
-            str: File path of the original CSV.
+            str: Directory path of the original CSV.
         """
 
     @property
