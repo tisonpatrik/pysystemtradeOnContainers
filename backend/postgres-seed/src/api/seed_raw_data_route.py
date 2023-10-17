@@ -13,7 +13,9 @@ router = APIRouter()
 seed_db_handler = SeedDBHandler(settings.database_url)
 
 
-@router.post("/seed_db/", status_code=status.HTTP_200_OK, name="seed_db")
+@router.post(
+    "/seed_raw_data_route/", status_code=status.HTTP_200_OK, name="seed_raw_data_route"
+)
 async def fill_database():
     """Fill the database tables with data."""
     await execute_with_logging_async(
