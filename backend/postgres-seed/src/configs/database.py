@@ -17,14 +17,6 @@ class Settings(BaseSettings):
     Reads environment variables and provides default values.
     """
 
-    title: str = os.environ.get("TITLE", "Слава Україні!")
-    version: str = "1.0.2"
-    description: str = os.environ.get("DESCRIPTION", "Postgres-seeder")
-    openapi_prefix: str = os.environ.get("OPENAPI_PREFIX", "/")
-    docs_url: str = "/docs"
-    openapi_url: str = "/openapi.json"
-    api_prefix: str = "/api"
-
     database_url: PostgresDsn = os.getenv("DB_URL")  # type: ignore
     test_database_url: PostgresDsn = os.getenv("TEST_DB_URL")  # type: ignore
 
