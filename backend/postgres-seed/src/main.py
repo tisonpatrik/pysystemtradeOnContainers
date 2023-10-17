@@ -4,7 +4,7 @@ Main entry point for the FastAPI application.
 
 from fastapi import FastAPI
 
-from src.config import settings
+from src.configs.database import settings
 from src.utils.logging import AppLogger
 
 from src.api.database_route import router as database_router
@@ -26,7 +26,7 @@ app = FastAPI(
 # app.include_router(router, prefix=settings.api_prefix)
 app.include_router(database_router, prefix="/database")
 app.include_router(parse_csv_files, prefix="/parse_csv_files")
-app.include_router(seed_db_router, prefix="/seed_raw_data_route")
+app.include_router(seed_db_router, prefix="/raw_data_route")
 app.include_router(risk_router, prefix="/seed_risk_route")
 
 

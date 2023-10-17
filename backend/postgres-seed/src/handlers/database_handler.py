@@ -1,6 +1,4 @@
-"""
-Module to handle database operations like truncate of tables and returning of list of tables.
-"""
+"""Async module for PostgreSQL database tasks like truncating tables and listing table names."""
 
 import logging
 
@@ -16,17 +14,15 @@ logger = logging.getLogger(__name__)
 
 class DatabaseHandler:
     """
-    A class for handling database-related tasks such as table creation and reset.
+    Handles async DB tasks: truncates tables and lists table names.
     """
 
     def __init__(self, db_session: AsyncSession):
-        """Initialize the handler with schemas fetched from get_schemas."""
         self.db_session = db_session
 
     async def truncate_tables_async(self) -> None:
         """
-        Truncate all tables in the database,
-        effectively deleting all records but keeping the schema.
+        Async truncate of all DB tables, resets identities, and cascades.
         """
         try:
             # Get the list of all tables
@@ -57,7 +53,7 @@ class DatabaseHandler:
 
     async def list_tables_async(self) -> list:
         """
-        Returns a list of all table names in the database.
+        Returns a list of non-system table names.
         """
         try:
             query = text(
