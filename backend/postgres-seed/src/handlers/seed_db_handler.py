@@ -5,10 +5,9 @@ which is responsible for seeding the database from CSV files.
 import asyncio
 import os
 import logging
+import traceback
 
 from src.configs.files_to_table_mapping import validated_mapping
-from src.handlers.errors import DatabaseError
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Initialize logger
@@ -30,6 +29,30 @@ class SeedDBHandler:
         """
         Asynchronously seed the database from CSV files using predefined schemas.
         """
+
+        async def run_task(directory, table):
+            try:
+                await insert_data_from_csv_to_table(self.db_session, directory, table)
+                logger.info(
+                    "Successfully inserted data from %s to table %s", directory, table
+                )
+            except Exception:
+                logger.error(
+                    "Failed to insert data from %s to table %s", directory, table
+                )
+                logger.debug(traceback.format_exc())
+                # Handle or re-raise the exception as needed
+                raise
+
+        tasks = [
+            run_task(item.directory, table)
+            for item in self.mapping
+            for table in (
+                item.tables if isinstance(item.tables, list) else [item.tables]
+            )
+        ]
+
+        await asyncio.gather(*tasks)
 
     async def get_count_of_mounted_files_async(self):
         """
