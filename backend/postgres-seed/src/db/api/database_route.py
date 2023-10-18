@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Application-specific dependencies
-from src.db.database import get_db
+from src.db.settings.database import get_db
 from src.db.handlers.database_handler import DatabaseHandler
 
 # Create a FastAPI router instance

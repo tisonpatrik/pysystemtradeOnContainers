@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from src.api.utils import execute_with_logging_async
-from src.configs.database import settings
+from src.db.settings.config import settings
 from src.handlers.risk_handler import RiskHandler
 
 router = APIRouter()

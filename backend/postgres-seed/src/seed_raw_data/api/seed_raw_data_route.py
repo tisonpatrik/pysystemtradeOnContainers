@@ -10,8 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Application-specific imports
-from src.handlers.seed_db_handler import SeedDBHandler
-from src.db.database import get_db
+from src.seed_raw_data.handler.seed_db_handler import SeedDBHandler
+from src.db.settings.database import get_db
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
