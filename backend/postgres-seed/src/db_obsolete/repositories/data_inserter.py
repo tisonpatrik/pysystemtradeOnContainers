@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 import asyncpg
 
-from src.db.errors import (
+from src.db_obsolete.errors import (
     DatabaseConnectionError,
     DatabaseInteractionError,
     TableOrColumnNotFoundError,

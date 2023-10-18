@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from src.utils.logging import AppLogger
 
-from src.api.database_route import router as database_router
+from src.db.api.database_route import router as database_router
 from src.api.data_processing_route import router as parse_csv_files
 from src.api.seed_raw_data_route import router as seed_db_router
 from src.api.seed_risk_route import router as risk_router

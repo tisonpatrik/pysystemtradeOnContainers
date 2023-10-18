@@ -2,16 +2,23 @@
 This module serves as an aggregator for different schema objects used to configure database tables.
 """
 
-from src.db.schemas.config_schemas.instrument_config_schema import (
+from src.db_obsolete.schemas.config_schemas.instrument_config_schema import (
     InstrumentConfigSchema,
 )
-from src.db.schemas.config_schemas.roll_config_schema import RollConfigSchema
-from src.db.schemas.config_schemas.spread_cost_schema import SpreadCostSchema
-from src.db.schemas.raw_data_schemas.adjusted_prices_schema import AdjustedPricesSchema
-from src.db.schemas.raw_data_schemas.fx_prices_schema import FxPricesSchema
-from src.db.schemas.raw_data_schemas.multiple_prices_schema import MultiplePricesSchema
-from src.db.schemas.raw_data_schemas.roll_calendars_schema import RollCalendarsSchema
-from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
+from src.db_obsolete.schemas.config_schemas.roll_config_schema import RollConfigSchema
+from src.db_obsolete.schemas.config_schemas.spread_cost_schema import SpreadCostSchema
+from src.db_obsolete.schemas.raw_data_schemas.adjusted_prices_schema import (
+    AdjustedPricesSchema,
+)
+from src.db_obsolete.schemas.raw_data_schemas.fx_prices_schema import FxPricesSchema
+from src.db_obsolete.schemas.raw_data_schemas.multiple_prices_schema import (
+    MultiplePricesSchema,
+)
+from src.db_obsolete.schemas.raw_data_schemas.roll_calendars_schema import (
+    RollCalendarsSchema,
+)
+from src.db_obsolete.schemas.risk_schemas.robust_volatility import RobustVolatility
+
 
 def get_schemas():
     """
@@ -22,6 +29,7 @@ def get_schemas():
     """
     return get_configs_schemas() + get_raw_data_schemas() + get_risk_schemas()
 
+
 def get_data_schemas():
     """
     Aggregates and returns all data schema objects.
@@ -30,6 +38,7 @@ def get_data_schemas():
         list: A list containing all data schema objects.
     """
     return get_configs_schemas() + get_raw_data_schemas()
+
 
 def get_configs_schemas():
     """
@@ -45,6 +54,7 @@ def get_configs_schemas():
         SpreadCostSchema(),
     ]
 
+
 def get_raw_data_schemas():
     """
     Returns a list of schema objects related to raw data.
@@ -59,7 +69,8 @@ def get_raw_data_schemas():
         RollCalendarsSchema(),
     ]
 
+
 def get_risk_schemas():
-    return[
+    return [
         RobustVolatility(),
-    ]    
+    ]

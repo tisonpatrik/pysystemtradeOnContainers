@@ -8,7 +8,7 @@ from src.data_processing.data_preprocessor import (
     process_all_csv_in_directory,
     save_concatenated_dataframes,
 )
-from src.db.schemas.schemas import get_raw_data_schemas
+from src.db_obsolete.schemas.schemas import get_raw_data_schemas
 from src.handlers.errors import ProcessingError
 
 # Initialize logger

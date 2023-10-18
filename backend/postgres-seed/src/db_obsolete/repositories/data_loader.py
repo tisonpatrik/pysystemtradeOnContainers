@@ -6,7 +6,7 @@ import logging
 import asyncpg
 import pandas as pd
 
-from src.db.errors import (
+from src.db_obsolete.errors import (
     DatabaseConnectionError,
     DatabaseInteractionError,
     ParameterMismatchError,
@@ -17,17 +17,19 @@ from src.db.errors import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DataLoader:
     def __init__(self, database_url):
         self.database_url = database_url
 
     async def fetch_data_as_dataframe_async(self, sql_query):
-        
         conn = await asyncpg.connect(dsn=self.database_url)
         try:
             rows = await conn.fetch(sql_query)
         except asyncpg.SyntaxOrAccessError as exc:
-            logger.error(f"SQL syntax or access error occurred: {exc}. Query: {sql_query}")
+            logger.error(
+                f"SQL syntax or access error occurred: {exc}. Query: {sql_query}"
+            )
             raise SQLSyntaxError from exc
         except asyncpg.ConnectionFailureError as exc:
             logger.error(f"Database connection error: {exc}.")
@@ -40,7 +42,7 @@ class DataLoader:
 
         return self._convert_to_dataframe(rows)
 
-    def _convert_to_dataframe(self, rows):        
+    def _convert_to_dataframe(self, rows):
         if not rows:
             return pd.DataFrame()
 
@@ -51,5 +53,3 @@ class DataLoader:
             raise ParameterMismatchError("No column names found.")
 
         return pd.DataFrame(rows, columns=columns)
-
-

@@ -1,13 +1,13 @@
 """
-This module defines the schema for configuring the 'fx_prices' database table and its associated CSV file.
+This module defines the schema for configuring the 'adjusted_prices' database table and its associated CSV file.
 """
 
-from src.db.schemas.base_config_schema import BaseConfigSchema
+from src.db_obsolete.schemas.base_config_schema import BaseConfigSchema
 
 
-class FxPricesSchema(BaseConfigSchema):
+class AdjustedPricesSchema(BaseConfigSchema):
     """
-    Concrete class that implements the BaseConfigSchema for the 'fx_prices' database table.
+    Concrete class that implements the BaseConfigSchema for the 'adjusted_prices' database table.
     """
 
     @property
@@ -18,18 +18,18 @@ class FxPricesSchema(BaseConfigSchema):
         Returns:
             Dict[str, str]: A dictionary mapping column names to database fields.
         """
-        return {"DATETIME": "unix_date_time", "PRICE": "price"}
+        return {"DATETIME": "unix_date_time", "price": "price"}
 
     @property
     def sql_command(self):
         """
-        Returns the SQL command to create the 'fx_prices' table.
+        Returns the SQL command to create the 'adjusted_prices' table.
 
         Returns:
             str: SQL command string.
         """
         return """
-                CREATE TABLE fx_prices (
+                CREATE TABLE adjusted_prices (
                         unix_date_time INTEGER,
                         symbol VARCHAR(50),
                         price FLOAT,
@@ -40,19 +40,19 @@ class FxPricesSchema(BaseConfigSchema):
     @property
     def table_name(self):
         """
-        Returns the name of the 'fx_prices' database table.
+        Returns the name of the 'adjusted_prices' database table.
 
         Returns:
             str: Name of the database table.
         """
-        return "fx_prices"
+        return "adjusted_prices"
 
     @property
     def origin_csv_directory_path(self):
         """
-        Returns the file path of the original CSV file for the 'fx_prices' table.
+        Returns the file path of the original CSV file for the 'adjusted_prices' table.
 
         Returns:
             str: File path of the original CSV.
         """
-        return "/path/in/container/fx_prices_csv/"
+        return "/path/in/container/adjusted_prices_csv/"

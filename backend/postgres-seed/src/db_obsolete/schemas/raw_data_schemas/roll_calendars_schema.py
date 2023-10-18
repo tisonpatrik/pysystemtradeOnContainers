@@ -2,7 +2,7 @@
 This module defines the schema for configuring the 'roll_calendars' database table and its associated CSV file.
 """
 
-from src.db.schemas.base_config_schema import BaseConfigSchema
+from src.db_obsolete.schemas.base_config_schema import BaseConfigSchema
 
 
 class RollCalendarsSchema(BaseConfigSchema):

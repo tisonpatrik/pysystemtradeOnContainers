@@ -7,7 +7,7 @@ import logging
 from src.data_processing.csv_helper import save_to_csv
 from src.data_processing.data_frame_helper import fill_empty_values
 from src.data_processing.data_preprocessor import load_csv, rename_columns
-from src.db.schemas.schemas import get_configs_schemas
+from src.db_obsolete.schemas.schemas import get_configs_schemas
 from src.handlers.errors import ProcessingError
 
 # Initialize logger

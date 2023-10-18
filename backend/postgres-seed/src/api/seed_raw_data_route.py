@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 # Application-specific imports
 from src.handlers.seed_db_handler import SeedDBHandler
-from src.database import get_db
+from src.db.database import get_db
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)

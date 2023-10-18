@@ -2,9 +2,9 @@ import logging
 import asyncio
 
 import pandas as pd
-from src.db.schemas.risk_schemas.robust_volatility import RobustVolatility
-from src.db.repositories.data_loader import DataLoader
-from src.db.repositories.data_inserter import DataInserter
+from src.db_obsolete.schemas.risk_schemas.robust_volatility import RobustVolatility
+from src.db_obsolete.repositories.data_loader import DataLoader
+from src.db_obsolete.repositories.data_inserter import DataInserter
 from src.data_processing.data_frame_helper import (
     convert_datetime_to_unixtime,
     concat_dataframes,
