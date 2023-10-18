@@ -32,7 +32,7 @@ class SeedDBHandler:
 
         async def run_task(directory, table):
             try:
-                await table_to_db_service.insert_data_from_csv_to_table(
+                await table_to_db_service.insert_data_from_csv_to_table_async(
                     directory, table
                 )
                 logger.info(

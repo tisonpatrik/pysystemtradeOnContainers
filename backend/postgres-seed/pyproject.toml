@@ -22,6 +22,8 @@ rich = "*"
 
 pandas = "^2.0.3"
 pytest-mock = "^3.11.1"
+aiofiles = "^23.2.1"
+aiocsv = "^1.2.4"
 
 
 [tool.poetry.dev-dependencies]
