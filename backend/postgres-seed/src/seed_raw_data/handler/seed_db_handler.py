@@ -8,7 +8,7 @@ import logging
 import traceback
 
 from src.configs.files_to_table_mapping import validated_mapping
-from sqlalchemy.ext.asyncio import AsyncSession
+from src.seed_raw_data.services.table_to_db_service import TableToDBService
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -21,18 +21,20 @@ class SeedDBHandler:
     asynchronously from CSV files according to given schemas.
     """
 
-    def __init__(self, db_session: AsyncSession):
-        self.db_session = db_session
+    def __init__(self):
         self.mapping = validated_mapping
 
     async def insert_data_from_csv_async(self):
         """
         Asynchronously seed the database from CSV files using predefined schemas.
         """
+        table_to_db_service = TableToDBService()
 
         async def run_task(directory, table):
             try:
-                await insert_data_from_csv_to_table(self.db_session, directory, table)
+                await table_to_db_service.insert_data_from_csv_to_table(
+                    directory, table
+                )
                 logger.info(
                     "Successfully inserted data from %s to table %s", directory, table
                 )
