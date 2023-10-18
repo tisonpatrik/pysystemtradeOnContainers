@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 class SeedDBHandler:
     """
-    This class provides methods to seed the database asynchronously from CSV files according to given schemas.
+    This class provides methods to seed the database
+    asynchronously from CSV files according to given schemas.
     """
 
     def __init__(self, db_session: AsyncSession):
@@ -34,18 +35,11 @@ class SeedDBHandler:
         Asynchronously count the number of CSV files mounted in the specified paths in the settings.
         """
         mapping = settings.file_to_table_mapping
-        counts = {}
 
         async def count_csv_files_in_directory(directory):
             return sum(1 for f in os.listdir(directory) if f.endswith(".csv"))
 
-        tasks = []
-        for key, path in mapping.items():
-            tasks.append(asyncio.ensure_future(count_csv_files_in_directory(path)))
+        tasks = [count_csv_files_in_directory(path) for path in mapping.values()]
+        completed = await asyncio.gather(*tasks)
 
-        completed, _ = await asyncio.gather(*tasks)
-
-        for idx, (key, _) in enumerate(mapping.items()):
-            counts[key] = completed[idx]
-
-        return counts
+        return sum(completed)

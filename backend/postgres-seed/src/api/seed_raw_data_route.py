@@ -1,4 +1,7 @@
-# Standard Library
+"""
+API route definitions for seeding the database with raw data.
+Handles all incoming HTTP requests related to this functionality.
+"""
 import logging
 
 # Third-Party Libraries
@@ -44,3 +47,31 @@ async def fill_database(db_session: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while seeding the database.",
         ) from DatabaseError("Failed to seed database.")
+
+
+@router.get(
+    "/get_csv_file_counts/",
+    status_code=status.HTTP_200_OK,
+    name="Get Count of Mounted CSV Files",
+)
+async def get_csv_file_counts(db_session: AsyncSession = Depends(get_db)):
+    """
+    Returns the count of CSV files in specified directories.
+    """
+    try:
+        seed_db_handler = SeedDBHandler(db_session)
+        counts = await seed_db_handler.get_count_of_mounted_files_async()
+
+        logger.info("Successfully counted CSV files: %s", counts)
+        return {
+            "status": "success",
+            "message": "Successfully counted CSV files.",
+            "counts": counts,
+        }
+
+    except Exception as e:
+        logger.error("Failed to count CSV files: %s", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while counting CSV files.",
+        ) from DatabaseError("Failed to count CSV files.")

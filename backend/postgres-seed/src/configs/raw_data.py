@@ -1,17 +1,16 @@
 """Handle app configurations."""
 
-import os
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     """Map environment variables."""
 
-    csv_config: str = os.environ.get("CSV_CONFIG", "")
-    adjusted_prices: str = os.environ.get("ADJUSTED_PRICES", "")
-    fx_prices: str = os.environ.get("FX_PRICES", "")
-    multiple_prices: str = os.environ.get("MULTIPLE_PRICES", "")
-    roll_calendars: str = os.environ.get("ROLL_CALENDARS", "")
+    csv_config: str = "/path/in/container/csvconfig"
+    adjusted_prices: str = "/path/in/container/adjusted_prices_csv"
+    fx_prices: str = "/path/in/container/fx_prices_csv"
+    multiple_prices: str = "/path/in/container/multiple_prices_csv"
+    roll_calendars: str = "/path/in/container/roll_calendars_csv"
 
     @property
     def file_to_table_mapping(self):
