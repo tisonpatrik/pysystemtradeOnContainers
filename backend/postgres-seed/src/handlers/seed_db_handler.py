@@ -24,6 +24,7 @@ class SeedDBHandler:
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
+        self.mapping = settings.file_to_table_mapping
 
     async def insert_data_from_csv_async(self):
         """
@@ -34,12 +35,11 @@ class SeedDBHandler:
         """
         Asynchronously count the number of CSV files mounted in the specified paths in the settings.
         """
-        mapping = settings.file_to_table_mapping
 
         async def count_csv_files_in_directory(directory):
             return sum(1 for f in os.listdir(directory) if f.endswith(".csv"))
 
-        tasks = [count_csv_files_in_directory(path) for path in mapping.values()]
+        tasks = [count_csv_files_in_directory(path) for path in self.mapping.values()]
         completed = await asyncio.gather(*tasks)
 
         return sum(completed)

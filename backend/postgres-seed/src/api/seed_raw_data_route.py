@@ -2,6 +2,7 @@
 API route definitions for seeding the database with raw data.
 Handles all incoming HTTP requests related to this functionality.
 """
+
 import logging
 
 # Third-Party Libraries
@@ -11,7 +12,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 # Application-specific imports
 from src.handlers.seed_db_handler import SeedDBHandler
 from src.database import get_db
-from src.handlers.errors import DatabaseError
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -46,7 +46,7 @@ async def fill_database(db_session: AsyncSession = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while seeding the database.",
-        ) from DatabaseError("Failed to seed database.")
+        ) from e
 
 
 @router.get(
@@ -74,4 +74,4 @@ async def get_csv_file_counts(db_session: AsyncSession = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while counting CSV files.",
-        ) from DatabaseError("Failed to count CSV files.")
+        ) from e
