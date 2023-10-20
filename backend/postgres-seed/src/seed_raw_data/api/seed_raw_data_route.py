@@ -9,7 +9,7 @@ import logging
 from fastapi import APIRouter, HTTPException, status
 
 # Application-specific imports
-from src.seed_raw_data.handler.seed_db_handler import SeedDBHandler
+from src.seed_raw_data.handlers.seed_db_handler import SeedDBHandler
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)

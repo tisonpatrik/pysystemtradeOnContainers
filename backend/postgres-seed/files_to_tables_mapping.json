@@ -1,0 +1,27 @@
+[
+    {
+        "Directory": "/path/in/container/csvconfig",
+        "Tables": [
+            "instrument_config",
+            "instrument_metadata",
+            "roll_config",
+            "spread_cost"
+        ]
+    },
+    {
+        "Directory": "/path/in/container/adjusted_prices_csv",
+        "Tables": "adjusted_prices"
+    },
+    {
+        "Directory": "/path/in/container/fx_prices_csv",
+        "Tables": "fx_prices"
+    },
+    {
+        "Directory": "/path/in/container/multiple_prices_csv",
+        "Tables": "multiple_prices"
+    },
+    {
+        "Directory": "/path/in/container/roll_calendars_csv",
+        "Tables": "roll_calendars"
+    }
+]

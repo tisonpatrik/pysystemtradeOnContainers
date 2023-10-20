@@ -20,9 +20,7 @@ class CsvFilesService:
     A class to work with CSV files asynchronously.
     """
 
-    async def load_csv_files_from_directory_async(
-        self, path_to_directory
-    ) -> List[CsvOutput]:
+    async def load_csv_files_from_directory_async(self, mapping) -> List[CsvOutput]:
         """
         Loads CSV files from the specified directory asynchronously.
 
@@ -32,13 +30,13 @@ class CsvFilesService:
         Returns:
             List[CsvOutput]: A list of CsvOutput objects representing the loaded CSV files.
         """
-        logger.info("Loading CSV files from %s", path_to_directory)
+        logger.info("Loading CSV files from %s", mapping.directory)
 
         # Initialize an empty list to hold the DataFrames
         dataframes = []
         try:
             # Use glob to get all CSV files in the directory
-            csv_files = glob.glob(f"{path_to_directory}/*.csv")
+            csv_files = glob.glob(f"{mapping.directory}/*.csv")
 
             # Create asynchronous tasks for each CSV file and read it into a DataFrame
             tasks = [self.load_csv_async(csv_file) for csv_file in csv_files]
@@ -46,13 +44,13 @@ class CsvFilesService:
             # Log each file-loading action
             logger.info(
                 "Successfully loaded all CSV files from %s into DataFrames.",
-                path_to_directory,
+                mapping.directory,
             )
 
         except Exception as e:
             logger.error(
                 "An error occurred while loading CSV files from %s: %s",
-                path_to_directory,
+                mapping.directory,
                 e,
             )
             raise
