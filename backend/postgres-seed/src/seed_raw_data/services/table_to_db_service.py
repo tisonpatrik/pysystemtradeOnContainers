@@ -4,6 +4,7 @@ bla bla
 import logging
 
 from src.csv_io.services.csv_files_service import CsvFilesService
+from src.data_processor.services.data_processing_service import DataProcessingService
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
@@ -17,6 +18,7 @@ class TableToDBService:
 
     def __init__(self):
         self.csv_service = CsvFilesService()
+        self.data_processing_service = DataProcessingService()
 
     async def insert_data_from_csv_to_table_async(self, map_item):
         """
@@ -29,11 +31,12 @@ class TableToDBService:
         Returns:
             None
         """
-        csv_files = self.csv_service.load_csv_files_from_directory_async(map_item)
+        csv_files = await self.csv_service.load_csv_files_from_directory_async(map_item)
 
         # Step 3: Add data preprocessing using either an existing method or Pydantic
-        # TODO
-
+        processed_tables = await self.data_processing_service.process_csv_files_async(
+            csv_files
+        )
         # Step 4: Integrate the existing insert_dataframe_async method
         # TODO
 

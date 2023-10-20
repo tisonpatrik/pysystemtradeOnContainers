@@ -1,0 +1,55 @@
+{
+    "instrument_config": {
+        "Instrument": "symbol",
+        "Description": "description",
+        "Pointsize": "pointsize",
+        "Currency": "currency",
+        "AssetClass": "asset_class",
+        "PerBlock": "per_block",
+        "Percentage": "percentage",
+        "PerTrade": "per_trade",
+        "Region": "region"
+    },
+    "instrument_metadata": {
+        "Instrument": "symbol",
+        "AssetClass": "asset_class",
+        "SubClass": "sub_class",
+        "SubSubClass": "sub_sub_class",
+        "Style": "style",
+        "Country": "country",
+        "Duration": "duration",
+        "Description": "description"
+    },
+    "roll_config": {
+        "Instrument": "symbol",
+        "HoldRollCycle": "hold_roll_cycle",
+        "RollOffsetDays": "roll_offset_days",
+        "CarryOffset": "carry_offset",
+        "PricedRollCycle": "priced_roll_cycle",
+        "ExpiryOffset": "expiry_offset"
+    },
+    "spread_cost": {
+        "Instrument": "symbol",
+        "SpreadCost": "spread_cost"
+    },
+    "adjusted_prices": {
+        "DATETIME": "unix_date_time",
+        "price": "price"
+    },
+    "fx_prices": {
+        "DATETIME": "unix_date_time",
+        "PRICE": "price"
+    },
+    "multiple_prices": {
+        "DATETIME": "unix_date_time",
+        "CARRY": "carry",
+        "CARRY_CONTRACT": "carry_contract",
+        "PRICE": "price",
+        "PRICE_CONTRACT": "price_contract",
+        "FORWARD": "forward",
+        "FORWARD_CONTRACT": "forward_contract"
+    },
+    "roll_calendars": {
+        "DATE_TIME": "unix_date_time"
+    }
+}

@@ -15,7 +15,7 @@ class MappingService:
     """
 
     def __init__(self):
-        self.json_file_path = "/home/app/files_to_tables_mapping.json"
+        self.json_file_path = "/home/app/mappings/files_to_tables_mapping.json"
 
     def load_mappings_from_json(self) -> List[FileTableMapping]:
         """
