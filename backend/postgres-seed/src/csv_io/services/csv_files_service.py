@@ -6,7 +6,6 @@ import glob
 import asyncio
 from typing import List
 import aiofiles
-import pandas as pd
 
 from aiocsv.readers import AsyncDictReader
 from src.csv_io.schemas.csv_output import CsvOutput
@@ -30,23 +29,19 @@ class CsvFilesService:
         Returns:
             List[CsvOutput]: A list of CsvOutput objects representing the loaded CSV files.
         """
-        logger.info("Loading CSV files from %s", mapping.directory)
-
-        # Initialize an empty list to hold the DataFrames
-        dataframes = []
+        csv_outputs = []
         try:
-            # Use glob to get all CSV files in the directory
             csv_files = glob.glob(f"{mapping.directory}/*.csv")
-
-            # Create asynchronous tasks for each CSV file and read it into a DataFrame
             tasks = [self.load_csv_async(csv_file) for csv_file in csv_files]
-            dataframes = await asyncio.gather(*tasks)
-            # Log each file-loading action
-            logger.info(
-                "Successfully loaded all CSV files from %s into DataFrames.",
-                mapping.directory,
-            )
+            data_list = await asyncio.gather(*tasks)
 
+            for full_path, data in zip(csv_files, data_list):
+                csv_output = CsvOutput(
+                    full_path=full_path, table=mapping.table, data=data
+                )
+                csv_outputs.append(csv_output)
+
+            logger.info("Successfully loaded all CSV files from %s.", mapping.directory)
         except Exception as e:
             logger.error(
                 "An error occurred while loading CSV files from %s: %s",
@@ -55,9 +50,9 @@ class CsvFilesService:
             )
             raise
 
-        return dataframes
+        return csv_outputs
 
-    async def load_csv_async(self, full_path) -> CsvOutput:
+    async def load_csv_async(self, full_path) -> List[dict]:
         """
         Loads a CSV file asynchronously and returns a CsvOutput object.
 
@@ -65,7 +60,7 @@ class CsvFilesService:
             full_path (str): The full path to the CSV file to be loaded.
 
         Returns:
-            CsvOutput: An object representing the loaded CSV file.
+            Dataframe representing the loaded CSV file.
         """
         try:
             # Log the action
@@ -76,13 +71,7 @@ class CsvFilesService:
                 async_reader = AsyncDictReader(file)
                 dataframe = [row async for row in async_reader]
 
-            # Convert list of dictionaries to DataFrame
-            dataframe = pd.DataFrame(dataframe)
-
-            # Create the return object
-            result = CsvOutput(full_path=full_path, dataframe=dataframe)
-
-            return result
+            return dataframe
 
         except Exception as e:
             # Log the error

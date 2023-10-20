@@ -18,7 +18,7 @@ WORKDIR /home/app
 ARG INSTALL_ARGS="--no-root"
 ENV POETRY_HOME="/opt/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
-COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* ./
+COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* postgres-seed/files_to_tables_mapping.json ./ 
 
 # install without virtualenv, since we are inside a container
 RUN poetry config virtualenvs.create false \

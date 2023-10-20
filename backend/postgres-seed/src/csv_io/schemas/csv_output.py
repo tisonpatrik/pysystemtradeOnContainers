@@ -1,11 +1,7 @@
 """
-Module: csv_output_module
-
-This module defines a Pydantic BaseModel for representing CSV output data.
-
+This module defines a Pydantic BaseModel class, CsvOutput, for representing CSV output data.
 """
-
-from pandas import DataFrame
+from typing import List, Dict
 from pydantic import BaseModel
 
 
@@ -17,9 +13,11 @@ class CsvOutput(BaseModel):
 
     Attributes:
         full_path (str): The full path to the CSV file.
-        dataframe (DataFrame): The data stored in a Pandas DataFrame.
+        table (str): Table name correspond to db.
+        data (List[Dict[str, str]]): The data stored in a list of dictionaries.
 
     """
 
     full_path: str
-    dataframe: DataFrame
+    table: str
+    data: List[Dict[str, str]]
