@@ -1,6 +1,6 @@
 """
-Module: InstrumentConfigService
-Purpose: This module defines the InstrumentConfigService class which processes instrument configuration data.
+Module: ConfigFilesService
+Purpose: This module defines the ConfigFilesService class which processes instrument configuration data.
 It reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object for further usage.
 """
 import os
@@ -11,12 +11,13 @@ from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
 from src.seed_raw_data.errors.table_to_db_errors import ProcessingError, InvalidFileNameError
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class InstrumentConfigService:
+class ConfigFilesService:
     """
-    Handles the processing of instrument configuration data.
+    Handles the processing of configuration data.
     Reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object.
     """
 
@@ -26,7 +27,7 @@ class InstrumentConfigService:
 
     def process_instrument_config(self, map_item: FileTableMapping):
         """
-        Processes instrument configuration data from a FileTableMapping object.
+        Processes configuration data from a FileTableMapping object.
 
         Args:
             map_item (FileTableMapping): The object containing mapping information for file processing.
@@ -35,10 +36,8 @@ class InstrumentConfigService:
             DataFrameContainer: Encapsulated Pandas DataFrame with renamed columns and table name.
         """
         try:
-            logger.info("Starting the process for instrument_config table.")
-            
+            logger.info("Starting the process for %s table.", map_item.table)        
             full_path = self._get_full_path(map_item)
-            
             raw_data = self.csv_files_service.load_csv(full_path)
             renamed = self.tables_helper.rename_columns(raw_data, map_item.columns_mapping)
             return DataFrameContainer(renamed, map_item.table)

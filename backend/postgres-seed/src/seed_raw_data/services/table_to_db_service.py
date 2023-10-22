@@ -6,12 +6,9 @@ import logging
 from typing import List
 from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
 from src.seed_raw_data.errors.table_to_db_errors import InvalidFileNameError, ProcessingError
-from src.data_processor.services.instrumentconfig_service import InstrumentConfigService
-from src.data_processor.services.moreinstrumentinfo_service import MoreInstrumentInfoService
-from src.data_processor.services.rollconfig_service import RollConfigService
-from src.data_processor.services.spreadcost_service import SpreadCostService
-from src.data_processor.services.adjustedprices_service import AdjustedPricesService
-from src.data_processor.services.fxprices_service import FxPricesService
+from src.data_processor.services.config_files_service import ConfigFilesService
+from src.data_processor.services.adjusted_prices_service import AdjustedPricesService
+from src.data_processor.services.fx_prices_service import FxPricesService
 from src.data_processor.services.multipleprices_service import MultiplePricesService
 from src.data_processor.services.rollcalendars_service import RollCalendarsService
 from src.seed_raw_data.schemas.files_mapping import FileTableMapping
@@ -26,12 +23,9 @@ class TableToDBService:
     """
 
     def __init__(self):
-        self.instrumentconfig_service = InstrumentConfigService()
-        self.moreinstrumentinfo_service = MoreInstrumentInfoService()
-        self.rollconfig_service = RollConfigService()
-        self.spreadcost_service = SpreadCostService()
-        self.adjustedprices_service = AdjustedPricesService()
-        self.fxprices_service = FxPricesService()
+        self.instrumentconfig_service = ConfigFilesService()
+        self.adjusted_prices_service = AdjustedPricesService()
+        self.fx_prices_service = FxPricesService()
         self.multipleprices_service = MultiplePricesService()
         self.rollcalendars_service = RollCalendarsService()
 
@@ -67,18 +61,12 @@ class TableToDBService:
         Returns:
             DataFrameContainer: Processed data for the table or None if not applicable.
         """
-        if map_item.table == 'instrument_config':
+        if map_item.table in ['instrument_config', 'roll_config', 'spread_cost']:
             return self.instrumentconfig_service.process_instrument_config(map_item)
-        elif map_item.table == 'instrument_metadata':
-            return await self.moreinstrumentinfo_service.process_more_instrument_info(map_item)
-        elif map_item.table == 'roll_config':
-            return await self.rollconfig_service.process_roll_config(map_item)
-        elif map_item.table == 'spread_cost':
-            return await self.spreadcost_service.process_spread_cost(map_item)
         elif map_item.table == 'adjusted_prices':
-            return await self.adjustedprices_service.process_adjusted_prices(map_item)
+            return await self.adjusted_prices_service.process_adjusted_prices(map_item)
         elif map_item.table == 'fx_prices':
-            return await self.fxprices_service.process_fx_prices(map_item)
+            return await self.fx_prices_service.process_fx_prices(map_item)
         elif map_item.table == 'multiple_prices':
             return await self.multipleprices_service.process_multiple_prices(map_item)
         elif map_item.table == 'roll_calendars':
