@@ -5,7 +5,7 @@ from src.csv_io.schemas.csv_output import CsvOutput
 
 # Fixture to mock a DataFrame similar to AEX.csv
 @pytest.fixture
-def mock_csv_outputs():
+def mock_csv_mappings():
     return [
         CsvOutput(
             full_path="/path/to/csv1",

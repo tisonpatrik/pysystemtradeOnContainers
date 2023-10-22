@@ -3,14 +3,14 @@ import asyncio
 
 import pandas as pd
 from src.db_obsolete.schemas.risk_schemas.robust_volatility import RobustVolatility
-from src.db_obsolete.repositories.data_loader import DataLoader
-from src.db_obsolete.repositories.data_inserter import DataInserter
+from src.db.services.data_load_service import DataLoadService
+from src.db.services.data_insert_service import DataInsertService
 from src.data_processing.data_frame_helper import (
-    convert_datetime_to_unixtime,
     concat_dataframes,
     split_dataframe,
 )
-from shared.src.estimators.volatility import robust_vol_calc
+
+# from shared.src.estimators.volatility import robust_vol_calc
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class RiskHandler:
         """
         Asynchronously seed the risk values for all dataset.
         """
-        data_inserter = DataInserter(self.database_url)
+        data_inserter = DataInsertService(self.database_url)
         risk_schema = RobustVolatility()
         adjusted_prices = await self.get_adujsted_prices_async()
         prices_by_symbol = self.split_dataframe_by_column(adjusted_prices)
@@ -47,17 +47,18 @@ class RiskHandler:
     async def calculate_volatility_for_instrument_async(
         self, instrument_name, price_series
     ):
-        volatility = robust_vol_calc(price_series).dropna()
-        vol_df = volatility.reset_index()
-        vol_df.columns = ["date_time", "volatility"]
-        vol_df["symbol"] = instrument_name
-        vol_df = convert_datetime_to_unixtime(vol_df)
+        vol_df = None
+        # volatility = robust_vol_calc(price_series).dropna()
+        # vol_df = volatility.reset_index()
+        # vol_df.columns = ["date_time", "volatility"]
+        # vol_df["symbol"] = instrument_name
+        # vol_df = convert_datetime_to_unixtime(vol_df)
         return vol_df
 
     async def get_adujsted_prices_async(self):
         logger.info("Method get_adujsted_prices called.")
 
-        data_loader = DataLoader(self.database_url)
+        data_loader = DataLoadService(self.database_url)
         query = "SELECT * FROM adjusted_prices"
 
         try:

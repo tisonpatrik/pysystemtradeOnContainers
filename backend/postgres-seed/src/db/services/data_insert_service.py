@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class DataInserter:
+class DataInsertService:
     """
     Class for inserting data into a database table asynchronously.
     """

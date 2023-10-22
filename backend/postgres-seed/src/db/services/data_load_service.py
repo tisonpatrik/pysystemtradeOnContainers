@@ -13,12 +13,11 @@ from src.db_obsolete.errors import (
     SQLSyntaxError,
 )
 
-# Setting up the logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class DataLoader:
+class DataLoadService:
     def __init__(self, database_url):
         self.database_url = database_url
 

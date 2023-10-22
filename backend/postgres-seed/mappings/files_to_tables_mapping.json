@@ -1,27 +1,103 @@
 [
     {
-        "Directory": "/path/in/container/csvconfig",
-        "Tables": [
-            "instrument_config",
-            "instrument_metadata",
-            "roll_config",
-            "spread_cost"
-        ]
+        "directory": "/path/in/container/csvconfig",
+        "table": "instrument_config",
+        "file_name": "instrumentconfig",
+        "multiple_files": false,
+        "mapping": {
+            "Instrument": "symbol",
+            "Description": "description",
+            "Pointsize": "pointsize",
+            "Currency": "currency",
+            "AssetClass": "asset_class",
+            "PerBlock": "per_block",
+            "Percentage": "percentage",
+            "PerTrade": "per_trade",
+            "Region": "region"
+        }
     },
     {
-        "Directory": "/path/in/container/adjusted_prices_csv",
-        "Tables": "adjusted_prices"
+        "directory": "/path/in/container/csvconfig",
+        "table": "instrument_metadata",
+        "file_name": "moreinstrumentinfo",
+        "multiple_files": false,
+        "mapping": {
+            "Instrument": "symbol",
+            "AssetClass": "asset_class",
+            "SubClass": "sub_class",
+            "SubSubClass": "sub_sub_class",
+            "Style": "style",
+            "Country": "country",
+            "Duration": "duration",
+            "Description": "description"
+        }
     },
     {
-        "Directory": "/path/in/container/fx_prices_csv",
-        "Tables": "fx_prices"
+        "directory": "/path/in/container/csvconfig",
+        "table": "roll_config",
+        "file_name": "rollconfig",
+        "multiple_files": false,
+        "mapping": {
+            "Instrument": "symbol",
+            "HoldRollCycle": "hold_roll_cycle",
+            "RollOffsetDays": "roll_offset_days",
+            "CarryOffset": "carry_offset",
+            "PricedRollCycle": "priced_roll_cycle",
+            "ExpiryOffset": "expiry_offset"
+        }
     },
     {
-        "Directory": "/path/in/container/multiple_prices_csv",
-        "Tables": "multiple_prices"
+        "directory": "/path/in/container/csvconfig",
+        "table": "spread_cost",
+        "file_name": "spreadcosts",
+        "multiple_files": false,
+        "mapping": {
+            "Instrument": "symbol",
+            "SpreadCost": "spread_cost"
+        }
     },
     {
-        "Directory": "/path/in/container/roll_calendars_csv",
-        "Tables": "roll_calendars"
+        "directory": "/path/in/container/adjusted_prices_csv",
+        "table": "adjusted_prices",
+        "file_name": "",
+        "multiple_files": true,
+        "mapping": {
+            "DATETIME": "unix_date_time",
+            "price": "price"
+        }
+    },
+    {
+        "directory": "/path/in/container/fx_prices_csv",
+        "table": "fx_prices",
+        "file_name": "",
+        "multiple_files": true,
+        "mapping": {
+            "DATETIME": "unix_date_time",
+            "PRICE": "price"
+        }
+    },
+    {
+        "directory": "/path/in/container/multiple_prices_csv",
+        "table": "multiple_prices",
+        "file_name": "",
+        "multiple_files": true,
+        "mapping": {
+            "DATETIME": "unix_date_time",
+            "CARRY": "carry",
+            "CARRY_CONTRACT": "carry_contract",
+            "PRICE": "price",
+            "PRICE_CONTRACT": "price_contract",
+            "FORWARD": "forward",
+            "FORWARD_CONTRACT": "forward_contract"
+        }
+    },
+    {
+        "directory": "/path/in/container/roll_calendars_csv",
+        "table": "roll_calendars",
+        "file_name": "",
+        "multiple_files": true,
+        "mapping": {
+            "DATE_TIME": "unix_date_time"
+        }
     }
 ]

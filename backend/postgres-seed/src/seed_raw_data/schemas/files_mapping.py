@@ -1,18 +1,23 @@
 """
-This module defines a Pydantic model for mapping directories to tables.
-The FileTableMapping model ensures consistent structure for directory-to-table mappings.
+Module for mapping file tables and their corresponding directories.
 """
-from typing import List, Union
+from typing import Dict
 from pydantic import BaseModel, Field
 
 
 class FileTableMapping(BaseModel):
     """
-    Defines a Pydantic model for mapping directories to corresponding tables.
-    Fields:
-        - directory: The directory where the CSV files are located.
-        - tables: The tables that correspond to the given directory.
+    Data model for storing table-to-directory mappings.
     """
 
-    directory: str = Field(..., alias="Directory")
-    tables: Union[str, List[str]] = Field(..., alias="Tables")
+    directory: str = Field(
+        ..., description="The directory path where files are stored."
+    )
+    file_name: str = Field(..., description="The table name for data storage.")
+    table: str = Field(..., description="The table name for data storage.")
+    multiple_files: bool = Field(
+        False, description="Whether multiple files need to be processed."
+    )
+    mapping: Dict[str, str] = Field(
+        ..., description="Column mapping from file to table."
+    )

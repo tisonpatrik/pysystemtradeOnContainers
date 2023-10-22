@@ -6,9 +6,11 @@ import glob
 import asyncio
 from typing import List
 import aiofiles
+import pandas as pd
+import os
 
 from aiocsv.readers import AsyncDictReader
-from src.csv_io.schemas.csv_output import CsvOutput
+from src.seed_raw_data.schemas.files_mapping import FileTableMapping
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,42 +21,57 @@ class CsvFilesService:
     A class to work with CSV files asynchronously.
     """
 
-    async def load_csv_files_from_directory_async(self, mapping) -> List[CsvOutput]:
+    async def load_csv_files_from_directory_async(
+        self, mapping: FileTableMapping
+    ) -> List[pd.DataFrame]:
         """
-        Loads CSV files from the specified directory asynchronously.
+        Asynchronously loads CSV files from a directory into Pandas DataFrames.
 
         Args:
-            path_to_directory (str): The path to the directory containing CSV files.
+            mapping (FileTableMapping): Object specifying directory and other CSV details.
 
         Returns:
-            List[CsvOutput]: A list of CsvOutput objects representing the loaded CSV files.
+            List[pd.DataFrame]: A list of Pandas DataFrames representing the loaded CSV files.
         """
-        csv_outputs = []
+        dataframes = []
         try:
-            csv_files = glob.glob(f"{mapping.directory}/*.csv")
-            tasks = [self.load_csv_async(csv_file) for csv_file in csv_files]
-            data_list = await asyncio.gather(*tasks)
+            csv_files_path = self._prepare_path(
+                mapping.multiple_files, mapping.directory, mapping.file_name
+            )
+            tasks = [
+                self.load_csv_async(csv_file) for csv_file in csv_files_path
+            ]  # load_csv_async loads raw CSV data
+            raw_csv_data_list = await asyncio.gather(*tasks)
+            for raw_csv_data in raw_csv_data_list:
+                # Assuming raw_csv_data is a string; adjust as needed
+                df = pd.read_csv(raw_csv_data)
+                dataframes.append(df)
 
-            for full_path, data in zip(csv_files, data_list):
-                csv_output = CsvOutput(
-                    full_path=full_path, table=mapping.table, data=data
-                )
-                csv_outputs.append(csv_output)
-
-            logger.info("Successfully loaded all CSV files from %s.", mapping.directory)
+            logger.info(
+                "Successfully loaded all CSV files from %s into Pandas DataFrames.",
+                mapping.directory,
+            )
         except Exception as e:
             logger.error(
-                "An error occurred while loading CSV files from %s: %s",
+                "An error occurred while loading CSV files from %s into Pandas DataFrames: %s",
                 mapping.directory,
                 e,
             )
             raise
 
-        return csv_outputs
+        return dataframes
+
+    def _prepare_path(self, multiple_files: bool, directory: str, file_name: str):
+        csv_files = None
+        if multiple_files:
+            csv_files = glob.glob(f"{directory}/*.csv")
+        else:
+            csv_files = [f"{directory}/{file_name}.csv"]
+        return csv_files
 
     async def load_csv_async(self, full_path) -> List[dict]:
         """
-        Loads a CSV file asynchronously and returns a CsvOutput object.
+        Loads a CSV file asynchronously and returns a dataframe object.
 
         Args:
             full_path (str): The full path to the CSV file to be loaded.
@@ -63,9 +80,6 @@ class CsvFilesService:
             Dataframe representing the loaded CSV file.
         """
         try:
-            # Log the action
-            logger.info("Loading CSV file from %s", full_path)
-
             # Load the DataFrame asynchronously
             async with aiofiles.open(full_path, mode="r") as file:
                 async_reader = AsyncDictReader(file)

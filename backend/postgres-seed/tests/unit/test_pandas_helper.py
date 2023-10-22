@@ -12,9 +12,9 @@ class MockLogger:
 logger = MockLogger()
 
 
-def test_convert_to_dataframe(mock_csv_outputs):
+def test_convert_to_dataframe(mock_csv_mappings):
     # Execute function
-    result_df = pandas_helper.convert_to_dataframe(mock_csv_outputs)
+    result_df = pandas_helper.convert_to_dataframe(mock_csv_mappings)
 
     # Build expected DataFrame
     expected_data = {
