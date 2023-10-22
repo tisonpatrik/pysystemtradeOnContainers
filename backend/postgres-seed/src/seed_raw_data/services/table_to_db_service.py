@@ -23,7 +23,7 @@ class TableToDBService:
     """
 
     def __init__(self):
-        self.instrumentconfig_service = ConfigFilesService()
+        self.config_files_service = ConfigFilesService()
         self.adjusted_prices_service = AdjustedPricesService()
         self.fx_prices_service = FxPricesService()
         self.multipleprices_service = MultiplePricesService()
@@ -62,7 +62,7 @@ class TableToDBService:
             DataFrameContainer: Processed data for the table or None if not applicable.
         """
         if map_item.table in ['instrument_config', 'roll_config', 'spread_cost']:
-            return self.instrumentconfig_service.process_instrument_config(map_item)
+            return self.config_files_service.process_config_files(map_item)
         elif map_item.table == 'adjusted_prices':
             return await self.adjusted_prices_service.process_adjusted_prices(map_item)
         elif map_item.table == 'fx_prices':
