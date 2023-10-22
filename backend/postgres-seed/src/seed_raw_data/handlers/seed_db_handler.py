@@ -32,8 +32,8 @@ class SeedDBHandler:
 
         mapping = self.mapping_service.load_mappings_from_json()
         datas = await self.table_to_db_service.get_processed_data_from_raw_files(mapping)
-        for data in datas:
-            await self.data_insert_service.insert_dataframe_async(data.data_frame, data.table)
+        # for data in datas:
+        #     await self.data_insert_service.insert_dataframe_async(data.data_frame, data.table)
 
 
     async def get_count_of_mounted_files_async(self):

@@ -18,6 +18,6 @@ class FileTableMapping(BaseModel):
     multiple_files: bool = Field(
         False, description="Whether multiple files need to be processed."
     )
-    mapping: Dict[str, str] = Field(
+    columns_mapping: Dict[str, str] = Field(
         ..., description="Column mapping from file to table."
     )

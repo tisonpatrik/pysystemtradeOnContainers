@@ -2,9 +2,9 @@
     {
         "directory": "/path/in/container/csvconfig",
         "table": "instrument_config",
-        "file_name": "instrumentconfig",
+        "file_name": "instrumentconfig.csv",
         "multiple_files": false,
-        "mapping": {
+        "columns_mapping": {
             "Instrument": "symbol",
             "Description": "description",
             "Pointsize": "pointsize",
@@ -19,9 +19,9 @@
     {
         "directory": "/path/in/container/csvconfig",
         "table": "instrument_metadata",
-        "file_name": "moreinstrumentinfo",
+        "file_name": "moreinstrumentinfo.csv",
         "multiple_files": false,
-        "mapping": {
+        "columns_mapping": {
             "Instrument": "symbol",
             "AssetClass": "asset_class",
             "SubClass": "sub_class",
@@ -35,9 +35,9 @@
     {
         "directory": "/path/in/container/csvconfig",
         "table": "roll_config",
-        "file_name": "rollconfig",
+        "file_name": "rollconfig.csv",
         "multiple_files": false,
-        "mapping": {
+        "columns_mapping": {
             "Instrument": "symbol",
             "HoldRollCycle": "hold_roll_cycle",
             "RollOffsetDays": "roll_offset_days",
@@ -49,9 +49,9 @@
     {
         "directory": "/path/in/container/csvconfig",
         "table": "spread_cost",
-        "file_name": "spreadcosts",
+        "file_name": "spreadcosts.csv",
         "multiple_files": false,
-        "mapping": {
+        "columns_mapping": {
             "Instrument": "symbol",
             "SpreadCost": "spread_cost"
         }
@@ -61,7 +61,7 @@
         "table": "adjusted_prices",
         "file_name": "",
         "multiple_files": true,
-        "mapping": {
+        "columns_mapping": {
             "DATETIME": "unix_date_time",
             "price": "price"
         }
@@ -71,7 +71,7 @@
         "table": "fx_prices",
         "file_name": "",
         "multiple_files": true,
-        "mapping": {
+        "columns_mapping": {
             "DATETIME": "unix_date_time",
             "PRICE": "price"
         }
@@ -81,7 +81,7 @@
         "table": "multiple_prices",
         "file_name": "",
         "multiple_files": true,
-        "mapping": {
+        "columns_mapping": {
             "DATETIME": "unix_date_time",
             "CARRY": "carry",
             "CARRY_CONTRACT": "carry_contract",
@@ -96,7 +96,7 @@
         "table": "roll_calendars",
         "file_name": "",
         "multiple_files": true,
-        "mapping": {
+        "columns_mapping": {
             "DATE_TIME": "unix_date_time"
         }
     }

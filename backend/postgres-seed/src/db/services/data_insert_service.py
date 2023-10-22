@@ -22,14 +22,14 @@ class DataInsertService:
     Class for inserting data into a database table asynchronously.
     """
 
-    def __init__(self, database_url):
+    def __init__(self):
         """
         Initialize the DataInserter with a database URL.
 
         Parameters:
             database_url (str): URL of the database to connect to.
         """
-        self._database_url = database_url
+        self._database_url = None
 
     async def insert_dataframe_async(self, data_frame, table_name) -> None:
         """
