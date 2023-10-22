@@ -3,7 +3,6 @@
         "directory": "/path/in/container/csvconfig",
         "table": "instrument_config",
         "file_name": "instrumentconfig.csv",
-        "multiple_files": false,
         "columns_mapping": {
             "Instrument": "symbol",
             "Description": "description",
@@ -20,7 +19,6 @@
         "directory": "/path/in/container/csvconfig",
         "table": "instrument_metadata",
         "file_name": "moreinstrumentinfo.csv",
-        "multiple_files": false,
         "columns_mapping": {
             "Instrument": "symbol",
             "AssetClass": "asset_class",
@@ -36,7 +34,6 @@
         "directory": "/path/in/container/csvconfig",
         "table": "roll_config",
         "file_name": "rollconfig.csv",
-        "multiple_files": false,
         "columns_mapping": {
             "Instrument": "symbol",
             "HoldRollCycle": "hold_roll_cycle",
@@ -50,7 +47,6 @@
         "directory": "/path/in/container/csvconfig",
         "table": "spread_cost",
         "file_name": "spreadcosts.csv",
-        "multiple_files": false,
         "columns_mapping": {
             "Instrument": "symbol",
             "SpreadCost": "spread_cost"
@@ -60,7 +56,6 @@
         "directory": "/path/in/container/adjusted_prices_csv",
         "table": "adjusted_prices",
         "file_name": "",
-        "multiple_files": true,
         "columns_mapping": {
             "DATETIME": "unix_date_time",
             "price": "price"
@@ -70,7 +65,6 @@
         "directory": "/path/in/container/fx_prices_csv",
         "table": "fx_prices",
         "file_name": "",
-        "multiple_files": true,
         "columns_mapping": {
             "DATETIME": "unix_date_time",
             "PRICE": "price"
@@ -80,7 +74,6 @@
         "directory": "/path/in/container/multiple_prices_csv",
         "table": "multiple_prices",
         "file_name": "",
-        "multiple_files": true,
         "columns_mapping": {
             "DATETIME": "unix_date_time",
             "CARRY": "carry",
@@ -95,7 +88,6 @@
         "directory": "/path/in/container/roll_calendars_csv",
         "table": "roll_calendars",
         "file_name": "",
-        "multiple_files": true,
         "columns_mapping": {
             "DATE_TIME": "unix_date_time"
         }
