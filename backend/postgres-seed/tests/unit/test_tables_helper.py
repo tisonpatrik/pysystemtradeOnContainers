@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 
-from src.data_processor.errors.data_processing_errors import ColumnRenameError, MissingColumnsError
+from src.data_processor.errors.table_helper_errors import ColumnRenameError, MissingColumnsError
 from src.data_processor.data_processing.tables_helper import TablesHelper
 
 @pytest.fixture

@@ -39,3 +39,4 @@ class AdjustedPricesService:
             agregated = self.date_time_helper.aggregate_to_day_based_prices(converted_to_date_time, self.date_time_column)
             coverted_to_unix_time = self.date_time_helper.convert_datetime_to_unixtime(agregated, self.date_time_column)
             rounded = self.tables_helper.round_values_in_column(coverted_to_unix_time,self.price_column)
+            symboled = self.tables_helper.add_column_and_populate_it_by_value(rounded,"symbol", name_of_symbol)
