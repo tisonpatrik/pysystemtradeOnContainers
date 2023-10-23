@@ -3,6 +3,9 @@ bla
 """
 
 import logging
+import datetime
+import time
+
 import pandas as pd
 
 from src.data_processor.errors.date_time_errors import DataAggregationError, InvalidDatetimeColumnError, DateTimeConversionError
@@ -67,9 +70,7 @@ class DateTimeHelper:
         Converts the date_column to UNIX time.
         """
         try:
-            data_frame[date_time_column] = (
-                data_frame[date_time_column].astype(int) // 10**9
-            )
+            data_frame[date_time_column] = data_frame[date_time_column].apply(lambda x: int(time.mktime(x.timetuple())))
             return data_frame
         except Exception as error:
             logger.error("Error during unix_date_time conversion: %s", error)
