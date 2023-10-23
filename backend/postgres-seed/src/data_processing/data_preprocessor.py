@@ -19,7 +19,6 @@ from src.data_processing.data_frame_helper import (
 )
 from src.data_processing.errors import ProcessingError
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
