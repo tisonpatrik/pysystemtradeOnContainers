@@ -1,7 +1,6 @@
 import pytest
 import pandas as pd
 
-from unittest.mock import patch
 from src.data_processor.errors.data_processing_errors import ColumnRenameError, MissingColumnsError
 from src.data_processor.data_processing.tables_helper import TablesHelper
 
