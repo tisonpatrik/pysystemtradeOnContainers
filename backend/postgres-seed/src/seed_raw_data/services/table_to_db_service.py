@@ -11,8 +11,6 @@ from src.seed_raw_data.errors.table_to_db_errors import (
 )
 from src.data_processor.services.config_files_service import ConfigFilesService
 from src.data_processor.services.prices_service import PricesService
-from src.data_processor.services.fx_prices_service import FxPricesService
-from src.data_processor.services.multipleprices_service import MultiplePricesService
 from src.data_processor.services.rollcalendars_service import RollCalendarsService
 from src.seed_raw_data.schemas.files_mapping import FileTableMapping
 
@@ -29,8 +27,6 @@ class TableToDBService:
     def __init__(self):
         self.config_files_service = ConfigFilesService()
         self.prices_service = PricesService()
-        self.fx_prices_service = FxPricesService()
-        self.multipleprices_service = MultiplePricesService()
         self.rollcalendars_service = RollCalendarsService()
 
     async def get_processed_data_from_raw_files(
@@ -77,6 +73,6 @@ class TableToDBService:
         elif map_item.table in ["adjusted_prices", "fx_prices", "multiple_prices"]:
             return self.prices_service.process_adjusted_prices(map_item)
         elif map_item.table == "roll_calendars":
-            return await self.rollcalendars_service.process_roll_calendars(map_item)
+            return self.rollcalendars_service.process_roll_calendars(map_item)
         else:
             return None
