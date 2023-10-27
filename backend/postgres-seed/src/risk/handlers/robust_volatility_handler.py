@@ -22,8 +22,7 @@ class RobustVolatilityHandler:
     def __init__(self, db_session: AsyncSession):
         self.data_load_service = DataLoadService(db_session)
         self.data_time_service = DateTimeService()
-        self.table_name = "adjusted_prices"
-        self.datetime_column = "unix_date_time"
+        self.source_table = "adjusted_prices"
 
     async def insert_robust_volatility_async(self):
         """
@@ -31,9 +30,10 @@ class RobustVolatilityHandler:
         and returns a Pandas Series containing the robust volatility data.
         """
         data_frames = await self.data_load_service.fetch_all_from_table_to_dataframe(
-            self.table_name
+            self.source_table
         )
-        series = self.data_time_service.convert_raw_dataframe_to_series(
-            data_frames, self.datetime_column
+
+        series = self.data_time_service.covert_dataframe_to_list_of_series(
+            data_frames, "symbol", "unix_date_time"
         )
-        return series
+        # return series

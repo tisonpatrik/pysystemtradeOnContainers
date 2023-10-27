@@ -5,11 +5,14 @@ It makes use of utility classes DateTimeHelper and TablesHelper for various data
 import logging
 import pandas as pd
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from typing import List
 
 from src.data_processor.data_processing.date_time_helper import DateTimeHelper
 from src.data_processor.data_processing.tables_helper import TablesHelper
+from src.data_processor.schemas.series_schema import SeriesSchema
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class DateTimeService:
@@ -55,16 +58,26 @@ class DateTimeService:
         )
         return aggregated_data
 
-    def convert_raw_dataframe_to_series(
-        self, data_frame: pd.DataFrame, date_time_column: str
-    ) -> pd.Series:
+    def covert_dataframe_to_list_of_series(
+        self, df: pd.DataFrame, symbol_column: str, index_column: str
+    ) -> List[SeriesSchema]:
         """
-        Converts a column with raw date-time data in a DataFrame into a Pandas Series.
+        qwe
         """
-        date_time_frame = self.date_time_helper.convert_unix_time_to_datetime(
-            data_frame, date_time_column
-        )
-        series = self.tables_helper.convert_datetime_column_to_series(
-            date_time_frame, date_time_column
-        )
-        return series
+        self.tables_helper.check_single_missing_column(df, symbol_column)
+        self.tables_helper.check_single_missing_column(df, index_column)
+        grouped = df.groupby(symbol_column)
+        series_schemas = []
+        for group in grouped:
+            # Getting the symbol from the first item of the group
+            first_item = group[1].iloc[0]
+            symbol_value = first_item[symbol_column]
+
+            print(f"Symbol from the first item of group: {symbol_value}")
+
+            group_dropped = group[1].drop(columns=[symbol_column])
+            series = group_dropped.set_index(index_column).squeeze()
+            schema = SeriesSchema(symbol_value, series)
+            series_schemas.append(schema)
+
+        return series_schemas
