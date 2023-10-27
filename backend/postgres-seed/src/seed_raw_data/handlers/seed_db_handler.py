@@ -2,8 +2,6 @@
 This module contains the SeedDBHandler class, 
 which is responsible for seeding the database from CSV files.
 """
-import os
-import asyncio
 import logging
 
 # FastAPI and SQLAlchemy dependencies
@@ -43,18 +41,3 @@ class SeedDBHandler:
             await self.data_insert_service.async_insert_dataframe_to_table(
                 data.get_data_frame(), data.get_table_name()
             )
-
-    async def get_count_of_mounted_files_async(self):
-        """
-        Asynchronously count the number of CSV files mounted in the specified paths.
-        """
-
-        async def count_csv_files_in_directory(directory):
-            return sum(1 for f in os.listdir(directory) if f.endswith(".csv"))
-
-        mapping = self.mapping_service.load_mappings_from_json()
-        # Extract directory paths from validated mappings
-        tasks = [count_csv_files_in_directory(item.directory) for item in mapping]
-        completed = await asyncio.gather(*tasks)
-
-        return sum(completed)
