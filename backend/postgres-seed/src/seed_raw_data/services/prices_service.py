@@ -14,8 +14,8 @@ from src.seed_raw_data.schemas.files_mapping import FileTableMapping
 from src.data_processor.data_processing.file_path_validator import FilePathValidator
 from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
-from src.data_processor.data_processing.date_time_helper import DateTimeHelper
 from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
+from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,25 +24,13 @@ logger = logging.getLogger(__name__)
 class PricesService:
     """
     Manages the processing and adjustment of pricing data from CSV files.
-
-    Attributes:
-        csv_files_service : Service for CSV loading.
-        file_path_validator : Validates file paths.
-        tables_helper : Assists in table manipulations.
-        date_time_helper : Handles date-time conversions.
-        date_time_column : Column name for date-time.
-        price_column : Column name for price.
-
-    Usage:
-        prices_service = PricesService()
-        df_container = prices_service.process_adjusted_prices(map_item)
     """
 
     def __init__(self):
         self.csv_files_service = CsvFilesService()
         self.file_path_validator = FilePathValidator()
         self.tables_helper = TablesHelper()
-        self.date_time_helper = DateTimeHelper()
+        self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
         self.price_column = "price"
 
@@ -86,17 +74,13 @@ class PricesService:
         renamed_data = self.tables_helper.rename_columns(
             removed_unnamed_columns, map_item.columns_mapping
         )
-        date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
-            renamed_data, self.date_time_column
-        )
-        aggregated_data = self.date_time_helper.aggregate_to_day_based_prices(
-            date_time_converted_data, self.date_time_column
-        )
-        unix_time_converted_data = self.date_time_helper.convert_datetime_to_unixtime(
-            aggregated_data, self.date_time_column
+        aggregated_data = (
+            self.date_time_service.aggregate_string_datetime_column_to_day_based_prices(
+                renamed_data, self.date_time_column
+            )
         )
         rounded_data = self.tables_helper.round_values_in_column(
-            unix_time_converted_data, self.price_column
+            aggregated_data, self.price_column
         )
 
         return self.tables_helper.add_column_and_populate_it_by_value(

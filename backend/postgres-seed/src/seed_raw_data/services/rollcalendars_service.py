@@ -9,8 +9,8 @@ from src.seed_raw_data.schemas.files_mapping import FileTableMapping
 from src.data_processor.data_processing.file_path_validator import FilePathValidator
 from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
-from src.data_processor.data_processing.date_time_helper import DateTimeHelper
 from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
+from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,24 +19,13 @@ logger = logging.getLogger(__name__)
 class RollCalendarsService:
     """
     Manages the processing of roll calendar data from CSV files.
-
-    Attributes:
-        csv_files_service : Handles CSV loading.
-        file_path_validator : Validates file paths.
-        tables_helper : Manages table manipulations.
-        date_time_helper : Manages date-time conversions.
-        date_time_column : Column name for date-time.
-
-    Usage:
-        service = RollCalendarsService()
-        df_container = service.process_roll_calendars(map_item)
     """
 
     def __init__(self):
         self.csv_files_service = CsvFilesService()
         self.file_path_validator = FilePathValidator()
         self.tables_helper = TablesHelper()
-        self.date_time_helper = DateTimeHelper()
+        self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
 
     def process_roll_calendars(self, map_item: FileTableMapping) -> DataFrameContainer:
@@ -79,30 +68,11 @@ class RollCalendarsService:
         renamed_data = self.tables_helper.rename_columns(
             removed_unnamed_columns, map_item.columns_mapping
         )
-        date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
+        date_time_data = self.date_time_service.convert_string_column_to_unixtime(
             renamed_data, self.date_time_column
         )
-        unix_time_converted_data = self.date_time_helper.convert_datetime_to_unixtime(
-            date_time_converted_data, self.date_time_column
-        )
-        # Validate that the DataFrame columns match the mapping
-        expected_columns = set(
-            map_item.columns_mapping.values()
-        )  # Assuming map_item.columns_mapping is a dictionary
-        actual_columns = set(unix_time_converted_data.columns)
-
-        if expected_columns != actual_columns:
-            mismatched_columns = actual_columns.difference(expected_columns)
-            logger.error(f"For symbol {symbol_name} in file {csv_file_name}:")
-            logger.error(f"Expected columns: {expected_columns}")
-            logger.error(f"Actual columns: {actual_columns}")
-            logger.error(f"Mismatched columns: {mismatched_columns}")
-            raise ValueError(
-                f"Column mismatch in file {csv_file_name}. Check logs for details."
-            )
-
         populated_column = self.tables_helper.add_column_and_populate_it_by_value(
-            unix_time_converted_data, "symbol", symbol_name
+            date_time_data, "symbol", symbol_name
         )
         return populated_column
 

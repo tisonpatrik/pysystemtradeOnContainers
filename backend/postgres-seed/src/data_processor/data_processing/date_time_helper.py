@@ -27,12 +27,6 @@ class DateTimeHelper:
     ) -> pd.DataFrame:
         """
         Aggregates the time-based price data to daily averages.
-
-        Parameters:
-            data_frame: DataFrame containing 'unix_date_time' and 'price' columns
-
-        Returns:
-            DataFrame: Aggregated DataFrame with daily average prices.
         """
         try:
             # Set DATETIME as index
@@ -49,13 +43,6 @@ class DateTimeHelper:
     ) -> pd.DataFrame:
         """
         Converts a specified column in the DataFrame to datetime format.
-
-        Parameters:
-            data_frame (pd.DataFrame): The DataFrame containing the column to convert.
-            column_name (str): The name of the column to convert to datetime.
-
-        Returns:
-            pd.DataFrame: A new DataFrame with the specified column converted to datetime.
         """
         new_df = data_frame.copy()  # Create a new DataFrame
         try:
@@ -91,3 +78,15 @@ class DateTimeHelper:
         except Exception as error:
             logger.error("Error during unix_date_time conversion: %s", error)
             raise DateTimeConversionError from error
+
+    def convert_unix_time_to_datetime(
+        self, df: pd.DataFrame, column_name: str
+    ) -> pd.DataFrame:
+        # Check if the column exists in the DataFrame
+        if column_name not in df.columns:
+            raise ValueError(f"Column '{column_name}' not found in DataFrame.")
+
+        # Convert Unix time to datetime
+        df[column_name] = pd.to_datetime(df[column_name], unit="s")
+
+        return df
