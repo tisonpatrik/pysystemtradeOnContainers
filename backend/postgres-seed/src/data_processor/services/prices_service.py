@@ -80,8 +80,11 @@ class PricesService:
         symbol_name = os.path.splitext(csv_file_name)[0]
 
         raw_data = self.csv_files_service.load_csv(full_path)
+        removed_unnamed_columns = raw_data.loc[
+            :, ~raw_data.columns.str.contains("^Unnamed")
+        ]
         renamed_data = self.tables_helper.rename_columns(
-            raw_data, map_item.columns_mapping
+            removed_unnamed_columns, map_item.columns_mapping
         )
         date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
             renamed_data, self.date_time_column

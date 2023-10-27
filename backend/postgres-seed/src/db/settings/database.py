@@ -22,7 +22,7 @@ if global_settings.database_url is None:
 engine = create_async_engine(
     global_settings.database_url.unicode_string(),
     future=True,
-    echo=True,
+    echo=False,
 )
 
 # expire_on_commit=False will prevent attributes from being expired

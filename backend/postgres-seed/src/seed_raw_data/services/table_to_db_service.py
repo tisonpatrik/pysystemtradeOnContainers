@@ -3,7 +3,6 @@ Handles the service logic for mapping various tables to the database.
 Responsible for orchestrating the flow of data from raw files to processed data in the database.
 """
 import logging
-import asyncio
 from typing import List
 from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
 from src.seed_raw_data.errors.table_to_db_errors import (
@@ -30,7 +29,7 @@ class TableToDBService:
         self.prices_service = PricesService()
         self.rollcalendars_service = RollCalendarsService()
 
-    async def get_processed_data_from_raw_files(
+    def get_processed_data_from_raw_files(
         self, map_items: List[FileTableMapping]
     ) -> List[DataFrameContainer]:
         """
@@ -38,24 +37,28 @@ class TableToDBService:
         Iterates over a list of FileTableMapping items and processes each according to its file_name attribute.
         """
         logger.info("Data processing for csv files has started")
-
-        async def process_map_item_async(map_item):  # Define inner async function
+        processed_data = []
+        for map_item in map_items:
             try:
-                return await self._process_map_item(map_item)
-            except (InvalidFileNameError, ProcessingError, Exception) as e:
-                logger.exception(
-                    f"An error occurred while processing {map_item.file_name}: {e}"
+                result = self._process_map_item(map_item)
+                if result:
+                    processed_data.append(result)
+
+            except InvalidFileNameError as e:
+                logger.error(
+                    "Encountered an error with file name: %s",
+                    map_item.file_name,
+                    exc_info=True,
                 )
+            except ProcessingError as e:
+                logger.error(
+                    "Processing failed for file: %s", map_item.file_name, exc_info=True
+                )
+            except Exception as e:
+                logger.exception("An unexpected error occurred: %s", e)
+        return processed_data
 
-        # Using asyncio.gather to run the tasks concurrently
-        processed_data = await asyncio.gather(
-            *[process_map_item_async(map_item) for map_item in map_items]
-        )
-
-        # Filter out None results, if any
-        return [data for data in processed_data if data is not None]
-
-    async def _process_map_item(self, map_item: FileTableMapping):
+    def _process_map_item(self, map_item: FileTableMapping):
         """
         Processes individual FileTableMapping item based on its table attribute.
 

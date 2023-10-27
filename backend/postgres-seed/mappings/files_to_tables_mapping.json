@@ -89,7 +89,10 @@
         "table": "roll_calendars",
         "file_name": "",
         "columns_mapping": {
-            "DATE_TIME": "unix_date_time"
+            "DATE_TIME": "unix_date_time",
+            "current_contract": "current_contract",
+            "next_contract": "next_contract",
+            "carry_contract": "carry_contract"
         }
     }
 ]

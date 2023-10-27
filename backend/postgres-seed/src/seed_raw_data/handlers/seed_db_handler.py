@@ -2,9 +2,16 @@
 This module contains the SeedDBHandler class, 
 which is responsible for seeding the database from CSV files.
 """
-import asyncio
 import os
+import asyncio
 import logging
+
+# FastAPI and SQLAlchemy dependencies
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+# Application-specific dependencies
+from src.db.settings.database import get_db
 
 from src.seed_raw_data.services.mapping_service import MappingService
 from src.seed_raw_data.services.table_to_db_service import TableToDBService
@@ -20,10 +27,10 @@ class SeedDBHandler:
     asynchronously from CSV files according to given schemas.
     """
 
-    def __init__(self):
+    def __init__(self, db_session: AsyncSession):
         self.mapping_service = MappingService()
         self.table_to_db_service = TableToDBService()
-        self.data_insert_service = DataInsertService()
+        self.data_insert_service = DataInsertService(db_session)
 
     async def insert_data_from_csv_async(self):
         """
@@ -31,13 +38,11 @@ class SeedDBHandler:
         """
 
         mapping = self.mapping_service.load_mappings_from_json()
-        datas = await self.table_to_db_service.get_processed_data_from_raw_files(
-            mapping
-        )
+        datas = self.table_to_db_service.get_processed_data_from_raw_files(mapping)
         for data in datas:
-            print(data.get_table_name())
-        # for data in datas:
-        #     await self.data_insert_service.insert_dataframe_async(data.data_frame, data.table)
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                data.get_data_frame(), data.get_table_name()
+            )
 
     async def get_count_of_mounted_files_async(self):
         """

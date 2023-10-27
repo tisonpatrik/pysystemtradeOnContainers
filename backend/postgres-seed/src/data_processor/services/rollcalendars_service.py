@@ -73,8 +73,11 @@ class RollCalendarsService:
         symbol_name = os.path.splitext(csv_file_name)[0]
 
         raw_data = self.csv_files_service.load_csv(full_path)
+        removed_unnamed_columns = raw_data.loc[
+            :, ~raw_data.columns.str.contains("^Unnamed")
+        ]
         renamed_data = self.tables_helper.rename_columns(
-            raw_data, map_item.columns_mapping
+            removed_unnamed_columns, map_item.columns_mapping
         )
         date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
             renamed_data, self.date_time_column
@@ -82,9 +85,26 @@ class RollCalendarsService:
         unix_time_converted_data = self.date_time_helper.convert_datetime_to_unixtime(
             date_time_converted_data, self.date_time_column
         )
-        return self.tables_helper.add_column_and_populate_it_by_value(
+        # Validate that the DataFrame columns match the mapping
+        expected_columns = set(
+            map_item.columns_mapping.values()
+        )  # Assuming map_item.columns_mapping is a dictionary
+        actual_columns = set(unix_time_converted_data.columns)
+
+        if expected_columns != actual_columns:
+            mismatched_columns = actual_columns.difference(expected_columns)
+            logger.error(f"For symbol {symbol_name} in file {csv_file_name}:")
+            logger.error(f"Expected columns: {expected_columns}")
+            logger.error(f"Actual columns: {actual_columns}")
+            logger.error(f"Mismatched columns: {mismatched_columns}")
+            raise ValueError(
+                f"Column mismatch in file {csv_file_name}. Check logs for details."
+            )
+
+        populated_column = self.tables_helper.add_column_and_populate_it_by_value(
             unix_time_converted_data, "symbol", symbol_name
         )
+        return populated_column
 
     def _get_csv_files_from_directory(self, directory: str) -> list:
         """
