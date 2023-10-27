@@ -62,22 +62,30 @@ class DateTimeService:
         self, df: pd.DataFrame, symbol_column: str, index_column: str
     ) -> List[SeriesSchema]:
         """
-        qwe
+        Converts the DataFrame to a list of SeriesSchema objects.
         """
+        logger.info(f"Processing dataframes to series")
+
+        series_schemas = []
         self.tables_helper.check_single_missing_column(df, symbol_column)
         self.tables_helper.check_single_missing_column(df, index_column)
-        grouped = df.groupby(symbol_column)
-        series_schemas = []
-        for group in grouped:
-            # Getting the symbol from the first item of the group
-            first_item = group[1].iloc[0]
-            symbol_value = first_item[symbol_column]
+        try:
+            grouped = df.groupby(symbol_column)
 
-            print(f"Symbol from the first item of group: {symbol_value}")
+            for group in grouped:
+                # Getting the symbol from the first item of the group
+                first_item = group[1].iloc[0]
+                symbol_value = first_item[symbol_column]
 
-            group_dropped = group[1].drop(columns=[symbol_column])
-            series = group_dropped.set_index(index_column).squeeze()
-            schema = SeriesSchema(symbol_value, series)
-            series_schemas.append(schema)
+                group_dropped = group[1].drop(columns=[symbol_column])
+                series = group_dropped.set_index(index_column).squeeze()
 
+                schema = SeriesSchema(symbol_value, series)
+                series_schemas.append(schema)
+
+        except Exception as e:
+            logger.error(
+                "An error occurred while converting DataFrame to SeriesSchemas: %s", e
+            )
+            raise
         return series_schemas

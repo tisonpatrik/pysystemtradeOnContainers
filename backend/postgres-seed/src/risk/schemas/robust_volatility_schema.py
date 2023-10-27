@@ -15,4 +15,4 @@ class RobustVolatilitySchema:
         """
         self.source_table = "adjusted_prices"
         self.datetime_table = "unix_date_time"
-        self.symbol_table = "sybmol"
+        self.symbol_table = "symbol"

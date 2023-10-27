@@ -1,17 +1,16 @@
 """
-qwe
+This module contains the SeriesSchema class for storing pandas Series data 
+between services.
 """
 import pandas as pd
 
 
 class SeriesSchema:
     """
-    qwe
+    A container for storing a named pandas Series object for
+    inter-service data transfer.
     """
 
     def __init__(self, name: str, series: pd.Series):
-        """
-        qwe
-        """
         self.name = name
         self.series = series
