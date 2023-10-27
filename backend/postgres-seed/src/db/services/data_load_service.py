@@ -2,53 +2,41 @@
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
 import logging
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
-import asyncpg
 import pandas as pd
-
-from src.db_obsolete.errors import (
-    DatabaseConnectionError,
-    DatabaseInteractionError,
-    ParameterMismatchError,
-    SQLSyntaxError,
-)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class DataLoadService:
-    def __init__(self, database_url):
-        self.database_url = database_url
+    """
+    Asynchronous service for loading data from a database table into a Pandas DataFrame.
+    """
 
-    async def fetch_data_as_dataframe_async(self, sql_query):
-        conn = await asyncpg.connect(dsn=self.database_url)
+    def __init__(self, db_session: AsyncSession):
+        self.db_session = db_session
+
+    async def fetch_all_from_table_to_dataframe(self, table_name: str) -> pd.DataFrame:
         try:
-            rows = await conn.fetch(sql_query)
-        except asyncpg.SyntaxOrAccessError as exc:
+            logger.info(f"Starting to fetch data from table {table_name}")
+            # Write raw SQL query string
+            query_str = f"SELECT * FROM {table_name}"
+
+            # Execute the query asynchronously
+            result = await self.db_session.execute(text(query_str))
+
+            # Fetch all rows
+            rows = result.fetchall()
+
+            # Create a Pandas DataFrame from the fetched data
+            result = pd.DataFrame(rows, columns=list(result.keys()))
+            return result
+
+        except Exception as e:
             logger.error(
-                f"SQL syntax or access error occurred: {exc}. Query: {sql_query}"
+                f"Failed to fetch data from table {table_name}: {e}", exc_info=True
             )
-            raise SQLSyntaxError from exc
-        except asyncpg.ConnectionFailureError as exc:
-            logger.error(f"Database connection error: {exc}.")
-            raise DatabaseConnectionError from exc
-        except Exception as exc:
-            logger.error(f"An unexpected error occurred: {exc}. Query: {sql_query}")
-            raise DatabaseInteractionError from exc
-        finally:
-            await conn.close()
-
-        return self._convert_to_dataframe(rows)
-
-    def _convert_to_dataframe(self, rows):
-        if not rows:
-            return pd.DataFrame()
-
-        try:
-            columns = [desc for desc in rows[0].keys()]
-        except IndexError:
-            logger.error("Could not determine DataFrame column names.")
-            raise ParameterMismatchError("No column names found.")
-
-        return pd.DataFrame(rows, columns=columns)
+            raise

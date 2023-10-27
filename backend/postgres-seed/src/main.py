@@ -9,6 +9,7 @@ from src.utils.logging import AppLogger
 from src.db.api.database_route import router as database_router
 from src.seed_raw_data.api.seed_raw_data_route import router as seed_db_router
 from src.csv_io.api.csv_files_route import router as csv_files_router
+from src.risk.api.risk_router import router as risk_router
 
 logger = AppLogger.get_instance().get_logger()
 
@@ -18,6 +19,7 @@ app = FastAPI()
 app.include_router(database_router, prefix="/database")
 app.include_router(csv_files_router, prefix="/csv_files_router")
 app.include_router(seed_db_router, prefix="/raw_data_route")
+app.include_router(risk_router, prefix="/risk_data_route")
 
 
 @app.get("/")

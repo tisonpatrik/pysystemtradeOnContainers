@@ -1,6 +1,5 @@
 """
-API route definitions for seeding the database with raw data.
-Handles all incoming HTTP requests related to this functionality.
+bla
 """
 
 import logging
@@ -10,33 +9,32 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.settings.database import get_db
-from src.seed_raw_data.handlers.seed_db_handler import SeedDBHandler
+from src.risk.handlers.robust_volatility_handler import RobustVolatilityHandler
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI router
 router = APIRouter()
 
 
 @router.post(
-    "/seed_raw_data_route/",
+    "/risk_data_route/",
     status_code=status.HTTP_201_CREATED,
-    name="Seed Database with Raw Data",
+    name="Seed Robust volatility data into db",
 )
-async def fill_database_async(db_session: AsyncSession = Depends(get_db)):
+async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
     """
-    Fills the database tables with data.
+    Fills the robust volatility table with data.
     """
     try:
         # Business logic is in a separate handler
-        seed_db_handler = SeedDBHandler(db_session)
-        await seed_db_handler.insert_data_from_csv_async()
+        seed_db_handler = RobustVolatilityHandler(db_session)
+        await seed_db_handler.insert_robust_volatility_async()
 
-        logger.info("Successfully seeded database with raw data.")
+        logger.info("Successfully seeded database with risk data.")
         return {
             "status": "success",
-            "message": "Database successfully seeded with raw data.",
+            "message": "Database successfully seeded with risk data.",
         }
 
     except Exception as e:

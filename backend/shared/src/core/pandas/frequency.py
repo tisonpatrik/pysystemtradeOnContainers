@@ -159,8 +159,8 @@
 #     return joint_data
 
 
-# def resample_prices_to_business_day_index(x):
-#     return x.resample("1B").last()
+def resample_prices_to_business_day_index(x):
+    return x.resample("1B").last()
 
 
 # def how_many_times_a_year_is_pd_frequency(frequency: str) -> float:

@@ -9,9 +9,9 @@ from src.seed_raw_data.errors.table_to_db_errors import (
     InvalidFileNameError,
     ProcessingError,
 )
-from src.data_processor.services.config_files_service import ConfigFilesService
-from src.data_processor.services.prices_service import PricesService
-from src.data_processor.services.rollcalendars_service import RollCalendarsService
+from src.seed_raw_data.services.config_files_service import ConfigFilesService
+from src.seed_raw_data.services.prices_service import PricesService
+from src.seed_raw_data.services.rollcalendars_service import RollCalendarsService
 from src.seed_raw_data.schemas.files_mapping import FileTableMapping
 
 logging.basicConfig(level=logging.INFO)
