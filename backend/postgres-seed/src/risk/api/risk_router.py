@@ -1,5 +1,6 @@
 """
-bla
+This module defines an API route for seeding robust volatility data into the database.
+It uses FastAPI for the API definitions and SQLAlchemy for the database interactions.
 """
 
 import logging

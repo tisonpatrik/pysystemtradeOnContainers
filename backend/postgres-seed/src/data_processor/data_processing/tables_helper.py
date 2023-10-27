@@ -1,5 +1,5 @@
 """
-bla
+Module for handling table-related operations in Pandas DataFrames.
 """
 
 import logging
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class TablesHelper:
     """
-    bla
+    Provides utility methods for column manipulation and validation in Pandas DataFrames.
     """
 
     def rename_columns(
@@ -98,8 +98,16 @@ class TablesHelper:
         self, data_frames: pd.DataFrame, column_name: str
     ) -> pd.Series:
         """
-        bla
+        Converts a datetime column in a DataFrame to a Pandas Series.
         """
-        self.check_single_missing_column(data_frames, column_name)
-        series_result = pd.Series(index=data_frames[column_name])
-        return series_result
+        try:
+            self.check_single_missing_column(data_frames, column_name)
+            series_result = pd.Series(index=data_frames[column_name])
+            return series_result
+        except Exception as e:
+            logger.error(
+                "Failed to convert column '%s' to series. Error: %s", column_name, e
+            )
+            raise RuntimeError(
+                f"Failed to convert column '{column_name}' to series. Error: {e}"
+            )

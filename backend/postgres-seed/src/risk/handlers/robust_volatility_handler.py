@@ -1,5 +1,6 @@
 """
-bla bla
+This module defines a handler class for inserting robust volatility data into a database.
+It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
 """
 import logging
 
@@ -14,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 class RobustVolatilityHandler:
     """
-    bla bla
+    Handler class responsible for inserting robust volatility data into the database.
+    Utilizes DataLoadService for database-related operations and DateTimeService for date-time data manipulation.
     """
 
     def __init__(self, db_session: AsyncSession):
@@ -25,7 +27,8 @@ class RobustVolatilityHandler:
 
     async def insert_robust_volatility_async(self):
         """
-        bla bla
+        Asynchronously fetches data from the specified table, performs date-time conversion,
+        and returns a Pandas Series containing the robust volatility data.
         """
         data_frames = await self.data_load_service.fetch_all_from_table_to_dataframe(
             self.table_name

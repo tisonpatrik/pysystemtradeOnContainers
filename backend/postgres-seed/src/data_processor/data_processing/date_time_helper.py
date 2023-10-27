@@ -1,5 +1,5 @@
 """
-bla
+DateTimeHelper: A utility for date and time operations on DataFrames.
 """
 
 import logging
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class DateTimeHelper:
     """
-    bla
+    Provides methods for handling date and time in DataFrames.
     """
 
     def aggregate_to_day_based_prices(
@@ -82,11 +82,18 @@ class DateTimeHelper:
     def convert_unix_time_to_datetime(
         self, df: pd.DataFrame, column_name: str
     ) -> pd.DataFrame:
-        # Check if the column exists in the DataFrame
-        if column_name not in df.columns:
-            raise ValueError(f"Column '{column_name}' not found in DataFrame.")
-
-        # Convert Unix time to datetime
-        df[column_name] = pd.to_datetime(df[column_name], unit="s")
-
+        """
+        Converts a column in a DataFrame from Unix time to datetime format.
+        """
+        try:
+            df[column_name] = pd.to_datetime(df[column_name], unit="s")
+        except Exception as e:
+            logger.error(
+                "Failed to convert Unix time to datetime for column '%s'. Error: %s",
+                column_name,
+                e,
+            )
+            raise RuntimeError(
+                f"Failed to convert Unix time to datetime for column '{column_name}'. Error: {e}"
+            )
         return df

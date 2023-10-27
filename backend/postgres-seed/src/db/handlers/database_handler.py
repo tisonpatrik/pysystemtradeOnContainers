@@ -2,7 +2,7 @@
 
 import logging
 
-from src.handlers.errors import DatabaseError
+from src.db.errors.db_errors import DatabaseError
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
