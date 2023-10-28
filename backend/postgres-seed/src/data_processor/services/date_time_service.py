@@ -41,25 +41,6 @@ class DateTimeService:
         )
         return unix_time_converted_data
 
-    def aggregate_string_datetime_column_to_day_based_prices(
-        self, data_frame: pd.DataFrame, date_time_column: str
-    ) -> pd.DataFrame:
-        """
-        Aggregates the data in a DataFrame's date-time column to daily frequency.
-        """
-
-        date_time_converted_data = convert_column_to_datetime(
-            data_frame, date_time_column
-        )
-        aggregated_data = aggregate_to_day_based_prices(
-            date_time_converted_data, date_time_column
-        )
-        unix_time_converted_data = convert_datetime_to_unixtime(
-            aggregated_data, date_time_column
-        )
-
-        return unix_time_converted_data
-
     def covert_dataframe_to_list_of_series(
         self, df: pd.DataFrame, symbol_column: str, index_column: str
     ) -> List[SeriesSchema]:

@@ -71,7 +71,7 @@ class TableToDBService:
         if map_item.table in ["instrument_config", "roll_config", "spread_cost"]:
             return self.config_files_service.process_config_files(map_item)
         elif map_item.table in ["adjusted_prices", "fx_prices", "multiple_prices"]:
-            return self.prices_service.process_adjusted_prices(map_item)
+            return self.prices_service.process_prices_files(map_item)
         elif map_item.table == "roll_calendars":
             return self.rollcalendars_service.process_roll_calendars(map_item)
         else:

@@ -5,9 +5,7 @@ from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.utils.path_validator import get_full_path
 from src.raw_data.utils.csv_loader import load_csv
 
-from src.common_utils.utils.data_aggregators import aggregate_to_day_based_prices
 from src.common_utils.utils.rename_columns import rename_columns, remove_unnamed_columns
-from src.common_utils.utils.round_column_numbers import round_values_in_column
 from src.common_utils.utils.add_and_populate_column import (
     add_column_and_populate_it_by_value,
 )
@@ -17,10 +15,9 @@ from src.common_utils.utils.date_time_convertions import (
 )
 
 
-def process_single_csv_file(
+def process_roll_calendar_file(
     csv_file_name: str,
     map_item: FileTableMapping,
-    price_column: str,
     date_time_column: str,
     symbol_column: str,
 ) -> pd.DataFrame:
@@ -36,12 +33,9 @@ def process_single_csv_file(
     date_time_converted_data = convert_column_to_datetime(
         renamed_data, date_time_column
     )
-    aggregated_data = aggregate_to_day_based_prices(
+    unix_time_converted_data = convert_datetime_to_unixtime(
         date_time_converted_data, date_time_column
     )
-    unix_time_converted_data = convert_datetime_to_unixtime(
-        aggregated_data, date_time_column
+    return add_column_and_populate_it_by_value(
+        unix_time_converted_data, symbol_column, symbol_name
     )
-    rounded_data = round_values_in_column(unix_time_converted_data, price_column)
-
-    return add_column_and_populate_it_by_value(rounded_data, symbol_column, symbol_name)
