@@ -11,9 +11,7 @@ from src.data_processor.schemas.series_schema import SeriesSchema
 from src.common_utils.utils.validators.columns_validators import (
     check_single_missing_column,
 )
-from src.common_utils.utils.date_time_convertions import (
-    convert_column_to_datetime,
-    convert_datetime_to_unixtime,
+from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_unix_time_to_datetime,
 )
 
