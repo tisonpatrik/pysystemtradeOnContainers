@@ -1,15 +1,17 @@
+"""
+Module for date-time related conversion utilities.
+"""
+
 import logging
 import time
-
 import pandas as pd
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 from src.common_utils.errors.date_time_errors import (
     DateTimeConversionError,
     InvalidDatetimeColumnError,
 )
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def convert_column_to_datetime(
@@ -25,11 +27,13 @@ def convert_column_to_datetime(
     try:
         converted = convert_column(copied_data_frame, date_time_column, unit)
         return converted
-    except Exception as e:
-        logger.error("Failed to convert column %s to datetime: %s", date_time_column, e)
+    except Exception as error:
+        logger.error(
+            "Failed to convert column %s to datetime: %s", date_time_column, error
+        )
         raise InvalidDatetimeColumnError(
             f"Failed to convert {date_time_column} to datetime"
-        ) from e
+        ) from error
 
 
 def convert_column(data_frame: pd.DataFrame, column_name: str, unit):

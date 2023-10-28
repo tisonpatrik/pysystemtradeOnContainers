@@ -33,6 +33,9 @@ def rename_columns(
 
 
 def remove_unnamed_columns(data_frame: pd.DataFrame) -> pd.DataFrame:
+    """
+    Removes unnamed columns from a given pandas DataFrame.
+    """
     removed_unnamed_columns = data_frame.loc[
         :, ~data_frame.columns.str.contains("^Unnamed")
     ]
