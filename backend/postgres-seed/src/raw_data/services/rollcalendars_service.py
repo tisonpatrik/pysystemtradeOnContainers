@@ -5,11 +5,11 @@ import os
 import logging
 import pandas as pd
 
-from src.seed_raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.data_processor.data_processing.file_path_validator import FilePathValidator
 from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
-from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
+from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)

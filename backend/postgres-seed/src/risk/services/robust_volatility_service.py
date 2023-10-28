@@ -22,5 +22,6 @@ class RobustVolatilityService:
         qwe
         """
         volatility = robust_vol_calc(series).dropna()
+
         vol_df = volatility.reset_index()
         vol_df.columns = ["date_time", "volatility"]

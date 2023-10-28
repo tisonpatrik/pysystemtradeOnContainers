@@ -69,8 +69,11 @@ class DateTimeService:
         series_schemas = []
         self.tables_helper.check_single_missing_column(df, symbol_column)
         self.tables_helper.check_single_missing_column(df, index_column)
+        time_converted = self.date_time_helper.convert_unix_time_to_datetime(
+            df, index_column
+        )
         try:
-            grouped = df.groupby(symbol_column)
+            grouped = time_converted.groupby(symbol_column)
 
             for group in grouped:
                 # Getting the symbol from the first item of the group

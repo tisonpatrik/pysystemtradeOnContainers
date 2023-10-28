@@ -10,11 +10,11 @@ import os
 import logging
 import pandas as pd
 
-from src.seed_raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.data_processor.data_processing.file_path_validator import FilePathValidator
 from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
-from src.seed_raw_data.schemas.data_frame_container import DataFrameContainer
+from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +33,7 @@ class PricesService:
         self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
         self.price_column = "price"
+        self.symbol_column = "symbol"
 
     def process_adjusted_prices(self, map_item: FileTableMapping) -> DataFrameContainer:
         """
@@ -84,7 +85,7 @@ class PricesService:
         )
 
         return self.tables_helper.add_column_and_populate_it_by_value(
-            rounded_data, "symbol", symbol_name
+            rounded_data, self.symbol_column, symbol_name
         )
 
     def _get_csv_files_from_directory(self, directory: str) -> list:

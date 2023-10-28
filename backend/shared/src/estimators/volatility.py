@@ -65,18 +65,12 @@ def robust_vol_calc(
     # Standard deviation will be nan for first 10 non nan values
     vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
     vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
-
-    if vol_floor:
-        vol = apply_vol_floor(
-            vol,
-            floor_min_quant=floor_min_quant,
-            floor_min_periods=floor_min_periods,
-            floor_days=floor_days,
-        )
-
-    if backfill:
-        # use the first vol in the past, sort of cheating
-        vol = backfill_vol(vol)
+    vol = apply_vol_floor(
+        vol,
+        floor_min_quant=floor_min_quant,
+        floor_min_periods=floor_min_periods,
+        floor_days=floor_days,
+    )
 
     return vol
 

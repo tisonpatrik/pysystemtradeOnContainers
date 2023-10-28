@@ -5,11 +5,12 @@ validating file paths.
 
 import os
 import logging
-from src.seed_raw_data.errors.table_to_db_errors import InvalidFileNameError
+from src.raw_data.errors.table_to_db_errors import InvalidFileNameError
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class FilePathValidator:
     """
