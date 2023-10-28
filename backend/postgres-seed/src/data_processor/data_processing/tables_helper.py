@@ -8,7 +8,7 @@ from src.data_processor.errors.table_helper_errors import (
     SymbolAdditionError,
     ColumnRoundingError,
 )
-from src.common_utils.utils.data_frame_validators import check_single_missing_column
+from src.common_utils.utils.columns_validators import check_single_missing_column
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

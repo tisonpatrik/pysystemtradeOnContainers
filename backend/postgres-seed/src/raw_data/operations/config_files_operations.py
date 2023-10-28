@@ -1,7 +1,7 @@
 import pandas as pd
 from src.raw_data.utils.csv_loader import load_csv
 from src.raw_data.utils.path_validator import get_full_path
-from src.common_utils.utils.rename_table import rename_columns
+from src.common_utils.utils.rename_columns import rename_columns
 from src.raw_data.schemas.files_mapping import FileTableMapping
 
 
