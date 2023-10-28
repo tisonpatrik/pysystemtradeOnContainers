@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
-from src.data_processor.data_processing.file_path_validator import FilePathValidator
+from src.raw_data.utils.path_validator import get_full_path
 from src.csv_io.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
@@ -23,7 +23,6 @@ class RollCalendarsService:
 
     def __init__(self):
         self.csv_files_service = CsvFilesService()
-        self.file_path_validator = FilePathValidator()
         self.tables_helper = TablesHelper()
         self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
@@ -56,9 +55,7 @@ class RollCalendarsService:
         """
         Process a single CSV file and return a processed DataFrame.
         """
-        full_path = self.file_path_validator.get_full_path(
-            map_item.directory, csv_file_name
-        )
+        full_path = get_full_path(map_item.directory, csv_file_name)
         symbol_name = os.path.splitext(csv_file_name)[0]
 
         raw_data = self.csv_files_service.load_csv(full_path)
