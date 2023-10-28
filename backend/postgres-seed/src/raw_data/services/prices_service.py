@@ -11,7 +11,6 @@ from src.raw_data.utils.csv_loader import get_csv_files_from_directory
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.raw_data.operations.prices_operations import process_single_csv_file
 
-from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,7 +22,6 @@ class PricesService:
     """
 
     def __init__(self):
-        self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
         self.price_column = "price"
         self.symbol_column = "symbol"

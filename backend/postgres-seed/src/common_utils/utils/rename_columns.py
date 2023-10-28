@@ -6,7 +6,7 @@ import logging
 import pandas as pd
 from typing import Dict
 from src.common_utils.errors.rename_colums_errors import ColumnRenameError
-from src.common_utils.utils.columns_validators import (
+from src.common_utils.utils.validators.columns_validators import (
     check_missing_columns,
     check_for_none_values,
 )

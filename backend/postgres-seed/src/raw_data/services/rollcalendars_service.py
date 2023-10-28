@@ -1,7 +1,6 @@
 """
 Handles processing and manipulation of roll calendar data from CSV files.
 """
-import os
 import logging
 import pandas as pd
 
@@ -9,7 +8,6 @@ from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.utils.csv_loader import get_csv_files_from_directory
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.raw_data.operations.rollcalendars_operations import process_roll_calendar_file
-from src.data_processor.services.date_time_service import DateTimeService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,7 +19,6 @@ class RollCalendarsService:
     """
 
     def __init__(self):
-        self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
         self.symbol_column = "symbol"
 

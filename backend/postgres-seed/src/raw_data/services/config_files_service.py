@@ -5,7 +5,6 @@ It reads raw CSV files, renames columns, and encapsulates the data into a DataFr
 import logging
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
-from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.raw_data.errors.table_to_db_errors import ProcessingError
 from src.raw_data.operations.config_files_operations import process_config_files_table
@@ -18,9 +17,6 @@ class ConfigFilesService:
     """
     Handles the processing of configuration data.
     """
-
-    def __init__(self):
-        self.tables_helper = TablesHelper()
 
     def process_config_files(self, map_item: FileTableMapping):
         """

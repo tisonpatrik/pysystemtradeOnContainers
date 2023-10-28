@@ -8,8 +8,9 @@ import pandas as pd
 from typing import List
 
 from src.data_processor.schemas.series_schema import SeriesSchema
-from src.common_utils.utils.columns_validators import check_single_missing_column
-from src.common_utils.utils.data_aggregators import aggregate_to_day_based_prices
+from src.common_utils.utils.validators.columns_validators import (
+    check_single_missing_column,
+)
 from src.common_utils.utils.date_time_convertions import (
     convert_column_to_datetime,
     convert_datetime_to_unixtime,
@@ -25,21 +26,6 @@ class DateTimeService:
     Provides services for handling and manipulating date-time data in Pandas DataFrames.
     It makes use of DateTimeHelper for date-time conversions and TablesHelper for table manipulations.
     """
-
-    def convert_string_column_to_unixtime(
-        self, data_frame: pd.DataFrame, date_time_column: str
-    ) -> pd.DataFrame:
-        """
-        Converts a column in a DataFrame containing date-time strings to UNIX time format.
-        """
-
-        date_time_converted_data = convert_column_to_datetime(
-            data_frame, date_time_column
-        )
-        unix_time_converted_data = convert_datetime_to_unixtime(
-            date_time_converted_data, date_time_column
-        )
-        return unix_time_converted_data
 
     def covert_dataframe_to_list_of_series(
         self, df: pd.DataFrame, symbol_column: str, index_column: str
