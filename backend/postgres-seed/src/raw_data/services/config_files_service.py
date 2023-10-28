@@ -6,7 +6,7 @@ It reads raw CSV files, renames columns, and encapsulates the data into a DataFr
 import logging
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
-from src.csv_io.services.csv_files_service import CsvFilesService
+from src.raw_data.services.csv_files_service import CsvFilesService
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.raw_data.errors.table_to_db_errors import ProcessingError
@@ -38,9 +38,7 @@ class ConfigFilesService:
         """
         try:
             logger.info("Starting the process for %s table.", map_item.table)
-            full_path = get_full_path(
-                map_item.directory, map_item.file_name
-            )
+            full_path = get_full_path(map_item.directory, map_item.file_name)
             raw_data = self.csv_files_service.load_csv(full_path)
             renamed = self.tables_helper.rename_columns(
                 raw_data, map_item.columns_mapping

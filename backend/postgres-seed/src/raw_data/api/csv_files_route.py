@@ -6,7 +6,7 @@ Exposes a FastAPI endpoint that utilizes the CsvFilesHandler class for the count
 import logging
 from fastapi import APIRouter, HTTPException, status
 
-from src.csv_io.handlers.csv_files_handler import CsvFilesHandler
+from src.raw_data.handlers.csv_files_handler import CsvFilesHandler
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
