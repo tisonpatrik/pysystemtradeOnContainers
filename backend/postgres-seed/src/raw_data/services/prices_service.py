@@ -12,7 +12,7 @@ import pandas as pd
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.utils.path_validator import get_full_path
-from src.raw_data.services.csv_files_service import CsvFilesService
+from src.raw_data.utils.csv_loader import load_csv
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.data_processor.services.date_time_service import DateTimeService
@@ -27,7 +27,6 @@ class PricesService:
     """
 
     def __init__(self):
-        self.csv_files_service = CsvFilesService()
         self.tables_helper = TablesHelper()
         self.date_time_service = DateTimeService()
         self.date_time_column = "unix_date_time"
@@ -65,7 +64,7 @@ class PricesService:
         full_path = get_full_path(map_item.directory, csv_file_name)
         symbol_name = os.path.splitext(csv_file_name)[0]
 
-        raw_data = self.csv_files_service.load_csv(full_path)
+        raw_data = load_csv(full_path)
         removed_unnamed_columns = raw_data.loc[
             :, ~raw_data.columns.str.contains("^Unnamed")
         ]
