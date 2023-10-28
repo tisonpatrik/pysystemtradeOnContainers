@@ -3,10 +3,6 @@ Module for defining custom exceptions related to date and time operations in dat
 """
 
 
-class DataAggregationError(Exception):
-    """Raised when there's an error in data aggregation."""
-
-
 class InvalidDatetimeColumnError(Exception):
     """Raised when the specified column cannot be converted to datetime."""
 

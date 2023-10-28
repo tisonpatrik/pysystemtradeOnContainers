@@ -7,10 +7,14 @@ import pandas as pd
 
 from typing import List
 
-from src.data_processor.data_processing.date_time_helper import DateTimeHelper
-from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.data_processor.schemas.series_schema import SeriesSchema
 from src.common_utils.utils.columns_validators import check_single_missing_column
+from src.common_utils.utils.data_aggregators import aggregate_to_day_based_prices
+from src.common_utils.utils.date_time_convertions import (
+    convert_column_to_datetime,
+    convert_datetime_to_unixtime,
+    convert_unix_time_to_datetime,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,10 +26,6 @@ class DateTimeService:
     It makes use of DateTimeHelper for date-time conversions and TablesHelper for table manipulations.
     """
 
-    def __init__(self):
-        self.date_time_helper = DateTimeHelper()
-        self.tables_helper = TablesHelper()
-
     def convert_string_column_to_unixtime(
         self, data_frame: pd.DataFrame, date_time_column: str
     ) -> pd.DataFrame:
@@ -33,10 +33,10 @@ class DateTimeService:
         Converts a column in a DataFrame containing date-time strings to UNIX time format.
         """
 
-        date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
+        date_time_converted_data = convert_column_to_datetime(
             data_frame, date_time_column
         )
-        unix_time_converted_data = self.date_time_helper.convert_datetime_to_unixtime(
+        unix_time_converted_data = convert_datetime_to_unixtime(
             date_time_converted_data, date_time_column
         )
         return unix_time_converted_data
@@ -48,16 +48,17 @@ class DateTimeService:
         Aggregates the data in a DataFrame's date-time column to daily frequency.
         """
 
-        date_time_converted_data = self.date_time_helper.convert_column_to_datetime(
+        date_time_converted_data = convert_column_to_datetime(
             data_frame, date_time_column
         )
-        unix_time_converted_data = self.date_time_helper.convert_datetime_to_unixtime(
+        aggregated_data = aggregate_to_day_based_prices(
             date_time_converted_data, date_time_column
         )
-        aggregated_data = self.date_time_helper.aggregate_to_day_based_prices(
-            unix_time_converted_data, date_time_column
+        unix_time_converted_data = convert_datetime_to_unixtime(
+            aggregated_data, date_time_column
         )
-        return aggregated_data
+
+        return unix_time_converted_data
 
     def covert_dataframe_to_list_of_series(
         self, df: pd.DataFrame, symbol_column: str, index_column: str
@@ -70,9 +71,7 @@ class DateTimeService:
         series_schemas = []
         check_single_missing_column(df, symbol_column)
         check_single_missing_column(df, index_column)
-        time_converted = self.date_time_helper.convert_unix_time_to_datetime(
-            df, index_column
-        )
+        time_converted = convert_unix_time_to_datetime(df, index_column)
         try:
             grouped = time_converted.groupby(symbol_column)
 
