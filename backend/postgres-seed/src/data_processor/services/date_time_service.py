@@ -12,7 +12,7 @@ from src.common_utils.utils.validators.columns_validators import (
     check_single_missing_column,
 )
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
-    convert_unix_time_to_datetime,
+    convert_column_to_datetime,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -36,7 +36,7 @@ class DateTimeService:
         series_schemas = []
         check_single_missing_column(df, symbol_column)
         check_single_missing_column(df, index_column)
-        time_converted = convert_unix_time_to_datetime(df, index_column)
+        time_converted = convert_column_to_datetime(df, index_column, "s")
         try:
             grouped = time_converted.groupby(symbol_column)
 

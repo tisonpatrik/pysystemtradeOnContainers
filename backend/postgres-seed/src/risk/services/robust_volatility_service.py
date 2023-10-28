@@ -25,3 +25,4 @@ class RobustVolatilityService:
 
         vol_df = volatility.reset_index()
         vol_df.columns = ["date_time", "volatility"]
+        print(vol_df.tail())
