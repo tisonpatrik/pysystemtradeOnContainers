@@ -2,8 +2,8 @@ import logging
 import pandas as pd
 from typing import Dict
 
-from src.data_processor.errors.table_helper_errors import (
-    ColumnRenameError,
+from src.common_utils.errors.rename_colums_errors import (
+    ColumnNoneValueError,
     MissingColumnsError,
 )
 
@@ -35,4 +35,4 @@ def check_for_none_values(new_column_names: Dict[str, str]):
     for old_name, new_name in new_column_names.items():
         if new_name is None:
             logger.error("New column name cannot be None for %s", old_name)
-            raise ColumnRenameError(f"New column name cannot be None for {old_name}")
+            raise ColumnNoneValueError(f"New column name cannot be None for {old_name}")

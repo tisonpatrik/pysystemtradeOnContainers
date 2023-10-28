@@ -1,6 +1,7 @@
 """
 Provides utilities for reading CSV files.
 """
+import os
 import logging
 import pandas as pd
 from src.raw_data.errors.csv_read_errors import (
@@ -38,3 +39,10 @@ def load_csv(full_path) -> pd.DataFrame:
     except Exception as e:
         logger.error("Unexpected error occurred: %s", e)
         raise Exception(f"Unexpected error occurred: {e}")
+
+
+def get_csv_files_from_directory(directory: str) -> list:
+    """
+    Get the list of all CSV files from the specified directory.
+    """
+    return [f for f in os.listdir(directory) if f.endswith(".csv")]

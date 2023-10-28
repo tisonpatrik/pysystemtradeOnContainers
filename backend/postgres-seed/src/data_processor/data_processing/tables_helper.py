@@ -50,7 +50,7 @@ class TablesHelper:
             logger.error("Error during symbol addition: %s", error)
             raise SymbolAdditionError from error
 
-    def convert_datetime_column_to_series(
+    def convert_dataframe_to_series(
         self, data_frames: pd.DataFrame, column_name: str
     ) -> pd.Series:
         """

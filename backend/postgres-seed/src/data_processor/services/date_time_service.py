@@ -10,6 +10,7 @@ from typing import List
 from src.data_processor.data_processing.date_time_helper import DateTimeHelper
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.data_processor.schemas.series_schema import SeriesSchema
+from src.common_utils.utils.columns_validators import check_single_missing_column
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -67,8 +68,8 @@ class DateTimeService:
         logger.info(f"Processing dataframes to series")
 
         series_schemas = []
-        self.tables_helper.check_single_missing_column(df, symbol_column)
-        self.tables_helper.check_single_missing_column(df, index_column)
+        check_single_missing_column(df, symbol_column)
+        check_single_missing_column(df, index_column)
         time_converted = self.date_time_helper.convert_unix_time_to_datetime(
             df, index_column
         )

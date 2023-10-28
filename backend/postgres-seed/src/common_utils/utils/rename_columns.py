@@ -5,7 +5,7 @@ Module for handling methods for renaming columns.
 import logging
 import pandas as pd
 from typing import Dict
-from src.data_processor.errors.table_helper_errors import ColumnRenameError
+from src.common_utils.errors.rename_colums_errors import ColumnRenameError
 from src.common_utils.utils.columns_validators import (
     check_missing_columns,
     check_for_none_values,
@@ -28,3 +28,10 @@ def rename_columns(
     except Exception as error:
         logger.error("Error during column renaming: %s", error)
         raise ColumnRenameError from error
+
+
+def remove_unnamed_columns(data_frame: pd.DataFrame) -> pd.DataFrame:
+    removed_unnamed_columns = data_frame.loc[
+        :, ~data_frame.columns.str.contains("^Unnamed")
+    ]
+    return removed_unnamed_columns

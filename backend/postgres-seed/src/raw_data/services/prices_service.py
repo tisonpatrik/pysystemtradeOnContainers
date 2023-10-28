@@ -2,9 +2,6 @@
 This module provides a service for processing CSV files and returning adjusted pricing data.
 It utilizes various helper classes for tasks such as file validation, date-time conversion,
 and table adjustments.
-
-Classes:
-    - PricesService: Handles the core logic for adjusting pricing data.
 """
 import os
 import logging
@@ -12,10 +9,11 @@ import pandas as pd
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.utils.path_validator import get_full_path
-from src.raw_data.utils.csv_loader import load_csv
+from src.raw_data.utils.csv_loader import load_csv, get_csv_files_from_directory
 from src.data_processor.data_processing.tables_helper import TablesHelper
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.data_processor.services.date_time_service import DateTimeService
+from src.common_utils.utils.rename_columns import rename_columns
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,7 +38,7 @@ class PricesService:
         logger.info("Starting the process for %s table.", map_item.table)
 
         # Get list of CSV file names in the directory
-        csv_files_names = self._get_csv_files_from_directory(map_item.directory)
+        csv_files_names = get_csv_files_from_directory(map_item.directory)
 
         # Initialize list to store processed DataFrames
         processed_data_frames = []
@@ -68,9 +66,7 @@ class PricesService:
         removed_unnamed_columns = raw_data.loc[
             :, ~raw_data.columns.str.contains("^Unnamed")
         ]
-        renamed_data = self.tables_helper.rename_columns(
-            removed_unnamed_columns, map_item.columns_mapping
-        )
+        renamed_data = rename_columns(removed_unnamed_columns, map_item.columns_mapping)
         aggregated_data = (
             self.date_time_service.aggregate_string_datetime_column_to_day_based_prices(
                 renamed_data, self.date_time_column
@@ -83,9 +79,3 @@ class PricesService:
         return self.tables_helper.add_column_and_populate_it_by_value(
             rounded_data, self.symbol_column, symbol_name
         )
-
-    def _get_csv_files_from_directory(self, directory: str) -> list:
-        """
-        Get the list of all CSV files from the specified directory.
-        """
-        return [f for f in os.listdir(directory) if f.endswith(".csv")]

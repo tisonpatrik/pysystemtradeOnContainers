@@ -17,3 +17,7 @@ class SymbolAdditionError(Exception):
 
 class ColumnRoundingError(Exception):
     """Exception raised for errors occurring during column rounding."""
+
+
+class ColumnNoneValueError(Exception):
+    """Exception raised for errors occurring when is None values in collumns."""
