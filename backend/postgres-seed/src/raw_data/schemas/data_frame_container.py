@@ -5,6 +5,7 @@ It provides methods for interacting with these encapsulated attributes.
 """
 import pandas as pd
 
+
 class DataFrameContainer:
     """
     Encapsulates a Pandas DataFrame along with its corresponding table name.

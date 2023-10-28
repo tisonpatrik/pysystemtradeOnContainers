@@ -4,12 +4,13 @@ It includes a POST endpoint that resets all database tables to their initial sta
 """
 
 # FastAPI and SQLAlchemy dependencies
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.handlers.database_handler import DatabaseHandler
 
 # Application-specific dependencies
 from src.db.settings.database import get_db
-from src.db.handlers.database_handler import DatabaseHandler
 
 # Create a FastAPI router instance
 router = APIRouter()

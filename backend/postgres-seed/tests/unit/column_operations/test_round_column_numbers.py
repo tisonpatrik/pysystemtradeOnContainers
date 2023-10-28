@@ -1,10 +1,10 @@
-import pytest
 import pandas as pd
+import pytest
 
+from src.common_utils.errors.rounding_error import ColumnRoundingError
 from src.common_utils.utils.column_operations.round_column_numbers import (
     round_values_in_column,
 )
-from src.common_utils.errors.rounding_error import ColumnRoundingError
 
 
 @pytest.fixture

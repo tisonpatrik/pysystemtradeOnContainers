@@ -1,4 +1,5 @@
 import logging
+
 import pandas as pd
 
 from src.common_utils.errors.aggregation_errors import DataAggregationError

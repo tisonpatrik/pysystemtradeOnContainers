@@ -1,10 +1,11 @@
 import logging
 
 import pandas as pd
+
+from src.common_utils.errors.rounding_error import ColumnRoundingError
 from src.common_utils.utils.validators.columns_validators import (
     check_single_missing_column,
 )
-from src.common_utils.errors.rounding_error import ColumnRoundingError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

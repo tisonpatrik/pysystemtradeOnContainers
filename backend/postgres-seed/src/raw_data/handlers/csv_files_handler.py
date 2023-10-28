@@ -1,9 +1,9 @@
 """
 Provides asynchronous handler for counting CSV files in specified directories.
 """
-import os
 import asyncio
 import logging
+import os
 
 from src.raw_data.services.mapping_service import MappingService
 

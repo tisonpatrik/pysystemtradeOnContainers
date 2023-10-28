@@ -2,6 +2,7 @@
 Module for mapping file tables and their corresponding directories.
 """
 from typing import Dict
+
 from pydantic import BaseModel, Field
 
 

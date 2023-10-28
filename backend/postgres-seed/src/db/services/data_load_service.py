@@ -2,10 +2,10 @@
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
 import logging
-from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 
 import pandas as pd
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

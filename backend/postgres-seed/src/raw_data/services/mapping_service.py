@@ -1,6 +1,6 @@
 """A module for mapping directories to tables using a JSON configuration file."""
-import logging
 import json
+import logging
 from typing import List
 
 from src.raw_data.schemas.files_mapping import FileTableMapping

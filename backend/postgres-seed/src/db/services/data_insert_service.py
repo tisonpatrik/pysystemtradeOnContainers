@@ -4,7 +4,6 @@ This module provides functionalities for inserting data into a database asynchro
 import logging
 
 import pandas as pd
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 logging.basicConfig(level=logging.INFO)

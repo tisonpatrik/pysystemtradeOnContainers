@@ -6,7 +6,7 @@ Handles all incoming HTTP requests related to this functionality.
 import logging
 
 # Third-Party Libraries
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.settings.database import get_db

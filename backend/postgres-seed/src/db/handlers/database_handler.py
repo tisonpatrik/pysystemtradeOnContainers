@@ -2,10 +2,10 @@
 
 import logging
 
-from src.db.errors.db_errors import DatabaseError
-
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.db.errors.db_errors import DatabaseError
 
 # Initialize logger
 logging.basicConfig(level=logging.INFO)

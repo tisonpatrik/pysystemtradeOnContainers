@@ -6,10 +6,10 @@ import logging
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.raw_data.services.mapping_service import MappingService
-from src.raw_data.services.table_to_db_service import TableToDBService
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.errors.table_to_db_errors import DataInsertionError
+from src.raw_data.services.mapping_service import MappingService
+from src.raw_data.services.table_to_db_service import TableToDBService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

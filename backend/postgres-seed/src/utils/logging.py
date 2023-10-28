@@ -10,7 +10,6 @@ import logging
 from rich.console import Console
 from rich.logging import RichHandler
 
-
 from src.utils.singleton import SingletonMeta
 
 

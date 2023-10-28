@@ -5,7 +5,6 @@ qwe
 import logging
 
 import pandas as pd
-
 from shared.src.estimators.volatility import robust_vol_calc
 
 logging.basicConfig(level=logging.INFO)

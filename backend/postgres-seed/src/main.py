@@ -4,12 +4,11 @@ Main entry point for the FastAPI application.
 
 from fastapi import FastAPI
 
-from src.utils.logging import AppLogger
-
 from src.db.api.database_route import router as database_router
-from src.raw_data.api.seed_raw_data_route import router as seed_db_router
 from src.raw_data.api.csv_files_route import router as csv_files_router
+from src.raw_data.api.seed_raw_data_route import router as seed_db_router
 from src.risk.api.risk_router import router as risk_router
+from src.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 
