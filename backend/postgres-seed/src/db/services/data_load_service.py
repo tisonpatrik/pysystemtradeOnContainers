@@ -20,8 +20,11 @@ class DataLoadService:
         self.db_session = db_session
 
     async def fetch_all_from_table_to_dataframe(self, table_name: str) -> pd.DataFrame:
+        """
+        Asynchronously fetches all data from a specified table into a Pandas DataFrame.
+        """
         try:
-            logger.info(f"Starting to fetch data from table {table_name}")
+            logger.info("Starting to fetch data from table %s", table_name)
             # Write raw SQL query string
             query_str = f"SELECT * FROM {table_name}"
 
@@ -32,11 +35,14 @@ class DataLoadService:
             rows = result.fetchall()
 
             # Create a Pandas DataFrame from the fetched data
-            result = pd.DataFrame(rows, columns=list(result.keys()))
-            return result
+            df_result = pd.DataFrame(rows, columns=list(result.keys()))
+            return df_result
 
-        except Exception as e:
+        except Exception as error:
             logger.error(
-                f"Failed to fetch data from table {table_name}: {e}", exc_info=True
+                "Failed to fetch data from table %s: %s",
+                table_name,
+                error,
+                exc_info=True,
             )
             raise

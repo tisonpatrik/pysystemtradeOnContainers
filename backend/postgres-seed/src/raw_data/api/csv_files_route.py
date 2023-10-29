@@ -6,7 +6,6 @@ Exposes a FastAPI endpoint that utilizes the CsvFilesHandler class for the count
 import logging
 
 from fastapi import APIRouter, HTTPException, status
-
 from src.raw_data.handlers.csv_files_handler import CsvFilesHandler
 
 logging.basicConfig(level=logging.INFO)
@@ -36,9 +35,9 @@ async def get_csv_file_counts():
             "counts": counts,
         }
 
-    except Exception as e:
-        logger.error("Failed to count CSV files: %s", e)
+    except Exception as error:
+        logger.error("Failed to count CSV files: %s", error)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while counting CSV files.",
-        ) from e
+        ) from error

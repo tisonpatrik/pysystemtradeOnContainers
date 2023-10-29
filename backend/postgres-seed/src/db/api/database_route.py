@@ -25,10 +25,10 @@ async def reset_database(db_session: AsyncSession = Depends(get_db)):
         db_handler = DatabaseHandler(db_session)
         await db_handler.truncate_tables_async()
         return {"status": "success", "message": "Database was reset."}
-    except Exception as e:
+    except Exception as exc:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        ) from e
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)
+        ) from exc
 
 
 @router.get("/list_tables/", status_code=status.HTTP_200_OK, name="List Tables")
@@ -40,7 +40,7 @@ async def list_tables(db_session: AsyncSession = Depends(get_db)):
         db_handler = DatabaseHandler(db_session)
         tables = await db_handler.list_tables_async()
         return {"tables": tables}
-    except Exception as e:
+    except Exception as exc:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        ) from e
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)
+        ) from exc

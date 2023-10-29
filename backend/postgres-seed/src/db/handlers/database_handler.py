@@ -46,10 +46,10 @@ class DatabaseHandler:
 
             logger.info("Successfully truncated all tables.")
 
-        except Exception as e:
-            logger.error("Failed to truncate tables: %s", e)
+        except Exception as exc:  # Change 'e' to 'exc'
+            logger.error("Failed to truncate tables: %s", exc)
             await self.db_session.rollback()
-            raise DatabaseError("Failed to truncate tables.") from e
+            raise DatabaseError("Failed to truncate tables.") from exc
 
     async def list_tables_async(self) -> list:
         """
@@ -67,6 +67,8 @@ class DatabaseHandler:
                 "Successfully fetched %d table names from the database.", len(tables)
             )
             return tables
-        except Exception as e:
-            logger.error("Failed to fetch table names: %s", e)
-            raise DatabaseError("Failed to fetch table names from the database.") from e
+        except Exception as exc:  # Change 'e' to 'exc'
+            logger.error("Failed to fetch table names: %s", exc)
+            raise DatabaseError(
+                "Failed to fetch table names from the database."
+            ) from exc

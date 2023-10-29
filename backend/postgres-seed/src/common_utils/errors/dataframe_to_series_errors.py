@@ -1,10 +1,11 @@
-# dataframe_to_series_errors.py
+"""Custom exceptions for handling errors during DataFrame to Series conversion."""
 
 
 class DataFrameToSeriesError(Exception):
     """Base class for all DataFrame to Series conversion errors."""
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(message)
 
 
 class ColumnNotFoundError(DataFrameToSeriesError):
@@ -25,8 +26,6 @@ class GroupByError(DataFrameToSeriesError):
 
 class DataFrameToDictOfSeriesError(DataFrameToSeriesError):
     """Base class for errors during DataFrame to dictionary of Series conversion."""
-
-    pass
 
 
 class DataFrameConversionError(DataFrameToDictOfSeriesError):

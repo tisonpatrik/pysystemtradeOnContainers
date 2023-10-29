@@ -1,4 +1,6 @@
-# custom_exceptions.py
+"""
+Module containing custom exception classes for handling CSV-related errors.
+"""
 
 
 class CsvFileNotFoundException(FileNotFoundError):
