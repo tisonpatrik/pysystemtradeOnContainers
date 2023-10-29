@@ -6,23 +6,17 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends curl git build-essential \
     && apt-get autoremove -y
-ENV POETRY_HOME="/opt/poetry"
-RUN curl -sSL https://install.python-poetry.org | python3 -
 
-
-FROM base AS install
 # Setting the working directory in the container
 WORKDIR /home/app
 
-# allow controlling the poetry installation of dependencies via external args
-ARG INSTALL_ARGS="--no-root"
-ENV POETRY_HOME="/opt/poetry"
-ENV PATH="$POETRY_HOME/bin:$PATH"
-COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* ./ 
+# Copying the poetry dependency files to the working directory
+COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* ./
 
-# install without virtualenv, since we are inside a container
-RUN poetry config virtualenvs.create false \
-    && poetry install $INSTALL_ARGS
+# Installing poetry and the project dependencies
+RUN pip install poetry
+RUN poetry config virtualenvs.create false --local
+RUN poetry install --no-dev
 
 # cleanup
 #RUN curl -sSL https://install.python-poetry.org | python3 - --uninstall
@@ -32,8 +26,6 @@ RUN apt-get purge -y curl git build-essential \
     && rm -rf /var/apt/lists/* \
     && rm -rf /var/cache/apt/*
 
-
-FROM install as app-image
 ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
 
 

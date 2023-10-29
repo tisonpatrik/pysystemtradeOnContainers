@@ -60,7 +60,7 @@ extend-immutable-calls = ["fastapi.Depends",]
 [tool.pytest.ini_options]
 addopts = "-v --doctest-modules --doctest-glob=*.md --ignore=alembic"
 asyncio_mode = "strict"
-env_files = [".env"]
+
 
 [tool.tryceratops]
 exclude = ["alembic",]
