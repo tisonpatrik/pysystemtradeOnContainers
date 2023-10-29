@@ -1,10 +1,10 @@
-import pytest
 import pandas as pd
+import pytest
 
 from src.common_utils.errors.dataframe_to_series_errors import GroupByError
 from src.common_utils.utils.data_aggregation.dataframe_to_series import (
-    get_grouped_df,
     convert_group_to_series,
+    get_grouped_df,
 )
 
 

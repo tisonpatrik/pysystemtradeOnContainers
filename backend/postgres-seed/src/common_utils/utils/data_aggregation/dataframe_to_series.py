@@ -1,16 +1,18 @@
 """Module for converting data frames to dictionaries of pandas Series."""
 
 import logging
+
 import pandas as pd
+
+from src.common_utils.errors.dataframe_to_series_errors import (
+    DataFrameConversionError,
+    GroupByError,
+)
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_column_to_datetime,
 )
 from src.common_utils.utils.validators.columns_validators import (
     check_single_missing_column,
-)
-from src.common_utils.errors.dataframe_to_series_errors import (
-    GroupByError,
-    DataFrameConversionError,
 )
 
 logging.basicConfig(level=logging.INFO)

@@ -1,3 +1,8 @@
+"""
+This module is responsible for handling operations related to roll calendars.
+It provides functionalities for reading CSV files, renaming columns, converting date-time data, 
+and performing other relevant data transformations.
+"""
 import os
 
 import pandas as pd

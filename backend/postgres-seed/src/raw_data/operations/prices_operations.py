@@ -1,3 +1,8 @@
+"""
+This module contains operations related to processing price data from CSV files.
+It provides functionalities for reading the file, renaming columns, converting date-time formats, 
+aggregating data, and other related tasks to prepare a DataFrame.
+"""
 import os
 
 import pandas as pd

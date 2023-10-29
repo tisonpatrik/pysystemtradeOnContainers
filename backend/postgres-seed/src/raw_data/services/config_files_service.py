@@ -27,8 +27,8 @@ class ConfigFilesService:
             data_frame = process_config_files_table(map_item)
             return DataFrameContainer(data_frame, map_item.table)
 
-        except Exception as e:
-            logger.error("An unexpected error occurred: %s", e)
+        except Exception as exc:
+            logger.error("An unexpected error occurred: %s", exc)
             raise ProcessingError(
                 "An unexpected error occurred during processing."
-            ) from e
+            ) from exc

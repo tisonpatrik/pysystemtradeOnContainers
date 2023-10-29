@@ -3,7 +3,9 @@ This module contains utility functions for adding and populating columns in a pa
 """
 
 import logging
+
 import pandas as pd
+
 from src.common_utils.errors.add_and_populate_error import SymbolAdditionError
 
 logging.basicConfig(level=logging.INFO)

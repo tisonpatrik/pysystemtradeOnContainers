@@ -1,3 +1,8 @@
+"""
+This module provides operations for processing configuration files.
+It contains functions for reading raw CSV files, renaming columns,
+and encapsulating the data into a DataFrameContainer object.
+"""
 import pandas as pd
 
 from src.common_utils.utils.column_operations.rename_columns import rename_columns
