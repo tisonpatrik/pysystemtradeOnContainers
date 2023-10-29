@@ -53,3 +53,5 @@ class PricesService:
         concatenated_data_frame = pd.concat(processed_data_frames, ignore_index=True)
 
         return DataFrameContainer(concatenated_data_frame, map_item.table)
+
+    
