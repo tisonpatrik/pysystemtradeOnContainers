@@ -3,12 +3,13 @@ This module defines a handler class for inserting robust volatility data into a 
 It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
 """
 import logging
-from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.risk.services.robust_volatility_service import RobustVolatilityService
-from src.db.services.data_insert_service import DataInsertService
+
 from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
+from src.db.services.data_insert_service import DataInsertService
+from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
+from src.risk.services.robust_volatility_service import RobustVolatilityService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,15 +35,15 @@ class RobustVolatilityHandler:
         """
         try:
             series_dict = await self.adjusted_service.get_adjusted_prices_async()
-            concatenated_data_frame = await self.process_volatility_data(series_dict)
+            concatenated_data_frame = await self._process_volatility_data(series_dict)
             await self.data_inserter.async_insert_dataframe_to_table(
                 concatenated_data_frame, self.table_name
             )
-        except Exception as e:
-            logger.error("Failed to insert robust volatility data: %s", e)
+        except Exception as error:
+            logger.error("Failed to insert robust volatility data: %s", error)
             raise
 
-    async def process_volatility_data(self, series_dict):
+    async def _process_volatility_data(self, series_dict):
         """
         Processes volatility data for various financial instruments.
         """
@@ -55,6 +56,6 @@ class RobustVolatilityHandler:
             ]
 
             return concatenate_data_frames(processed_data_frames)
-        except Exception as e:
-            logger.error("Failed to process volatility data: %s", e)
+        except Exception as error:
+            logger.error("Failed to process volatility data: %s", error)
             raise

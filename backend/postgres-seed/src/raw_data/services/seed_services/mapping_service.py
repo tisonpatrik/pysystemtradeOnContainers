@@ -3,8 +3,8 @@ import json
 import logging
 from typing import List
 
-from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.errors.mapping_error import MappingNotFoundError
+from src.raw_data.schemas.files_mapping import FileTableMapping
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

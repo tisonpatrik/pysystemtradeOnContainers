@@ -2,8 +2,8 @@
 This module defines the RobustVolatilitySchema class, 
 which models the structure of the 'robust_volatility' table in the database.
 """
-from typing import Dict
 from dataclasses import dataclass, field
+from typing import Dict
 
 
 @dataclass(frozen=True, order=True)

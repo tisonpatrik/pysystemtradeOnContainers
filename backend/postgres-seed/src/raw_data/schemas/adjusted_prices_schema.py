@@ -1,8 +1,16 @@
-import pandas as pd
+"""
+This module defines the schema for adjusted prices as well as utility methods related to it.
+"""
+
 from dataclasses import dataclass, field
+
+import pandas as pd
 
 
 def empty_series() -> pd.Series:
+    """
+    Returns an empty Pandas Series.
+    """
     return pd.Series()
 
 
