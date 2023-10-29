@@ -5,7 +5,9 @@ from pandas.testing import assert_frame_equal
 from src.common_utils.errors.aggregation_errors import DataAggregationError
 from src.common_utils.utils.data_aggregation.data_aggregators import (
     aggregate_to_day_based_prices,
+    covert_dataframe_to_list_of_series,
 )
+from src.data_processor.schemas.series_schema import SeriesSchema
 
 
 @pytest.fixture
@@ -84,3 +86,30 @@ def test_aggregate_to_day_based_prices_empty_dataframe():
 
     with pytest.raises(DataAggregationError):
         aggregate_to_day_based_prices(empty_dataframe, "DATETIME")
+
+
+@pytest.fixture
+def sample_dataframe():
+    df = pd.DataFrame(
+        {
+            "symbol_column": ["AAPL", "AAPL", "GOOGL", "GOOGL"],
+            "index_column": ["2021-01-01", "2021-01-02", "2021-01-01", "2021-01-02"],
+            "price": [150, 151, 2000, 2001],
+        }
+    )
+    return df
+
+
+def test_covert_dataframe_to_list_of_series(sample_dataframe):
+    result = covert_dataframe_to_list_of_series(
+        sample_dataframe, "symbol_column", "index_column"
+    )
+
+    # Validate the output
+    assert len(result) == 2
+
+    # Check the first SeriesSchema object
+    series_schema_1 = result[0]
+    assert isinstance(series_schema_1, SeriesSchema)
+    assert series_schema_1.name == "AAPL"
+    assert "2021-01-01" in series_schema_1.series.index

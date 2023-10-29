@@ -1,3 +1,6 @@
+"""
+This module contains utility functions for validating columns in a pandas DataFrame.
+"""
 import logging
 from typing import Dict
 

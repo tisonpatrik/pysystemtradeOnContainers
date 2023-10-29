@@ -6,10 +6,12 @@ import logging
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.data_processor.services.date_time_service import DateTimeService
 from src.db.services.data_load_service import DataLoadService
 from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
 from src.risk.services.robust_volatility_service import RobustVolatilityService
+from src.common_utils.utils.data_aggregation.dataframe_to_series import (
+    convert_dataframe_to_list_of_series,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,7 +25,6 @@ class RobustVolatilityHandler:
 
     def __init__(self, db_session: AsyncSession):
         self.data_load_service = DataLoadService(db_session)
-        self.data_time_service = DateTimeService()
         self.risk_schema = RobustVolatilitySchema()
         self.robust_volatility_service = RobustVolatilityService()
         self.source_table = "adjusted_prices"
@@ -37,10 +38,10 @@ class RobustVolatilityHandler:
             self.source_table
         )
 
-        series = self.data_time_service.covert_dataframe_to_list_of_series(
+        series_dict = convert_dataframe_to_list_of_series(
             data_frames, self.risk_schema.symbol_table, self.risk_schema.datetime_table
         )
-        for serie in series:
+        for symbol, serie in series_dict.items():
             risk = self.robust_volatility_service.calculate_volatility_for_instrument(
-                serie.series
+                serie
             )
