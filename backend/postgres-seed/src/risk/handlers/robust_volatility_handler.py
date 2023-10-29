@@ -3,10 +3,12 @@ This module defines a handler class for inserting robust volatility data into a 
 It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
 """
 import logging
-
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
 from src.risk.services.robust_volatility_service import RobustVolatilityService
+from src.db.services.data_insert_service import DataInsertService
+from src.common_utils.utils.data_aggregation.data_aggregators import (
+    concatenate_data_frames,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,19 +22,39 @@ class RobustVolatilityHandler:
 
     def __init__(self, db_session):
         self.db_session = db_session
-        self.risk_schema = RobustVolatilitySchema()
         self.robust_volatility_service = RobustVolatilityService()
+        self.data_inserter = DataInsertService(db_session)
+        self.adjusted_service = AdjustedPricesService(self.db_session)
+        self.table_name = "robust_volatility"
 
-    async def insert_robust_volatility_async(
-        self,
-    ):
+    async def insert_robust_volatility_async(self):
         """
-        Asynchronously fetches data from the specified table, performs date-time conversion,
-        and returns a Pandas Series containing the robust volatility data.
+        Asynchronously fetches data from the specified table,
+        performs date-time conversion, and inserts robust volatility data.
         """
-        adjusted_service = AdjustedPricesService(self.db_session)
-        series_dict = await adjusted_service.get_adjusted_prices_async()
-        for symbol, serie in series_dict.items():
-            risk = self.robust_volatility_service.calculate_volatility_for_instrument(
-                serie
+        try:
+            series_dict = await self.adjusted_service.get_adjusted_prices_async()
+            concatenated_data_frame = await self.process_volatility_data(series_dict)
+            await self.data_inserter.async_insert_dataframe_to_table(
+                concatenated_data_frame, self.table_name
             )
+        except Exception as e:
+            logger.error("Failed to insert robust volatility data: %s", e)
+            raise
+
+    async def process_volatility_data(self, series_dict):
+        """
+        Processes volatility data for various financial instruments.
+        """
+        try:
+            processed_data_frames = [
+                self.robust_volatility_service.calculate_volatility_for_instrument(
+                    series, symbol
+                )
+                for symbol, series in series_dict.items()
+            ]
+
+            return concatenate_data_frames(processed_data_frames)
+        except Exception as e:
+            logger.error("Failed to process volatility data: %s", e)
+            raise

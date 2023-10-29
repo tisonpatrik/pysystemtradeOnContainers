@@ -5,12 +5,13 @@ and table adjustments.
 """
 import logging
 
-import pandas as pd
-
 from src.raw_data.operations.prices_operations import process_single_csv_file
 from src.raw_data.schemas.data_frame_container import DataFrameContainer
 from src.raw_data.schemas.files_mapping import FileTableMapping
 from src.raw_data.utils.csv_loader import get_csv_files_from_directory
+from src.common_utils.utils.data_aggregation.data_aggregators import (
+    concatenate_data_frames,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -50,8 +51,6 @@ class PricesService:
             processed_data_frames.append(processed_df)
 
         # Concatenate all processed DataFrames into a single DataFrame
-        concatenated_data_frame = pd.concat(processed_data_frames, ignore_index=True)
+        concatenated_data_frame = concatenate_data_frames(processed_data_frames)
 
         return DataFrameContainer(concatenated_data_frame, map_item.table)
-
-    

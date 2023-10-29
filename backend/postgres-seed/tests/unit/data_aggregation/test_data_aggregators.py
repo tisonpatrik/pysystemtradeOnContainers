@@ -5,6 +5,7 @@ from pandas.testing import assert_frame_equal
 from src.common_utils.errors.aggregation_errors import DataAggregationError
 from src.common_utils.utils.data_aggregation.data_aggregators import (
     aggregate_to_day_based_prices,
+    concatenate_data_frames,
 )
 
 
@@ -84,3 +85,17 @@ def test_aggregate_to_day_based_prices_empty_dataframe():
 
     with pytest.raises(DataAggregationError):
         aggregate_to_day_based_prices(empty_dataframe, "DATETIME")
+
+
+@pytest.fixture
+def sample_data_frames():
+    df1 = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
+    df2 = pd.DataFrame({"A": [5, 6], "B": [7, 8]})
+    return [df1, df2]
+
+
+# Test for a successful concatenation
+def test_concatenate_data_frames_success(sample_data_frames):
+    expected_df = pd.DataFrame({"A": [1, 2, 5, 6], "B": [3, 4, 7, 8]})
+    result_df = concatenate_data_frames(sample_data_frames)
+    pd.testing.assert_frame_equal(result_df, expected_df)
