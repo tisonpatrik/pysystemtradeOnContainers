@@ -13,3 +13,9 @@ class CsvEmptyDataError(Exception):
 
 class CsvParserError(Exception):
     """Raised when there's a parsing error while reading the CSV file."""
+
+
+class CsvUnexpectedError(Exception):
+    """
+    Exception raised for unexpected errors during CSV file processing.
+    """

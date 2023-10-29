@@ -1,3 +1,6 @@
+"""
+Provides utilities for validating file paths and raising appropriate exceptions.
+"""
 import os
 
 from src.raw_data.errors.table_to_db_errors import InvalidFileNameError

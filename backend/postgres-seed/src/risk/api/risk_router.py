@@ -38,9 +38,9 @@ async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
             "message": "Database successfully seeded with risk data.",
         }
 
-    except Exception as e:
-        logger.error("Failed to seed database with raw data: %s", e)
+    except Exception as exception_error:
+        logger.error("Failed to seed database with raw data: %s", exception_error)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while seeding the database.",
-        ) from e
+        ) from exception_error

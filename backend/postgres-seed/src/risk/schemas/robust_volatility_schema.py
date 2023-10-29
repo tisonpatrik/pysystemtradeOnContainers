@@ -3,7 +3,10 @@ This module defines the RobustVolatilitySchema class,
 which models the structure of the 'robust_volatility' table in the database.
 """
 
+from dataclasses import dataclass
 
+
+@dataclass
 class RobustVolatilitySchema:
     """
     Defines the schema for the Robust Volatility table in the database.

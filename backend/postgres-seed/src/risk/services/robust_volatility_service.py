@@ -1,7 +1,3 @@
-"""
-qwe
-"""
-
 import logging
 
 import pandas as pd
@@ -12,14 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class RobustVolatilityService:
-    """
-    qwe
-    """
-
     def calculate_volatility_for_instrument(self, series: pd.Series):
-        """
-        qwe
-        """
         volatility = robust_vol_calc(series).dropna()
 
         vol_df = volatility.reset_index()
