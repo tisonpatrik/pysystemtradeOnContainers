@@ -36,17 +36,17 @@ class SeedDBHandler:
         for data in datas:
             try:
                 await self.data_insert_service.async_insert_dataframe_to_table(
-                    data.get_data_frame(), data.get_table_name()
+                    data.data_frame, data.table_name
                 )
-                logger.info("Successfully inserted data into %s", data.get_table_name())
+                logger.info("Successfully inserted data into %s", data.table_name)
 
             except Exception as exc:  # Renamed "e" to "exc"
                 logger.error(
                     "Error while inserting data into %s: %s",
-                    data.get_table_name(),
+                    data.table_name,
                     exc,
                     exc_info=True,
                 )
                 raise DataInsertionError(
-                    data.get_table_name(), exc
+                    data.table_name, exc
                 ) from exc  # Explicitly re-raise

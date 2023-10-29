@@ -4,6 +4,7 @@ import logging
 from typing import List
 
 from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.errors.mapping_error import MappingNotFoundError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,3 +38,13 @@ class MappingService:
         except json.JSONDecodeError:
             logger.error("Failed to decode JSON from file: %s", self.json_file_path)
             return []
+
+    def get_mapping_by_name(self, name: str) -> FileTableMapping:
+        """
+        Get the mapping by table name.
+        """
+        all_mappings = self.load_mappings_from_json()
+        for mapping in all_mappings:
+            if mapping.table == name:
+                return mapping
+        raise MappingNotFoundError(f"No mapping found for table name {name}")

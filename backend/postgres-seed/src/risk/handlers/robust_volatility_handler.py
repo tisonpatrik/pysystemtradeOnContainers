@@ -4,12 +4,7 @@ It makes use of DataLoadService for database operations and DateTimeService for 
 """
 import logging
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.common_utils.utils.data_aggregation.dataframe_to_series import (
-    convert_dataframe_to_dict_of_series,
-)
-from src.db.services.data_load_service import DataLoadService
+from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
 from src.risk.services.robust_volatility_service import RobustVolatilityService
 
@@ -23,24 +18,20 @@ class RobustVolatilityHandler:
     Utilizes DataLoadService for database-related operations and DateTimeService for date-time data manipulation.
     """
 
-    def __init__(self, db_session: AsyncSession):
-        self.data_load_service = DataLoadService(db_session)
+    def __init__(self, db_session):
+        self.db_session = db_session
         self.risk_schema = RobustVolatilitySchema()
         self.robust_volatility_service = RobustVolatilityService()
-        self.source_table = "adjusted_prices"
 
-    async def insert_robust_volatility_async(self):
+    async def insert_robust_volatility_async(
+        self,
+    ):
         """
         Asynchronously fetches data from the specified table, performs date-time conversion,
         and returns a Pandas Series containing the robust volatility data.
         """
-        data_frames = await self.data_load_service.fetch_all_from_table_to_dataframe(
-            self.source_table
-        )
-
-        series_dict = convert_dataframe_to_dict_of_series(
-            data_frames, self.risk_schema.symbol_table, self.risk_schema.datetime_table
-        )
+        adjusted_service = AdjustedPricesService(self.db_session)
+        series_dict = await adjusted_service.get_adjusted_prices_async()
         for symbol, serie in series_dict.items():
             risk = self.robust_volatility_service.calculate_volatility_for_instrument(
                 serie
