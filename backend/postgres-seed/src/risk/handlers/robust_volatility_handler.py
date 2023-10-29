@@ -10,7 +10,7 @@ from src.db.services.data_load_service import DataLoadService
 from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
 from src.risk.services.robust_volatility_service import RobustVolatilityService
 from src.common_utils.utils.data_aggregation.dataframe_to_series import (
-    convert_dataframe_to_list_of_series,
+    convert_dataframe_to_dict_of_series,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -38,7 +38,7 @@ class RobustVolatilityHandler:
             self.source_table
         )
 
-        series_dict = convert_dataframe_to_list_of_series(
+        series_dict = convert_dataframe_to_dict_of_series(
             data_frames, self.risk_schema.symbol_table, self.risk_schema.datetime_table
         )
         for symbol, serie in series_dict.items():
