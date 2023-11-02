@@ -19,12 +19,9 @@ def robust_vol_calc(
     days: int = 35,
     min_periods: int = 10,
     vol_abs_min: float = 0.0000000001,
-    vol_floor: bool = True,
     floor_min_quant: float = 0.05,
     floor_min_periods: int = 100,
     floor_days: int = 500,
-    backfill: bool = False,
-    **ignored_kwargs,
 ) -> pd.Series:
     """
     Robust exponential volatility calculation, assuming daily series of prices
@@ -120,8 +117,6 @@ def mixed_vol_calc(
     slow_vol_years: int = 20,
     proportion_of_slow_vol: float = 0.3,
     vol_abs_min: float = 0.0000000001,
-    backfill: bool = False,
-    **ignored_kwargs,
 ) -> pd.Series:
     """
     Robust exponential volatility calculation, assuming daily series of prices
@@ -164,15 +159,8 @@ def mixed_vol_calc(
 
     slow_vol_days = slow_vol_years * BUSINESS_DAYS_IN_YEAR
     long_vol = vol.ewm(slow_vol_days).mean()
-
     vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
-
     vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
-
-    if backfill:
-        # use the first vol in the past, sort of cheating
-        vol = backfill_vol(vol)
-
     return vol
 
 

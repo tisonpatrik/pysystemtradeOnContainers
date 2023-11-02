@@ -6,7 +6,7 @@ and encapsulating the data into a DataFrameContainer object.
 import pandas as pd
 
 from src.common_utils.utils.column_operations.rename_columns import rename_columns
-from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.models.files_mapping import FileTableMapping
 from src.raw_data.utils.csv_loader import load_csv
 from src.raw_data.utils.path_validator import get_full_path
 

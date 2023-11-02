@@ -11,7 +11,7 @@ from src.common_utils.utils.data_aggregation.dataframe_to_series import (
     convert_dataframe_to_dict_of_series,
 )
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.schemas.adjusted_prices_schema import AdjustedPricesSchema
+from src.raw_data.schemas.adjusted_prices import AdjustedPrices
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,7 +27,6 @@ class AdjustedPricesService:
         Initialize the service with a database session.
         """
         self.data_loader_service = DataLoadService(db_session)
-        self.schema = AdjustedPricesSchema()
 
     async def get_adjusted_prices_async(self) -> dict[str, pd.Series]:
         """
@@ -35,10 +34,10 @@ class AdjustedPricesService:
         """
         try:
             data = await self.data_loader_service.fetch_all_from_table_to_dataframe(
-                self.schema.table_name
+                AdjustedPrices.__tablename__
             )
             series = convert_dataframe_to_dict_of_series(
-                data, self.schema.symbol_column, self.schema.index_column
+                data, AdjustedPrices.symbol.key, AdjustedPrices.unix_date_time.key
             )
             return series
         except Exception as error:

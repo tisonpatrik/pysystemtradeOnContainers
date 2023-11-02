@@ -6,8 +6,8 @@ import logging
 from typing import List
 
 from src.raw_data.errors.table_to_db_errors import InvalidFileNameError, ProcessingError
-from src.raw_data.schemas.data_frame_container import DataFrameContainer
-from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.models.data_frame_container import DataFrameContainer
+from src.raw_data.models.files_mapping import FileTableMapping
 from src.raw_data.services.seed_services.config_files_service import ConfigFilesService
 from src.raw_data.services.seed_services.prices_service import PricesService
 from src.raw_data.services.seed_services.rollcalendars_service import (

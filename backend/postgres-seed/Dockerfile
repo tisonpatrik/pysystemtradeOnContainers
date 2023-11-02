@@ -32,7 +32,6 @@ ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
 # Copying the source code to the working directory
 COPY postgres-seed/src ./src
 COPY postgres-seed/tests ./tests
-COPY postgres-seed/alembic ./alembic
 COPY postgres-seed/db ./db
 COPY postgres-seed/mappings ./mappings
 

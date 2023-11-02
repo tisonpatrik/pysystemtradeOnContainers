@@ -49,7 +49,7 @@ class RobustVolatilityHandler:
         """
         try:
             processed_data_frames = [
-                self.robust_volatility_service.calculate_volatility_for_instrument(
+                self.robust_volatility_service.calculate_robust_volatility_for_instrument(
                     series, symbol
                 )
                 for symbol, series in series_dict.items()

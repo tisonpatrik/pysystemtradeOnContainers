@@ -6,8 +6,8 @@ import logging
 
 from src.raw_data.errors.table_to_db_errors import ProcessingError
 from src.raw_data.operations.config_files_operations import process_config_files_table
-from src.raw_data.schemas.data_frame_container import DataFrameContainer
-from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.models.data_frame_container import DataFrameContainer
+from src.raw_data.models.files_mapping import FileTableMapping
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

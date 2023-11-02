@@ -9,8 +9,8 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.prices_operations import process_single_csv_file
-from src.raw_data.schemas.data_frame_container import DataFrameContainer
-from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.models.data_frame_container import DataFrameContainer
+from src.raw_data.models.files_mapping import FileTableMapping
 from src.raw_data.utils.csv_loader import get_csv_files_from_directory
 
 logging.basicConfig(level=logging.INFO)

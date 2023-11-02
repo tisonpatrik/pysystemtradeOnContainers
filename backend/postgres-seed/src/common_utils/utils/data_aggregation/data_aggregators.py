@@ -21,7 +21,7 @@ def aggregate_to_day_based_prices(
         # Set DATETIME as index
         series = data_frame.set_index(date_time_column)
         # Resample to daily frequency using the mean of the prices for each day
-        result = series.resample("D").mean().dropna().reset_index()
+        result = series.resample("1B").last().dropna().reset_index()
         return result
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)

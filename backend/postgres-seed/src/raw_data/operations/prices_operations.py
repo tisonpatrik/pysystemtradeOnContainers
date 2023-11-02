@@ -19,7 +19,7 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_datetime_to_unixtime,
 )
-from src.raw_data.schemas.files_mapping import FileTableMapping
+from src.raw_data.models.files_mapping import FileTableMapping
 from src.raw_data.utils.data_preprocessing import preprocess_raw_data
 
 

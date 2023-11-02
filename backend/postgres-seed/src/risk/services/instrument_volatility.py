@@ -1,39 +1,19 @@
-"""Module for calculating robust volatility for financial instruments."""
-
 import logging
-
 import pandas as pd
 
-# pylint: disable=import-error
-from shared.src.estimators.volatility import robust_vol_calc
-
-from src.common_utils.utils.column_operations.add_and_populate_column import (
-    add_column_and_populate_it_by_value,
-)
-from src.common_utils.utils.column_operations.rename_columns import rename_columns
-from src.common_utils.utils.date_time_operations.date_time_convertions import (
-    convert_datetime_to_unixtime,
-)
-from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
+from src.risk.schemas.instrument_volatility_schema import InstrumentVolatilitySchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class RobustVolatilityService:
-    """
-    Service for calculating robust volatility of financial instruments.
-    """
-
+class InstrumentVolatilityService:
     def __init__(self):
-        self.risk_schema = RobustVolatilitySchema()
+        self.risk_schema = InstrumentVolatilitySchema()
 
-    def calculate_robust_volatility_for_instrument(
+    def calculate_instrument_volatility_for_instrument(
         self, series: pd.Series, symbol: str
     ) -> pd.DataFrame:
-        """
-        Calculates the volatility of a given financial instrument represented by a Pandas Series.
-        """
         try:
             volatility = robust_vol_calc(series).dropna()
             data_frame = pd.DataFrame(volatility)
