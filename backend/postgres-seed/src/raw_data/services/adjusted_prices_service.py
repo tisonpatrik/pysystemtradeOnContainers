@@ -11,7 +11,7 @@ from src.common_utils.utils.data_aggregation.dataframe_to_series import (
     convert_dataframe_to_dict_of_series,
 )
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.schemas.adjusted_prices import AdjustedPrices
+from src.raw_data.schemas.raw_data_schemas import AdjustedPrices
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

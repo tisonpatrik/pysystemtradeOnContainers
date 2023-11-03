@@ -6,27 +6,23 @@ import pandas as pd
 
 # pylint: disable=import-error
 from shared.src.estimators.volatility import robust_vol_calc
+from src.common_utils.utils.data_to_db.series_to_frame import (
+    process_series_to_frame,
+)
 
-from src.common_utils.utils.column_operations.add_and_populate_column import (
-    add_column_and_populate_it_by_value,
-)
-from src.common_utils.utils.column_operations.rename_columns import rename_columns
-from src.common_utils.utils.date_time_operations.date_time_convertions import (
-    convert_datetime_to_unixtime,
-)
-from src.risk.schemas.robust_volatility_schema import RobustVolatilitySchema
+
+from src.raw_data.schemas.risk_schemas import RobustVolatility
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+ROBUST_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
 
 
 class RobustVolatilityService:
     """
     Service for calculating robust volatility of financial instruments.
     """
-
-    def __init__(self):
-        self.risk_schema = RobustVolatilitySchema()
 
     def calculate_robust_volatility_for_instrument(
         self, series: pd.Series, symbol: str
@@ -36,16 +32,10 @@ class RobustVolatilityService:
         """
         try:
             volatility = robust_vol_calc(series).dropna()
-            data_frame = pd.DataFrame(volatility)
-            data_frame.reset_index(inplace=True)
-            renamed = rename_columns(data_frame, self.risk_schema.columns)
-            unix_timed = convert_datetime_to_unixtime(
-                renamed, self.risk_schema.index_column
+            data_frame = process_series_to_frame(
+                volatility, symbol, RobustVolatility, ROBUST_VOLATILITY_COLUMN_MAPPING
             )
-            populated = add_column_and_populate_it_by_value(
-                unix_timed, "symbol", symbol
-            )
-            return populated
+            return data_frame
         except Exception as error:
             logger.error(
                 "Failed to calculate volatility for instrument %s: %s",

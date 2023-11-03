@@ -1,31 +1,34 @@
 import logging
+
 import pandas as pd
 
-from src.risk.schemas.instrument_volatility_schema import InstrumentVolatilitySchema
+# pylint: disable=import-error
+from shared.src.estimators.instrument_volatility import get_instrument_currency_vol
+from src.common_utils.utils.data_to_db.series_to_frame import (
+    process_series_to_frame,
+)
+
+from src.raw_data.schemas.risk_schemas import InstrumentVolatility
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+INSTRUMENT_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
+
 
 class InstrumentVolatilityService:
-    def __init__(self):
-        self.risk_schema = InstrumentVolatilitySchema()
-
     def calculate_instrument_volatility_for_instrument(
         self, series: pd.Series, symbol: str
     ) -> pd.DataFrame:
         try:
-            volatility = robust_vol_calc(series).dropna()
-            data_frame = pd.DataFrame(volatility)
-            data_frame.reset_index(inplace=True)
-            renamed = rename_columns(data_frame, self.risk_schema.columns)
-            unix_timed = convert_datetime_to_unixtime(
-                renamed, self.risk_schema.index_column
+            volatility = get_instrument_currency_vol(series).dropna()
+            data_frame = process_series_to_frame(
+                volatility,
+                symbol,
+                InstrumentVolatility,
+                INSTRUMENT_VOLATILITY_COLUMN_MAPPING,
             )
-            populated = add_column_and_populate_it_by_value(
-                unix_timed, "symbol", symbol
-            )
-            return populated
+            return data_frame
         except Exception as error:
             logger.error(
                 "Failed to calculate volatility for instrument %s: %s",
