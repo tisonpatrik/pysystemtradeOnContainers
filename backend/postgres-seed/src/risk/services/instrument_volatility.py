@@ -18,10 +18,16 @@ INSTRUMENT_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
 
 class InstrumentVolatilityService:
     def calculate_instrument_volatility_for_instrument(
-        self, series: pd.Series, symbol: str
+        self,
+        multiple_prices: pd.Series,
+        adjusted_prices: pd.Series,
+        symbol: str,
+        poinsize: float,
     ) -> pd.DataFrame:
         try:
-            volatility = get_instrument_currency_vol(series).dropna()
+            volatility = get_instrument_currency_vol(
+                multiple_prices, adjusted_prices, poinsize
+            ).dropna()
             data_frame = process_series_to_frame(
                 volatility,
                 symbol,
