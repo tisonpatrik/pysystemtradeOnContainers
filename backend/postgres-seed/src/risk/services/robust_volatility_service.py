@@ -10,8 +10,7 @@ from src.common_utils.utils.data_to_db.series_to_frame import (
     process_series_to_frame,
 )
 
-
-from src.raw_data.schemas.risk_schemas import RobustVolatility
+from src.risk.schemas.risk_schemas import RobustVolatility
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
