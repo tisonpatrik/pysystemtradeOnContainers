@@ -115,7 +115,7 @@ def mixed_vol_calc(
     days: int = 35,
     min_periods: int = 10,
     slow_vol_years: int = 20,
-    proportion_of_slow_vol: float = 0.3,
+    proportion_of_slow_vol: float = 0.35,
     vol_abs_min: float = 0.0000000001,
 ) -> pd.Series:
     """

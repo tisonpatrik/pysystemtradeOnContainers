@@ -36,15 +36,13 @@ def get_daily_percentage_volatility(
 
 
 def daily_returns_volatility(daily_prices: pd.Series) -> pd.Series:
-    volconfig = copy(config.volatility_calculation)
-
     price_returns = daily_returns(daily_prices)
 
     # volconfig contains 'func' and some other arguments
     # we turn func which could be a string into a function, and then
     # call it with the other ags
-    vol_multiplier = volconfig.pop("multiplier_to_get_daily_vol")
-    raw_vol = mixed_vol_calc(price_returns, **volconfig)
+    vol_multiplier = 1
+    raw_vol = mixed_vol_calc(price_returns)
     vol = vol_multiplier * raw_vol
 
     return vol
