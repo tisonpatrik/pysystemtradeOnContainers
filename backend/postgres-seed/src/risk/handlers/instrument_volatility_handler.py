@@ -1,7 +1,3 @@
-"""
-This module defines a handler class for inserting robust volatility data into a database.
-It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
-"""
 import logging
 
 from src.common_utils.utils.data_aggregation.data_aggregators import (
@@ -9,24 +5,19 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
 )
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.risk.services.robust_volatility_service import RobustVolatilityService
-from src.raw_data.schemas.risk_schemas import RobustVolatility
+from src.risk.services.instrument_volatility import InstrumentVolatilityService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class RobustVolatilityHandler:
-    """
-    Handler class responsible for inserting robust volatility data into the database.
-    Utilizes DataLoadService for database-related operations and DateTimeService for date-time data manipulation.
-    """
-
     def __init__(self, db_session):
         self.db_session = db_session
-        self.robust_volatility_service = RobustVolatilityService()
+        self.instrument_volatility_service = InstrumentVolatilityService()
         self.data_inserter = DataInsertService(db_session)
         self.adjusted_service = AdjustedPricesService(self.db_session)
+        self.table_name = "robust_volatility"
 
     async def insert_robust_volatility_async(self):
         """
@@ -34,25 +25,34 @@ class RobustVolatilityHandler:
         performs date-time conversion, and inserts robust volatility data.
         """
         try:
-            series_dict = await self.adjusted_service.get_adjusted_prices_async()
-            concatenated_data_frame = await self._process_volatility_data(series_dict)
+            adjusted_prices = await self.adjusted_service.get_adjusted_prices_async()
+            denominator_prices = (
+                await self.multiple_prices_service.get_denominator_prices_async()
+            )
+            point_sizes = await self.config_data_service.get_point_sizes_async()
+            concatenated_data_frame = await self._process_volatility_data(
+                denominator_prices, adjusted_prices, point_sizes
+            )
+
             await self.data_inserter.async_insert_dataframe_to_table(
-                concatenated_data_frame, RobustVolatility.__tablename__
+                concatenated_data_frame, self.table_name
             )
         except Exception as error:
             logger.error("Failed to insert robust volatility data: %s", error)
             raise
 
-    async def _process_volatility_data(self, series_dict):
+    async def _process_volatility_data(
+        self, denominator_prices, adjusted_prices_series, point_sizes
+    ):
         """
         Processes volatility data for various financial instruments.
         """
         try:
             processed_data_frames = [
-                self.robust_volatility_service.calculate_robust_volatility_for_instrument(
-                    series, symbol
+                self.instrument_volatility_service.calculate_instrument_volatility_for_instrument(
+                    denominator_prices, adjusted_prices_serie, symbol, point_size
                 )
-                for symbol, series in series_dict.items()
+                for symbol, denominator_prices, adjusted_prices_serie, point_size in adjusted_prices_series.items()
             ]
 
             return concatenate_data_frames(processed_data_frames)
