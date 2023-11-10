@@ -40,5 +40,4 @@ def process_single_csv_file(
         aggregated_data, date_time_column
     )
     rounded_data = round_values_in_column(unix_time_converted_data, price_column)
-
     return add_column_and_populate_it_by_value(rounded_data, symbol_column, symbol_name)

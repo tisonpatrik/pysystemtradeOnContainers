@@ -27,9 +27,6 @@ class DataLoadService:
         """
         empty_df = pd.DataFrame()
         try:
-            logger.info(
-                f"Starting to fetch data from table {table_name} for symbol {symbol_value}"
-            )
             # Use parameterized queries to prevent SQL injection
             query_str = f"SELECT * FROM {table_name} WHERE symbol = :symbol_value"
 
@@ -43,9 +40,6 @@ class DataLoadService:
 
             # Check if rows were fetched; if not, return the empty DataFrame
             if not rows:
-                logger.info(
-                    f"No data found for symbol {symbol_value} in table {table_name}"
-                )
                 return empty_df
 
             # Create a Pandas DataFrame from the fetched data

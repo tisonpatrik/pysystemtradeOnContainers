@@ -13,7 +13,6 @@ def get_instrument_currency_vol(
     (block_value, daily_perc_vol) = block_value.align(daily_perc_vol, join="inner")
 
     instr_ccy_vol = block_value.ffill() * daily_perc_vol
-
     return instr_ccy_vol
 
 

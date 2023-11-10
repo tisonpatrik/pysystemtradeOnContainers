@@ -17,13 +17,12 @@ INSTRUMENT_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
 
 
 class InstrumentVolatilityService:
-    
     def calculate_instrument_volatility_for_instrument(
         self,
         multiple_prices: pd.Series,
         adjusted_prices: pd.Series,
-        symbol: str,
         poinsize: float,
+        symbol: str,
     ) -> pd.DataFrame:
         try:
             volatility = get_instrument_currency_vol(
@@ -39,7 +38,6 @@ class InstrumentVolatilityService:
         except Exception as error:
             logger.error(
                 "Failed to calculate volatility for instrument %s: %s",
-                symbol,
                 error,
                 exc_info=True,
             )

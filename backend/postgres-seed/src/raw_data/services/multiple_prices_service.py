@@ -38,9 +38,9 @@ class MultiplePricesService:
                 return pd.Series()
 
             data = data[[MultiplePrices.unix_date_time.key, MultiplePrices.price.key]]
-            series = convert_dataframe_to_serie(
-                data, MultiplePrices.symbol.key, MultiplePrices.unix_date_time.key
-            )
+            series = convert_dataframe_to_serie(data, MultiplePrices.unix_date_time.key)
+            print(symbol)
+            print(series)
             return series
         except Exception as error:
             logger.error(

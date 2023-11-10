@@ -25,7 +25,7 @@ def round_values_in_column(
     """
     try:
         check_single_missing_column(data_frame, column_to_round)
-        data_frame[column_to_round] = data_frame[column_to_round].round(1)
+        data_frame[column_to_round] = data_frame[column_to_round].round(2)
     except Exception as error:
         logger.error("An unexpected error occurred: %s", error)
         raise ColumnRoundingError(

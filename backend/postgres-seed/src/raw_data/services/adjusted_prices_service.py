@@ -56,9 +56,7 @@ class AdjustedPricesService:
                 logger.info(f"No data found for symbol: {symbol}")
                 return pd.Series()
             data = data[[AdjustedPrices.unix_date_time.key, AdjustedPrices.price.key]]
-            series = convert_dataframe_to_serie(
-                data, AdjustedPrices.symbol.key, AdjustedPrices.unix_date_time.key
-            )
+            series = convert_dataframe_to_serie(data, AdjustedPrices.unix_date_time.key)
             return series
         except Exception as error:
             logger.error(
