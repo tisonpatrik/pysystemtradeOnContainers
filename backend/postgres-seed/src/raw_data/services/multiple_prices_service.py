@@ -17,9 +17,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class AdjustedPricesService:
+class MultiplePricesService:
     """
-    Service for dealing with operations related to denominator prices.
+    Service for dealing with operations related to multiple prices.
     """
 
     def __init__(self, db_session: AsyncSession):
@@ -30,7 +30,7 @@ class AdjustedPricesService:
         Asynchronously fetches denominator prices by symbol and returns them as Pandas Series.
         """
         try:
-            data = await self.data_loader_service.fetch_data_from_table_by_symbol(
+            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 MultiplePrices.__tablename__, symbol
             )
             if data.empty:

@@ -49,7 +49,7 @@ class AdjustedPricesService:
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            data = await self.data_loader_service.fetch_data_from_table_by_symbol(
+            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 AdjustedPrices.__tablename__, symbol
             )
             if data.empty:

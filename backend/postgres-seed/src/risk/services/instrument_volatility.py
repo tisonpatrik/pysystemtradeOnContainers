@@ -17,6 +17,7 @@ INSTRUMENT_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
 
 
 class InstrumentVolatilityService:
+    
     def calculate_instrument_volatility_for_instrument(
         self,
         multiple_prices: pd.Series,
