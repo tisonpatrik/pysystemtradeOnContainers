@@ -43,7 +43,6 @@ def convert_group_to_series(
 def convert_dataframe_to_dict_of_series(
     data_frame: pd.DataFrame, symbol_column: str, index_column: str
 ) -> dict[str, pd.Series]:
-    """Converts the DataFrame to a dictionary of pandas Series."""
     logger.info("Processing dataframes to series")
     check_single_missing_column(data_frame, symbol_column)
     check_single_missing_column(data_frame, index_column)
@@ -63,3 +62,16 @@ def convert_dataframe_to_dict_of_series(
         raise DataFrameConversionError(exc) from exc
 
     return series_dict
+
+
+def convert_dataframe_to_serie(
+    data_frame: pd.DataFrame, symbol_column: str, index_column: str
+) -> pd.Series:
+    """Converts the DataFrame to pandas Series."""
+    check_single_missing_column(data_frame, symbol_column)
+    check_single_missing_column(data_frame, index_column)
+
+    time_converted = convert_column_to_datetime(data_frame, index_column, "s")
+    series = time_converted.set_index(index_column).squeeze()
+
+    return series

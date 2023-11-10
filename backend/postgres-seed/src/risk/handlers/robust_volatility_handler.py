@@ -10,7 +10,7 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.services.robust_volatility_service import RobustVolatilityService
-from src.risk.schemas.risk_schemas import RobustVolatility
+from src.core.models.risk_schemas import RobustVolatility
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
