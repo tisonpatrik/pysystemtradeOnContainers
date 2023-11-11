@@ -31,6 +31,9 @@ def get_daily_percentage_volatility(
     (denom_price, return_vol) = denom_price.align(return_vol, join="right")
     perc_vol = 100.0 * (return_vol / denom_price.ffill().abs())
 
+    # print(denom_price)
+    # print(return_vol)
+    # print(perc_vol)
     return perc_vol
 
 

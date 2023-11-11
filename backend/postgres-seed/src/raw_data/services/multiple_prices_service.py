@@ -39,8 +39,10 @@ class MultiplePricesService:
 
             data = data[[MultiplePrices.unix_date_time.key, MultiplePrices.price.key]]
             series = convert_dataframe_to_serie(data, MultiplePrices.unix_date_time.key)
-            print(symbol)
-            print(series)
+            if symbol == "CORN":
+                print(symbol)
+                print(data)
+                print(series)
             return series
         except Exception as error:
             logger.error(

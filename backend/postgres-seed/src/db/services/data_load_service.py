@@ -59,7 +59,6 @@ class DataLoadService:
         Asynchronously fetches all data from a specified table into a Pandas DataFrame.
         """
         try:
-            logger.info("Starting to fetch data from table %s", table_name)
             # Write raw SQL query string
             query_str = f"SELECT * FROM {table_name}"
 
