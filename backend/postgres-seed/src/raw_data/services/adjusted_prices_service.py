@@ -53,7 +53,6 @@ class AdjustedPricesService:
                 AdjustedPrices.__tablename__, symbol
             )
             if data.empty:
-                logger.info(f"No data found for symbol: {symbol}")
                 return pd.Series()
             data = data[[AdjustedPrices.unix_date_time.key, AdjustedPrices.price.key]]
             series = convert_dataframe_to_serie(data, AdjustedPrices.unix_date_time.key)

@@ -30,6 +30,7 @@ async def seed_robust_volatility_data(db_session: AsyncSession = Depends(get_db)
     """
     try:
         # Business logic is in a separate handler
+        logger.info("Seed of robust volatility data was started.")
         seed_db_handler = RobustVolatilityHandler(db_session)
         await seed_db_handler.insert_robust_volatility_async()
 
@@ -57,6 +58,7 @@ async def seed_instrument_volatility_data(db_session: AsyncSession = Depends(get
     Fills the instrument volatility table with data.
     """
     try:
+        logger.info("Seed of instrument volatility data was started.")
         # Business logic is in a separate handler
         seed_db_handler = InstrumentVolatilityHandler(db_session)
         await seed_db_handler.insert_robust_volatility_async()
