@@ -23,7 +23,8 @@ pandas = "^2.0.3"
 pytest-mock = "^3.11.1"
 aiofiles = "^23.2.1"
 aiocsv = "^1.2.4"
-rich = "*"
+rich = "^13.6.0"
+
 
 [tool.poetry.dev-dependencies]
 devtools = { extras = ["pygments"], version = "*" }
