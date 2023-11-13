@@ -38,8 +38,6 @@ class DataInsertService:
                 )
             )
             await self.db_session.commit()
-            self.logger.info("Data successfully inserted into %s", table_name)
-
         except (
             DataFrameInsertError,
             TransactionCommitError,

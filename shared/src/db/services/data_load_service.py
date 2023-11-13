@@ -1,14 +1,11 @@
 """
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
-import logging
+from shared.src.utils.logging import AppLogger
 
 import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 class DataLoadService:
@@ -18,6 +15,7 @@ class DataLoadService:
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
+        self.logger = AppLogger.get_instance().get_logger()
 
     async def fetch_raw_data_from_table_by_symbol(
         self, table_name: str, symbol_value: str
@@ -48,7 +46,7 @@ class DataLoadService:
             return df_result
 
         except Exception as error:
-            logger.error(
+            self.logger.error(
                 f"Failed to fetch data from table {table_name}: {error}", exc_info=True
             )
             # Return the empty DataFrame instead of raising the exception to handle the error gracefully
@@ -73,7 +71,7 @@ class DataLoadService:
             return df_result
 
         except Exception as error:
-            logger.error(
+            self.logger.error(
                 "Failed to fetch data from table %s: %s",
                 table_name,
                 error,

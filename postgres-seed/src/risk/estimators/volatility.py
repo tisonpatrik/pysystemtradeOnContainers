@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from src.roberts_files.core.dateutils import BUSINESS_DAYS_IN_YEAR
-from src.roberts_files.core.pandas.frequency import (
+from src.risk.core.dateutils import BUSINESS_DAYS_IN_YEAR
+from src.risk.core.pandas.frequency import (
     resample_prices_to_business_day_index,
 )
 

@@ -11,7 +11,7 @@ from collections.abc import AsyncGenerator
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from shared.src.db.settings.config import settings as global_settings
-from src.utils.logging import AppLogger
+from shared.src.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 
