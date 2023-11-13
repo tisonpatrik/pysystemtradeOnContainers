@@ -1,4 +1,4 @@
-# backend/postgres-seed/Dockerfile
+# backend//Dockerfile
 # Using the specified Python version
 FROM python:3.12-slim-bookworm AS base
 
@@ -11,12 +11,12 @@ RUN apt-get update \
 WORKDIR /home/app
 
 # Copying the poetry dependency files to the working directory
-COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* ./
+COPY /pyproject.toml /poetry.lock* ./
 
 # Copying the source code to the working directory
-COPY postgres-seed/src ./src
-COPY postgres-seed/tests ./tests
-COPY postgres-seed/mappings ./mappings
+COPY /src ./src
+COPY /tests ./tests
+COPY /mappings ./mappings
 
 # Additionally, copy the shared directory
 COPY shared/src ./shared/src
