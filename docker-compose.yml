@@ -1,22 +1,22 @@
-# backend/postgres-seed/docker-compose.yml  
+# backend/DataManagement/docker-compose.yml
 version: "3.9"
 
 services:
-  postgres-seed:
+  DataManagement:
     build:
-      context: ..
-      dockerfile: postgres-seed/Dockerfile
-    hostname: postgres-seed
-    container_name: postgres-seed
+      context: ./DataManagement
+      dockerfile: Dockerfile
+    hostname: DataManagement
+    container_name: DataManagement
     depends_on:
       - db_postgres
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./DataManagement/.env
     volumes:
-      - ${SRC_PATH}:/home/app/src
-      - ${DATA_PATH}:/path/in/container:rw
+      - ./DataManagement/src:/home/app/src
+      - ./DataManagement/data:/home/app/data:rw
 
   db_postgres:
     image: postgres:15.3
@@ -24,7 +24,7 @@ services:
     hostname: db_postgres
     restart: on-failure
     env_file:
-      - .env
+      - ./DataManagement/.env
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -33,8 +33,7 @@ services:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
-      - ${DATA_PATH}:/path/in/container
-    
+      - ./DataManagement/data:/home/app/data
 
   pg-admin:
     image: dpage/pgadmin4
@@ -42,7 +41,6 @@ services:
       - PGADMIN_DEFAULT_EMAIL=admin@email.com
       - PGADMIN_DEFAULT_PASSWORD=admin
       - PGADMIN_LISTEN_PORT=5050
-
     ports:
       - "5050:5050"
 

@@ -1,6 +1,6 @@
 # backend/postgres-seed/Dockerfile
 # Using the specified Python version
-FROM python:3.10-slim-bookworm AS base
+FROM python:3.12-slim-bookworm AS base
 
 RUN apt-get update \
     && apt-get upgrade -y \

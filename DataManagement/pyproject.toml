@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "postgres-seed"
+name = "DataManagement"
 version = "0.1.0"
 description = ""
 authors = ["PatrikTison <patriktison@gmail.com>"]
