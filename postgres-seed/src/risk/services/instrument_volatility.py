@@ -3,7 +3,9 @@ import logging
 import pandas as pd
 
 # pylint: disable=import-error
-from shared.src.estimators.instrument_volatility import get_instrument_currency_vol
+from src.roberts_files.estimators.instrument_volatility import (
+    get_instrument_currency_vol,
+)
 from src.common_utils.utils.data_to_db.series_to_frame import (
     process_series_to_frame,
 )

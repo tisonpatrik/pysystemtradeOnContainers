@@ -18,9 +18,6 @@ COPY postgres-seed/src ./src
 COPY postgres-seed/tests ./tests
 COPY postgres-seed/mappings ./mappings
 
-# Copying the shared directory into the container
-COPY ../shared /home/app/shared
-
 # Installing poetry and the project dependencies
 RUN pip install poetry
 
@@ -37,8 +34,6 @@ RUN apt-get purge -y curl git build-essential \
     && rm -rf /var/cache/apt/*
 
 ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
-
-
 
 # Specifying the default command to run the FastAPI app with uvicorn
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

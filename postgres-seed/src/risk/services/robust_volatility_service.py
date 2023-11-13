@@ -5,7 +5,7 @@ import logging
 import pandas as pd
 
 # pylint: disable=import-error
-from shared.src.estimators.volatility import robust_vol_calc
+from src.roberts_files.estimators.volatility import robust_vol_calc
 from src.common_utils.utils.data_to_db.series_to_frame import (
     process_series_to_frame,
 )
