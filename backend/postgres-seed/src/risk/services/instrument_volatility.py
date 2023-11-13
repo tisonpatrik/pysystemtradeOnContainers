@@ -20,14 +20,14 @@ class InstrumentVolatilityService:
     def calculate_instrument_volatility_for_instrument(
         self,
         multiple_prices: pd.Series,
-        adjusted_prices: pd.Series,
+        daily_prices: pd.Series,
         poinsize: float,
         symbol: str,
     ) -> pd.DataFrame:
         try:
             volatility = get_instrument_currency_vol(
-                multiple_prices, adjusted_prices, poinsize
-            ).dropna()
+                multiple_prices, daily_prices, poinsize
+            )
             data_frame = process_series_to_frame(
                 volatility,
                 symbol,

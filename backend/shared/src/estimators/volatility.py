@@ -117,7 +117,9 @@ def mixed_vol_calc(
     slow_vol_years: int = 20,
     proportion_of_slow_vol: float = 0.35,
     vol_abs_min: float = 0.0000000001,
+    backfill: bool = True,
 ) -> pd.Series:
+    # slow_vol_years can be also 20. need to be discovered
     """
     Robust exponential volatility calculation, assuming daily series of prices
     We apply an absolute minimum level of vol (absmin);
@@ -156,11 +158,13 @@ def mixed_vol_calc(
 
     # Standard deviation will be nan for first 10 non nan values
     vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
-
     slow_vol_days = slow_vol_years * BUSINESS_DAYS_IN_YEAR
     long_vol = vol.ewm(slow_vol_days).mean()
     vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
     vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
+    if backfill:
+        # use the first vol in the past, sort of cheating
+        vol = backfill_vol(vol)
     return vol
 
 

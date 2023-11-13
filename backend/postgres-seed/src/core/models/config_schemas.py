@@ -1,7 +1,5 @@
 from sqlalchemy import Column, String, Float, Integer, Text
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
+from src.core.models.base_model import Base
 
 
 class InstrumentConfig(Base):

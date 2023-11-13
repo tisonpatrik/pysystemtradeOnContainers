@@ -1,4 +1,5 @@
 import logging
+import pandas as pd
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_series import InstrumentConfigService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
@@ -29,9 +30,11 @@ class InstrumentVolatilityHandler:
         performs date-time conversion, and inserts robust volatility data.
         """
         try:
-            symbols = await self.files_configs_service.get_list_of_symbols_async()
+            # symbols = await self.files_configs_service.get_list_of_symbols_async()
+            symbols = pd.DataFrame({"symbol": ["AEX"]})
             for symbol in symbols.itertuples(index=False):
                 symbol = symbol.symbol
+
                 adjusted_prices = await self.adjusted_service.get_daily_prices_async(
                     symbol
                 )

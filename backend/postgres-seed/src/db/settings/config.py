@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     database_url: PostgresDsn = os.getenv("DB_URL")  # type: ignore
     test_database_url: PostgresDsn = os.getenv("TEST_DB_URL")  # type: ignore
+    db_sync_url: PostgresDsn = os.getenv("DB_SYNC_URL")  # type: ignore
 
 
 # Create an instance of the GlobalConfig class.
