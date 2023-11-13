@@ -36,10 +36,10 @@
 #     return pd.concat([x[:rows], x[-rows:]], axis=0)
 
 
-# def sum_series(list_of_series: List[pd.Series], bfill=True) -> pd.Series:
+# def sum_series(list_of_series: List[pd.Series], ffill=True) -> pd.Series:
 #     list_of_series_as_df = pd.concat(list_of_series, axis=1)
-#     if bfill:
-#         list_of_series_as_df = list_of_series_as_df.bfill()
+#     if ffill:
+#         list_of_series_as_df = list_of_series_as_df.ffill()
 
 #     sum_of_series = list_of_series_as_df.sum(axis=1)
 
@@ -321,7 +321,7 @@
 
 # ### unused but might be useful
 # def from_series_to_matching_df_frame(
-#     pd_series: pd.Series, pd_df_to_match: pd.DataFrame, method="bfill"
+#     pd_series: pd.Series, pd_df_to_match: pd.DataFrame, method="ffill"
 # ) -> pd.DataFrame:
 #     list_of_columns = list(pd_df_to_match.columns)
 #     new_df = from_series_to_df_with_column_names(pd_series, list_of_columns)

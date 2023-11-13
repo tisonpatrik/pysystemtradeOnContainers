@@ -94,7 +94,7 @@ def apply_vol_floor(
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
     vol_min.iloc[0] = 0.0
-    vol_min.bfill(inplace=True)
+    vol_min.ffill(inplace=True)
 
     # apply the vol floor
     vol_floored = pd.Series(np.maximum(vol, vol_min), index=vol.index)

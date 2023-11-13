@@ -11,14 +11,14 @@ def get_instrument_currency_vol(
     ## FIXME WHY NOT RESAMPLE?
     (block_value, daily_perc_vol) = block_value.align(daily_perc_vol, join="inner")
 
-    instr_ccy_vol = block_value.bfill() * daily_perc_vol
+    instr_ccy_vol = block_value.ffill() * daily_perc_vol
     return instr_ccy_vol
 
 
 def get_block_value(
     underlying_price: pd.Series, value_of_price_move: float
 ) -> pd.Series:
-    block_value = underlying_price.bfill() * value_of_price_move * 0.01
+    block_value = underlying_price.ffill() * value_of_price_move * 0.01
 
     return block_value
 
@@ -29,7 +29,7 @@ def get_daily_percentage_volatility(
     return_vol = daily_returns_volatility(daily_prices)
 
     (denom_price, return_vol) = denom_price.align(return_vol, join="right")
-    perc_vol = 100.0 * (return_vol / denom_price.bfill().abs())
+    perc_vol = 100.0 * (return_vol / denom_price.ffill().abs())
     return perc_vol
 
 
