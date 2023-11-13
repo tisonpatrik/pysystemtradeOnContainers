@@ -9,7 +9,7 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.settings.database import get_db
+from shared.src.db.settings.database import get_db
 from src.risk.handlers.robust_volatility_handler import RobustVolatilityHandler
 from src.risk.handlers.instrument_volatility_handler import InstrumentVolatilityHandler
 

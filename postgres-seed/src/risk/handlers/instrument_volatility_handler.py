@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from src.db.services.data_insert_service import DataInsertService
+from shared.src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_series import InstrumentConfigService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService

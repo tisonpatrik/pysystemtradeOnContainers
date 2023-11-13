@@ -18,6 +18,9 @@ COPY postgres-seed/src ./src
 COPY postgres-seed/tests ./tests
 COPY postgres-seed/mappings ./mappings
 
+# Additionally, copy the shared directory
+COPY shared/src ./shared/src
+
 # Installing poetry and the project dependencies
 RUN pip install poetry
 
@@ -26,7 +29,6 @@ RUN poetry config virtualenvs.create false \
     && poetry install --only main
 
 # cleanup
-#RUN curl -sSL https://install.python-poetry.org | python3 - --uninstall
 RUN apt-get purge -y curl git build-essential \
     && apt-get clean -y \
     && rm -rf /root/.cache \

@@ -7,7 +7,7 @@ import logging
 from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
-from src.db.services.data_insert_service import DataInsertService
+from shared.src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.services.robust_volatility_service import RobustVolatilityService
 from src.core.models.risk_schemas import RobustVolatility

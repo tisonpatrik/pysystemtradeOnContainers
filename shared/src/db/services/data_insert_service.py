@@ -6,7 +6,7 @@ from shared.src.utils.logging import AppLogger
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.errors.data_insert_service_errors import (
+from shared.src.db.errors.data_insert_service_errors import (
     DataFrameInsertError,
     TransactionCommitError,
 )

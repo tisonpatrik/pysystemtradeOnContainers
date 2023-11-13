@@ -6,7 +6,7 @@ import logging
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.db.services.data_load_service import DataLoadService
+from shared.src.db.services.data_load_service import DataLoadService
 from src.core.models.config_schemas import InstrumentConfig
 
 logging.basicConfig(level=logging.INFO)

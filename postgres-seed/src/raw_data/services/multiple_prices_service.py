@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.common_utils.utils.data_aggregation.dataframe_to_series import (
     convert_dataframe_to_serie,
 )
-from src.db.services.data_load_service import DataLoadService
+from shared.src.db.services.data_load_service import DataLoadService
 from src.core.models.raw_data_schemas import MultiplePrices
 
 logging.basicConfig(level=logging.INFO)
