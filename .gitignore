@@ -134,3 +134,4 @@ infrastructure/environments/dev/.terraform/
 infrastructure/environments/dev/builds
 infrastructure/environments/dev/terraform.tfstate.backup
 infrastructure/environments/dev/terraform.tfstate
+backend/postgres-seed/alembic.ini

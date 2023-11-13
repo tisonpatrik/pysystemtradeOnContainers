@@ -30,6 +30,7 @@ class InstrumentVolatility(Base):
     __tablename__ = "instrument_volatility"
     unix_date_time = Column(Integer, primary_key=True)
     symbol = Column(String(50), primary_key=True)
+    volatility = Column(Float)
 
     def __repr__(self):
         return f"<InstrumentVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
