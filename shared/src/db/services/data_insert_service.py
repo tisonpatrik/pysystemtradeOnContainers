@@ -1,7 +1,7 @@
 """
 This module provides functionalities for inserting data into a database asynchronously.
 """
-import logging
+from shared.src.utils.logging import AppLogger
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,9 +11,6 @@ from src.db.errors.data_insert_service_errors import (
     TransactionCommitError,
 )
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 class DataInsertService:
     """
@@ -22,6 +19,7 @@ class DataInsertService:
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
+        self.logger = AppLogger.get_instance().get_logger()
 
     async def async_insert_dataframe_to_table(
         self, data_frame: pd.DataFrame, table_name: str
@@ -40,11 +38,11 @@ class DataInsertService:
                 )
             )
             await self.db_session.commit()
-            logger.info("Data successfully inserted into %s", table_name)
+            self.logger.info("Data successfully inserted into %s", table_name)
 
         except (
             DataFrameInsertError,
             TransactionCommitError,
         ) as exc:  # Replace with actual exceptions
             await self.db_session.rollback()
-            logger.error("An error occurred: %s", exc)
+            self.logger.error("An error occurred: %s", exc)
