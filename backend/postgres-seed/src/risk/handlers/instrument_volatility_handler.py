@@ -30,8 +30,7 @@ class InstrumentVolatilityHandler:
         performs date-time conversion, and inserts robust volatility data.
         """
         try:
-            # symbols = await self.files_configs_service.get_list_of_symbols_async()
-            symbols = pd.DataFrame({"symbol": ["AEX"]})
+            symbols = await self.files_configs_service.get_list_of_symbols_async()
             for symbol in symbols.itertuples(index=False):
                 symbol = symbol.symbol
 
@@ -57,9 +56,9 @@ class InstrumentVolatilityHandler:
                     point_size[InstrumentConfig.pointsize.key].iloc[0],
                     symbol,
                 )
-                # await self.data_inserter.async_insert_dataframe_to_table(
-                #     instrument_volatility, self.table_name
-                # )
+                await self.data_inserter.async_insert_dataframe_to_table(
+                    instrument_volatility, self.table_name
+                )
         except Exception as error:
             logger.error("Failed to insert robust volatility data: %s", error)
             raise

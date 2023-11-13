@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Float, Integer, Text
-from src.core.models.base_model import Base
+from src.core.models.base_model import BaseModel
 
 
-class InstrumentConfig(Base):
+class InstrumentConfig(BaseModel):
     __tablename__ = "instrument_config"
 
     symbol = Column(String(50), primary_key=True)
@@ -19,7 +19,7 @@ class InstrumentConfig(Base):
         return f"<InstrumentConfig(symbol={self.symbol}, description={self.description}, ...)>"
 
 
-class InstrumentMetadata(Base):
+class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"
 
     symbol = Column(String(50), primary_key=True)
@@ -32,7 +32,7 @@ class InstrumentMetadata(Base):
         return f"<InstrumentMetadata(symbol={self.symbol}, asset_class={self.asset_class}, ...)>"
 
 
-class RollConfig(Base):
+class RollConfig(BaseModel):
     __tablename__ = "roll_config"
 
     symbol = Column(String(50), primary_key=True)
@@ -46,7 +46,7 @@ class RollConfig(Base):
         return f"<RollConfig(symbol={self.symbol}, hold_roll_cycle={self.hold_roll_cycle}, ...)>"
 
 
-class SpreadCost(Base):
+class SpreadCost(BaseModel):
     __tablename__ = "spread_cost"
 
     symbol = Column(String(50), primary_key=True)

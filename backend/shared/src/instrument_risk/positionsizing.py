@@ -32,9 +32,9 @@
 #     instr_ccy_vol = get_instrument_currency_vol(instrument_code)
 #     fx_rate = get_fx_rate(instrument_code)
 
-#     fx_rate = fx_rate.reindex(instr_ccy_vol.index, method="ffill")
+#     fx_rate = fx_rate.reindex(instr_ccy_vol.index, method="bfill")
 
-#     instr_value_vol = instr_ccy_vol.ffill() * fx_rate
+#     instr_value_vol = instr_ccy_vol.bfill() * fx_rate
 
 #     return instr_value_vol
 
@@ -54,7 +54,7 @@
 #     # FIXME: WHY NOT RESAMPLE?
 #     block_value, daily_perc_vol = block_value.align(daily_perc_vol, join="inner")
 
-#     instr_ccy_vol = block_value.ffill() * daily_perc_vol
+#     instr_ccy_vol = block_value.bfill() * daily_perc_vol
 
 #     return instr_ccy_vol
 
@@ -71,7 +71,7 @@
 #     underlying_price = get_underlying_price(instrument_code)
 #     value_of_price_move = parent.data.get_value_of_block_price_move(instrument_code)
 
-#     block_value = underlying_price.ffill() * value_of_price_move * 0.01
+#     block_value = underlying_price.bfill() * value_of_price_move * 0.01
 
 #     return block_value
 

@@ -153,7 +153,7 @@
 
 #     both_sets_of_data = pd.concat([intraday_data_summed, closing_data_summed], axis=1)
 #     both_sets_of_data[both_sets_of_data == 0] = np.nan
-#     joint_data = both_sets_of_data.ffill(axis=1)
+#     joint_data = both_sets_of_data.bfill(axis=1)
 #     joint_data = joint_data.iloc[:, 1]
 
 #     return joint_data
@@ -215,6 +215,6 @@ def resample_prices_to_business_day_index(x):
 #     df_monthly_index = list(df.resample("1M").last().index)  ## last day in month
 #     df_first_date_in_index = df.index[0]
 #     df_monthly_index = [df_first_date_in_index] + df_monthly_index
-#     df_reindex = df.reindex(df_monthly_index).ffill()
+#     df_reindex = df.reindex(df_monthly_index).bfill()
 
 #     return df_reindex

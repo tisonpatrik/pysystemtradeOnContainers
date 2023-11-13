@@ -26,4 +26,3 @@ class Settings(BaseSettings):
 
 # Create an instance of the GlobalConfig class.
 settings = Settings()
-print(settings.database_url)

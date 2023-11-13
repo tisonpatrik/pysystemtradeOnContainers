@@ -92,7 +92,7 @@ def apply_vol_floor(
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
     vol_min.iloc[0] = 0.0
-    vol_min.ffill(inplace=True)
+    vol_min.bfill(inplace=True)
 
     # apply the vol floor
     vol_floored = pd.Series(np.maximum(vol, vol_min), index=vol.index)
@@ -104,7 +104,7 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
     # have to fill forwards first, as it's only the start we want to
     # backfill, eg before any value available
 
-    vol_forward_fill = vol.fillna(method="ffill")
+    vol_forward_fill = vol.fillna(method="bfill")
     vol_backfilled = vol_forward_fill.fillna(method="bfill")
 
     return vol_backfilled

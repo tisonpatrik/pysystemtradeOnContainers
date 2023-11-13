@@ -19,8 +19,8 @@
 #     def process_data(self) -> Dict[str, Any]:
 #         ewmac = self.compute_ewmac()
 #         volatility = robust_vol_calc(self.raw_data)
-#         forecast = ewmac / volatility.ffill()
-        
+#         forecast = ewmac / volatility.bfill()
+
 #         return {
 #             'message': 'EWMAC calculation and save completed successfully',
 #             'rule': 'MAC',

@@ -16,6 +16,12 @@ down:
 tests: run
 	@docker exec -it postgres-seed poetry run pytest
 
+migrate-create:
+	@poetry run alembic revision --autogenerate -m "${commit}"
+
+migrate-apply:
+	@poetry run alembic upgrade head
+
 build:
 	@poetry shell
 	@poetry run black .

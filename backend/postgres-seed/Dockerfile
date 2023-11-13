@@ -15,8 +15,11 @@ COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock* ./
 
 # Installing poetry and the project dependencies
 RUN pip install poetry
-RUN poetry config virtualenvs.create false --local
-RUN poetry install --no-dev
+
+# Disabling virtualenv creation by poetry and installing dependencies
+COPY postgres-seed/pyproject.toml postgres-seed/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-dev
 
 # cleanup
 #RUN curl -sSL https://install.python-poetry.org | python3 - --uninstall
@@ -32,7 +35,6 @@ ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
 # Copying the source code to the working directory
 COPY postgres-seed/src ./src
 COPY postgres-seed/tests ./tests
-COPY postgres-seed/db ./db
 COPY postgres-seed/mappings ./mappings
 
 # Copying the shared directory into the container

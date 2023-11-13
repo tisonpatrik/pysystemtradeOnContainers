@@ -5,10 +5,10 @@ These classes facilitate database interactions in a Pythonic way.
 """
 
 from sqlalchemy import Column, Integer, String, Float
-from src.core.models.base_model import Base
+from src.core.models.base_model import BaseModel
 
 
-class AdjustedPrices(Base):
+class AdjustedPrices(BaseModel):
     """
     ORM class for the 'adjusted_prices' table. Represents prices adjusted for factors
     like splits and dividends.
@@ -30,7 +30,7 @@ class AdjustedPrices(Base):
         return f"<AdjustedPrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, price={self.price})>"
 
 
-class FxPrices(Base):
+class FxPrices(BaseModel):
     """
     ORM class for the 'fx_prices' table. Represents foreign exchange prices.
 
@@ -50,7 +50,7 @@ class FxPrices(Base):
         return f"<FxPrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, price={self.price})>"
 
 
-class MultiplePrices(Base):
+class MultiplePrices(BaseModel):
     """
     ORM class for the 'multiple_prices' table. Represents various price-related metrics.
 
@@ -80,7 +80,7 @@ class MultiplePrices(Base):
         return f"<MultiplePrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, ...)>"
 
 
-class RollCalendars(Base):
+class RollCalendars(BaseModel):
     """
     ORM class for the 'roll_calendars' table. Represents rolling calendar data for futures contracts.
 

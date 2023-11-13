@@ -20,11 +20,14 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from src.core.models.base_model import Base
 
-print(Base.metadata.tables.keys())
+from src.core.models.config_schemas import BaseModel
+from src.core.models.raw_data_schemas import BaseModel
+from src.core.models.risk_schemas import BaseModel
 
-target_metadata = Base.metadata
+print(BaseModel.Base.metadata.tables.keys())
+
+target_metadata = BaseModel.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

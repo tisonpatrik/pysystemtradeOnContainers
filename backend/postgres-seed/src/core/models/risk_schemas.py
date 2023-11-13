@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Float
-from src.core.models.base_model import Base
+from src.core.models.base_model import BaseModel
 
 
-class RobustVolatility(Base):
+class RobustVolatility(BaseModel):
     """
     ORM class for the 'robust_volatility' table. Represents volatility metrics for financial instruments.
 
@@ -22,7 +22,7 @@ class RobustVolatility(Base):
         return f"<RobustVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
 
 
-class InstrumentVolatility(Base):
+class InstrumentVolatility(BaseModel):
     """
     ORM class for the 'instrument_volatility' table. Represents volatility metrics for financial instruments.
     """

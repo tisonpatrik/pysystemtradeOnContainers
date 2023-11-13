@@ -145,7 +145,7 @@
 #     # UGLY
 #     denom_price = self.daily_denominator_price(instrument_code)
 #     num_returns = self.daily_returns(instrument_code)
-#     perc_returns = num_returns / denom_price.ffill()
+#     perc_returns = num_returns / denom_price.bfill()
 
 #     return perc_returns
 
@@ -165,7 +165,7 @@
 #     denom_price = self.daily_denominator_price(instrument_code)
 #     return_vol = self.daily_returns_volatility(instrument_code)
 #     (denom_price, return_vol) = denom_price.align(return_vol, join="right")
-#     perc_vol = 100.0 * (return_vol / denom_price.ffill().abs())
+#     perc_vol = 100.0 * (return_vol / denom_price.bfill().abs())
 
 #     return perc_vol
 
@@ -225,7 +225,7 @@
 #         aggregate_returns_across_instruments_list, axis=1
 #     )
 
-#     # we don't ffill before working out the median as this could lead to
+#     # we don't bfill before working out the median as this could lead to
 #     # bad data
 #     median_returns = aggregate_returns_across_instruments.median(axis=1)
 
@@ -286,7 +286,7 @@
 #     normalised_price_for_asset_class_aligned = (
 #         normalised_price_for_asset_class.reindex(
 #             normalised_price_this_instrument.index
-#         ).ffill()
+#         ).bfill()
 #     )
 
 #     return normalised_price_for_asset_class_aligned
@@ -459,7 +459,7 @@
 #         smooth_days
 #     ).mean()
 
-#     # we don't ffill before working out the median as this could lead to
+#     # we don't bfill before working out the median as this could lead to
 #     # bad data
 #     median_carry = smoothed_carrys_across_asset_class.median(axis=1)
 
@@ -481,7 +481,7 @@
 
 #     # Align for an easy life
 #     # As usual forward fill at last moment
-#     median_carry = median_carry.reindex(instrument_carry.index).ffill()
+#     median_carry = median_carry.reindex(instrument_carry.index).bfill()
 
 #     return median_carry
 

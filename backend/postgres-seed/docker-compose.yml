@@ -1,4 +1,4 @@
-# backend/postgres-seed/docker-compose.yml
+# backend/postgres-seed/docker-compose.yml  
 version: "3.9"
 
 services:
@@ -19,11 +19,8 @@ services:
       - ${DATA_PATH}:/path/in/container:rw
 
   db_postgres:
+    image: postgres:15.3
     container_name: postgres
-    build:
-      context: ./db
-      dockerfile: Dockerfile
-      
     hostname: db_postgres
     restart: on-failure
     env_file:
