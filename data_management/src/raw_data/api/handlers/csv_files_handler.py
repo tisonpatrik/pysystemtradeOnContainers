@@ -5,7 +5,7 @@ import asyncio
 import logging
 import os
 
-from src.raw_data.services.seed_services.mapping_service import MappingService
+from src.raw_data.services.mapping_service import MappingService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

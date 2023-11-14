@@ -7,7 +7,7 @@ import logging
 
 from fastapi import APIRouter, HTTPException, status
 
-from src.raw_data.handlers.csv_files_handler import CsvFilesHandler
+from src.raw_data.api.handlers.csv_files_handler import CsvFilesHandler
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
