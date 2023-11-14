@@ -15,6 +15,7 @@ services:
       - .env  # Adjusted path to the .env file
     volumes:
       - ${DATA_PATH}:/path/in/container:rw
+      - ./data_management/src:/path/in/container/src:rw
 
   db_postgres:
     image: postgres:15.3
