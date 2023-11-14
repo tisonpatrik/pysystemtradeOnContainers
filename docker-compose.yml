@@ -12,9 +12,8 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - data_management/.env  # Adjusted path to the .env file
+      - .env  # Adjusted path to the .env file
     volumes:
-      - data_management/src:/home/app/src
       - ${DATA_PATH}:/path/in/container:rw
 
   db_postgres:
@@ -23,7 +22,7 @@ services:
     hostname: db_postgres
     restart: on-failure
     env_file:
-      - data_management/.env  # Adjusted path to the .env file
+      - .env  # Adjusted path to the .env file
     environment:
       - POSTGRES_USER=${SQL_USER}
       - POSTGRES_PASSWORD=${SQL_PASS}

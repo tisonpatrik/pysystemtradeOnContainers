@@ -24,6 +24,7 @@ pytest-mock = "^3.11.1"
 aiofiles = "^23.2.1"
 aiocsv = "^1.2.4"
 rich = "^13.6.0"
+alembic = "^1.12.1"
 
 
 [tool.poetry.dev-dependencies]

@@ -19,6 +19,7 @@ app.include_router(seed_db_router, prefix="/raw_data_route")
 app.include_router(risk_router, prefix="/risk_data_route")
 
 
+
 @app.get("/")
 async def root():
     """

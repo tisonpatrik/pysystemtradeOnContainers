@@ -39,3 +39,4 @@ ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
 
 # Specifying the default command to run the FastAPI app with uvicorn
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
