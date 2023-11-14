@@ -14,8 +14,8 @@ services:
     env_file:
       - data_management/.env  # Adjusted path to the .env file
     volumes:
-      - ./data_management/src:/home/app/src
-      - ./data_management/data:/home/app/data:rw
+      - data_management/src:/home/app/src
+      - ${DATA_PATH}:/path/in/container:rw
 
   db_postgres:
     image: postgres:15.3
@@ -32,7 +32,7 @@ services:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
-      - ./data_management/data:/home/app/data
+      - ${DATA_PATH}:/path/in/container:rw
 
   pg-admin:
     image: dpage/pgadmin4

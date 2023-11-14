@@ -14,7 +14,7 @@ down:
 	@docker compose -f ./docker-compose.yml down --remove-orphans
 
 tests: run
-	@docker exec -it postgres-seed poetry run pytest
+	@docker exec -it data_management poetry run pytest
 
 migrate-create:
 	@poetry run alembic revision --autogenerate -m "${commit}"
