@@ -11,12 +11,12 @@ RUN apt-get update \
 WORKDIR /home/app
 
 # Copying the poetry dependency files to the working directory
-COPY pyproject.toml poetry.lock* ./
+COPY data_management/pyproject.toml data_management/poetry.lock* ./
 
 # Copying the source code and other directories to the working directory
-COPY src ./src
-COPY tests ./tests
-COPY mappings ./mappings
+COPY data_management/src/ ./src
+COPY data_management/tests/ ./tests
+COPY data_management/mappings/ ./mappings
 
 # Copying the shared directory - ensure this path is correct relative to the Dockerfile
 COPY ../shared ./shared
