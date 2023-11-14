@@ -2,12 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "data_management"
-		},
-		{
-			"path": "shared"
 		}
 	],
 	"settings": {
