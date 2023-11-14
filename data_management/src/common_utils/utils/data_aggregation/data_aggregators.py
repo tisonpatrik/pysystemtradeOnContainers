@@ -5,7 +5,7 @@ import logging
 
 import pandas as pd
 
-from src.common_utils.errors.aggregation_errors import DataAggregationError
+from src.core.errors.aggregation_errors import DataAggregationError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

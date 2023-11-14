@@ -7,7 +7,7 @@ import time
 
 import pandas as pd
 
-from src.common_utils.errors.date_time_errors import (
+from src.core.errors.date_time_errors import (
     DateTimeConversionError,
     InvalidDatetimeColumnError,
 )

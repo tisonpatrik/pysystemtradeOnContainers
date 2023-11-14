@@ -6,7 +6,7 @@ import os
 
 import pandas as pd
 
-from src.raw_data.errors.csv_read_errors import (
+from src.core.errors.csv_read_errors import (
     CsvEmptyDataError,
     CsvFileNotFoundException,
     CsvParserError,

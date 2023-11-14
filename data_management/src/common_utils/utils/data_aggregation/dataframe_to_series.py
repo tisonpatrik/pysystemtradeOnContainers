@@ -4,7 +4,7 @@ import logging
 
 import pandas as pd
 
-from src.common_utils.errors.dataframe_to_series_errors import (
+from src.core.errors.dataframe_to_series_errors import (
     DataFrameConversionError,
     GroupByError,
 )

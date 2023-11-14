@@ -6,7 +6,7 @@ import logging
 
 import pandas as pd
 
-from src.common_utils.errors.add_and_populate_error import SymbolAdditionError
+from src.core.errors.add_and_populate_error import SymbolAdditionError
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -6,7 +6,7 @@ from typing import Dict
 
 import pandas as pd
 
-from src.common_utils.errors.rename_colums_errors import (
+from src.core.errors.rename_colums_errors import (
     ColumnNoneValueError,
     MissingColumnsError,
 )
