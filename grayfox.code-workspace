@@ -4,13 +4,14 @@
 			"path": "."
 		},
 		{
-			"path": "../data_management"
+			"path": "data_management"
 		},
 		{
-			"path": "../shared"
+			"path": "shared"
 		}
 	],
 	"settings": {
-		"python.pythonPath": ".venv/bin/python3.12"
+		"python.analysis.extraPaths": ["shared"],
+		"python.defaultInterpreterPath": ".venv/bin/python"
 	}
 }
