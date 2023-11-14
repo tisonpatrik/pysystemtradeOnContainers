@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI router
 router = APIRouter()
 
-
 @router.get(
     "/get_csv_file_counts/",
     status_code=status.HTTP_200_OK,
