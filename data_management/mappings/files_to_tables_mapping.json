@@ -1,0 +1,98 @@
+[
+    {
+        "directory": "/path/in/container/csvconfig",
+        "table": "instrument_config",
+        "file_name": "instrumentconfig.csv",
+        "columns_mapping": {
+            "Instrument": "symbol",
+            "Description": "description",
+            "Pointsize": "pointsize",
+            "Currency": "currency",
+            "AssetClass": "asset_class",
+            "PerBlock": "per_block",
+            "Percentage": "percentage",
+            "PerTrade": "per_trade",
+            "Region": "region"
+        }
+    },
+    {
+        "directory": "/path/in/container/csvconfig",
+        "table": "instrument_metadata",
+        "file_name": "moreinstrumentinfo.csv",
+        "columns_mapping": {
+            "Instrument": "symbol",
+            "AssetClass": "asset_class",
+            "SubClass": "sub_class",
+            "SubSubClass": "sub_sub_class",
+            "Style": "style",
+            "Country": "country",
+            "Duration": "duration",
+            "Description": "description"
+        }
+    },
+    {
+        "directory": "/path/in/container/csvconfig",
+        "table": "roll_config",
+        "file_name": "rollconfig.csv",
+        "columns_mapping": {
+            "Instrument": "symbol",
+            "HoldRollCycle": "hold_roll_cycle",
+            "RollOffsetDays": "roll_offset_days",
+            "CarryOffset": "carry_offset",
+            "PricedRollCycle": "priced_roll_cycle",
+            "ExpiryOffset": "expiry_offset"
+        }
+    },
+    {
+        "directory": "/path/in/container/csvconfig",
+        "table": "spread_cost",
+        "file_name": "spreadcosts.csv",
+        "columns_mapping": {
+            "Instrument": "symbol",
+            "SpreadCost": "spread_cost"
+        }
+    },
+    {
+        "directory": "/path/in/container/adjusted_prices_csv",
+        "table": "adjusted_prices",
+        "file_name": "",
+        "columns_mapping": {
+            "DATETIME": "unix_date_time",
+            "price": "price"
+        }
+    },
+    {
+        "directory": "/path/in/container/fx_prices_csv",
+        "table": "fx_prices",
+        "file_name": "",
+        "columns_mapping": {
+            "DATETIME": "unix_date_time",
+            "PRICE": "price"
+        }
+    },
+    {
+        "directory": "/path/in/container/multiple_prices_csv",
+        "table": "multiple_prices",
+        "file_name": "",
+        "columns_mapping": {
+            "DATETIME": "unix_date_time",
+            "CARRY": "carry",
+            "CARRY_CONTRACT": "carry_contract",
+            "PRICE": "price",
+            "PRICE_CONTRACT": "price_contract",
+            "FORWARD": "forward",
+            "FORWARD_CONTRACT": "forward_contract"
+        }
+    },
+    {
+        "directory": "/path/in/container/roll_calendars_csv",
+        "table": "roll_calendars",
+        "file_name": "",
+        "columns_mapping": {
+            "DATE_TIME": "unix_date_time",
+            "current_contract": "current_contract",
+            "next_contract": "next_contract",
+            "carry_contract": "carry_contract"
+        }
+    }
+]
