@@ -2,7 +2,15 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../data_management"
+		},
+		{
+			"path": "../shared"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": ".venv/bin/python3.12"
+	}
 }
