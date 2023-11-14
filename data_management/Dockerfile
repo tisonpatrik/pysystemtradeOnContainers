@@ -1,4 +1,4 @@
-# backend//Dockerfile
+# data_management/Dockerfile
 # Using the specified Python version
 FROM python:3.12-slim-bookworm AS base
 
@@ -11,15 +11,15 @@ RUN apt-get update \
 WORKDIR /home/app
 
 # Copying the poetry dependency files to the working directory
-COPY /pyproject.toml /poetry.lock* ./
+COPY pyproject.toml poetry.lock* ./
 
-# Copying the source code to the working directory
-COPY /src ./src
-COPY /tests ./tests
-COPY /mappings ./mappings
+# Copying the source code and other directories to the working directory
+COPY src ./src
+COPY tests ./tests
+COPY mappings ./mappings
 
-# Additionally, copy the shared directory
-COPY shared/src ./shared/src
+# Copying the shared directory - ensure this path is correct relative to the Dockerfile
+COPY ../shared ./shared
 
 # Installing poetry and the project dependencies
 RUN pip install poetry
