@@ -5,7 +5,6 @@
 		}
 	],
 	"settings": {
-		"python.analysis.extraPaths": ["shared"],
 		"python.defaultInterpreterPath": ".venv/bin/python"
 	}
 }
