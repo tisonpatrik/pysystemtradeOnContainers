@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "data-management"
+version = "0.1.0"
+description = ""
+authors = ["PatrikTison <patriktison@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12"
+fastapi = "0.103.2"
+pydantic = {extras = ["python-dotenv"], version = "^2.4.2"}
+pydantic-settings = "^2.0.3"
+sqlalchemy = "2.0.21"
+uvicorn = { version = "0.23.2", extras = ["standard"]}
+asyncpg = "0.28.0"
+httpx = "*"
+pytest-cov = "*"
+pytest-asyncio = "*"
+uvloop = "*"
+httptools = "*"
+
+pandas = "^2.0.3"
+aiofiles = "^23.2.1"
+aiocsv = "^1.2.4"
+rich = "^13.6.0"
+alembic = "^1.12.1"
+
+[tool.poetry.dev-dependencies]
+devtools = { extras = ["pygments"], version = "*" }
+black = "*"
+safety = "*"
+pyupgrade = "*"
+ipython = "*"
+ruff = "*"
+isort = "^5.12.0"
+pylint = "^2.17.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
