@@ -16,7 +16,6 @@ COPY data_management/pyproject.toml data_management/poetry.lock* ./
 # Copying the source code and other directories to the working directory
 COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
-COPY data_management/mappings/ ./mappings
 
 # Installing poetry and the project dependencies
 RUN pip install poetry

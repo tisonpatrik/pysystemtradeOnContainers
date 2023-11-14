@@ -7,7 +7,6 @@ These classes facilitate database interactions in a Pythonic way.
 from sqlalchemy import Column, Integer, String, Float
 from src.core.models.base_model import BaseModel
 
-
 class AdjustedPrices(BaseModel):
     """
     ORM class for the 'adjusted_prices' table. Represents prices adjusted for factors
@@ -20,14 +19,11 @@ class AdjustedPrices(BaseModel):
     """
 
     __tablename__ = "adjusted_prices"
-
+    directory = "/path/in/container/adjusted_prices_csv"
     # Defining the table schema
     unix_date_time = Column(Integer, primary_key=True)
     symbol = Column(String(50), primary_key=True)
     price = Column(Float)
-
-    def __repr__(self):
-        return f"<AdjustedPrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, price={self.price})>"
 
 
 class FxPrices(BaseModel):
@@ -40,14 +36,12 @@ class FxPrices(BaseModel):
         price (float): Price of the currency pair.
     """
 
-    __tablename__ = "fx_prices"
+    __tablename__ = "/path/in/container/fx_prices_csv"
+    file_name = "adjusted_prices.csv"
 
     unix_date_time = Column(Integer, primary_key=True)
     symbol = Column(String(50), primary_key=True)
     price = Column(Float)
-
-    def __repr__(self):
-        return f"<FxPrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, price={self.price})>"
 
 
 class MultiplePrices(BaseModel):
@@ -65,7 +59,7 @@ class MultiplePrices(BaseModel):
         forward_contract (int): Contract number for forward.
     """
 
-    __tablename__ = "multiple_prices"
+    __tablename__ = "/path/in/container/multiple_prices_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
     symbol = Column(String(50), primary_key=True)
@@ -75,9 +69,6 @@ class MultiplePrices(BaseModel):
     price_contract = Column(Integer)
     forward = Column(Float)
     forward_contract = Column(Integer)
-
-    def __repr__(self):
-        return f"<MultiplePrices(unix_date_time={self.unix_date_time}, symbol={self.symbol}, ...)>"
 
 
 class RollCalendars(BaseModel):
@@ -92,7 +83,7 @@ class RollCalendars(BaseModel):
         carry_contract (int): Identifier for the carry contract.
     """
 
-    __tablename__ = "roll_calendars"
+    __tablename__ = "/path/in/container/roll_calendars_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
     symbol = Column(String(50), primary_key=True)
@@ -100,5 +91,3 @@ class RollCalendars(BaseModel):
     next_contract = Column(Integer)
     carry_contract = Column(Integer)
 
-    def __repr__(self):
-        return f"<RollCalendars(unix_date_time={self.unix_date_time}, symbol={self.symbol}, ...)>"

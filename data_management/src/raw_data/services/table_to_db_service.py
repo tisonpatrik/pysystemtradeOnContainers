@@ -2,7 +2,6 @@
 Handles the service logic for mapping various tables to the database. 
 Responsible for orchestrating the flow of data from raw files to processed data in the database.
 """
-import logging
 from typing import List
 
 from src.raw_data.core.errors.table_to_db_errors import InvalidFileNameError, ProcessingError
@@ -14,9 +13,7 @@ from src.raw_data.services.rollcalendars_service import (
     RollCalendarsService,
 )
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+from src.utils.logging import AppLogger
 
 class TableToDBService:
     """
@@ -28,6 +25,7 @@ class TableToDBService:
         self.config_files_service = ConfigFilesService()
         self.prices_service = PricesService()
         self.rollcalendars_service = RollCalendarsService()
+        self.logger = AppLogger.get_instance().get_logger()
 
     def get_processed_data_from_raw_files(
         self, map_items: List[FileTableMapping]
@@ -35,7 +33,7 @@ class TableToDBService:
         """
         Data processing for CSV files.
         """
-        logger.info("Data processing for csv files has started")
+        self.logger.info("Data processing for csv files has started")
         processed_data = []
         for map_item in map_items:
             try:
@@ -44,13 +42,13 @@ class TableToDBService:
                     processed_data.append(result)
 
             except InvalidFileNameError:
-                logger.error(
+                self.logger.error(
                     "Encountered an error with file name: %s",
                     map_item.file_name,
                     exc_info=True,
                 )
             except ProcessingError:
-                logger.error(
+                self.logger.error(
                     "Processing failed for file: %s", map_item.file_name, exc_info=True
                 )
         return processed_data

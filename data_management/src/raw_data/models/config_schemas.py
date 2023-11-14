@@ -4,6 +4,7 @@ from src.core.models.base_model import BaseModel
 
 class InstrumentConfig(BaseModel):
     __tablename__ = "instrument_config"
+    file_name = "instrumentconfig.csv"
 
     symbol = Column(String(50), primary_key=True)
     description = Column(Text)
@@ -15,12 +16,9 @@ class InstrumentConfig(BaseModel):
     per_trade = Column(Integer)
     region = Column(String(50))
 
-    def __repr__(self):
-        return f"<InstrumentConfig(symbol={self.symbol}, description={self.description}, ...)>"
-
-
 class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"
+    file_name = "moreinstrumentinfo.csv"
 
     symbol = Column(String(50), primary_key=True)
     asset_class = Column(String(50))
@@ -28,12 +26,9 @@ class InstrumentMetadata(BaseModel):
     sub_sub_class = Column(String(50))
     description = Column(String(100))
 
-    def __repr__(self):
-        return f"<InstrumentMetadata(symbol={self.symbol}, asset_class={self.asset_class}, ...)>"
-
-
 class RollConfig(BaseModel):
     __tablename__ = "roll_config"
+    file_name = "rollconfig.csv"
 
     symbol = Column(String(50), primary_key=True)
     hold_roll_cycle = Column(String(50))
@@ -42,15 +37,10 @@ class RollConfig(BaseModel):
     priced_roll_cycle = Column(String(50))
     expiry_offset = Column(Integer)
 
-    def __repr__(self):
-        return f"<RollConfig(symbol={self.symbol}, hold_roll_cycle={self.hold_roll_cycle}, ...)>"
-
-
 class SpreadCost(BaseModel):
     __tablename__ = "spread_cost"
+    file_name = "spreadcosts.csv"
 
     symbol = Column(String(50), primary_key=True)
     spread_cost = Column(Float)
 
-    def __repr__(self):
-        return f"<SpreadCost(symbol={self.symbol}, spread_cost={self.spread_cost})>"
