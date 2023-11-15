@@ -26,8 +26,6 @@ from src.raw_data.models.config_schemas import BaseModel
 from src.raw_data.models.raw_data_schemas import BaseModel
 from src.risk.models.risk_models import BaseModel
 
-print(BaseModel.Base.metadata.tables.keys())
-
 target_metadata = BaseModel.Base.metadata
 
 # other values from the config, defined by the needs of env.py,

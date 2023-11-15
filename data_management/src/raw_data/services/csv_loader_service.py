@@ -25,7 +25,7 @@ class CsvLoaderService():
             raise CsvLoadingError(full_path, str(error))
 
 
-    def get_csv_files_from_directory(directory: str) -> list:
+    def get_csv_files_from_directory(self, directory: str) -> list:
         """
         Get the list of all CSV files from the specified directory.
         """

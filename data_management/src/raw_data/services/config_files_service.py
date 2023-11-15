@@ -3,7 +3,7 @@ Purpose: This module defines the ConfigFilesService class which processes instru
 It reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object for further usage.
 """
 
-from src.raw_data.core.errors.table_to_db_errors import ProcessingError
+from src.raw_data.core.errors.raw_data_processing_error import ProcessingError
 from src.raw_data.utils.rename_columns import rename_columns
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.utils.path_validator import get_full_path
@@ -18,15 +18,15 @@ class ConfigFilesService:
         self.csv_loader = CsvLoaderService()
         self.directory = "/path/in/container/csvconfig"
 
-    def process_config_files(self, map_item):
+    def process_config_files(self, model):
         """
         Processes configuration data from a FileTableMapping object.
         """
         try:
-            self.logger.info("Starting the process for %s table.", map_item.__tablename__)
-            full_path = get_full_path(self.directory, map_item.file_name)
+            self.logger.info("Starting the process for %s table.", model.__tablename__)
+            full_path = get_full_path(self.directory, model.file_name)
             raw_data = self.csv_loader.load_csv(full_path)
-            column_names = [column.name for column in map_item.__table__.columns]
+            column_names = [column.name for column in model.__table__.columns]
             renamed_data = rename_columns(raw_data, column_names)
             return renamed_data
 
