@@ -3,13 +3,12 @@ This module provides functionalities for inserting data into a database asynchro
 """
 from src.utils.logging import AppLogger
 
-import pandas as pd
+import polars as pl
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import insert, table, column
+from sqlalchemy.exc import SQLAlchemyError
+from src.db.errors.data_insert_service_errors import DataFrameInsertError
 
-from src.db.errors.data_insert_service_errors import (
-    DataFrameInsertError,
-    TransactionCommitError,
-)
 
 class DataInsertService:
     """
@@ -21,25 +20,27 @@ class DataInsertService:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def async_insert_dataframe_to_table(
-        self, data_frame: pd.DataFrame, table_name: str
+        self, data_frame: pl.DataFrame, table_name: str
     ):
         """
-        Asynchronously inserts a DataFrame into a PostgreSQL table.
+        Asynchronously inserts a Polars DataFrame into a PostgreSQL table.
 
         Args:
-            data_frame (pd.DataFrame): The DataFrame to insert.
+            data_frame (pl.DataFrame): The DataFrame to insert.
             table_name (str): The name of the PostgreSQL table.
         """
         try:
-            await self.db_session.run_sync(
-                lambda session: data_frame.to_sql(
-                    table_name, session.bind, index=False, if_exists="append"
-                )
-            )
+            # Convert Polars DataFrame to list of dictionaries for insertion
+            data_dicts = data_frame.to_dicts()
+
+            # Create a SQLAlchemy table object dynamically
+            dynamic_table = table(table_name,*[column(name) for name in data_frame.columns])
+
+            # Perform the insert operation
+            await self.db_session.execute(insert(dynamic_table).values(data_dicts))
             await self.db_session.commit()
-        except (
-            DataFrameInsertError,
-            TransactionCommitError,
-        ) as exc:  # Replace with actual exceptions
+
+        except SQLAlchemyError as exc:  # Adjust exception as needed
             await self.db_session.rollback()
             self.logger.error("An error occurred: %s", exc)
+            raise DataFrameInsertError(table_name, str(exc)) from exc
