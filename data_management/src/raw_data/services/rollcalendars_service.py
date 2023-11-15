@@ -7,8 +7,6 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.rollcalendars_operations import process_roll_calendar_file
-from src.raw_data.models.data_frame_container import DataFrameContainer
-from src.raw_data.models.files_mapping import FileTableMapping
 from src.core.utils.csv_loader import get_csv_files_from_directory
 
 logging.basicConfig(level=logging.INFO)
@@ -24,7 +22,7 @@ class RollCalendarsService:
         self.date_time_column = "unix_date_time"
         self.symbol_column = "symbol"
 
-    def process_roll_calendars(self, map_item: FileTableMapping) -> DataFrameContainer:
+    def process_roll_calendars(self, map_item):
         """
         Process and prices for a given table mapping.
         """
@@ -43,4 +41,4 @@ class RollCalendarsService:
             ]
         )
 
-        return DataFrameContainer(roll_calendars, map_item.table)
+        return roll_calendars

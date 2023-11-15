@@ -13,13 +13,12 @@ from src.common_utils.utils.column_operations.add_and_populate_column import (
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_datetime_to_unixtime,
 )
-from src.raw_data.models.files_mapping import FileTableMapping
 from src.raw_data.operations.data_preprocessing import preprocess_raw_data
 
 
 def process_roll_calendar_file(
     csv_file_name: str,
-    map_item: FileTableMapping,
+    map_item,
     date_time_column: str,
     symbol_column: str,
 ) -> pd.DataFrame:

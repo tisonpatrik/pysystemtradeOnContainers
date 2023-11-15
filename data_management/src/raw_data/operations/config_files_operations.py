@@ -6,11 +6,10 @@ and encapsulating the data into a DataFrameContainer object.
 import pandas as pd
 
 from src.common_utils.utils.column_operations.rename_columns import rename_columns
-from src.raw_data.models.files_mapping import FileTableMapping
 from src.core.utils.csv_loader import load_csv
 from src.raw_data.validators.path_validator import get_full_path
 
-def process_config_files_table(map_item: FileTableMapping) -> pd.DataFrame:
+def process_config_files_table(map_item) -> pd.DataFrame:
     """
     Reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object.
     """

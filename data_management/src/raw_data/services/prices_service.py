@@ -9,8 +9,6 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.prices_operations import process_single_csv_file
-from src.raw_data.models.data_frame_container import DataFrameContainer
-from src.raw_data.models.files_mapping import FileTableMapping
 from src.core.utils.csv_loader import get_csv_files_from_directory
 
 logging.basicConfig(level=logging.INFO)
@@ -27,7 +25,7 @@ class PricesService:
         self.price_column = "price"
         self.symbol_column = "symbol"
 
-    def process_prices_files(self, map_item: FileTableMapping) -> DataFrameContainer:
+    def process_prices_files(self, map_item):
         """
         Process and prices for a given table mapping.
         """
@@ -50,4 +48,4 @@ class PricesService:
             ]
         )
 
-        return DataFrameContainer(price_data_frames, map_item.table)
+        return price_data_frames

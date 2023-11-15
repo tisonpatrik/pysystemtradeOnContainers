@@ -14,13 +14,12 @@ from src.common_utils.utils.column_operations.rename_columns import (
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_column_to_datetime,
 )
-from src.raw_data.models.files_mapping import FileTableMapping
 from src.core.utils.csv_loader import load_csv
 from src.raw_data.validators.path_validator import get_full_path
 
 
 def preprocess_raw_data(
-    csv_file_name: str, map_item: FileTableMapping, date_time_column: str
+    csv_file_name: str, map_item, date_time_column: str
 ) -> pd.DataFrame:
     """
     Preprocess a given raw CSV data file and returns a cleaned DataFrame.
