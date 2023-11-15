@@ -9,7 +9,8 @@ from src.raw_data.core.errors.table_to_db_errors import DataInsertionError
 from src.raw_data.services.config_files_service import ConfigFilesService
 from src.raw_data.services.prices_service import PricesService
 from src.raw_data.services.rollcalendars_service import RollCalendarsService
-from src.raw_data.models.config_schemas import InstrumentConfig, InstrumentMetadata ,RollConfig, SpreadCost
+from src.raw_data.models.config_schemas import InstrumentConfig ,RollConfig, SpreadCost
+from src.raw_data.models.raw_data_schemas import AdjustedPrices, FxPrices, MultiplePrices, RollCalendars
 from src.utils.logging import AppLogger
 
 class SeedDBHandler:
@@ -22,7 +23,7 @@ class SeedDBHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)
         self.config_files_service = ConfigFilesService()
-        self.price_service = PricesService()
+        self.prices_service = PricesService()
         self.rollcalendars_service = RollCalendarsService()
 
 
@@ -31,7 +32,7 @@ class SeedDBHandler:
         Asynchronously seed the database from CSV files using predefined schemas.
         """
         self.logger.info("Data processing for csv files has started")
-        models = [InstrumentConfig, InstrumentMetadata, RollConfig, SpreadCost]
+        models = [InstrumentConfig, RollConfig, SpreadCost, AdjustedPrices, FxPrices, MultiplePrices, RollCalendars]
 
         for model in models:
             try:
@@ -50,6 +51,5 @@ class SeedDBHandler:
         if model.__tablename__ in ["adjusted_prices", "fx_prices", "multiple_prices"]:
             return self.prices_service.process_prices_files(model)
         if model.__tablename__ == "roll_calendars":
-            return self.rollcalendars_service.process_roll_calendars(model)
-        
+            return self.rollcalendars_service.process_roll_calendars(model)       
         raise ValueError(f"Unrecognized table name: {model.__tablename__}")

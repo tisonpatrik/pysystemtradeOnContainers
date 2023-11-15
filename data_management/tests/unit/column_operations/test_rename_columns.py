@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from src.common_utils.errors.rename_colums_errors import MissingColumnsError
-from src.common_utils.utils.column_operations.rename_columns import rename_columns
+from data_management.src.raw_data.utils.rename_columns import rename_columns
 
 
 @pytest.fixture

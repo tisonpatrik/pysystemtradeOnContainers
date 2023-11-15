@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 from typing import Dict
 from src.common_utils.schemas.schema_protocol import SchemaProtocol
-from src.common_utils.utils.column_operations.rename_columns import rename_columns
+from src.raw_data.utils.rename_columns import rename_columns
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_datetime_to_unixtime,
 )

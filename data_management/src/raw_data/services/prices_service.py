@@ -9,7 +9,7 @@ from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.prices_operations import process_single_csv_file
-from src.core.utils.csv_loader import get_csv_files_from_directory
+from src.raw_data.services.csv_loader_service import get_csv_files_from_directory
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

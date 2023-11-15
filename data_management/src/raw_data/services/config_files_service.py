@@ -4,7 +4,9 @@ It reads raw CSV files, renames columns, and encapsulates the data into a DataFr
 """
 
 from src.raw_data.core.errors.table_to_db_errors import ProcessingError
-from src.raw_data.operations.config_files_operations import process_config_files_table
+from src.raw_data.utils.rename_columns import rename_columns
+from src.raw_data.services.csv_loader_service import CsvLoaderService
+from src.raw_data.utils.path_validator import get_full_path
 from src.utils.logging import AppLogger
 
 class ConfigFilesService:
@@ -13,7 +15,8 @@ class ConfigFilesService:
     """
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
-
+        self.csv_loader = CsvLoaderService()
+        self.directory = "/path/in/container/csvconfig"
 
     def process_config_files(self, map_item):
         """
@@ -21,8 +24,11 @@ class ConfigFilesService:
         """
         try:
             self.logger.info("Starting the process for %s table.", map_item.__tablename__)
-            data_frame = process_config_files_table(map_item)
-            return data_frame
+            full_path = get_full_path(self.directory, map_item.file_name)
+            raw_data = self.csv_loader.load_csv(full_path)
+            column_names = [column.name for column in map_item.__table__.columns]
+            renamed_data = rename_columns(raw_data, column_names)
+            return renamed_data
 
         except Exception as exc:
             self.logger.error("An unexpected error occurred: %s", exc)
