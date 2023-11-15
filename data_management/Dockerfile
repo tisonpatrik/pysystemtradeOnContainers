@@ -21,7 +21,7 @@ COPY data_management/tests/ ./tests
 RUN pip install pipenv
 
 # Installing dependencies using pipenv
-RUN pipenv install --deploy --ignore-pipfile
+RUN pipenv install --system --deploy --ignore-pipfile
 
 # cleanup
 RUN apt-get purge -y curl git build-essential \
@@ -29,8 +29,6 @@ RUN apt-get purge -y curl git build-essential \
     && rm -rf /root/.cache \
     && rm -rf /var/apt/lists/* \
     && rm -rf /var/cache/apt/*
-
-ENV PYTHONPATH=/home/app/ PYTHONHASHSEED=0
 
 # Specifying the default command to run the FastAPI app with uvicorn
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
