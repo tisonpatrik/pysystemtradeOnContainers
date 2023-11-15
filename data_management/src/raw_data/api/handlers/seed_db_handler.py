@@ -2,7 +2,6 @@
 This module contains the SeedDBHandler class, 
 which is responsible for seeding the database from CSV files.
 """
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.core.errors.table_to_db_errors import DataInsertionError
@@ -19,7 +18,7 @@ class SeedDBHandler:
     asynchronously from CSV files according to given schemas.
     """
 
-    def __init__(self, db_session: AsyncSession):
+    def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)
         self.config_files_service = ConfigFilesService()

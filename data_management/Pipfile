@@ -13,6 +13,7 @@ pydantic = "*"
 pydantic-settings = "*"
 uvicorn = "*"
 asyncpg = "*"
+pyarrow = "*"
 
 [dev-packages]
 

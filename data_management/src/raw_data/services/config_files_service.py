@@ -28,7 +28,7 @@ class ConfigFilesService:
             raw_data = self.csv_loader.load_csv(full_path)
             column_names = [column.name for column in map_item.__table__.columns]
             renamed_data = rename_columns(raw_data, column_names)
-            return renamed_data
+            return renamed_data.to_pandas()
 
         except Exception as exc:
             self.logger.error("An unexpected error occurred: %s", exc)

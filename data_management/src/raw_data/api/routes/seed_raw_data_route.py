@@ -3,8 +3,6 @@ API route definitions for seeding the database with raw data.
 Handles all incoming HTTP requests related to this functionality.
 """
 
-import logging
-
 # Third-Party Libraries
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
