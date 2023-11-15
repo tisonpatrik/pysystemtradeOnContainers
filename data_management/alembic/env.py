@@ -22,9 +22,9 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 
-from src.core.models.config_schemas import BaseModel
-from src.core.models.raw_data_schemas import BaseModel
-from src.core.models.risk_schemas import BaseModel
+from src.raw_data.models.config_schemas import BaseModel
+from src.raw_data.models.raw_data_schemas import BaseModel
+from src.risk.models.risk_models import BaseModel
 
 print(BaseModel.Base.metadata.tables.keys())
 

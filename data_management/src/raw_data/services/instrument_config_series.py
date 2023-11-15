@@ -2,16 +2,12 @@
 This module provides services for fetching and processing instrument config data asynchronously.
 """
 
-import logging
-
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.models.config_schemas import InstrumentConfig
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+from src.utils.logging import AppLogger
 
 class InstrumentConfigService:
     """
@@ -20,6 +16,7 @@ class InstrumentConfigService:
 
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
+        self.logger = AppLogger.get_instance().get_logger()
 
     async def get_files_configs_async(self):
         """
@@ -31,7 +28,7 @@ class InstrumentConfigService:
             )
             return data
         except Exception as error:
-            logger.error(
+            self.logger.error(
                 "Failed to get instrument config asynchronously: %s",
                 error,
                 exc_info=True,
@@ -51,10 +48,10 @@ class InstrumentConfigService:
             if not data.empty:
                 return data[[symbol_column]]
             else:
-                logger.info("No symbols found in instrument configurations.")
+                self.logger.info("No symbols found in instrument configurations.")
                 return pd.DataFrame(columns=[symbol_column])
         except Exception as error:
-            logger.error(
+            self.logger.error(
                 "Failed to get list of symbols asynchronously: %s",
                 error,
                 exc_info=True,
@@ -82,7 +79,7 @@ class InstrumentConfigService:
                 logger.info(f"No configuration found for symbol: {symbol}")
                 return pd.DataFrame(columns=[symbol_column, pointsize_column])
         except Exception as error:
-            logger.error(
+            self.logger.error(
                 "Failed to get point size for symbol asynchronously: %s",
                 error,
                 exc_info=True,

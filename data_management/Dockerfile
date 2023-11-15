@@ -11,18 +11,17 @@ RUN apt-get update \
 WORKDIR /home/app
 
 # Copying the poetry dependency files to the working directory
-COPY data_management/pyproject.toml data_management/poetry.lock* ./
+COPY data_management/Pipfile data_management/Pipfile.lock* ./
 
 # Copying the source code and other directories to the working directory
 COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
 
-# Installing poetry and the project dependencies
-RUN pip install poetry
+# Installing pipenv and the project dependencies
+RUN pip install pipenv
 
-# Disabling virtualenv creation by poetry and installing dependencies
-RUN poetry config virtualenvs.create false \
-    && poetry install --only main
+# Installing dependencies using pipenv
+RUN pipenv install --deploy --ignore-pipfile
 
 # cleanup
 RUN apt-get purge -y curl git build-essential \

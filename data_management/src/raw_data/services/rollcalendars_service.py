@@ -1,17 +1,13 @@
 """
 Handles processing and manipulation of roll calendar data from CSV files.
 """
-import logging
-
 from src.common_utils.utils.data_aggregation.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.rollcalendars_operations import process_roll_calendar_file
-from src.raw_data.services.csv_loader_service import get_csv_files_from_directory
+from src.raw_data.services.csv_loader_service import CsvLoaderService
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+from src.utils.logging import AppLogger
 
 class RollCalendarsService:
     """
@@ -19,6 +15,8 @@ class RollCalendarsService:
     """
 
     def __init__(self):
+        self.logger = AppLogger.get_instance().get_logger()
+        self.csv_loader_service = CsvLoaderService()
         self.date_time_column = "unix_date_time"
         self.symbol_column = "symbol"
 
@@ -26,10 +24,10 @@ class RollCalendarsService:
         """
         Process and prices for a given table mapping.
         """
-        logger.info("Starting the process for %s table.", map_item.table)
+        self.logger.info("Starting the process for %s table.", map_item.table)
 
         # Get list of CSV file names in the directory
-        csv_files_names = get_csv_files_from_directory(map_item.directory)
+        csv_files_names = self.csv_loader_service.get_csv_files_from_directory(map_item.directory)
 
         # Initialize list to store processed DataFrames
         roll_calendars = concatenate_data_frames(

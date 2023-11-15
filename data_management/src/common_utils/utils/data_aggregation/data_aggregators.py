@@ -1,14 +1,13 @@
 """
 Module for aggregating time-based price data to daily averages.
 """
-import logging
-
 import pandas as pd
 
 from src.core.errors.aggregation_errors import DataAggregationError
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.utils.logging import AppLogger
+
+logger = AppLogger.get_instance().get_logger()
 
 
 def aggregate_to_day_based_prices(

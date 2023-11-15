@@ -2,18 +2,14 @@
 This module defines a handler class for inserting robust volatility data into a database.
 It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
 """
-import logging
 
-from src.common_utils.utils.data_aggregation.data_aggregators import (
-    concatenate_data_frames,
-)
+from src.common_utils.utils.data_aggregation.data_aggregators import concatenate_data_frames
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.services.robust_volatility_service import RobustVolatilityService
 from src.risk.models.risk_models import RobustVolatility
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.utils.logging import AppLogger
 
 
 class RobustVolatilityHandler:
@@ -27,6 +23,8 @@ class RobustVolatilityHandler:
         self.robust_volatility_service = RobustVolatilityService()
         self.data_inserter = DataInsertService(db_session)
         self.adjusted_service = AdjustedPricesService(self.db_session)
+        self.logger = AppLogger.get_instance().get_logger()
+
 
     async def insert_robust_volatility_async(self):
         """
@@ -40,7 +38,7 @@ class RobustVolatilityHandler:
                 concatenated_data_frame, RobustVolatility.__tablename__
             )
         except Exception as error:
-            logger.error("Failed to insert robust volatility data: %s", error)
+            self.logger.error("Failed to insert robust volatility data: %s", error)
             raise
 
     async def _process_volatility_data(self, series_dict):
@@ -57,5 +55,5 @@ class RobustVolatilityHandler:
 
             return concatenate_data_frames(processed_data_frames)
         except Exception as error:
-            logger.error("Failed to process volatility data: %s", error)
+            self.logger.error("Failed to process volatility data: %s", error)
             raise

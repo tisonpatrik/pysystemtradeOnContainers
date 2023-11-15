@@ -5,6 +5,6 @@
 		}
 	],
 	"settings": {
-		"python.defaultInterpreterPath": ".venv/bin/python"
+		"python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3"
 	}
 }

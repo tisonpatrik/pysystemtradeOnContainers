@@ -12,12 +12,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.raw_data.api.handlers.seed_db_handler import SeedDBHandler
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.utils.logging import AppLogger
 
 # Initialize FastAPI router
 router = APIRouter()
-
+logger = AppLogger.get_instance().get_logger()
 
 @router.post(
     "/seed_raw_data_route/",

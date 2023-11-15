@@ -1,5 +1,4 @@
-import logging
-import pandas as pd
+
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_series import InstrumentConfigService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
@@ -9,9 +8,7 @@ from src.risk.services.instrument_volatility import InstrumentVolatilityService
 from src.risk.models.risk_models import InstrumentVolatility
 from src.raw_data.models.config_schemas import InstrumentConfig
 
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.utils.logging import AppLogger
 
 
 class InstrumentVolatilityHandler:
@@ -23,6 +20,8 @@ class InstrumentVolatilityHandler:
         self.adjusted_service = AdjustedPricesService(self.db_session)
         self.multiple_prices_service = MultiplePricesService(self.db_session)
         self.table_name = InstrumentVolatility.__tablename__
+        self.logger = AppLogger.get_instance().get_logger()
+       
 
     async def insert_robust_volatility_async(self):
         """
@@ -34,22 +33,12 @@ class InstrumentVolatilityHandler:
             for symbol in symbols.itertuples(index=False):
                 symbol = symbol.symbol
 
-                adjusted_prices = await self.adjusted_service.get_daily_prices_async(
-                    symbol
-                )
+                adjusted_prices = await self.adjusted_service.get_daily_prices_async(symbol)
                 if adjusted_prices.empty:
                     continue
 
-                denominator_prices = (
-                    await self.multiple_prices_service.get_denominator_prices_async(
-                        symbol
-                    )
-                )
-                point_size = (
-                    await self.files_configs_service.get_point_size_for_symbol_async(
-                        symbol
-                    )
-                )
+                denominator_prices = await self.multiple_prices_service.get_denominator_prices_async(symbol)
+                point_size = await self.files_configs_service.get_point_size_for_symbol_async(symbol)
                 instrument_volatility = self.instrument_volatility_service.calculate_instrument_volatility_for_instrument(
                     denominator_prices,
                     adjusted_prices,
@@ -60,5 +49,5 @@ class InstrumentVolatilityHandler:
                     instrument_volatility, self.table_name
                 )
         except Exception as error:
-            logger.error("Failed to insert robust volatility data: %s", error)
+            self.logger.error("Failed to insert robust volatility data: %s", error)
             raise

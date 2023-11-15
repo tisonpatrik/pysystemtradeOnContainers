@@ -2,9 +2,7 @@
 Module for date-time related conversion utilities.
 """
 
-import logging
 import time
-
 import pandas as pd
 
 from src.core.errors.date_time_errors import (
@@ -12,8 +10,8 @@ from src.core.errors.date_time_errors import (
     InvalidDatetimeColumnError,
 )
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from src.utils.logging import AppLogger
+logger = AppLogger.get_instance().get_logger()
 
 
 def convert_column_to_datetime(

@@ -4,11 +4,6 @@ from src.core.models.base_model import BaseModel
 class RobustVolatility(BaseModel):
     """
     ORM class for the 'robust_volatility' table. Represents volatility metrics for financial instruments.
-
-    Attributes:
-        unix_date_time (int): UNIX timestamp, part of the primary key.
-        symbol (str): Financial instrument symbol, part of the primary key.
-        volatility (float): Volatility measure of the instrument.
     """
 
     __tablename__ = "robust_volatility"
