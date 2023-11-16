@@ -15,7 +15,7 @@ def add_column_and_populate_it_by_value(
     """
     try:
         # Add a new column with the specified value for all rows
-        data_frame = data_frame.with_column(pl.lit(column_value).alias(column_name))
+        data_frame = data_frame.with_columns(pl.lit(column_value).alias(column_name))
         return data_frame
     except Exception as error:
         logger.error("Error during symbol addition: %s", error)

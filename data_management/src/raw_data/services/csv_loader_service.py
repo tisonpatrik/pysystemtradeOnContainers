@@ -19,7 +19,7 @@ class CsvLoaderService():
         Loads a CSV file from a given path and returns it as a DataFrame.
         """
         try:
-            data_frame = pl.read_csv(full_path, infer_schema_length = 500)
+            data_frame = pl.read_csv(full_path, infer_schema_length = 500, truncate_ragged_lines=True)
             return data_frame
         except Exception as error:
             self.logger.error("Error loading CSV file from %s: %s", full_path, error)
@@ -39,10 +39,3 @@ class CsvLoaderService():
         except Exception as error:
             self.logger.error("Error loading multiple CSV files from directory %s: %s", directory, error)
             raise MultipleCsvLoadingError(directory, str(error))
-
-
-    def get_csv_files_names_from_directory(self, directory: str) -> list:
-        """
-        Get the list of all CSV files from the specified directory.
-        """
-        return [f for f in os.listdir(directory) if f.endswith(".csv")]

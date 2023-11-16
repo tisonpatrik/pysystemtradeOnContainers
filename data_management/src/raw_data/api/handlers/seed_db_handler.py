@@ -36,7 +36,7 @@ class SeedDBHandler:
         for model in models:
             try:
                 data = self._get_processed_data_from_raw_file(model)
-                # await self.data_insert_service.async_insert_dataframe_to_table(data, model.__tablename__)
+                await self.data_insert_service.async_insert_dataframe_to_table(data, model.__tablename__)
             except DataInsertionError as error:
                 self.logger.error(f"Data insertion failed for {model.__tablename__}: {error}")
                 raise error

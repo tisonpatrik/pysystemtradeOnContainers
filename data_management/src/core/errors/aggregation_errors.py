@@ -3,3 +3,6 @@
 
 class DataAggregationError(Exception):
     """Raised when there's an error in data aggregation."""
+
+class DataFrameConcatenationError(Exception):
+    """Raised when there's an error in data concatenation."""
