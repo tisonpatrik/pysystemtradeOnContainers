@@ -3,7 +3,7 @@
 import pandas as pd
 
 from src.core.errors.dataframe_to_series_errors import DataFrameConversionError, GroupByError
-from src.common_utils.utils.date_time_operations.date_time_convertions import convert_column_to_datetime
+from src.common_utils.utils.date_time_operations.date_time_convertions import convert_string_column_to_datetime
 from src.common_utils.utils.validators.columns_validators import check_single_missing_column
 from src.utils.logging import AppLogger
 
@@ -38,7 +38,7 @@ def convert_dataframe_to_dict_of_series(
     check_single_missing_column(data_frame, symbol_column)
     check_single_missing_column(data_frame, index_column)
 
-    time_converted = convert_column_to_datetime(data_frame, index_column, "s")
+    time_converted = convert_string_column_to_datetime(data_frame, index_column, "s")
     series_dict = {}
 
     try:
@@ -61,7 +61,7 @@ def convert_dataframe_to_serie(
     """Converts the DataFrame to pandas Series."""
     check_single_missing_column(data_frame, index_column)
 
-    time_converted = convert_column_to_datetime(data_frame, index_column, "s")
+    time_converted = convert_string_column_to_datetime(data_frame, index_column, "s")
     time_converted_sorted = time_converted.sort_values(by=index_column)
     series = time_converted_sorted.set_index(index_column).squeeze()
 

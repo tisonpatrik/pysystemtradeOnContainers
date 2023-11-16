@@ -10,7 +10,7 @@ from src.common_utils.errors.date_time_errors import (
 )
 from src.common_utils.utils.date_time_operations.date_time_convertions import (
     convert_column,
-    convert_column_to_datetime,
+    convert_string_column_to_datetime,
     convert_datetime_to_unixtime,
 )
 
@@ -28,7 +28,7 @@ def time_based_dataframe():
 
 # Test for string-based time
 def test_convert_string_to_datetime(time_based_dataframe):
-    result = convert_column_to_datetime(time_based_dataframe, "time_str")
+    result = convert_string_column_to_datetime(time_based_dataframe, "time_str")
     expected_df = time_based_dataframe.copy()
     expected_df["time_str"] = pd.to_datetime(expected_df["time_str"])
     assert_frame_equal(result, expected_df)
@@ -36,7 +36,7 @@ def test_convert_string_to_datetime(time_based_dataframe):
 
 # Test for Unix-based time
 def test_convert_unix_to_datetime(time_based_dataframe):
-    result = convert_column_to_datetime(time_based_dataframe, "time_unix", unit="s")
+    result = convert_string_column_to_datetime(time_based_dataframe, "time_unix", unit="s")
     expected_df = time_based_dataframe.copy()
     expected_df["time_unix"] = pd.to_datetime(expected_df["time_unix"], unit="s")
     assert_frame_equal(result, expected_df)
@@ -45,7 +45,7 @@ def test_convert_unix_to_datetime(time_based_dataframe):
 # Test for an Invalid column
 def test_convert_invalid_column(time_based_dataframe):
     with pytest.raises(InvalidDatetimeColumnError):
-        convert_column_to_datetime(time_based_dataframe, "invalid_column")
+        convert_string_column_to_datetime(time_based_dataframe, "invalid_column")
 
 
 # Test for convert_column

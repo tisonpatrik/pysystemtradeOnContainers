@@ -6,7 +6,7 @@ specified columns to date-time format.
 """
 
 from src.raw_data.utils.rename_columns import remove_unnamed_columns, rename_columns
-from src.common_utils.utils.date_time_operations.date_time_convertions import convert_column_to_datetime
+from src.common_utils.utils.date_time_operations.date_time_convertions import convert_string_column_to_datetime
 from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.utils.logging import AppLogger
@@ -25,11 +25,9 @@ class RawFilesService:
         """
         try:
             removed_unnamed_columns = remove_unnamed_columns(dataframe)
-            column_names = [column.name for column in model.__table__.columns]
+            column_names = [column.name for column in model.__table__.columns if column.name != model.symbol.name]
             renamed_data = rename_columns(removed_unnamed_columns, column_names)
-            date_time_converted_data = convert_column_to_datetime(renamed_data, date_time_column)
-            self.logger.info(f"Successfully preprocessed CSV file: {csv_file_name}")
-
+            date_time_converted_data = convert_string_column_to_datetime(renamed_data, model.unix_date_time)
             return date_time_converted_data
         except Exception as exc:
             self.logger.error(f"Error preprocessing CSV file {symbol_name}: {exc}")
