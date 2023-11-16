@@ -19,7 +19,6 @@ class CsvLoaderService():
         Loads a CSV file from a given path and returns it as a DataFrame.
         """
         try:
-            self.logger.info(f"Loading CSV file from: {full_path}")
             data_frame = pl.read_csv(full_path, infer_schema_length = 500)
             return data_frame
         except Exception as error:
@@ -30,7 +29,6 @@ class CsvLoaderService():
         """
         Loads multiple CSV files from a given directory and returns a list of DataFrames.
         """
-        self.logger.info(f"Loading CSV files from: {directory}")
         data_frames_dict = {}
         try:
             for filepath in glob.glob(os.path.join(directory, '*.csv')):

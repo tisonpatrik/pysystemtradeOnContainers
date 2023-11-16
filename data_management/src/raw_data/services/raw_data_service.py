@@ -27,7 +27,7 @@ class RawFilesService:
             removed_unnamed_columns = remove_unnamed_columns(dataframe)
             column_names = [column.name for column in model.__table__.columns if column.name != model.symbol.name]
             renamed_data = rename_columns(removed_unnamed_columns, column_names)
-            date_time_converted_data = convert_string_column_to_datetime(renamed_data, model.unix_date_time)
+            date_time_converted_data = convert_string_column_to_datetime(renamed_data, model.unix_date_time.name)
             return date_time_converted_data
         except Exception as exc:
             self.logger.error(f"Error preprocessing CSV file {symbol_name}: {exc}")

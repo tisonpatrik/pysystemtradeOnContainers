@@ -12,14 +12,13 @@ from src.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-def convert_string_column_to_datetime(
-    data_frame: pl.DataFrame, date_time_column: str) -> pd.DataFrame:
+def convert_string_column_to_datetime(data_frame: pl.DataFrame, date_time_column: str) -> pd.DataFrame:
     """
     Converts a specified column in the DataFrame to datetime format.
     """
     try:
         # Convert the specified column to datetime format
-        converted_df = data_frame.with_column(pl.col(date_time_column).str.strptime(pl.Datetime))
+        converted_df = data_frame.with_columns(pl.col(date_time_column).str.strptime(pl.Datetime, None))
         return converted_df
     except Exception as exc:
         logger.error("Failed to convert column %s to datetime: %s", date_time_column, exc)

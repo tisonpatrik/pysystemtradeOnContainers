@@ -49,7 +49,6 @@ class PricesService:
         processed_data_frames = []
         for symbol_name, dataframe in dataframes.items():
             try:
-                self.logger.info("Processing data for symbol: %s", symbol_name)
                 preprocessed_data = self.raw_file_service.preprocess_raw_data(dataframe, model, symbol_name)
                 # aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time)
                 # unix_time_converted_data = convert_datetime_to_unixtime(aggregated_data, model.unix_date_time)
