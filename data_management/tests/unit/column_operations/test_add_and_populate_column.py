@@ -3,7 +3,7 @@ import pytest
 from pandas.testing import assert_frame_equal
 
 from src.common_utils.errors.rename_colums_errors import SymbolAdditionError
-from src.common_utils.utils.column_operations.add_and_populate_column import (
+from src.raw_data.utils.add_and_populate_column import (
     add_column_and_populate_it_by_value,
 )
 

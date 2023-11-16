@@ -3,7 +3,6 @@ This module defines an API route for seeding robust volatility data into the dat
 It uses FastAPI for the API definitions and SQLAlchemy for the database interactions.
 """
 
-import logging
 
 # Third-Party Libraries
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -12,9 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.risk.api.handlers.robust_volatility_handler import RobustVolatilityHandler
 from src.risk.api.handlers.instrument_volatility_handler import InstrumentVolatilityHandler
+from src.utils.logging import AppLogger
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = AppLogger.get_instance().get_logger()
 
 router = APIRouter()
 

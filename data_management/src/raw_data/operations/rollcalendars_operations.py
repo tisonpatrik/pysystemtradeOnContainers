@@ -7,12 +7,8 @@ import os
 
 import pandas as pd
 
-from src.common_utils.utils.column_operations.add_and_populate_column import (
-    add_column_and_populate_it_by_value,
-)
-from src.raw_data.utils.date_time_convertions import (
-    convert_datetime_to_unixtime,
-)
+from src.raw_data.utils.add_and_populate_column import add_column_and_populate_it_by_value
+from src.raw_data.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.raw_data.services.raw_data_service import RawFilesService
 
 

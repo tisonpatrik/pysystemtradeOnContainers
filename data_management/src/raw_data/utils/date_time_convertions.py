@@ -3,7 +3,6 @@ Module for date-time related conversion utilities.
 """
 
 import time
-import pandas as pd
 import polars as pl
 
 from src.raw_data.core.errors.date_time_errors import DateTimeConversionError,InvalidDatetimeColumnError
@@ -12,7 +11,7 @@ from src.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-def convert_string_column_to_datetime(data_frame: pl.DataFrame, date_time_column: str) -> pd.DataFrame:
+def convert_string_column_to_datetime(data_frame: pl.DataFrame, date_time_column: str) -> pl.DataFrame:
     """
     Converts a specified column in the DataFrame to datetime format.
     """
@@ -24,16 +23,12 @@ def convert_string_column_to_datetime(data_frame: pl.DataFrame, date_time_column
         logger.error("Failed to convert column %s to datetime: %s", date_time_column, exc)
         raise InvalidDatetimeColumnError(f"Failed to convert {date_time_column} to datetime") from exc
 
-def convert_datetime_to_unixtime(
-    data_frame: pd.DataFrame, date_time_column: str
-) -> pd.DataFrame:
+def convert_datetime_to_unixtime(data_frame: pl.DataFrame, date_time_column: str) -> pl.DataFrame:
     """
     Converts the date_column to UNIX time.
     """
     try:
-        data_frame[date_time_column] = data_frame[date_time_column].apply(
-            lambda x: int(time.mktime(x.timetuple()))
-        )
+        data_frame = data_frame.with_columns(data_frame[date_time_column].dt.timestamp().cast(pl.Int64).alias(date_time_column))
         return data_frame
     except Exception as error:
         logger.error("Error during unix_date_time conversion: %s", error)
