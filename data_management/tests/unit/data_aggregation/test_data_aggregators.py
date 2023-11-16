@@ -3,7 +3,7 @@ import pytest
 from pandas.testing import assert_frame_equal
 
 from src.common_utils.errors.aggregation_errors import DataAggregationError
-from src.common_utils.utils.data_aggregation.data_aggregators import (
+from src.raw_data.utils.data_aggregators import (
     aggregate_to_day_based_prices,
     concatenate_data_frames,
 )

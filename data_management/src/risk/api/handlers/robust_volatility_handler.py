@@ -3,7 +3,7 @@ This module defines a handler class for inserting robust volatility data into a 
 It makes use of DataLoadService for database operations and DateTimeService for date-time data handling.
 """
 
-from src.common_utils.utils.data_aggregation.data_aggregators import concatenate_data_frames
+from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.services.robust_volatility_service import RobustVolatilityService

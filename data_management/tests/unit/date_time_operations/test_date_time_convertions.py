@@ -8,7 +8,7 @@ from src.common_utils.errors.date_time_errors import (
     DateTimeConversionError,
     InvalidDatetimeColumnError,
 )
-from src.common_utils.utils.date_time_operations.date_time_convertions import (
+from src.raw_data.utils.date_time_convertions import (
     convert_column,
     convert_string_column_to_datetime,
     convert_datetime_to_unixtime,

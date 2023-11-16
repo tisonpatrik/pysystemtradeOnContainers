@@ -4,11 +4,11 @@ It utilizes various helper classes for tasks such as file validation, date-time 
 and table adjustments.
 """
 
-from src.common_utils.utils.data_aggregation.data_aggregators import concatenate_data_frames
+from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.common_utils.utils.column_operations.add_and_populate_column import add_column_and_populate_it_by_value
 from src.common_utils.utils.column_operations.round_column_numbers import round_values_in_column
-from src.common_utils.utils.data_aggregation.data_aggregators import aggregate_to_day_based_prices
-from src.common_utils.utils.date_time_operations.date_time_convertions import convert_datetime_to_unixtime
+from src.raw_data.utils.data_aggregators import aggregate_to_day_based_prices
+from src.raw_data.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.raw_data.services.raw_data_service import RawFilesService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError, PricesFilesProcessingError
@@ -50,7 +50,7 @@ class PricesService:
         for symbol_name, dataframe in dataframes.items():
             try:
                 preprocessed_data = self.raw_file_service.preprocess_raw_data(dataframe, model, symbol_name)
-                # aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time)
+                aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time.name, model.price.name)
                 # unix_time_converted_data = convert_datetime_to_unixtime(aggregated_data, model.unix_date_time)
                 # rounded_data = round_values_in_column(unix_time_converted_data, model.price)
                 # processed_df = add_column_and_populate_it_by_value(rounded_data, model.symbol, symbol_name)

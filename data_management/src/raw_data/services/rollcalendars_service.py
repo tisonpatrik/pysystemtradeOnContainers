@@ -1,7 +1,7 @@
 """
 Handles processing and manipulation of roll calendar data from CSV files.
 """
-from src.common_utils.utils.data_aggregation.data_aggregators import (
+from src.raw_data.utils.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.operations.rollcalendars_operations import process_roll_calendar_file

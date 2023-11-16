@@ -3,7 +3,7 @@
 import pandas as pd
 
 from src.core.errors.dataframe_to_series_errors import DataFrameConversionError, GroupByError
-from src.common_utils.utils.date_time_operations.date_time_convertions import convert_string_column_to_datetime
+from src.raw_data.utils.date_time_convertions import convert_string_column_to_datetime
 from src.common_utils.utils.validators.columns_validators import check_single_missing_column
 from src.utils.logging import AppLogger
 

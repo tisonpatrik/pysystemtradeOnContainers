@@ -6,7 +6,7 @@ import time
 import pandas as pd
 import polars as pl
 
-from src.core.errors.date_time_errors import DateTimeConversionError,InvalidDatetimeColumnError
+from src.raw_data.core.errors.date_time_errors import DateTimeConversionError,InvalidDatetimeColumnError
 
 from src.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
