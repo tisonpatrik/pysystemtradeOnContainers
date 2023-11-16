@@ -27,7 +27,7 @@ class RollCalendarsService:
         self.logger.info("Starting the process for %s table.", map_item.table)
 
         # Get list of CSV file names in the directory
-        csv_files_names = self.csv_loader_service.get_csv_files_from_directory(map_item.directory)
+        csv_files_names = self.csv_loader_service.get_csv_files_names_from_directory(map_item.directory)
 
         # Initialize list to store processed DataFrames
         roll_calendars = concatenate_data_frames(

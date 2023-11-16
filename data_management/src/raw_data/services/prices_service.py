@@ -5,7 +5,11 @@ and table adjustments.
 """
 
 from src.common_utils.utils.data_aggregation.data_aggregators import concatenate_data_frames
-from src.raw_data.operations.prices_operations import process_single_csv_file
+from src.common_utils.utils.column_operations.add_and_populate_column import add_column_and_populate_it_by_value
+from src.common_utils.utils.column_operations.round_column_numbers import round_values_in_column
+from src.common_utils.utils.data_aggregation.data_aggregators import aggregate_to_day_based_prices
+from src.common_utils.utils.date_time_operations.date_time_convertions import convert_datetime_to_unixtime
+from src.raw_data.operations.data_preprocessing import preprocess_raw_data
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.core.errors.raw_data_processing_error import ProcessingError, PricesFilesProcessingError
 
@@ -19,10 +23,6 @@ class PricesService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader_service = CsvLoaderService()
-        
-        self.date_time_column = "unix_date_time"
-        self.price_column = "price"
-        self.symbol_column = "symbol"
 
     def process_prices_files(self, model):
         """
@@ -31,8 +31,8 @@ class PricesService:
         try:
             self.logger.info("Starting the process for %s table.", model.__tablename__)
 
-            csv_files_names = self.csv_loader_service.get_csv_files_from_directory(model.directory)
-            processed_data_frames = self._process_csv_files(csv_files_names, model)
+            dataframes = self.csv_loader_service.load_multiple_csv_files(model.directory)
+            processed_data_frames = self._process_csv_files(dataframes, model)
             price_data_frames = concatenate_data_frames(processed_data_frames)
             return price_data_frames
         
@@ -41,17 +41,21 @@ class PricesService:
             raise
 
 
-    def _process_csv_files(self, csv_files_names, model):
+    def _process_csv_files(self, dataframes, model):
         """
         Processes each CSV file in the given list.
         """
         processed_data_frames = []
-        for csv_file_name in csv_files_names:
+        for symbol_name, dataframe in dataframes.items():
             try:
-                self.logger.info("Processing CSV file: %s", csv_file_name)
-                processed_df = process_single_csv_file(csv_file_name, model, self.price_column, self.date_time_column, self.symbol_column)
+                self.logger.info("Processing data for symbol: %s", symbol_name)
+                preprocessed_data = preprocess_raw_data(dataframe, model, model.unix_date_time)
+                aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time)
+                unix_time_converted_data = convert_datetime_to_unixtime(aggregated_data, model.unix_date_time)
+                rounded_data = round_values_in_column(unix_time_converted_data, model.price)
+                processed_df = add_column_and_populate_it_by_value(rounded_data, model.symbol, symbol_name)
                 processed_data_frames.append(processed_df)
             except Exception as exc:
-                self.logger.error("An unexpected error occurred while processing %s: %s", csv_file_name, exc)
-                raise ProcessingError(f"An unexpected error occurred during processing of {csv_file_name}.") from exc
+                self.logger.error("An unexpected error occurred while processing data for symbol %s: %s", symbol_name, exc)
+                raise ProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol_name}.") from exc
         return processed_data_frames
