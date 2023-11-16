@@ -7,7 +7,7 @@ and table adjustments.
 from src.common_utils.utils.data_aggregation.data_aggregators import concatenate_data_frames
 from src.raw_data.operations.prices_operations import process_single_csv_file
 from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.core.errors.raw_data_processing_error import ProcessingError
+from src.raw_data.core.errors.raw_data_processing_error import ProcessingError, PricesFilesProcessingError
 
 from src.utils.logging import AppLogger
 
@@ -28,25 +28,30 @@ class PricesService:
         """
         Process and prices for a given table mapping.
         """
-        self.logger.info("Starting the process for %s table.", model.__tablename__)
+        try:
+            self.logger.info("Starting the process for %s table.", model.__tablename__)
 
-        # Get list of CSV file names in the directory
-        csv_files_names = self.csv_loader_service.get_csv_files_from_directory(model.directory)
+            csv_files_names = self.csv_loader_service.get_csv_files_from_directory(model.directory)
+            processed_data_frames = self._process_csv_files(csv_files_names, model)
+            price_data_frames = concatenate_data_frames(processed_data_frames)
+            return price_data_frames
+        
+        except PricesFilesProcessingError as error:
+            self.logger.error("An error occurred during processing: %s", error)
+            raise
 
-        # Initialize list to store processed DataFrames
+
+    def _process_csv_files(self, csv_files_names, model):
+        """
+        Processes each CSV file in the given list.
+        """
         processed_data_frames = []
-
-        # Process each CSV file
         for csv_file_name in csv_files_names:
             try:
+                self.logger.info("Processing CSV file: %s", csv_file_name)
                 processed_df = process_single_csv_file(csv_file_name, model, self.price_column, self.date_time_column, self.symbol_column)
                 processed_data_frames.append(processed_df)
             except Exception as exc:
-                self.logger.error("An unexpected error occurred: %s", exc)
-                raise ProcessingError("An unexpected error occurred during processing.") from exc
-
-        # Concatenate all processed DataFrames
-        price_data_frames = concatenate_data_frames(processed_data_frames)
-
-        return price_data_frames
-
+                self.logger.error("An unexpected error occurred while processing %s: %s", csv_file_name, exc)
+                raise ProcessingError(f"An unexpected error occurred during processing of {csv_file_name}.") from exc
+        return processed_data_frames
