@@ -5,7 +5,6 @@ Module for handling methods for renaming columns.
 import polars as pl
 from src.core.errors.rename_colums_errors import ColumnRenameError
 
-
 from src.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
@@ -22,9 +21,9 @@ def rename_columns(data_frame, new_column_names):
 
 def remove_unnamed_columns(data_frame: pl.DataFrame):
     """
-    Removes unnamed columns from a given pandas DataFrame.
+    Removes unnamed columns from a given Polars DataFrame.
     """
-    removed_unnamed_columns = data_frame.loc[
-        :, ~data_frame.columns.str.contains("^Unnamed")
-    ]
+    # Filter out columns whose names start with 'Unnamed'
+    columns_to_keep = [col for col in data_frame.columns if not col.startswith("Unnamed")]
+    removed_unnamed_columns = data_frame.select(columns_to_keep)
     return removed_unnamed_columns

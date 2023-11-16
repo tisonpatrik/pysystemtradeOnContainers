@@ -3,7 +3,7 @@ Purpose: This module defines the ConfigFilesService class which processes instru
 It reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object for further usage.
 """
 
-from src.raw_data.core.errors.raw_data_processing_error import ProcessingError
+from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError
 from src.raw_data.utils.rename_columns import rename_columns
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.utils.path_validator import get_full_path
@@ -16,7 +16,6 @@ class ConfigFilesService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader = CsvLoaderService()
-        self.directory = "/path/in/container/csvconfig"
 
     def process_config_files(self, model):
         """
@@ -24,7 +23,7 @@ class ConfigFilesService:
         """
         try:
             self.logger.info("Starting the process for %s table.", model.__tablename__)
-            full_path = get_full_path(self.directory, model.file_name)
+            full_path = get_full_path(model.directory, model.file_name)
             raw_data = self.csv_loader.load_csv(full_path)
             column_names = [column.name for column in model.__table__.columns]
             renamed_data = rename_columns(raw_data, column_names)
@@ -32,4 +31,4 @@ class ConfigFilesService:
 
         except Exception as exc:
             self.logger.error("An unexpected error occurred: %s", exc)
-            raise ProcessingError("An unexpected error occurred during processing.") from exc
+            raise ConfigFilesProcessingError("An unexpected error occurred during processing.") from exc

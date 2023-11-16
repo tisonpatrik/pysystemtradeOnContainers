@@ -1,0 +1,36 @@
+"""
+This module provides utilities for preprocessing raw data files, specifically
+CSV files. It performs tasks such as loading the CSV into a DataFrame, 
+removing unnamed columns, renaming columns based on a mapping, and converting
+specified columns to date-time format.
+"""
+
+from src.raw_data.utils.rename_columns import remove_unnamed_columns, rename_columns
+from src.common_utils.utils.date_time_operations.date_time_convertions import convert_column_to_datetime
+from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError
+from src.raw_data.services.csv_loader_service import CsvLoaderService
+from src.utils.logging import AppLogger
+
+class RawFilesService:
+    """
+    Handles the processing of raw data.
+    """
+    def __init__(self):
+        self.logger = AppLogger.get_instance().get_logger()
+        self.csv_loader = CsvLoaderService()
+
+    def preprocess_raw_data(self, dataframe, model, symbol_name):
+        """
+        Preprocess a given raw CSV data file and returns a cleaned DataFrame.
+        """
+        try:
+            removed_unnamed_columns = remove_unnamed_columns(dataframe)
+            column_names = [column.name for column in model.__table__.columns]
+            renamed_data = rename_columns(removed_unnamed_columns, column_names)
+            date_time_converted_data = convert_column_to_datetime(renamed_data, date_time_column)
+            self.logger.info(f"Successfully preprocessed CSV file: {csv_file_name}")
+
+            return date_time_converted_data
+        except Exception as exc:
+            self.logger.error(f"Error preprocessing CSV file {symbol_name}: {exc}")
+            raise ConfigFilesProcessingError("An unexpected error occurred during processing.") from exc

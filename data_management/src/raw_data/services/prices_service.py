@@ -9,9 +9,9 @@ from src.common_utils.utils.column_operations.add_and_populate_column import add
 from src.common_utils.utils.column_operations.round_column_numbers import round_values_in_column
 from src.common_utils.utils.data_aggregation.data_aggregators import aggregate_to_day_based_prices
 from src.common_utils.utils.date_time_operations.date_time_convertions import convert_datetime_to_unixtime
-from src.raw_data.operations.data_preprocessing import preprocess_raw_data
+from src.raw_data.services.raw_data_service import RawFilesService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.core.errors.raw_data_processing_error import ProcessingError, PricesFilesProcessingError
+from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError, PricesFilesProcessingError
 
 from src.utils.logging import AppLogger
 
@@ -23,6 +23,7 @@ class PricesService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader_service = CsvLoaderService()
+        self.raw_file_service = RawFilesService()
 
     def process_prices_files(self, model):
         """
@@ -49,13 +50,13 @@ class PricesService:
         for symbol_name, dataframe in dataframes.items():
             try:
                 self.logger.info("Processing data for symbol: %s", symbol_name)
-                preprocessed_data = preprocess_raw_data(dataframe, model, model.unix_date_time)
-                aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time)
-                unix_time_converted_data = convert_datetime_to_unixtime(aggregated_data, model.unix_date_time)
-                rounded_data = round_values_in_column(unix_time_converted_data, model.price)
-                processed_df = add_column_and_populate_it_by_value(rounded_data, model.symbol, symbol_name)
-                processed_data_frames.append(processed_df)
+                preprocessed_data = self.raw_file_service.preprocess_raw_data(dataframe, model, symbol_name)
+                # aggregated_data = aggregate_to_day_based_prices(preprocessed_data, model.unix_date_time)
+                # unix_time_converted_data = convert_datetime_to_unixtime(aggregated_data, model.unix_date_time)
+                # rounded_data = round_values_in_column(unix_time_converted_data, model.price)
+                # processed_df = add_column_and_populate_it_by_value(rounded_data, model.symbol, symbol_name)
+                # processed_data_frames.append(processed_df)
             except Exception as exc:
                 self.logger.error("An unexpected error occurred while processing data for symbol %s: %s", symbol_name, exc)
-                raise ProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol_name}.") from exc
+                raise ConfigFilesProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol_name}.") from exc
         return processed_data_frames

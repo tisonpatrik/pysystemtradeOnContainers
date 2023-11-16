@@ -4,10 +4,16 @@ in the TableToDBService class. It includes exceptions for invalid file names and
 processing errors.
 """
 
-class ProcessingError(Exception):
+class RawDataProcessingError(Exception):
     
   """  
   Raised when an error occurs during the processing of raw data files.
+  """
+
+class ConfigFilesProcessingError(Exception):
+    
+  """  
+  Raised when an error occurs during the processing of config files.
   """
 
 class PricesFilesProcessingError(Exception):
