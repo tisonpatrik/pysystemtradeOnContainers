@@ -12,7 +12,6 @@ from src.raw_data.api.handlers.seed_db_handler import SeedDBHandler
 
 from src.utils.logging import AppLogger
 
-# Initialize FastAPI router
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 

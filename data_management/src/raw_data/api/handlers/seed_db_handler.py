@@ -4,7 +4,7 @@ which is responsible for seeding the database from CSV files.
 """
 
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.core.errors.seeder_error import DataInsertionError
+from src.core.errors.seeder_error import DataInsertionError
 from src.raw_data.services.config_files_service import ConfigFilesService
 from src.raw_data.services.prices_service import PricesService
 from src.raw_data.services.rollcalendars_service import RollCalendarsService
