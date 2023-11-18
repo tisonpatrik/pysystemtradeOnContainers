@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, PrimaryKeyConstraint, ForeignKey
 from src.core.models.base_model import BaseModel
 
 class RobustVolatility(BaseModel):
@@ -9,8 +9,10 @@ class RobustVolatility(BaseModel):
     __tablename__ = "robust_volatility"
 
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     volatility = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
     def __repr__(self):
         return f"<RobustVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
@@ -23,8 +25,10 @@ class InstrumentVolatility(BaseModel):
 
     __tablename__ = "instrument_volatility"
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     volatility = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
     def __repr__(self):
         return f"<InstrumentVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"

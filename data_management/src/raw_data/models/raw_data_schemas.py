@@ -4,7 +4,7 @@ including adjusted prices, FX prices, multiple prices, and roll calendars.
 These classes facilitate database interactions in a Pythonic way.
 """
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, PrimaryKeyConstraint
 from src.core.models.base_model import BaseModel
 
 class AdjustedPrices(BaseModel):
@@ -17,8 +17,10 @@ class AdjustedPrices(BaseModel):
     directory = "/path/in/container/adjusted_prices_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     price = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
 
 class FxPrices(BaseModel):
@@ -30,8 +32,11 @@ class FxPrices(BaseModel):
     directory = "/path/in/container/fx_prices_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     price = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+
 
 
 class MultiplePrices(BaseModel):
@@ -43,13 +48,16 @@ class MultiplePrices(BaseModel):
     directory = "/path/in/container/multiple_prices_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     carry = Column(Float)
     carry_contract = Column(Integer)
     price = Column(Float)
     price_contract = Column(Integer)
     forward = Column(Float)
     forward_contract = Column(Integer)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+
 
 
 class RollCalendars(BaseModel):
@@ -61,8 +69,10 @@ class RollCalendars(BaseModel):
     directory = "/path/in/container/roll_calendars_csv"
 
     unix_date_time = Column(Integer, primary_key=True)
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'))  
     current_contract = Column(Integer)
     next_contract = Column(Integer)
     carry_contract = Column(Integer)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 

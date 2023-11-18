@@ -1,5 +1,5 @@
 
-import pandas as pd
+from src.db.services.data_load_service import DataLoadService
 
 from src.risk.estimators.instrument_volatility import get_instrument_currency_vol
 from src.common_utils.utils.data_to_db.series_to_frame import process_series_to_frame
@@ -7,19 +7,12 @@ from src.common_utils.utils.data_to_db.series_to_frame import process_series_to_
 from src.risk.models.risk_models import InstrumentVolatility
 from src.utils.logging import AppLogger
 
-INSTRUMENT_VOLATILITY_COLUMN_MAPPING = {"price": "volatility"}
-
 class InstrumentVolatilityService:
-    def __init__(self):
+    def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
+        self.data_loader = DataLoadService(db_session)
 
-    def calculate_instrument_volatility_for_instrument(
-        self,
-        multiple_prices: pd.Series,
-        daily_prices: pd.Series,
-        poinsize: float,
-        symbol: str,
-    ) -> pd.DataFrame:
+    def calculate_instrument_volatility_for_instrument(self, model):
         try:
             volatility = get_instrument_currency_vol(multiple_prices, daily_prices, poinsize)
             data_frame = process_series_to_frame(volatility,symbol,InstrumentVolatility,INSTRUMENT_VOLATILITY_COLUMN_MAPPING)

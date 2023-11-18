@@ -1,6 +1,6 @@
 
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.services.instrument_config_series import InstrumentConfigService
+from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.services.instrument_volatility import InstrumentVolatilityService

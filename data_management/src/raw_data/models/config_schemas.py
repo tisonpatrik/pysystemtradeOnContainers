@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Integer, Text
+from sqlalchemy import Column, String, Float, Integer, Text, ForeignKey
 from src.core.models.base_model import BaseModel
 
 
@@ -22,18 +22,19 @@ class InstrumentMetadata(BaseModel):
     file_name = "moreinstrumentinfo.csv"
     directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)
     asset_class = Column(String(50))
     sub_class = Column(String(50))
     sub_sub_class = Column(String(50))
     description = Column(String(100))
+
 
 class RollConfig(BaseModel):
     __tablename__ = "roll_config"
     file_name = "rollconfig.csv"
     directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)    
     hold_roll_cycle = Column(String(50))
     roll_offset_days = Column(Integer)
     carry_offset = Column(Integer)
@@ -45,6 +46,6 @@ class SpreadCost(BaseModel):
     file_name = "spreadcosts.csv"
     directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), primary_key=True)
+    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)  
     spread_cost = Column(Float)
 

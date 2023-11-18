@@ -11,7 +11,7 @@ from src.raw_data.utils.data_aggregators import aggregate_to_day_based_prices
 from src.raw_data.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.raw_data.services.raw_data_service import RawFilesService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError, PricesFilesProcessingError
+from src.raw_data.core.errors.raw_data_processing_error import PricesFilesProcessingError
 
 from src.utils.logging import AppLogger
 
@@ -57,5 +57,5 @@ class PricesService:
                 processed_data_frames.append(processed_df)
             except Exception as exc:
                 self.logger.error("An unexpected error occurred while processing data for symbol %s: %s", symbol_name, exc)
-                raise ConfigFilesProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol_name}.") from exc
+                raise PricesFilesProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol_name}.") from exc
         return processed_data_frames
