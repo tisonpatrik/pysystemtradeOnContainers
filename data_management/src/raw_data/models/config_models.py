@@ -4,8 +4,6 @@ from src.core.models.base_model import BaseModel
 
 class InstrumentConfig(BaseModel):
     __tablename__ = "instrument_config"
-    file_name = "instrumentconfig.csv"
-    directory = "/path/in/container/csvconfig"
 
     symbol = Column(String(50), primary_key=True)
     description = Column(Text)
@@ -19,8 +17,6 @@ class InstrumentConfig(BaseModel):
 
 class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"
-    file_name = "moreinstrumentinfo.csv"
-    directory = "/path/in/container/csvconfig"
 
     symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)
     asset_class = Column(String(50))
@@ -31,8 +27,6 @@ class InstrumentMetadata(BaseModel):
 
 class RollConfig(BaseModel):
     __tablename__ = "roll_config"
-    file_name = "rollconfig.csv"
-    directory = "/path/in/container/csvconfig"
 
     symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)    
     hold_roll_cycle = Column(String(50))
@@ -43,8 +37,6 @@ class RollConfig(BaseModel):
 
 class SpreadCost(BaseModel):
     __tablename__ = "spread_cost"
-    file_name = "spreadcosts.csv"
-    directory = "/path/in/container/csvconfig"
 
     symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)  
     spread_cost = Column(Float)

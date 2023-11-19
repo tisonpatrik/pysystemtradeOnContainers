@@ -6,7 +6,7 @@ from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.services.instrument_volatility import InstrumentVolatilityService
 
 from src.risk.models.risk_models import InstrumentVolatility
-from src.raw_data.models.config_schemas import InstrumentConfig
+from src.raw_data.models.config_models import InstrumentConfig
 
 from src.utils.logging import AppLogger
 

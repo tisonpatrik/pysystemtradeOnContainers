@@ -8,8 +8,8 @@ from src.core.errors.seeder_error import DataInsertionError
 from src.raw_data.services.config_files_service import ConfigFilesService
 from src.raw_data.services.prices_service import PricesService
 from src.raw_data.services.rollcalendars_service import RollCalendarsService
-from src.raw_data.models.config_schemas import InstrumentConfig ,RollConfig, SpreadCost
-from src.raw_data.models.raw_data_schemas import AdjustedPrices, FxPrices, MultiplePrices, RollCalendars
+from src.raw_data.models.config_models import InstrumentConfig ,RollConfig, SpreadCost
+from src.raw_data.models.raw_data_models import AdjustedPrices, FxPrices, MultiplePrices, RollCalendars
 from src.utils.logging import AppLogger
 
 class SeedDBHandler:

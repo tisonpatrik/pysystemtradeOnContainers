@@ -5,7 +5,7 @@ This module provides services for fetching and processing instrument config data
 import polars as pl
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.models.config_schemas import InstrumentConfig
+from src.raw_data.models.config_models import InstrumentConfig
 
 from src.utils.logging import AppLogger
 
