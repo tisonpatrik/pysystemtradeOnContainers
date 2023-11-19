@@ -7,7 +7,7 @@ specified columns to date-time format.
 
 from src.raw_data.utils.rename_columns import rename_columns
 from src.raw_data.utils.date_time_convertions import convert_string_column_to_datetime
-from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError
+from src.raw_data.errors.raw_data_processing_error import ConfigFilesProcessingError
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.utils.logging import AppLogger
 

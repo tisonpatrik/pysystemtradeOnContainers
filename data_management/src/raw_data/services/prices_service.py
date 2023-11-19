@@ -11,9 +11,10 @@ from src.raw_data.utils.data_aggregators import aggregate_to_day_based_prices
 from src.raw_data.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.raw_data.services.raw_data_service import RawFilesService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.core.errors.raw_data_processing_error import PricesFilesProcessingError
+from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
 
 from src.utils.logging import AppLogger
+
 
 class PricesService:
     """
@@ -36,11 +37,9 @@ class PricesService:
             processed_data_frames = self._process_csv_files(dataframes, model)
             price_data_frames = concatenate_data_frames(processed_data_frames)
             return price_data_frames
-        
         except PricesFilesProcessingError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise
-
 
     def _process_csv_files(self, dataframes, model):
         """

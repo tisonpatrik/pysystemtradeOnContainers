@@ -7,7 +7,7 @@ from src.raw_data.utils.add_and_populate_column import add_column_and_populate_i
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.services.raw_data_service import RawFilesService
 
-from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError, PricesFilesProcessingError
+from src.raw_data.errors.raw_data_processing_error import ConfigFilesProcessingError, PricesFilesProcessingError
 from src.utils.logging import AppLogger
 
 class RollCalendarsService:

@@ -3,7 +3,7 @@ This module contains utility functions for adding and populating columns in a pa
 """
 import polars as pl
 
-from src.raw_data.core.errors.add_and_populate_error import SymbolAdditionError
+from src.raw_data.errors.add_and_populate_error import SymbolAdditionError
 from src.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()

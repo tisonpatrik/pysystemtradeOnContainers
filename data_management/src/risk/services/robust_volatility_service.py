@@ -15,6 +15,7 @@ class RobustVolatilityService:
     """
     Service for calculating robust volatility of financial instruments.
     """
+
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.data_loader = DataLoadService(db_session)
@@ -40,12 +41,19 @@ class RobustVolatilityService:
         processed_robust_vol = []
         for symbol in symbols:
             try:
-                data_frame = await self.data_loader.fetch_raw_data_from_table_by_symbol(RobustVolatility.__tablename__, symbol)
+                data_frame = await self.data_loader.fetch_raw_data_from_table_by_symbol(
+                    RobustVolatility.__tablename__, symbol
+                )
                 if data_frame.is_empty():
                     continue
-                    
 
             except Exception as exc:
-                self.logger.error("An unexpected error occurred while processing data for symbol %s: %s", symbol, exc)
-                raise RobustVolProcessingError(f"An unexpected error occurred during processing of data for symbol {symbol}.") from exc
+                self.logger.error(
+                    "An unexpected error occurred while processing data for symbol %s: %s",
+                    symbol,
+                    exc,
+                )
+                raise RobustVolProcessingError(
+                    f"An unexpected error occurred during processing of data for symbol {symbol}."
+                ) from exc
         return processed_robust_vol

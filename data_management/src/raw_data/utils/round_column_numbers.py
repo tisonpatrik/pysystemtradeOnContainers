@@ -7,7 +7,7 @@ The module also imports a utility function for checking missing columns.
 
 import polars as pl
 
-from src.raw_data.core.errors.rounding_error import ColumnRoundingError
+from src.raw_data.errors.rounding_error import ColumnRoundingError
 from src.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()

@@ -3,7 +3,7 @@ Purpose: This module defines the ConfigFilesService class which processes instru
 It reads raw CSV files, renames columns, and encapsulates the data into a DataFrameContainer object for further usage.
 """
 
-from src.raw_data.core.errors.raw_data_processing_error import ConfigFilesProcessingError
+from src.raw_data.errors.raw_data_processing_error import ConfigFilesProcessingError
 from src.raw_data.utils.rename_columns import rename_columns
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.utils.path_validator import get_full_path

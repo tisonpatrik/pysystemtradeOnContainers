@@ -3,7 +3,7 @@ Provides utilities for validating file paths and raising appropriate exceptions.
 """
 import os
 
-from src.raw_data.core.errors.path_validation_error import InvalidFileNameError
+from src.raw_data.errors.path_validation_error import InvalidFileNameError
 
 
 def get_full_path(directory: str, file_name: str) -> str:

@@ -6,7 +6,7 @@ import glob
 
 import polars as pl
 
-from src.raw_data.core.errors.csv_loading_errors import CsvLoadingError, MultipleCsvLoadingError
+from src.raw_data.errors.csv_loading_errors import CsvLoadingError, MultipleCsvLoadingError
 from src.utils.logging import AppLogger
 
 class CsvLoaderService():

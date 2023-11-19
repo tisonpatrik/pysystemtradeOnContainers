@@ -1,10 +1,18 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3"
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3",
+        "[python]": {
+            "editor.defaultFormatter": "ms-python.black-formatter",
+            "editor.formatOnSave": true
+        },
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.diagnosticMode": "workspace",
+        "python.testing.pytestEnabled": true,
+        "mypy-type-checker.severity": {"error": "Error", "note": "Information"}
+    }
 }
