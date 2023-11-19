@@ -16,6 +16,7 @@ asyncpg = "*"
 pyarrow = "*"
 
 [dev-packages]
+alembic = "*"
 
 [requires]
 python_version = "3.12"

@@ -17,13 +17,7 @@ tests: run
 	@docker exec -it data_management poetry run pytest
 
 migrate-create:
-	@poetry run alembic revision --autogenerate -m "${commit}"
+	@alembic revision --autogenerate -m "${commit}"
 
 migrate-apply:
-	@poetry run alembic upgrade head
-
-build:
-	@poetry shell
-	@poetry run black .
-	@poetry run isort . --profile black
-	@poetry run pylint **/*.py
+	@alembic upgrade head
