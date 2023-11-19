@@ -1,9 +1,11 @@
-from sqlalchemy import Column, String, Float, Integer, Text, ForeignKey
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 from src.core.models.base_model import BaseModel
 
 
 class InstrumentConfig(BaseModel):
     __tablename__ = "instrument_config"
+    file_name: str = "instrumentconfig.csv"
+    directory: str = "/path/in/container/csvconfig"
 
     symbol = Column(String(50), primary_key=True)
     description = Column(Text)
@@ -15,10 +17,15 @@ class InstrumentConfig(BaseModel):
     per_trade = Column(Integer)
     region = Column(String(50))
 
+
 class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"
+    file_name = "moreinstrumentinfo.csv"
+    directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)
+    symbol = Column(
+        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
+    )
     asset_class = Column(String(50))
     sub_class = Column(String(50))
     sub_sub_class = Column(String(50))
@@ -27,17 +34,25 @@ class InstrumentMetadata(BaseModel):
 
 class RollConfig(BaseModel):
     __tablename__ = "roll_config"
+    file_name = "rollconfig.csv"
+    directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)    
+    symbol = Column(
+        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
+    )
     hold_roll_cycle = Column(String(50))
     roll_offset_days = Column(Integer)
     carry_offset = Column(Integer)
     priced_roll_cycle = Column(String(50))
     expiry_offset = Column(Integer)
 
+
 class SpreadCost(BaseModel):
     __tablename__ = "spread_cost"
+    file_name = "spreadcosts.csv"
+    directory = "/path/in/container/csvconfig"
 
-    symbol = Column(String(50), ForeignKey('instrument_config.symbol'), primary_key=True)  
+    symbol = Column(
+        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
+    )
     spread_cost = Column(Float)
-

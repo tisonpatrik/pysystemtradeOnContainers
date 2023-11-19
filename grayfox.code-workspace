@@ -13,6 +13,12 @@
         "python.analysis.autoImportCompletions": true,
         "python.analysis.diagnosticMode": "workspace",
         "python.testing.pytestEnabled": true,
-        "mypy-type-checker.severity": {"error": "Error", "note": "Information"}
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+        "mypy-type-checker.severity": {"error": "Error", "note": "Information"},
+        "isort.args":["--profile", "black"],
     }
 }
