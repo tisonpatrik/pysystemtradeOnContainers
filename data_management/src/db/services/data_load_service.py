@@ -42,3 +42,22 @@ class DataLoadService:
                 f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
             )
             raise DataFetchingError(symbol, exc)
+
+    async def fetch_raw_data_from_table(self, table_name: str):
+        try:
+            query_str = f"SELECT * FROM {table_name}"
+            result = await self.db_session.execute(text(query_str))
+
+            # Asynchronously fetch all rows
+            rows = result.fetchall()
+
+            # Create a Polars DataFrame from the fetched data with column names
+            df_result = pd.DataFrame(rows, columns=list(result.keys()))
+
+            return pl.DataFrame(df_result)
+
+        except Exception as exc:
+            self.logger.error(
+                f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
+            )
+            raise DataFetchingError(exc)
