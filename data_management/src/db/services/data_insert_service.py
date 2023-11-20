@@ -1,13 +1,10 @@
 """
 This module provides functionalities for inserting data into a database asynchronously.
 """
-from src.utils.logging import AppLogger
-
 import polars as pl
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, table, column
-from sqlalchemy.exc import SQLAlchemyError
 from src.db.errors.data_insert_service_errors import DataFrameInsertError
+from src.utils.logging import AppLogger
 
 
 class DataInsertService:
@@ -23,24 +20,20 @@ class DataInsertService:
         self, data_frame: pl.DataFrame, table_name: str
     ):
         """
-        Asynchronously inserts a Polars DataFrame into a PostgreSQL table.
+        Asynchronously inserts a DataFrame into a PostgreSQL table.
 
         Args:
             data_frame (pl.DataFrame): The DataFrame to insert.
             table_name (str): The name of the PostgreSQL table.
         """
         try:
-            # Convert Polars DataFrame to list of dictionaries for insertion
-            data_dicts = data_frame.to_dicts()
-
-            # Create a SQLAlchemy table object dynamically
-            dynamic_table = table(table_name,*[column(name) for name in data_frame.columns])
-
-            # Perform the insert operation
-            await self.db_session.execute(insert(dynamic_table).values(data_dicts))
+            data_frame = data_frame.to_pandas()
+            await self.db_session.run_sync(
+                lambda session: data_frame.to_sql(
+                    table_name, session.bind, index=False, if_exists="append"
+                )
+            )
             await self.db_session.commit()
-
-        except SQLAlchemyError as exc:  # Adjust exception as needed
+        except (DataFrameInsertError,) as exc:
             await self.db_session.rollback()
             self.logger.error("An error occurred: %s", exc)
-            raise DataFrameInsertError(table_name, str(exc)) from exc

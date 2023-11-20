@@ -4,7 +4,15 @@ including adjusted prices, FX prices, multiple prices, and roll calendars.
 These classes facilitate database interactions in a Pythonic way.
 """
 
-from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint, String
+from sqlalchemy import (
+    BigInteger,
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    PrimaryKeyConstraint,
+    String,
+)
 from src.core.models.base_model import BaseModel
 
 
@@ -17,7 +25,7 @@ class AdjustedPrices(BaseModel):
     __tablename__ = "adjusted_prices"
     directory = "/path/in/container/adjusted_prices_csv"
 
-    unix_date_time = Column(Integer)
+    unix_date_time = Column(BigInteger)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     price = Column(Float)
 
@@ -32,7 +40,7 @@ class FxPrices(BaseModel):
     __tablename__ = "fx_prices"
     directory = "/path/in/container/fx_prices_csv"
 
-    unix_date_time = Column(Integer)
+    unix_date_time = Column(BigInteger)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     price = Column(Float)
 
@@ -47,7 +55,7 @@ class MultiplePrices(BaseModel):
     __tablename__ = "multiple_prices"
     directory = "/path/in/container/multiple_prices_csv"
 
-    unix_date_time = Column(Integer)
+    unix_date_time = Column(BigInteger)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     carry = Column(Float)
     carry_contract = Column(Integer)

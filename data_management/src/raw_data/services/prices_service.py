@@ -39,6 +39,7 @@ class PricesService:
             dataframes = self.csv_loader_service.load_multiple_csv_files(
                 model.directory, list_of_symbols
             )
+
             processed_data_frames = self._process_csv_files(dataframes, model)
             price_data_frames = concatenate_data_frames(processed_data_frames)
             return price_data_frames
