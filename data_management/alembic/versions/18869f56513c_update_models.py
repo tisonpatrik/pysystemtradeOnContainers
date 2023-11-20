@@ -1,8 +1,8 @@
 """Update models
 
-Revision ID: e9be1365a4eb
+Revision ID: 18869f56513c
 Revises: 
-Create Date: 2023-11-20 13:13:52.159380
+Create Date: 2023-11-20 17:17:34.372448
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e9be1365a4eb'
+revision: str = '18869f56513c'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -33,14 +33,14 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('symbol')
     )
     op.create_table('adjusted_prices',
-    sa.Column('unix_date_time', sa.BigInteger(), nullable=False),
+    sa.Column('unix_date_time', sa.Integer(), nullable=False),
     sa.Column('symbol', sa.String(length=50), nullable=False),
     sa.Column('price', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('unix_date_time', 'symbol')
     )
     op.create_table('fx_prices',
-    sa.Column('unix_date_time', sa.BigInteger(), nullable=False),
+    sa.Column('unix_date_time', sa.Integer(), nullable=False),
     sa.Column('symbol', sa.String(length=50), nullable=False),
     sa.Column('price', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
@@ -56,14 +56,14 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('symbol')
     )
     op.create_table('instrument_volatility',
-    sa.Column('unix_date_time', sa.BigInteger(), nullable=False),
+    sa.Column('unix_date_time', sa.Integer(), nullable=False),
     sa.Column('symbol', sa.String(length=50), nullable=False),
     sa.Column('volatility', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('unix_date_time', 'symbol')
     )
     op.create_table('multiple_prices',
-    sa.Column('unix_date_time', sa.BigInteger(), nullable=False),
+    sa.Column('unix_date_time', sa.Integer(), nullable=False),
     sa.Column('symbol', sa.String(length=50), nullable=False),
     sa.Column('carry', sa.Float(), nullable=True),
     sa.Column('carry_contract', sa.Integer(), nullable=True),
@@ -75,7 +75,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('unix_date_time', 'symbol')
     )
     op.create_table('robust_volatility',
-    sa.Column('unix_date_time', sa.BigInteger(), nullable=False),
+    sa.Column('unix_date_time', sa.Integer(), nullable=False),
     sa.Column('symbol', sa.String(length=50), nullable=False),
     sa.Column('volatility', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),

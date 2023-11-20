@@ -63,11 +63,11 @@ class SeedDBHandler:
                 model, list_of_symbols
             )
             await self.data_insert_service.async_insert_dataframe_to_table(
-                instrument_config_data, InstrumentConfig.__tablename__
+                instrument_config_data, model.__tablename__
             )
         except DataInsertionError as error:
             self.logger.error(
-                f"Data insertion failed for {InstrumentConfig.__tablename__}: {error}"
+                f"Data insertion failed for {model.__tablename__}: {error}"
             )
             raise error
 

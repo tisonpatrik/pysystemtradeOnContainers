@@ -24,13 +24,10 @@ class DataLoadService:
         """
         try:
             # Use parameterized queries to prevent SQL injection
-            query_str = "SELECT * FROM {} WHERE symbol = %s".format(table_name)
-            parameters = (symbol,)
+            query_str = "SELECT * FROM {} WHERE symbol = :symbol".format(table_name)
 
-            # Execute the query asynchronously using parameters for security
-            result = await self.db_session.execute(
-                text(query_str), {"symbol_value": symbol}
-            )
+            # Execute the query asynchronously with matching parameter key
+            result = await self.db_session.execute(text(query_str), {"symbol": symbol})
 
             # Fetch all rows
             rows = result.fetchall()

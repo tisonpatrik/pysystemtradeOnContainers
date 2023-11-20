@@ -19,5 +19,7 @@ class InstrumentVolatilityService:
         #     InstrumentVolatility,
         #     INSTRUMENT_VOLATILITY_COLUMN_MAPPING,
         # )
+
         data_frame = await self.adjusted_prices_services.get_daily_prices_async("CORN")
+        
         return data_frame
