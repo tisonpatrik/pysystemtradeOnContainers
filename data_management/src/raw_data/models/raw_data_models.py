@@ -17,7 +17,7 @@ class AdjustedPrices(BaseModel):
     __tablename__ = "adjusted_prices"
     directory = "/path/in/container/adjusted_prices_csv"
 
-    unix_date_time = Column(Integer, primary_key=True)
+    unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     price = Column(Float)
 
@@ -32,7 +32,7 @@ class FxPrices(BaseModel):
     __tablename__ = "fx_prices"
     directory = "/path/in/container/fx_prices_csv"
 
-    unix_date_time = Column(Integer, primary_key=True)
+    unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     price = Column(Float)
 
@@ -47,7 +47,7 @@ class MultiplePrices(BaseModel):
     __tablename__ = "multiple_prices"
     directory = "/path/in/container/multiple_prices_csv"
 
-    unix_date_time = Column(Integer, primary_key=True)
+    unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     carry = Column(Float)
     carry_contract = Column(Integer)
@@ -67,7 +67,7 @@ class RollCalendars(BaseModel):
     __tablename__ = "roll_calendars"
     directory = "/path/in/container/roll_calendars_csv"
 
-    unix_date_time = Column(Integer, primary_key=True)
+    unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     current_contract = Column(Integer)
     next_contract = Column(Integer)

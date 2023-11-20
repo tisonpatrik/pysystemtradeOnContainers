@@ -25,7 +25,7 @@ class RollCalendarsService:
         self.csv_loader_service = CsvLoaderService()
         self.raw_file_service = RawFilesService()
 
-    def process_roll_calendars(self, model):
+    def process_roll_calendars(self, model, list_of_symbols):
         """
         Process and prices for a given table mapping.
         """
@@ -33,7 +33,7 @@ class RollCalendarsService:
             self.logger.info("Starting the process for %s table.", model.__tablename__)
 
             dataframes = self.csv_loader_service.load_multiple_csv_files(
-                model.directory
+                model.directory, list_of_symbols
             )
             processed_data_frames = self._process_csv_files(dataframes, model)
             price_data_frames = concatenate_data_frames(processed_data_frames)

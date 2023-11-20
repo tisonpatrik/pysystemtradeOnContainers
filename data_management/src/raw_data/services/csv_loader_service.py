@@ -3,6 +3,7 @@ Provides utilities for reading CSV files.
 """
 import glob
 import os
+from typing import List
 
 import polars as pl
 from src.raw_data.errors.csv_loading_errors import (
@@ -29,16 +30,17 @@ class CsvLoaderService:
             self.logger.error("Error loading CSV file from %s: %s", full_path, error)
             raise CsvLoadingError(full_path, str(error))
 
-    def load_multiple_csv_files(self, directory):
+    def load_multiple_csv_files(self, directory: str, list_of_symbols: List[str]):
         """
         Loads multiple CSV files from a given directory and returns a list of DataFrames.
         """
         data_frames_dict = {}
         try:
             for filepath in glob.glob(os.path.join(directory, "*.csv")):
-                symbol_name = os.path.basename(filepath).split(".")[0]
-                df = self.load_csv(filepath)
-                data_frames_dict[symbol_name] = df
+                symbol_name = os.path.splitext(os.path.basename(filepath))[0]
+                if symbol_name in list_of_symbols:
+                    df = self.load_csv(filepath)
+                    data_frames_dict[symbol_name] = df
             return data_frames_dict
         except Exception as error:
             self.logger.error(

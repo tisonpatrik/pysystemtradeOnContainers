@@ -13,6 +13,7 @@ from src.raw_data.models.raw_data_models import (
     RollCalendars,
 )
 from src.raw_data.services.config_files_service import ConfigFilesService
+from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.services.prices_service import PricesService
 from src.raw_data.services.rollcalendars_service import RollCalendarsService
 from src.utils.logging import AppLogger
@@ -30,6 +31,7 @@ class SeedDBHandler:
         self.config_files_service = ConfigFilesService()
         self.prices_service = PricesService()
         self.rollcalendars_service = RollCalendarsService()
+        self.csv_loader = CsvLoaderService()
 
     async def insert_data_from_csv_async(self):
         """
@@ -45,10 +47,13 @@ class SeedDBHandler:
             RollCalendars,
         ]
 
+        list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
+            AdjustedPrices.directory
+        )
         # Process InstrumentConfig first
         try:
             instrument_config_data = self._get_processed_data_from_raw_file(
-                InstrumentConfig
+                InstrumentConfig, list_of_instruments
             )
             await self.data_insert_service.async_insert_dataframe_to_table(
                 instrument_config_data, InstrumentConfig.__tablename__
@@ -61,7 +66,9 @@ class SeedDBHandler:
 
         for model in models:
             try:
-                data = self._get_processed_data_from_raw_file(model)
+                data = self._get_processed_data_from_raw_file(
+                    model, list_of_instruments
+                )
                 await self.data_insert_service.async_insert_dataframe_to_table(
                     data, model.__tablename__
                 )
@@ -71,14 +78,18 @@ class SeedDBHandler:
                 )
                 raise error
 
-    def _get_processed_data_from_raw_file(self, model):
+    def _get_processed_data_from_raw_file(self, model, list_of_symbols):
         """
         Data processing for CSV files.
         """
         if model.__tablename__ in ["instrument_config", "roll_config", "spread_cost"]:
-            return self.config_files_service.process_config_files(model)
+            return self.config_files_service.process_config_files(
+                model, list_of_symbols
+            )
         if model.__tablename__ in ["adjusted_prices", "fx_prices", "multiple_prices"]:
-            return self.prices_service.process_prices_files(model)
+            return self.prices_service.process_prices_files(model, list_of_symbols)
         if model.__tablename__ == "roll_calendars":
-            return self.rollcalendars_service.process_roll_calendars(model)
+            return self.rollcalendars_service.process_roll_calendars(
+                model, list_of_symbols
+            )
         raise ValueError(f"Unrecognized table name: {model.__tablename__}")
