@@ -51,9 +51,16 @@ class SeedDBHandler:
             AdjustedPrices.directory
         )
         # Process InstrumentConfig first
+        await self._process_data_and_insert_them_into_db(
+            InstrumentConfig, list_of_instruments
+        )
+        for model in models:
+            await self._process_data_and_insert_them_into_db(model, list_of_instruments)
+
+    async def _process_data_and_insert_them_into_db(self, model, list_of_symbols):
         try:
             instrument_config_data = self._get_processed_data_from_raw_file(
-                InstrumentConfig, list_of_instruments
+                model, list_of_symbols
             )
             await self.data_insert_service.async_insert_dataframe_to_table(
                 instrument_config_data, InstrumentConfig.__tablename__
@@ -63,20 +70,6 @@ class SeedDBHandler:
                 f"Data insertion failed for {InstrumentConfig.__tablename__}: {error}"
             )
             raise error
-
-        for model in models:
-            try:
-                data = self._get_processed_data_from_raw_file(
-                    model, list_of_instruments
-                )
-                await self.data_insert_service.async_insert_dataframe_to_table(
-                    data, model.__tablename__
-                )
-            except DataInsertionError as error:
-                self.logger.error(
-                    f"Data insertion failed for {model.__tablename__}: {error}"
-                )
-                raise error
 
     def _get_processed_data_from_raw_file(self, model, list_of_symbols):
         """
