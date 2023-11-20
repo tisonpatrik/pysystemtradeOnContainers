@@ -1,4 +1,4 @@
-from src.db.services.data_load_service import DataLoadService
+from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.risk.estimators.instrument_volatility import get_instrument_currency_vol
 from src.risk.models.risk_models import InstrumentVolatility
 from src.utils.logging import AppLogger
@@ -7,24 +7,17 @@ from src.utils.logging import AppLogger
 class InstrumentVolatilityService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_loader = DataLoadService(db_session)
+        self.adjusted_prices_services = AdjustedPricesService(db_session)
 
-    def calculate_instrument_volatility_for_instrument(self, model):
-        try:
-            volatility = get_instrument_currency_vol(
-                multiple_prices, daily_prices, poinsize
-            )
-            data_frame = process_series_to_frame(
-                volatility,
-                symbol,
-                InstrumentVolatility,
-                INSTRUMENT_VOLATILITY_COLUMN_MAPPING,
-            )
-            return data_frame
-        except Exception as error:
-            self.logger.error(
-                "Failed to calculate volatility for instrument %s: %s",
-                error,
-                exc_info=True,
-            )
-            raise
+    async def calculate_instrument_volatility_for_instrument_async(self, model):
+        # volatility = get_instrument_currency_vol(
+        #     multiple_prices, daily_prices, poinsize
+        # )
+        # data_frame = process_series_to_frame(
+        #     volatility,
+        #     symbol,
+        #     InstrumentVolatility,
+        #     INSTRUMENT_VOLATILITY_COLUMN_MAPPING,
+        # )
+        data_frame = await self.adjusted_prices_services.get_daily_prices_async("CORN")
+        return data_frame

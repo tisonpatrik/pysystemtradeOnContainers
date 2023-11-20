@@ -1,5 +1,4 @@
 import pandas as pd
-
 from src.risk.estimators.volatility import mixed_vol_calc
 
 

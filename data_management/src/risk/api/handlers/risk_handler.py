@@ -18,7 +18,10 @@ class RiskHandler:
         Asynchronously seed the database of risk calculations using predefined schemas.
         """
         self.logger.info("Data processing for risk calculations has started")
-        models = [RobustVolatility, InstrumentVolatility]
+        models = [
+            # RobustVolatility,
+            InstrumentVolatility
+        ]
 
         for model in models:
             try:
@@ -35,11 +38,11 @@ class RiskHandler:
         Data processing for CSV files.
         """
         if model.__tablename__ in "robust_volatility":
-            return await self.robust_volatility_service.calculate_robust_volatility_for_instrument(
+            return await self.robust_volatility_service.calculate_robust_volatility_for_instrument_async(
                 model
             )
         if model.__tablename__ in "instrument_volatility":
-            return await self.instrument_volatility_service.calculate_instrument_volatility_for_instrument(
+            return await self.instrument_volatility_service.calculate_instrument_volatility_for_instrument_async(
                 model
             )
         raise ValueError(f"Unrecognized table name: {model.__tablename__}")

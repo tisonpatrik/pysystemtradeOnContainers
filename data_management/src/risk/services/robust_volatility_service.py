@@ -1,6 +1,5 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.risk.errors.robust_vol_processing_error import RobustVolProcessingError
@@ -16,10 +15,9 @@ class RobustVolatilityService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_loader = DataLoadService(db_session)
         self.instrument_config_series = InstrumentConfigService(db_session)
 
-    async def calculate_robust_volatility_for_instrument(self, model):
+    async def calculate_robust_volatility_for_instrument_async(self, model):
         """
         Calculates the volatility of a given financial instrument represented by a Pandas Series.
         """
