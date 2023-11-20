@@ -1,10 +1,14 @@
 """
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
-from src.utils.logging import AppLogger
-
 import polars as pl
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.db.errors.data_loader_service_errors import (
+    DataFetchingError,
+    EmptyDataFrameError,
+)
+from src.utils.logging import AppLogger
+
 
 class DataLoadService:
     """
@@ -19,41 +23,52 @@ class DataLoadService:
         """
         Fetches data by symbol from a specified table into a Polars DataFrame.
         """
-        empty_df = pl.DataFrame()
-        try:
 
+        try:
             # Use parameterized queries to prevent SQL injection
             query_str = f"SELECT * FROM {table_name} WHERE symbol = '{symbol_value}'"
 
             # Execute the query synchronously
-            df_result = pl.read_database(query=query_str, connection=self.db_session.connection)
+            df_result = pl.read_database(
+                query=query_str, connection=self.db_session.connection
+            )
 
             if df_result.is_empty():
-                return empty_df
+                raise EmptyDataFrameError(
+                    f"No data found in table {table_name} for symbol {symbol_value}"
+                )
 
             return df_result
 
         except Exception as exc:
-            self.logger.error(f"Failed to fetch data from table {table_name}: {exc}", exc_info=True)
-            return empty_df
+            self.logger.error(
+                f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
+            )
+            raise DataFetchingError(table_name, exc)
 
-    async def fetch_all_from_table_to_dataframe(self, table_name: str):
+    def fetch_raw_data_from_table_by_symbol(self, table_name: str, symbol_value: str):
         """
-        Asynchronously fetches all data from a specified table into a Pandas DataFrame.
+        Fetches data by symbol from a specified table into a Polars DataFrame.
+        Raises an EmptyDataFrameError if the result is an empty DataFrame.
         """
-        empty_df = pl.DataFrame()
         try:
-            # Write raw SQL query string
-            query_str = f"SELECT * FROM {table_name}"
+            # Use parameterized queries to prevent SQL injection
+            query_str = f"SELECT * FROM {table_name} WHERE symbol = '{symbol_value}'"
 
-            # Execute the query asynchronously
-            df_result = pl.read_database(query=query_str, connection=self.db_session.connection)
+            # Execute the query synchronously
+            df_result = pl.read_database(
+                query=query_str, connection=self.db_session.connection
+            )
 
             if df_result.is_empty():
-                return empty_df
+                raise EmptyDataFrameError(
+                    f"No data found in table {table_name} for symbol {symbol_value}"
+                )
 
             return df_result
 
         except Exception as exc:
-            self.logger.error("Failed to fetch data from table %s: %s",table_name,exc,exc_info=True)
-            raise
+            self.logger.error(
+                f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
+            )
+            raise DataFetchingError(table_name, exc)
