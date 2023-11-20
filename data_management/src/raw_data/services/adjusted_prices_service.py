@@ -5,10 +5,10 @@ This module provides services for fetching and processing adjusted prices data a
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.common_utils.utils.data_aggregation.dataframe_to_series import (
-    convert_dataframe_to_dict_of_series,
     convert_dataframe_to_serie,
 )
 from src.db.services.data_load_service import DataLoadService
+from src.raw_data.errors.adjusted_prices_errors import DailyPricesFetchError
 from src.raw_data.models.raw_data_models import AdjustedPrices
 from src.utils.logging import AppLogger
 
@@ -21,24 +21,6 @@ class AdjustedPricesService:
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
-
-    async def get_adjusted_prices_async(self) -> dict[str, pd.Series]:
-        """
-        Asynchronously fetches all adjusted prices and returns them as a dictionary of Pandas Series.
-        """
-        try:
-            data = await self.data_loader_service.fetch_all_from_table_to_dataframe(
-                AdjustedPrices.__tablename__
-            )
-            series = convert_dataframe_to_dict_of_series(
-                data, AdjustedPrices.symbol.key, AdjustedPrices.unix_date_time.key
-            )
-            return series
-        except Exception as error:
-            self.logger.error(
-                "Failed to get adjusted prices asynchronously: %s", error, exc_info=True
-            )
-            raise
 
     async def get_daily_prices_async(self, symbol: str) -> pd.Series:
         """
@@ -53,6 +35,9 @@ class AdjustedPricesService:
             return series
         except Exception as error:
             self.logger.error(
-                "Failed to get adjusted prices asynchronously: %s", error, exc_info=True
+                "Failed to get adjusted prices asynchronously for symbol '%s': %s",
+                symbol,
+                error,
+                exc_info=True,
             )
-            raise
+            raise DailyPricesFetchError(symbol, error)

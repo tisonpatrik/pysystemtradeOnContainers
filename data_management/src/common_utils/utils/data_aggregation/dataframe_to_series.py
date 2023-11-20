@@ -30,31 +30,6 @@ def convert_group_to_series(
     series = data_frame.set_index(index_column).squeeze()
     return {symbol: series}
 
-
-def convert_dataframe_to_dict_of_series(
-    data_frame: pd.DataFrame, symbol_column: str, index_column: str
-) -> dict[str, pd.Series]:
-    logger.info("Processing dataframes to series")
-    check_single_missing_column(data_frame, symbol_column)
-    check_single_missing_column(data_frame, index_column)
-
-    time_converted = convert_string_column_to_datetime(data_frame, index_column, "s")
-    series_dict = {}
-
-    try:
-        grouped_data_frames = get_grouped_df(time_converted, symbol_column)
-        for symbol, frame in grouped_data_frames.items():
-            series = convert_group_to_series(
-                {symbol: frame}, symbol_column, index_column
-            )[symbol]
-            series_dict[symbol] = series
-    except Exception as exc:
-        logger.error("An error occurred while converting DataFrame to series: %s", exc)
-        raise DataFrameConversionError(exc) from exc
-
-    return series_dict
-
-
 def convert_dataframe_to_serie(
     data_frame: pd.DataFrame, index_column: str
 ) -> pd.Series:
