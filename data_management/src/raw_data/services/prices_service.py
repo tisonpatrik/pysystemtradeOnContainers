@@ -14,8 +14,8 @@ from src.raw_data.utils.data_aggregators import (
     aggregate_to_day_based_prices,
     concatenate_data_frames,
 )
-from src.raw_data.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.raw_data.utils.round_column_numbers import round_values_in_column
+from src.utils.date_time_convertions import convert_datetime_to_unixtime
 from src.utils.logging import AppLogger
 
 

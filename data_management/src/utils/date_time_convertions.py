@@ -2,8 +2,6 @@
 Module for date-time related conversion utilities.
 """
 
-import time
-
 import polars as pl
 from src.raw_data.errors.date_time_errors import (
     DateTimeConversionError,
@@ -49,3 +47,15 @@ def convert_datetime_to_unixtime(
     except Exception as error:
         logger.error("Error during unix_date_time conversion: %s", error)
         raise DateTimeConversionError from error
+
+
+def convert_and_sort_by_time(data_frame: pl.DataFrame, date_time_column: str):
+    data_frame = data_frame.with_columns(
+        pl.from_epoch(data_frame[date_time_column], time_unit="s").alias(
+            date_time_column
+        )
+    )
+
+    data_frame = data_frame.sort(date_time_column)
+
+    return data_frame

@@ -19,6 +19,18 @@
             "source.organizeImports": true
         },
         "mypy-type-checker.severity": {"error": "Error", "note": "Information"},
-        "isort.args":["--profile", "black"],
+        "isort.args": [
+            "--profile",
+            "black"
+        ],
+        "python.languageServer": "Pylance",
+        "python.analysis.logLevel": "Information",
+        "vsintellicode.features.python.deepLearning": "disabled",
+        "python.analysis.inlayHints.variableTypes": false,
+        "python.analysis.persistAllIndices": false,
+        "python.missingPackage.severity": "Information",
+        "python.analysis.useLibraryCodeForTypes": false,
+        "python.analysis.addImport.exactMatchOnly": true,
+        "python.analysis.typeCheckingMode": "basic",
     }
 }

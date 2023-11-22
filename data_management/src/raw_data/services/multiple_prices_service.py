@@ -5,6 +5,7 @@ This module provides services for fetching and processing multiple prices data a
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.models.raw_data_models import MultiplePrices
+from src.utils.date_time_convertions import convert_and_sort_by_time
 from src.utils.logging import AppLogger
 
 
@@ -25,7 +26,10 @@ class MultiplePricesService:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 MultiplePrices.__tablename__, symbol
             )
-            return data
+            converted_and_sorted = convert_and_sort_by_time(
+                data, MultiplePrices.unix_date_time.key
+            )
+            return converted_and_sorted
         except Exception as error:
             self.logger.error(
                 "Failed to get denominator prices asynchronously: %s",

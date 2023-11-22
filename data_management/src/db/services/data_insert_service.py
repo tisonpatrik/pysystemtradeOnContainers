@@ -27,9 +27,9 @@ class DataInsertService:
             table_name (str): The name of the PostgreSQL table.
         """
         try:
-            data_frame = data_frame.to_pandas()
+            pandas_data_frame = data_frame.to_pandas()
             await self.db_session.run_sync(
-                lambda session: data_frame.to_sql(
+                lambda session: pandas_data_frame.to_sql(
                     table_name, session.bind, index=False, if_exists="append"
                 )
             )
