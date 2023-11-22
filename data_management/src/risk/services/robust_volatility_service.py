@@ -22,7 +22,8 @@ class RobustVolatilityService:
         Calculates the volatility of a given financial instrument represented by a Pandas Series.
         """
         try:
-            symbols = await self.instrument_config_series.get_list_of_symbols_async()
+            i = 0
+            # symbols = await self.instrument_config_series.get_list_of_symbols_async()
             # processed_risk_vols = await self._calculate_robust_volatility(
             #     symbols, model
             # )

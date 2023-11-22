@@ -27,6 +27,7 @@ class AdjustedPricesService:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 AdjustedPrices.__tablename__, symbol
             )
+            
             converted_and_sorted = convert_and_sort_by_time(
                 data, AdjustedPrices.unix_date_time.key
             )

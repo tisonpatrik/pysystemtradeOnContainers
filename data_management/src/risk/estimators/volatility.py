@@ -1,29 +1,19 @@
 import numpy as np
 import pandas as pd
-
+import polars as pl
+from polars import functions as pf
 from src.core.dateutils import BUSINESS_DAYS_IN_YEAR
-from src.core.pandas.frequency import (
-    resample_prices_to_business_day_index,
-)
-
-def robust_daily_vol_given_price(price: pd.Series, **kwargs):
-    price = resample_prices_to_business_day_index(price)
-    daily_returns = price.diff()
-
-    vol = robust_vol_calc(daily_returns, **kwargs)
-
-    return vol
 
 
 def robust_vol_calc(
-    daily_returns: pd.Series,
+    daily_returns: pl.DataFrame,
     days: int = 35,
     min_periods: int = 10,
     vol_abs_min: float = 0.0000000001,
     floor_min_quant: float = 0.05,
     floor_min_periods: int = 100,
     floor_days: int = 500,
-) -> pd.Series:
+) -> pl.DataFrame:
     """
     Robust exponential volatility calculation, assuming daily series of prices
     We apply an absolute minimum level of vol (absmin);
@@ -61,65 +51,64 @@ def robust_vol_calc(
     """
 
     # Standard deviation will be nan for first 10 non nan values
-    vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
-    vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
+    serie = pl.Series(daily_returns)
+    simple_vol = simple_ewvol_calc(serie, days=days, min_periods=min_periods)
+    min_vol = apply_min_vol(simple_vol, vol_abs_min=vol_abs_min)
     vol = apply_vol_floor(
-        vol,
+        min_vol,
         floor_min_quant=floor_min_quant,
         floor_min_periods=floor_min_periods,
         floor_days=floor_days,
     )
 
-    return vol
+    return pl.DataFrame(vol)
 
 
-def apply_min_vol(vol: pd.Series, vol_abs_min: float = 0.0000000001) -> pd.Series:
+def apply_min_vol(vol: pl.Series, vol_abs_min: float = 0.0000000001) -> pl.Series:
     vol[vol < vol_abs_min] = vol_abs_min
 
     return vol
 
 
 def apply_vol_floor(
-    vol: pd.Series,
+    vol: pl.Series,
     floor_min_quant: float = 0.05,
     floor_min_periods: int = 100,
     floor_days: int = 500,
-) -> pd.Series:
+) -> pl.Series:
     # Find the rolling 5% quantile point to set as a minimum
-    vol_min = vol.rolling(min_periods=floor_min_periods, window=floor_days).quantile(
-        floor_min_quant
+    vol_min = vol.rolling_quantile(
+        min_periods=floor_min_periods, window_size=floor_days, quantile=floor_min_quant
     )
-
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
-    vol_min.iloc[0] = 0.0
-    vol_min.ffill(inplace=True)
+    vol_min[0] = 0.0
+    minimal_volatility = vol_min.fill_null(strategy="forward")
 
     # apply the vol floor
-    vol_floored = pd.Series(np.maximum(vol, vol_min), index=vol.index)
+    vol_floored = pl.Series(np.maximum(vol, vol_min))
 
     return vol_floored
 
 
-def backfill_vol(vol: pd.Series) -> pd.Series:
-    # have to fill forwards first, as it's only the start we want to
-    # backfill, eg before any value available
-
-    vol_forward_fill = vol.bfill()
-    vol_backfilled = vol_forward_fill.bfill()
+def backfill_vol(vol: pl.Series) -> pl.Series:
+    # Fill forwards first
+    vol_forward_fill = vol.fill_null(strategy="forward")
+    # Then backfill
+    vol_backfilled = vol_forward_fill.fill_null(strategy="backward")
 
     return vol_backfilled
 
 
 def mixed_vol_calc(
-    daily_returns: pd.Series,
+    daily_returns: pl.DataFrame,
     days: int = 35,
     min_periods: int = 10,
     slow_vol_years: int = 20,
     proportion_of_slow_vol: float = 0.35,
     vol_abs_min: float = 0.0000000001,
     backfill: bool = True,
-) -> pd.Series:
+) -> pl.DataFrame:
     # slow_vol_years can be also 20. need to be discovered
     """
     Robust exponential volatility calculation, assuming daily series of prices
@@ -156,32 +145,24 @@ def mixed_vol_calc(
 
     :returns: pd.DataFrame -- volatility measure
     """
-
+    serie = pl.Series(daily_returns)
     # Standard deviation will be nan for first 10 non nan values
-    vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
+    vol = simple_ewvol_calc(serie, days=days, min_periods=min_periods)
     slow_vol_days = slow_vol_years * BUSINESS_DAYS_IN_YEAR
-    long_vol = vol.ewm(slow_vol_days).mean()
-    vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
-    vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
+    long_vol = vol.ewm_mean(slow_vol_days)
+    prop_vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
+    min_vol = apply_min_vol(prop_vol, vol_abs_min=vol_abs_min)
     if backfill:
         # use the first vol in the past, sort of cheating
-        vol = backfill_vol(vol)
-    return vol
+        min_vol = backfill_vol(min_vol)
+    return pl.DataFrame(min_vol)
 
 
 def simple_ewvol_calc(
-    daily_returns: pd.Series, days: int = 35, min_periods: int = 10, **ignored_kwargs
-) -> pd.Series:
+    daily_returns: pl.Series, days: int = 35, min_periods: int = 10
+) -> pl.Series:
     # Standard deviation will be nan for first 10 non nan values
-    vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
-
-    return vol
-
-
-def simple_vol_calc(
-    daily_returns: pd.Series, days: int = 25, min_periods: int = 10, **ignored_kwargs
-) -> pd.Series:
-    # Standard deviation will be nan for first 10 non nan values
-    vol = daily_returns.rolling(days, min_periods=min_periods).std()
+    serie = pl.Series(daily_returns)
+    vol = serie.ewm_std(span=days, adjust=True, min_periods=min_periods)
 
     return vol

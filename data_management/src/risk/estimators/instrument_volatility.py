@@ -5,12 +5,14 @@ from src.risk.estimators.volatility import mixed_vol_calc
 def get_instrument_currency_vol(
     multiple_prices: pl.DataFrame, adjusted_prices: pl.DataFrame, point_size: float
 ) -> pl.DataFrame:
+    
+    
+
     block_value = get_block_value(multiple_prices, point_size)
     daily_perc_vol = get_daily_percentage_volatility(multiple_prices, adjusted_prices)
     ## FIXME WHY NOT RESAMPLE?
-    (block_value, daily_perc_vol) = block_value.align(daily_perc_vol, join="inner")
 
-    instr_ccy_vol = block_value.ffill() * daily_perc_vol
+    instr_ccy_vol = block_value.fill_null(strategy="forward") * daily_perc_vol
     return instr_ccy_vol
 
 
