@@ -28,7 +28,9 @@ class InstrumentVolatilityService:
             multiple_prices = (
                 await self.multiple_prices_services.get_denominator_prices_async(symbol)
             )
+
             volatility = get_instrument_currency_vol(
                 multiple_prices, daily_prices, poinsize
             )
         # return data_frame
+
