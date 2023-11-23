@@ -4,6 +4,8 @@ It utilizes various helper classes for tasks such as file validation, date-time 
 and table adjustments.
 """
 
+from src.core.polars.date_time_convertions import convert_datetime_to_unixtime
+from src.core.utils.logging import AppLogger
 from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.services.raw_data_service import RawFilesService
@@ -15,8 +17,6 @@ from src.raw_data.utils.data_aggregators import (
     concatenate_data_frames,
 )
 from src.raw_data.utils.round_column_numbers import round_values_in_column
-from src.utils.date_time_convertions import convert_datetime_to_unixtime
-from src.utils.logging import AppLogger
 
 
 class PricesService:

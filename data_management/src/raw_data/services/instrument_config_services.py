@@ -3,10 +3,10 @@ This module provides services for fetching and processing instrument config data
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.instrument_config_service import InstrumentConfigError
 from src.raw_data.models.config_models import InstrumentConfig
-from src.utils.logging import AppLogger
 
 
 class InstrumentConfigService:

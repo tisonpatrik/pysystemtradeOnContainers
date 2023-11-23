@@ -1,11 +1,11 @@
 """Module for calculating robust volatility for financial instruments."""
 
+from src.core.utils.logging import AppLogger
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.risk.errors.robust_vol_processing_error import RobustVolProcessingError
 from src.risk.estimators.volatility import robust_vol_calc
 from src.risk.models.risk_models import RobustVolatility
-from src.utils.logging import AppLogger
 
 
 class RobustVolatilityService:

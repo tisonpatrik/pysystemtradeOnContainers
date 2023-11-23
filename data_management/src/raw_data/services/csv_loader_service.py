@@ -6,11 +6,11 @@ import os
 from typing import List
 
 import polars as pl
+from src.core.utils.logging import AppLogger
 from src.raw_data.errors.csv_loading_errors import (
     CsvLoadingError,
     MultipleCsvLoadingError,
 )
-from src.utils.logging import AppLogger
 
 
 class CsvLoaderService:

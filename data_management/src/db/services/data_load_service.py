@@ -5,8 +5,8 @@ import pandas as pd
 import polars as pl
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.utils.logging import AppLogger
 from src.db.errors.data_loader_service_errors import DataFetchingError
-from src.utils.logging import AppLogger
 
 
 class DataLoadService:

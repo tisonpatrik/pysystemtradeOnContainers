@@ -1,9 +1,9 @@
 from src.core.errors.seeder_error import DataInsertionError
+from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import InstrumentVolatility, RobustVolatility
 from src.risk.services.instrument_volatility_service import InstrumentVolatilityService
 from src.risk.services.robust_volatility_service import RobustVolatilityService
-from src.utils.logging import AppLogger
 
 
 class RiskHandler:

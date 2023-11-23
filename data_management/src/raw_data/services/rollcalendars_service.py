@@ -1,6 +1,8 @@
 """
 Handles processing and manipulation of roll calendar data from CSV files.
 """
+from src.core.polars.date_time_convertions import convert_datetime_to_unixtime
+from src.core.utils.logging import AppLogger
 from src.raw_data.errors.raw_data_processing_error import (
     ConfigFilesProcessingError,
     PricesFilesProcessingError,
@@ -11,8 +13,6 @@ from src.raw_data.utils.add_and_populate_column import (
     add_column_and_populate_it_by_value,
 )
 from src.raw_data.utils.data_aggregators import concatenate_data_frames
-from src.utils.date_time_convertions import convert_datetime_to_unixtime
-from src.utils.logging import AppLogger
 
 
 class RollCalendarsService:

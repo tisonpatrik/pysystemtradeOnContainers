@@ -3,11 +3,11 @@ This module provides services for fetching and processing adjusted prices data a
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.polars.date_time_convertions import convert_and_sort_by_time
+from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.adjusted_prices_errors import DailyPricesFetchError
 from src.raw_data.models.raw_data_models import AdjustedPrices
-from src.utils.date_time_convertions import convert_and_sort_by_time
-from src.utils.logging import AppLogger
 
 
 class AdjustedPricesService:
@@ -27,7 +27,7 @@ class AdjustedPricesService:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 AdjustedPrices.__tablename__, symbol
             )
-            
+
             converted_and_sorted = convert_and_sort_by_time(
                 data, AdjustedPrices.unix_date_time.key
             )

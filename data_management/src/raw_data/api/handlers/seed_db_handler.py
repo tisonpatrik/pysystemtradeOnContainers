@@ -4,6 +4,7 @@ which is responsible for seeding the database from CSV files.
 """
 
 from src.core.errors.seeder_error import DataInsertionError
+from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.models.config_models import InstrumentConfig, RollConfig, SpreadCost
 from src.raw_data.models.raw_data_models import (
@@ -16,7 +17,6 @@ from src.raw_data.services.config_files_service import ConfigFilesService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.services.prices_service import PricesService
 from src.raw_data.services.rollcalendars_service import RollCalendarsService
-from src.utils.logging import AppLogger
 
 
 class SeedDBHandler:

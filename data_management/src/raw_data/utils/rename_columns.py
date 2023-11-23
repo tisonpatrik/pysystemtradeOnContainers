@@ -4,9 +4,10 @@ Module for handling methods for renaming columns.
 
 import polars as pl
 from src.core.errors.rename_colums_errors import ColumnRenameError
+from src.core.utils.logging import AppLogger
 
-from src.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
+
 
 def rename_columns(data_frame, new_column_names):
     """

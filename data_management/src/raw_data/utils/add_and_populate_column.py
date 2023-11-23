@@ -2,14 +2,15 @@
 This module contains utility functions for adding and populating columns in a pandas DataFrame.
 """
 import polars as pl
-
+from src.core.utils.logging import AppLogger
 from src.raw_data.errors.add_and_populate_error import SymbolAdditionError
-from src.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 
+
 def add_column_and_populate_it_by_value(
-    data_frame: pl.DataFrame, column_name: str, column_value: str) -> pl.DataFrame:
+    data_frame: pl.DataFrame, column_name: str, column_value: str
+) -> pl.DataFrame:
     """
     Adds a new column to a given Polars DataFrame and populates it with a specified value.
     """

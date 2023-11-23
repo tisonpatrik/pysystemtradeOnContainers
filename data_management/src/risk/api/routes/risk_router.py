@@ -5,9 +5,9 @@ It uses FastAPI for the API definitions and SQLAlchemy for the database interact
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.utils.logging import AppLogger
 from src.db.database import get_db
 from src.risk.api.handlers.risk_handler import RiskHandler
-from src.utils.logging import AppLogger
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -27,7 +27,7 @@ async def seed_robust_volatility_data(db_session: AsyncSession = Depends(get_db)
         risk_handler = RiskHandler(db_session)
         await risk_handler.calculate_risk_data_async()
 
-        logger.info("Successfully seeded database with raw data.")
+        logger.info("Successfully seeded database with risk data.")
         return {
             "status": "success",
             "message": "Database successfully seeded with raw data.",

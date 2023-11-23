@@ -3,8 +3,8 @@ This module provides functionalities for inserting data into a database asynchro
 """
 import polars as pl
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.utils.logging import AppLogger
 from src.db.errors.data_insert_service_errors import DataFrameInsertError
-from src.utils.logging import AppLogger
 
 
 class DataInsertService:

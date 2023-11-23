@@ -1,9 +1,9 @@
+from src.core.utils.logging import AppLogger
 from src.raw_data.models.config_models import InstrumentConfig
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.estimators.instrument_volatility import get_instrument_currency_vol
-from src.utils.logging import AppLogger
 
 
 class InstrumentVolatilityService:

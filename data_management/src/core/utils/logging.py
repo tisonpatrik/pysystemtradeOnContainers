@@ -9,8 +9,7 @@ import logging
 
 from rich.console import Console
 from rich.logging import RichHandler
-
-from src.utils.singleton import SingletonMeta
+from src.core.utils.singleton import SingletonMeta
 
 
 class AppLogger(metaclass=SingletonMeta):
@@ -27,7 +26,9 @@ class AppLogger(metaclass=SingletonMeta):
         if not self._logger.hasHandlers():
             # Initialize and set the RichConsoleHandler
             rich_handler = RichConsoleHandler()
-            rich_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+            rich_handler.setFormatter(
+                logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+            )
             self._logger.addHandler(rich_handler)
 
     def get_logger(self):
