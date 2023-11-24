@@ -1,4 +1,5 @@
 import pandas as pd
+import polars as pl
 from src.risk.estimators.volatility import mixed_vol_calc
 
 
@@ -6,7 +7,7 @@ def get_instrument_currency_vol(
     multiple_prices: pd.Series,
     adjusted_prices: pd.Series,
     point_size: float,
-) -> pd.Series:
+) -> pl.DataFrame:
     block_value = get_block_value(multiple_prices, point_size)
     daily_perc_vol = get_daily_percentage_volatility(multiple_prices, adjusted_prices)
     ## FIXME WHY NOT RESAMPLE?
@@ -14,7 +15,7 @@ def get_instrument_currency_vol(
 
     instr_ccy_vol = block_value.ffill() * daily_perc_vol
 
-    return instr_ccy_vol
+    return pl.DataFrame(instr_ccy_vol)
 
 
 def get_block_value(

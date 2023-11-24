@@ -26,7 +26,12 @@ class RiskHandler:
         for model in models:
             try:
                 data = await self._get_risk_data_from_raw_file(model)
-                # await self.data_insert_service.async_insert_dataframe_to_table(data, model.__tablename__)
+                if data is None:
+                    self.logger.error(f"No data returned for {model.__tablename__}")
+                    continue  # Skip to the next model
+                # await self.data_insert_service.async_insert_dataframe_to_table(
+                #     data, model.__tablename__
+                # )
             except DataInsertionError as error:
                 self.logger.error(
                     f"Data insertion failed for {model.__tablename__}: {error}"
