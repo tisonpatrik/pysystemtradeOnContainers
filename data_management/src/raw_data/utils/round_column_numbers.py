@@ -20,7 +20,7 @@ def round_values_in_column(
     """
     try:
         data_frame = data_frame.with_columns(
-            data_frame[column_to_round].round(2).alias(column_to_round)
+            data_frame[column_to_round].round(3).alias(column_to_round)
         )
     except Exception as exc:
         logger.error("An unexpected error occurred: %s", exc)

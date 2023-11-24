@@ -28,6 +28,7 @@ def get_daily_percentage_volatility(
     denom_price: pd.Series, daily_prices: pd.Series
 ) -> pd.Series:
     # Calculate the volatility of daily returns
+
     return_vol = daily_returns_volatility(daily_prices)
     (denom_price, return_vol) = denom_price.align(return_vol, join="right")
     perc_vol = 100.0 * (return_vol / denom_price.ffill().abs())
@@ -41,7 +42,6 @@ def daily_returns_volatility(daily_prices: pd.Series) -> pd.Series:
     """
     # Calculate daily returns
     price_returns = daily_returns(daily_prices)
-
     # Assuming mixed_vol_calc is adapted for Polars and returns a DataFrame
     # vol_multiplier can be adjusted as per your requirement
     vol_multiplier = 1

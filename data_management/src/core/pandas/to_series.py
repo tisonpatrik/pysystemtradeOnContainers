@@ -17,6 +17,7 @@ def convert_polars_to_series(
         converted_df: pd.DataFrame = data_frame.to_pandas()
         indexed_df = converted_df.set_index(index_column)
         series = indexed_df[price_column]
+        series = series.resample("1B").last()
         return series
     except Exception as e:
         # Raise a custom error for any exceptions that may occur

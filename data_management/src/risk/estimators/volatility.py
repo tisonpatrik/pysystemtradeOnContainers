@@ -101,7 +101,7 @@ def apply_vol_floor(
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
     vol_min.iloc[0] = 0.0
-    vol_min.ffill(inplace=True)
+    vol_min.bfill(inplace=True)
 
     # apply the vol floor
     vol_floored = np.maximum(vol, vol_min)
@@ -124,9 +124,9 @@ def mixed_vol_calc(
     days: int = 35,
     min_periods: int = 10,
     slow_vol_years: int = 20,
-    proportion_of_slow_vol: float = 0.3,
+    proportion_of_slow_vol: float = 0.35,
     vol_abs_min: float = 0.0000000001,
-    backfill: bool = False,
+    backfill: bool = True,
     **ignored_kwargs,
 ) -> pd.Series:
     """
@@ -166,7 +166,6 @@ def mixed_vol_calc(
     """
     # Standard deviation will be nan for first 10 non nan values
     vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
-
     slow_vol_days = slow_vol_years * BUSINESS_DAYS_IN_YEAR
     long_vol = vol.ewm(slow_vol_days).mean()
 
@@ -186,7 +185,6 @@ def simple_ewvol_calc(
 ) -> pd.Series:
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
-
     return vol
 
 
