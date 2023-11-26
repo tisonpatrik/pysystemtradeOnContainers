@@ -2,12 +2,12 @@ from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint,
 from src.core.models.base_model import BaseModel
 
 
-class RobustVolatility(BaseModel):
+class DailyReturnsVolatility(BaseModel):
     """
-    ORM class for the 'robust_volatility' table. Represents volatility metrics for financial instruments.
+    ORM class for the 'daily_returns_volatility' table. Represents volatility metrics for financial instruments.
     """
 
-    __tablename__ = "robust_volatility"
+    __tablename__ = "daily_returns_volatility"
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
@@ -16,7 +16,7 @@ class RobustVolatility(BaseModel):
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
     def __repr__(self):
-        return f"<RobustVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
+        return f"<DailyReturnsVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
 
 
 class InstrumentVolatility(BaseModel):

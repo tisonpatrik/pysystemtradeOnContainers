@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import polars as pl
 from polars import functions as pf
 from src.core.dateutils import BUSINESS_DAYS_IN_YEAR
 from src.core.pandas.frequency import resample_prices_to_business_day_index

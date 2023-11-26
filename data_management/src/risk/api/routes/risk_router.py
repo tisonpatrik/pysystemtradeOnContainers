@@ -18,9 +18,9 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_201_CREATED,
     name="Seed Database with Risk calculations",
 )
-async def seed_robust_volatility_data(db_session: AsyncSession = Depends(get_db)):
+async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
     """
-    Fills the robust volatility table with data.
+    Fills the risk table with data.
     """
     try:
         # Business logic is in a separate handler
