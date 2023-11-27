@@ -11,10 +11,8 @@ services:
       - db_postgres
     ports:
       - "8000:8000"
-    env_file:
-      - .env  # Adjusted path to the .env file
     volumes:
-      - ${DATA_PATH}:/path/in/container:rw
+      - /home/patrik/repos/pysystemtrade/data/futures:/path/in/container:rw
       - ./data_management/src:/home/app/src
 
   db_postgres:
@@ -22,17 +20,15 @@ services:
     container_name: postgres
     hostname: db_postgres
     restart: on-failure
-    env_file:
-      - .env  # Adjusted path to the .env file
     environment:
-      - POSTGRES_USER=${SQL_USER}
-      - POSTGRES_PASSWORD=${SQL_PASS}
-      - POSTGRES_DB=${SQL_DB}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=grayfox_db
     ports:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
-      - ${DATA_PATH}:/path/in/container:rw
+      - /home/patrik/repos/pysystemtrade/data/futures:/path/in/container:rw
 
   pg-admin:
     image: dpage/pgadmin4
