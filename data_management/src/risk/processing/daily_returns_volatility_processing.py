@@ -18,7 +18,7 @@ class DailyReturnsVolatilityCalculator:
 
     async def get_daily_returns_vols_async(self, instrument_configs, model):
         processed_vols = []
-        for config in instrument_configs.to_dicts():
+        for config in instrument_configs.to_dict(orient='records'):
             try:
                 volatility = await self.process_daily_returns_vol_async(config, model)
                 processed_vols.append(volatility)

@@ -12,10 +12,11 @@ pydantic-settings = "*"
 uvicorn = "*"
 asyncpg = "*"
 polars = "*"
+pyarrow = "*"
+rich = "*"
 
 [dev-packages]
 alembic = "*"
-rich = "*"
 
 [requires]
 python_version = "3.12"

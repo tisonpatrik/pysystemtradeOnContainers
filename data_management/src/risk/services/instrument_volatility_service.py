@@ -19,6 +19,7 @@ class InstrumentVolatilityService:
 
     async def calculate_instrument_volatility_for_instrument_async(self, model):
         try:
+            self.logger.info("Starting the process for %s table.", model.__tablename__)
             # Fetch instrument configurations
             instrument_configs = (
                 await self.instrument_config_service.get_instrument_configs()

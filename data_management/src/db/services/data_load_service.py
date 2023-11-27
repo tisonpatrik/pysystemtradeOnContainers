@@ -2,6 +2,7 @@
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
 import pandas as pd
+import polars as pl
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
@@ -34,7 +35,7 @@ class DataLoadService:
             # Create a Pandas DataFrame from the fetched data
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
 
-            return df_result
+            return pl.DataFrame(df_result)
 
         except Exception as exc:
             self.logger.error(

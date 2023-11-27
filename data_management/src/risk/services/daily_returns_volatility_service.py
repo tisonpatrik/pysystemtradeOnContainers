@@ -35,6 +35,7 @@ class DailyReturnsVolatilityService:
         Calculates daily returns volatility of a given financial instrument represented.
         """
         try:
+            self.logger.info("Starting the process for %s table.", model.__tablename__)
             # Fetch instrument configurations
             instrument_configs = (
                 await self.instrument_config_service.get_instrument_configs()

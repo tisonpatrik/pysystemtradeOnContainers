@@ -39,9 +39,9 @@ class RiskHandler:
         for model in models:
             try:
                 data = await self._get_risk_data_from_raw_file(model)
-                await self.data_insert_service.async_insert_dataframe_to_table(
-                    data, model.__tablename__
-                )
+                # await self.data_insert_service.async_insert_dataframe_to_table(
+                #     data, model.__tablename__
+                # )
             except DataInsertionError as error:
                 self.logger.error(
                     f"Data insertion failed for {model.__tablename__}: {error}"
@@ -52,7 +52,7 @@ class RiskHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ in "robust_volatility":
+        if model.__tablename__ in "daily_returns_volatility":
             return await self.daily_returns_vols_service.calculate_daily_returns_volatility_for_instrument_async(
                 model
             )

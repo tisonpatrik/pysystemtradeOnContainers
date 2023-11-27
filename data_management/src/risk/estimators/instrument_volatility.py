@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def get_instrument_currency_vol(
     multiple_prices: pd.Series,
     daily_returns_vol: pd.Series,
