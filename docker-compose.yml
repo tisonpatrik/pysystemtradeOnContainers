@@ -16,7 +16,7 @@ services:
       - ./data_management/src:/home/app/src
 
   db_postgres:
-    image: postgres:15.3
+    image: postgres:latest
     container_name: postgres
     hostname: db_postgres
     restart: on-failure
@@ -38,7 +38,6 @@ services:
       - PGADMIN_LISTEN_PORT=5050
     ports:
       - "5050:5050"
-
 volumes:
   db-postgres:
     driver: local
