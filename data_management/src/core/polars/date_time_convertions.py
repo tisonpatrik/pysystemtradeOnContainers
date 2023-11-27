@@ -1,9 +1,8 @@
 """
 Module for date-time related conversion utilities.
 """
-import time
 
-import pandas as pd
+import polars as pl
 from src.core.utils.logging import AppLogger
 from src.raw_data.errors.date_time_errors import (
     DateTimeConversionError,
@@ -14,14 +13,17 @@ logger = AppLogger.get_instance().get_logger()
 
 
 def convert_string_column_to_datetime(
-    data_frame: pd.DataFrame, date_time_column: str
-) -> pd.DataFrame:
+    data_frame: pl.DataFrame, date_time_column: str
+) -> pl.DataFrame:
     """
-    Converts a specified column in the Pandas DataFrame to datetime format.
+    Converts a specified column in the DataFrame to datetime format.
     """
     try:
-        data_frame[date_time_column] = pd.to_datetime(data_frame[date_time_column])
-        return data_frame
+        # Convert the specified column to datetime format
+        converted_df = data_frame.with_columns(
+            pl.col(date_time_column).str.strptime(pl.Datetime, None)
+        )
+        return converted_df
     except Exception as exc:
         logger.error(
             "Failed to convert column %s to datetime: %s", date_time_column, exc
@@ -32,32 +34,28 @@ def convert_string_column_to_datetime(
 
 
 def convert_datetime_to_unixtime(
-    data_frame: pd.DataFrame, date_time_column: str
-) -> pd.DataFrame:
+    data_frame: pl.DataFrame, date_time_column: str
+) -> pl.DataFrame:
     """
-    Converts the datetime column to UNIX time in the Pandas DataFrame.
+    Converts the date_column to UNIX time.
     """
     try:
-        # Convert the specified column to datetime format if it's not already
-        if not pd.api.types.is_datetime64_any_dtype(data_frame[date_time_column]):
-            data_frame[date_time_column] = pd.to_datetime(data_frame[date_time_column])
-
-        # Convert datetime to UNIX time using time module
-        data_frame[date_time_column] = data_frame[date_time_column].apply(
-            lambda x: int(time.mktime(x.timetuple()))
+        data_frame = data_frame.with_columns(
+            data_frame[date_time_column].dt.epoch(time_unit="s").alias(date_time_column)
         )
         return data_frame
-
     except Exception as error:
         logger.error("Error during unix_date_time conversion: %s", error)
         raise DateTimeConversionError from error
 
 
-def convert_and_sort_by_time(data_frame: pd.DataFrame, date_time_column: str):
-    try:
-        data_frame[date_time_column] = pd.to_datetime(data_frame[date_time_column])
-        data_frame = data_frame.sort_values(by=date_time_column)
-        return data_frame
-    except Exception as error:
-        logger.error("Error during sorting by time: %s", error)
-        raise DateTimeConversionError from error
+def convert_and_sort_by_time(data_frame: pl.DataFrame, date_time_column: str):
+    data_frame = data_frame.with_columns(
+        pl.from_epoch(data_frame[date_time_column], time_unit="s").alias(
+            date_time_column
+        )
+    )
+
+    data_frame = data_frame.sort(date_time_column)
+
+    return data_frame

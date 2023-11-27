@@ -13,6 +13,7 @@ pydantic-settings = "*"
 uvicorn = "*"
 asyncpg = "*"
 pyarrow = "*"
+polars = "*"
 
 [dev-packages]
 alembic = "*"
