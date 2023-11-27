@@ -27,11 +27,11 @@ class DailyReturnsVolatilityService:
         self.data_loader_service = DataLoadService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.table_name = DailyReturnsVolatility.__tablename__
-        self.price_column = DailyReturnsVolatility.volatility.key
+        self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
         self.time_column = DailyReturnsVolatility.unix_date_time.key
         self.daily_returns_vol_calculator = DailyReturnsVolatilityCalculator(db_session)
 
-    async def seed_daily_returns_volatility_for_instrument_async(self, model):
+    async def calculate_daily_returns_volatility_for_instrument_async(self, model):
         """
         Calculates daily returns volatility of a given financial instrument represented.
         """

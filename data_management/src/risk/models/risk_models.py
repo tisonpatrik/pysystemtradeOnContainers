@@ -11,12 +11,12 @@ class DailyReturnsVolatility(BaseModel):
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
-    volatility = Column(Float)
+    daily_returns_volatility = Column(Float)
 
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
     def __repr__(self):
-        return f"<DailyReturnsVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
+        return f"<DailyReturnsVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.daily_returns_volatility})>"
 
 
 class InstrumentVolatility(BaseModel):
@@ -27,9 +27,26 @@ class InstrumentVolatility(BaseModel):
     __tablename__ = "instrument_volatility"
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
-    volatility = Column(Float)
+    instrument_volatility = Column(Float)
 
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
     def __repr__(self):
-        return f"<InstrumentVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.volatility})>"
+        return f"<InstrumentVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.instrument_volatility})>"
+
+
+class CumulativeDailyVolNormalizedReturns(BaseModel):
+    """
+    ORM class for the 'cumulative_daily_vol_normalized_returns' table.
+    Represents cumulative normalized volatility metrics for financial instruments.
+    """
+
+    __tablename__ = "cumulative_daily_vol_normalized_returns"
+    unix_date_time = Column(Integer)
+    symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
+    normalized_volatility = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+
+    def __repr__(self):
+        return f"<CumulativeDailyVolNormalizedReturns(unix_date_time={self.unix_date_time}, symbol={self.symbol}, normalized_volatility={self.normalized_volatility})>"

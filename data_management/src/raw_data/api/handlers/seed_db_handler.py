@@ -39,6 +39,7 @@ class SeedDBHandler:
         """
         self.logger.info("Data processing for csv files has started")
         models = [
+            InstrumentConfig,
             RollConfig,
             SpreadCost,
             AdjustedPrices,
@@ -49,10 +50,6 @@ class SeedDBHandler:
 
         list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
             AdjustedPrices.directory
-        )
-        # Process InstrumentConfig first
-        await self._process_data_and_insert_them_into_db(
-            InstrumentConfig, list_of_instruments
         )
         for model in models:
             await self._process_data_and_insert_them_into_db(model, list_of_instruments)

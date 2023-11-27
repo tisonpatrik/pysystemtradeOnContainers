@@ -25,7 +25,7 @@ async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
     try:
         # Business logic is in a separate handler
         risk_handler = RiskHandler(db_session)
-        await risk_handler.calculate_risk_data_async()
+        await risk_handler.seed_calculate_risk_data_async()
 
         logger.info("Successfully seeded database with risk data.")
         return {
