@@ -1,6 +1,6 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from src.core.pandas.to_series import convert_frame_to_series
+from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
@@ -10,10 +10,10 @@ from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolatilityFetchError,
     DailyReturnsVolCalculationError,
 )
-from src.risk.models.risk_models import DailyReturnsVolatility
 from src.risk.processing.daily_returns_volatility_processing import (
     DailyReturnsVolatilityCalculator,
 )
+from src.risk.models.risk_models import DailyReturnsVolatility
 
 
 class DailyReturnsVolatilityService:

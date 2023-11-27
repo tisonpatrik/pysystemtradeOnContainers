@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     Directly provides configuration values.
     """
 
-    database_url: PostgresDsn = "postgresql+asyncpg://postgres:postgres@postgres/grayfox_db"
-    test_database_url: PostgresDsn = "postgresql+asyncpg://postgres:postgres@postgres/test_db"
+    database_url: PostgresDsn = "postgresql+asyncpg://postgres:postgres@postgres/grayfox_db" # type: ignore
+    test_database_url: PostgresDsn = "postgresql+asyncpg://postgres:postgres@postgres/test_db" # type: ignore
 
 # Create an instance of the Settings class.
 settings = Settings()

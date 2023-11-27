@@ -8,7 +8,7 @@ logger = AppLogger.get_instance().get_logger()
 
 def convert_frame_to_series(
     data_frame: pl.DataFrame, index_column: str, price_column: str
-) -> pl.DataFrame:
+) -> pd.Series:
     """
     Converts a specified column of a Polars DataFrame to a Pandas Series with another column as its index.
     """
