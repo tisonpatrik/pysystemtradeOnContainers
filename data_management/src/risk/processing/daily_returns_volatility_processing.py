@@ -1,11 +1,10 @@
 from src.core.utils.logging import AppLogger
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.risk.estimators.daily_returns import daily_returns_volatility
-
-from data_management.src.risk.errors.daily_returns_vol_processing_error import (
+from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolProcessingError,
     DailyReturnsVolProcessingHaltedError,
 )
+from src.risk.estimators.daily_returns import daily_returns_volatility
 
 
 class DailyReturnsVolatilityCalculator:

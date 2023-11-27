@@ -1,24 +1,28 @@
 import pandas as pd
-import polars as pl
 from src.core.errors.conversion_errors import DataFrameConversionError
 from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 
 
-def convert_polars_to_series(
-    data_frame: pl.DataFrame, index_column: str, price_column: str
+def convert_frame_to_series(
+    data_frame: pd.DataFrame, index_column: str, price_column: str
 ) -> pd.Series:
     """
-    Converts a specified column of a Polars DataFrame to a Pandas Series with another column as its index.
+    Converts a specified column of a Pandas DataFrame to a Pandas Series with another column as its index.
     """
     try:
-        # Convert the specified column to datetime format
-        converted_df: pd.DataFrame = data_frame.to_pandas()
-        indexed_df = converted_df.set_index(index_column)
+        # Set the specified column as the index
+        indexed_df = data_frame.set_index(index_column)
+
+        # Extract the Series
         series = indexed_df[price_column]
-        series = series.resample("1B").last()
+
+        # Resample if the index is datetime, comment out if not needed
+        if pd.api.types.is_datetime64_any_dtype(indexed_df.index):
+            series = series.resample("1B").last()
+
         return series
     except Exception as e:
-        # Raise a custom error for any exceptions that may occur
+        logger.error("Error during conversion to Pandas Series: %s", e)
         raise DataFrameConversionError(f"An error occurred during conversion: {e}")

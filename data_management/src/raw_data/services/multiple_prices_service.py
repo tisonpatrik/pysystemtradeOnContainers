@@ -2,7 +2,7 @@
 This module provides services for fetching and processing multiple prices data asynchronously.
 """
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.pandas.to_series import convert_polars_to_series
+from src.core.pandas.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
@@ -31,7 +31,7 @@ class MultiplePricesService:
                 self.table_name, symbol
             )
             converted_and_sorted = convert_and_sort_by_time(data, self.time_column)
-            series = convert_polars_to_series(
+            series = convert_frame_to_series(
                 converted_and_sorted, self.time_column, self.price_column
             )
             return series

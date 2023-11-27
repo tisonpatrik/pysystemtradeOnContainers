@@ -1,20 +1,18 @@
 import pandas as pd
-import polars as pl
 
 
 def get_instrument_currency_vol(
     multiple_prices: pd.Series,
     daily_returns_vol: pd.Series,
     point_size: float,
-) -> pl.DataFrame:
+) -> pd.Series:
     block_value = get_block_value(multiple_prices, point_size)
     daily_perc_vol = get_daily_percentage_volatility(multiple_prices, daily_returns_vol)
     ## FIXME WHY NOT RESAMPLE?
     (block_value, daily_perc_vol) = block_value.align(daily_perc_vol, join="inner")
 
     instr_ccy_vol = block_value.ffill() * daily_perc_vol
-    instr_ccy_vol = instr_ccy_vol.to_frame()
-    return pl.from_pandas(instr_ccy_vol)
+    return instr_ccy_vol
 
 
 def get_block_value(

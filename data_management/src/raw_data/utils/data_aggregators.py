@@ -1,7 +1,7 @@
 """
 Module for aggregating time-based price data to daily averages.
 """
-import polars as pl
+import pandas as pd
 from src.core.errors.aggregation_errors import (
     DataAggregationError,
     DataFrameConcatenationError,
@@ -12,29 +12,32 @@ logger = AppLogger.get_instance().get_logger()
 
 
 def aggregate_to_day_based_prices(
-    data_frame: pl.DataFrame, date_time_column: str, price_column: str
-) -> pl.DataFrame:
+    data_frame: pd.DataFrame, date_time_column: str, price_column: str
+) -> pd.DataFrame:
     """
-    Aggregates the time-based price data to daily averages.
+    Aggregates the time-based price data to daily averages using Pandas.
     """
     try:
-        result = (
-            data_frame.sort(date_time_column)
-            .group_by_dynamic(date_time_column, every="1d")
-            .agg(pl.col(price_column).last().alias(price_column))
-        )
-        return result
+        # Ensure the date_time_column is in datetime format
+        data_frame[date_time_column] = pd.to_datetime(data_frame[date_time_column])
+
+        # Set the datetime column as the index
+        data_frame = data_frame.set_index(date_time_column)
+
+        # Resample and aggregate to get the last price of each day
+        result = data_frame.resample("1D")[price_column].last()
+        return result.reset_index()
     except Exception as error:
         logger.error("Error during data aggregation: %s", error)
         raise DataAggregationError from error
 
 
-def concatenate_data_frames(processed_data_frames: list) -> pl.DataFrame:
+def concatenate_data_frames(processed_data_frames: list) -> pd.DataFrame:
     """
-    Concatenates a list of Polars data frames into a single data frame.
+    Concatenates a list of Pandas data frames into a single data frame.
     """
     try:
-        return pl.concat(processed_data_frames, rechunk=True)
+        return pd.concat(processed_data_frames)
     except Exception as error:
         logger.error("Failed to concatenate data frames: %s", error)
         raise DataFrameConcatenationError from error

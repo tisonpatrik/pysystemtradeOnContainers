@@ -4,7 +4,7 @@ from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.risk.errors.cumulative_volatility_returns_errors import (
     CumulativeVolatilityReturnsCalculationError,
 )
-from data_management.src.risk.processing.cumulative_volatility_returns import (
+from src.risk.processing.cumulative_volatility_returns import (
     CumulativeVolatilityReturnsCalculator,
 )
 

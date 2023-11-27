@@ -1,19 +1,18 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from src.core.pandas.to_series import convert_polars_to_series
+from src.core.pandas.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.utils.data_aggregators import concatenate_data_frames
+from src.risk.errors.daily_returns_vol_processing_error import (
+    DailyReturnsVolatilityFetchError,
+    DailyReturnsVolCalculationError,
+)
 from src.risk.models.risk_models import DailyReturnsVolatility
 from src.risk.processing.daily_returns_volatility_processing import (
     DailyReturnsVolatilityCalculator,
-)
-
-from data_management.src.risk.errors.daily_returns_vol_processing_error import (
-    DailyReturnsVolatilityFetchError,
-    DailyReturnsVolCalculationError,
 )
 
 
@@ -60,7 +59,7 @@ class DailyReturnsVolatilityService:
                 self.table_name, symbol
             )
             converted_and_sorted = convert_and_sort_by_time(data, self.time_column)
-            series = convert_polars_to_series(
+            series = convert_frame_to_series(
                 converted_and_sorted, self.time_column, self.price_column
             )
             return series

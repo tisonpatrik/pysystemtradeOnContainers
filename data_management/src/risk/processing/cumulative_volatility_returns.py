@@ -1,12 +1,11 @@
 from src.core.utils.logging import AppLogger
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.risk.estimators.cumulative_daily_vol_normalised_returns import (
-    get_cumulative_daily_vol_normalised_returns,
-)
-
-from data_management.src.risk.errors.cumulative_volatility_returns_errors import (
+from src.risk.errors.cumulative_volatility_returns_errors import (
     CumulativeVolatilityReturnsProcessingError,
     CumulativeVolatilityReturnsProcessingHaltedError,
+)
+from src.risk.estimators.cumulative_daily_vol_normalised_returns import (
+    get_cumulative_daily_vol_normalised_returns,
 )
 
 
