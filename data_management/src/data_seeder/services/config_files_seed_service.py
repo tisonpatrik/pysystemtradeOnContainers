@@ -6,8 +6,8 @@ It reads raw CSV files, renames columns, and encapsulates the data into a DataFr
 from src.core.utils.logging import AppLogger
 from src.data_seeder.data_processors.config_files_processor import ConfigFilesProcessor
 from src.data_seeder.errors.config_files_errors import ConfigFilesServiceError
+from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.utils.path_validator import get_full_path
 
 

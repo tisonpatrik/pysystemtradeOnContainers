@@ -7,7 +7,7 @@ from typing import List
 
 import polars as pl
 from src.core.utils.logging import AppLogger
-from src.raw_data.errors.csv_loading_errors import (
+from src.data_seeder.errors.csv_loading_errors import (
     CsvLoadingError,
     MultipleCsvLoadingError,
 )
