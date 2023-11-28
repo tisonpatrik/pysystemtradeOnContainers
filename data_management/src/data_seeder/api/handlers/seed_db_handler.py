@@ -46,6 +46,7 @@ class SeedDBHandler:
         list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
             AdjustedPrices.directory
         )
+
         for model in models:
             await self._process_data_and_insert_them_into_db(model, list_of_instruments)
 
@@ -53,15 +54,18 @@ class SeedDBHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ in ["instrument_config", "roll_config", "spread_cost"]:
+        table_name = model.__tablename__
+
+        if table_name in ["instrument_config", "roll_config", "spread_cost"]:
             await self.config_files_seed_service.seed_config_files(
                 list_of_symbols, model
             )
-        if model.__tablename__ in [
+        elif table_name in [
             "adjusted_prices",
             "fx_prices",
             "multiple_prices",
             "roll_calendars",
         ]:
-            return self.prices_seed_service.process_prices_files(model, list_of_symbols)
-        raise ValueError(f"Unrecognized table name: {model.__tablename__}")
+            await self.prices_seed_service.process_prices_files(model, list_of_symbols)
+        else:
+            raise ValueError(f"Unrecognized table name: {table_name}")

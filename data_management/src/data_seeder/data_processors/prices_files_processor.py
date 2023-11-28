@@ -53,9 +53,7 @@ class PricesFilesProcessor:
         date_time_converted_data = convert_string_column_to_datetime(
             renamed_data, model.unix_date_time.name
         )
-        unix_time_converted_data = convert_datetime_to_unixtime(
-            date_time_converted_data, model.unix_date_time.name
-        )
+
         if model.__tablename__ == "roll_calendars":
             final_data = date_time_converted_data
         else:
@@ -64,12 +62,14 @@ class PricesFilesProcessor:
                 model.unix_date_time.name,
                 model.price.name,
             )
-
             rounded_data = round_values_in_column(
                 unix_time_converted_data, model.price.name
             )
             final_data = rounded_data
 
+        unix_time_converted_data = convert_datetime_to_unixtime(
+            final_data, model.unix_date_time.name
+        )
         return add_column_and_populate_it_by_value(
-            final_data, model.symbol.name, symbol_name
+            unix_time_converted_data, model.symbol.name, symbol_name
         )
