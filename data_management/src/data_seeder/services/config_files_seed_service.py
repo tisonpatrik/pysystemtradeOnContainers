@@ -4,11 +4,11 @@ It reads raw CSV files, renames columns, and encapsulates the data into a DataFr
 """
 
 from src.core.utils.logging import AppLogger
-from src.raw_data.errors.raw_data_processing_error import ConfigFilesProcessingError
+from src.data_seeder.data_processors.config_files_processor import ConfigFilesProcessor
+from src.data_seeder.errors.config_files_errors import ConfigFilesServiceError
+from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.utils.filter_dataframe import filter_df_by_symbols
 from src.raw_data.utils.path_validator import get_full_path
-from src.raw_data.utils.rename_columns import rename_columns
 
 
 class ConfigFilesService:
@@ -16,11 +16,13 @@ class ConfigFilesService:
     Handles the processing of configuration data.
     """
 
-    def __init__(self):
+    def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader = CsvLoaderService()
+        self.data_insert_service = DataInsertService(db_session)
+        self.config_files_processor = ConfigFilesProcessor()
 
-    def process_config_files(self, list_of_symbols, model):
+    async def seed_config_files(self, list_of_symbols, model):
         """
         Processes configuration data from a FileTableMapping object.
         """
@@ -28,13 +30,13 @@ class ConfigFilesService:
             self.logger.info("Starting the process for %s table.", model.__tablename__)
             full_path = get_full_path(model.directory, model.file_name)
             raw_data = self.csv_loader.load_csv(full_path)
-            column_names = [column.name for column in model.__table__.columns]
-            renamed_data = rename_columns(raw_data, column_names)
-            filtered_df = filter_df_by_symbols(renamed_data, list_of_symbols)
-            return filtered_df
-
-        except Exception as exc:
-            self.logger.error("An unexpected error occurred: %s", exc)
-            raise ConfigFilesProcessingError(
-                "An unexpected error occurred during processing."
-            ) from exc
+            data = self.config_files_processor.process_config_files(
+                list_of_symbols=list_of_symbols, model=model, raw_data=raw_data
+            )
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                data, model.__tablename__
+            )
+        except Exception as e:
+            raise ConfigFilesServiceError(
+                f"Error seeding config files for {model.__tablename__}: {str(e)}"
+            )

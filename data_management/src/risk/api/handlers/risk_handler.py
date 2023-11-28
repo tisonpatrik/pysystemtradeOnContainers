@@ -52,15 +52,15 @@ class RiskHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ in "daily_returns_volatility":
+        if model.__tablename__ == "daily_returns_volatility":
             return await self.daily_returns_vols_service.calculate_daily_returns_volatility_for_instrument_async(
                 model
             )
-        if model.__tablename__ in "instrument_volatility":
+        if model.__tablename__ == "instrument_volatility":
             return await self.instrument_volatility_service.calculate_instrument_volatility_for_instrument_async(
                 model
             )
-        if model.__tablename__ in "cumulative_daily_vol_normalized_returns":
+        if model.__tablename__ == "cumulative_daily_vol_normalized_returns":
             return await self.cumulative_volatility_returns_service.calculate_cumulative_volatility_returns_for_instrument_async(
                 model
             )

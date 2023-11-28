@@ -6,6 +6,7 @@ and table adjustments.
 
 from src.core.polars.date_time_convertions import convert_datetime_to_unixtime
 from src.core.utils.logging import AppLogger
+from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.services.raw_data_service import RawFilesService
@@ -19,17 +20,18 @@ from src.raw_data.utils.data_aggregators import (
 from src.raw_data.utils.round_column_numbers import round_values_in_column
 
 
-class PricesService:
+class PricesSeedService:
     """
     Manages the processing and adjustment of pricing data from CSV files.
     """
 
-    def __init__(self):
+    def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader_service = CsvLoaderService()
         self.raw_file_service = RawFilesService()
+        self.data_insert_service = DataInsertService(db_session)
 
-    def process_prices_files(self, model, list_of_symbols):
+    async def process_prices_files(self, model, list_of_symbols):
         """
         Process and prices for a given table mapping.
         """
@@ -42,7 +44,9 @@ class PricesService:
 
             processed_data_frames = self._process_csv_files(dataframes, model)
             price_data_frames = concatenate_data_frames(processed_data_frames)
-            return price_data_frames
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                price_data_frames, model.__tablename__
+            )
         except PricesFilesProcessingError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise

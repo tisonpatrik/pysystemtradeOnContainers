@@ -6,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.instrument_config_service import InstrumentConfigError
-from src.raw_data.models.config_models import InstrumentConfig
+from src.raw_data.models.config_models import RollConfig
 
-class InstrumentConfigService:
+class RollConfigService:
     """
     Service for dealing with operations related to instrument config.
     """
@@ -23,7 +23,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table(
-                InstrumentConfig.__tablename__
+                RollConfig.__tablename__
             )
             return data
         except Exception as error:
