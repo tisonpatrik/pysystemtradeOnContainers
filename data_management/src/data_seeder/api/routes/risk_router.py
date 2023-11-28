@@ -6,8 +6,8 @@ It uses FastAPI for the API definitions and SQLAlchemy for the database interact
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
+from src.data_seeder.api.handlers.risk_handler import RiskHandler
 from src.db.database import get_db
-from src.risk.api.handlers.risk_handler import RiskHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

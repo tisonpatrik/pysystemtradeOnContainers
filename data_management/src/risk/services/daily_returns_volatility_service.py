@@ -10,10 +10,10 @@ from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolatilityFetchError,
     DailyReturnsVolCalculationError,
 )
+from src.risk.models.risk_models import DailyReturnsVolatility
 from src.risk.processing.daily_returns_volatility_processing import (
     DailyReturnsVolatilityCalculator,
 )
-from src.risk.models.risk_models import DailyReturnsVolatility
 
 
 class DailyReturnsVolatilityService:

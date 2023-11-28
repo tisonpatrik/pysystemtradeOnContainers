@@ -16,7 +16,6 @@ class CumulativeVolatilityReturnsService:
         self.cumulative_volatility_returns_calculator = (
             CumulativeVolatilityReturnsCalculator(db_session)
         )
-        
 
     async def calculate_cumulative_volatility_returns_for_instrument_async(self, model):
         try:
@@ -25,7 +24,6 @@ class CumulativeVolatilityReturnsService:
             instrument_configs = (
                 await self.instrument_config_service.get_instrument_configs()
             )
-
             # Process volatilities
             processed_volatilities = await self.cumulative_volatility_returns_calculator.get_cumulative_volatilities_async(
                 instrument_configs, model

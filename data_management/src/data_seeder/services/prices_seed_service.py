@@ -4,8 +4,6 @@ It utilizes various helper classes for tasks such as file validation, date-time 
 and table adjustments.
 """
 
-import time
-
 from src.core.utils.logging import AppLogger
 from src.data_seeder.data_processors.prices_files_processor import PricesFilesProcessor
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
