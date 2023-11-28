@@ -5,7 +5,7 @@ from src.risk.errors.cumulative_volatility_returns_errors import (
     CumulativeVolatilityReturnsProcessingHaltedError,
 )
 from src.risk.estimators.cumulative_daily_vol_normalised_returns import (
-    get_cumulative_daily_vol_normalised_returns,
+    CumulativeDailyVolNormalisedReturns,
 )
 
 
@@ -17,6 +17,9 @@ class CumulativeVolatilityReturnsCalculator:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.adjusted_prices_service = AdjustedPricesService(db_session)
+        self.cumulative_daily_vol_normalised_returns = (
+            CumulativeDailyVolNormalisedReturns()
+        )
 
     async def get_cumulative_volatilities_async(self, instrument_configs, model):
         cumulative_vols = []
@@ -46,7 +49,7 @@ class CumulativeVolatilityReturnsCalculator:
             )
 
             # Calculate cumulative volatility returns
-            cumulative_volatility = get_cumulative_daily_vol_normalised_returns(
+            cumulative_volatility = self.cumulative_daily_vol_normalised_returns.get_cumulative_daily_vol_normalised_returns(
                 daily_prices
             )
             return cumulative_volatility

@@ -7,9 +7,7 @@ from src.risk.errors.instrument_volatility_errors import (
     VolatilityProcessingHaltedError,
 )
 from src.risk.estimators.instrument_volatility import get_instrument_currency_vol
-from src.risk.services.daily_returns_volatility_service import (
-    DailyReturnsVolatilityService,
-)
+from src.risk.services.daily_returns_volatility_service import DailyReturnsVolService
 
 
 class InstrumentVolatilityCalculator:
@@ -19,9 +17,7 @@ class InstrumentVolatilityCalculator:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_returns_volatility_service = DailyReturnsVolatilityService(
-            db_session
-        )
+        self.daily_returns_volatility_service = DailyReturnsVolService(db_session)
         self.data_loader_service = DataLoadService(db_session)
         self.multiple_prices_service = MultiplePricesService(db_session)
 

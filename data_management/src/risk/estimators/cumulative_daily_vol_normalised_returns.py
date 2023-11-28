@@ -1,27 +1,41 @@
 import pandas as pd
-from src.risk.estimators.daily_returns import daily_returns, daily_returns_volatility
+from src.core.utils.logging import AppLogger
+from src.risk.processing.daily_returns_volatility_processing import (
+    DailyReturnsVolProcessor,
+)
 
 
-def get_cumulative_daily_vol_normalised_returns(daily_prices: pd.Series) -> pd.Series:
-    """
-    Returns a cumulative normalised return. This is like a price, but with equal expected vol
-    Used for a few different trading rules
-    """
+class CumulativeDailyVolNormalisedReturns:
+    def __init__(self):
+        self.logger = AppLogger.get_instance().get_logger()
+        self.daily_returns_vol_processor = DailyReturnsVolProcessor()
 
-    norm_returns = get_daily_vol_normalised_returns(daily_prices)
+    def get_cumulative_daily_vol_normalised_returns(
+        self,
+        daily_prices: pd.Series,
+    ) -> pd.Series:
+        """
+        Returns a cumulative normalised return. This is like a price, but with equal expected vol
+        Used for a few different trading rules
+        """
 
-    cum_norm_returns = norm_returns.cumsum()
+        norm_returns = self.get_daily_vol_normalised_returns(daily_prices)
 
-    return cum_norm_returns
+        cum_norm_returns = norm_returns.cumsum()
 
+        return cum_norm_returns
 
-def get_daily_vol_normalised_returns(daily_prices: pd.Series) -> pd.Series:
-    """
-    Get returns normalised by recent vol
-    Useful statistic, also used for some trading rules
-    """
-    returnvol = daily_returns_volatility(daily_prices).shift(1)
-    dailyreturns = daily_returns(daily_prices)
-    norm_return = dailyreturns / returnvol
+    def get_daily_vol_normalised_returns(self, daily_prices: pd.Series) -> pd.Series:
+        """
+        Get returns normalised by recent vol
+        Useful statistic, also used for some trading rules
+        """
+        returnvol = self.daily_returns_vol_processor.process_daily_returns_vol(
+            daily_prices
+        ).shift(1)
+        dailyreturns = self.daily_returns_vol_processor.daily_returns(
+            daily_prices
+        ).to_pandas()
+        norm_return = dailyreturns / returnvol
 
-    return norm_return
+        return norm_return
