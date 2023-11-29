@@ -2,8 +2,8 @@
 This module contains utility functions for adding and populating columns in a pandas DataFrame.
 """
 import polars as pl
+from src.core.errors.polars_errors import SymbolAdditionError
 from src.core.utils.logging import AppLogger
-from src.raw_data.errors.add_and_populate_error import SymbolAdditionError
 
 logger = AppLogger.get_instance().get_logger()
 

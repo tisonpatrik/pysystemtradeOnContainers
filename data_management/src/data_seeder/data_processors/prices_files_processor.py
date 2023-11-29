@@ -1,16 +1,14 @@
+from src.core.polars.add_and_populate_column import add_column_and_populate_it_by_value
 from src.core.polars.date_time_convertions import (
     convert_datetime_to_unixtime,
     convert_string_column_to_datetime,
 )
+from src.core.polars.rename_columns import rename_columns
 from src.core.utils.logging import AppLogger
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
-from src.raw_data.utils.add_and_populate_column import (
-    add_column_and_populate_it_by_value,
-)
 from src.raw_data.utils.data_aggregators import aggregate_to_day_based_prices
-from src.raw_data.utils.rename_columns import rename_columns
 from src.raw_data.utils.round_column_numbers import round_values_in_column
 
 
