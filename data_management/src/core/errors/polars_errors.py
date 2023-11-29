@@ -9,3 +9,7 @@ class InvalidDatetimeColumnError(Exception):
 
 class DateTimeConversionError(Exception):
     """Raised when there's an error in converting date/time."""
+
+
+class DataPreparationError(Exception):
+    """Exception raised for errors in the data preparation process."""
