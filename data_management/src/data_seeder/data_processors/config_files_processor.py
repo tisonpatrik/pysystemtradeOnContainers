@@ -1,7 +1,7 @@
 from src.core.polars.rename_columns import rename_columns
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.config_files_errors import ConfigFilesProcessingError
-from src.raw_data.utils.filter_dataframe import filter_df_by_symbols
+from src.data_seeder.utils.filter_dataframe import filter_df_by_symbols
 
 
 class ConfigFilesProcessor:

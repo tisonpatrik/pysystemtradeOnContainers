@@ -5,11 +5,11 @@ from src.core.polars.date_time_convertions import (
 )
 from src.core.polars.rename_columns import rename_columns
 from src.core.utils.logging import AppLogger
+from src.data_seeder.errors.prices_data_seed_error import PricesFilesProcessingError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
+from src.data_seeder.utils.data_aggregators import aggregate_to_day_based_prices
+from src.data_seeder.utils.round_column_numbers import round_values_in_column
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
-from src.raw_data.utils.data_aggregators import aggregate_to_day_based_prices
-from src.raw_data.utils.round_column_numbers import round_values_in_column
 
 
 class PricesFilesProcessor:

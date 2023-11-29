@@ -6,10 +6,10 @@ and table adjustments.
 
 from src.core.utils.logging import AppLogger
 from src.data_seeder.data_processors.prices_files_processor import PricesFilesProcessor
+from src.data_seeder.errors.prices_data_seed_error import PricesFilesProcessingError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
+from src.data_seeder.utils.data_aggregators import concatenate_data_frames
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.errors.raw_data_processing_error import PricesFilesProcessingError
-from src.raw_data.utils.data_aggregators import concatenate_data_frames
 
 
 class PricesSeedService:

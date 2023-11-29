@@ -1,6 +1,6 @@
 from src.core.utils.logging import AppLogger
+from src.data_seeder.utils.data_aggregators import concatenate_data_frames
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.raw_data.utils.data_aggregators import concatenate_data_frames
 from src.risk.errors.cumulative_volatility_returns_errors import (
     CumulativeVolatilityReturnsCalculationError,
 )
