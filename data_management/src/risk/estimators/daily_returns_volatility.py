@@ -1,5 +1,4 @@
 import pandas as pd
-import polars as pl
 from src.core.utils.logging import AppLogger
 from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolProcessingHaltedError,
@@ -7,7 +6,7 @@ from src.risk.errors.daily_returns_vol_processing_error import (
 from src.risk.estimators.volatility import mixed_vol_calc
 
 
-class DailyReturnsVolProcessor:
+class DailyReturnsVolEstimator:
     """
     Class for calculating daily returns volatility of financial instruments.
     """

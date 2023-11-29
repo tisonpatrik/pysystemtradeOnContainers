@@ -1,14 +1,12 @@
 import pandas as pd
 from src.core.utils.logging import AppLogger
-from src.risk.processing.daily_returns_volatility_processing import (
-    DailyReturnsVolProcessor,
-)
+from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
 
 class CumulativeDailyVolNormalisedReturns:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_returns_vol_processor = DailyReturnsVolProcessor()
+        self.daily_returns_vol_processor = DailyReturnsVolEstimator()
 
     def get_cumulative_daily_vol_normalised_returns(
         self,

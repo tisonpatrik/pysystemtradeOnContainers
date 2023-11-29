@@ -11,10 +11,8 @@ from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolatilityFetchError,
     DailyReturnsVolCalculationError,
 )
+from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from src.risk.models.risk_models import DailyReturnsVolatility
-from src.risk.processing.daily_returns_volatility_processing import (
-    DailyReturnsVolProcessor,
-)
 
 
 class DailyReturnsVolService:
@@ -30,7 +28,7 @@ class DailyReturnsVolService:
         self.table_name = DailyReturnsVolatility.__tablename__
         self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
         self.time_column = DailyReturnsVolatility.unix_date_time.key
-        self.daily_returns_vol_processor = DailyReturnsVolProcessor()
+        self.daily_returns_vol_processor = DailyReturnsVolEstimator()
 
     async def insert_daily_returns_vol_for_prices_async(self, prices, symbol):
         """
@@ -48,9 +46,9 @@ class DailyReturnsVolService:
                 daily_returns_vols, DailyReturnsVolatility, symbol
             )
 
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
-            )
+            # await self.data_insert_service.async_insert_dataframe_to_table(
+            #     prepared_data, self.table_name
+            # )
         except DailyReturnsVolCalculationError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise

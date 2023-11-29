@@ -18,6 +18,7 @@ def aggregate_to_day_based_prices(
     Aggregates the time-based price data to daily averages.
     """
     try:
+        
         result = (
             data_frame.sort(date_time_column)
             .group_by_dynamic(date_time_column, every="1d")
