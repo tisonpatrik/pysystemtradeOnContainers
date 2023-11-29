@@ -8,6 +8,7 @@ from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.instrument_config_service import InstrumentConfigError
 from src.raw_data.models.config_models import InstrumentConfig
 
+
 class InstrumentConfigService:
     """
     Service for dealing with operations related to instrument config.
@@ -26,6 +27,21 @@ class InstrumentConfigService:
                 InstrumentConfig.__tablename__
             )
             return data
+        except Exception as error:
+            self.logger.error(
+                "Failed to get instrument config asynchronously: %s",
+                error,
+                exc_info=True,
+            )
+            raise InstrumentConfigError("Error fetching instrument config", error)
+
+    async def get_point_size_of_instrument(self, symbol):
+        """Asynchronously fetch point size for given instrument."""
+        try:
+            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
+                InstrumentConfig.__tablename__, symbol
+            )
+            return data[InstrumentConfig.pointsize.key][0]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument config asynchronously: %s",

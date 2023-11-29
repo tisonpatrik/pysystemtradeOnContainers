@@ -17,8 +17,8 @@ class DailyReturnsVolSeedService:
         self.adjusted_prices_service = AdjustedPricesService(db_session)
         self.daily_returns_vol_service = DailyReturnsVolService(db_session)
 
-    async def calculate_daily_returns_vol_for_instrument_async(self, model):
-        """Calculates daily returns volatility of a given financial instrument represented."""
+    async def seed_daily_returns_vol_async(self):
+        """Calculates daily returns volatility."""
         try:
             self.logger.info(
                 "Starting the process for %s table.",
@@ -28,7 +28,7 @@ class DailyReturnsVolSeedService:
                 await self.instrument_config_service.get_instrument_configs()
             )
             for config in instrument_configs.to_dict(orient="records"):
-                symbol = config[model.symbol.key]
+                symbol = config[DailyReturnsVolatility.symbol.key]
                 daily_prices = (
                     await self.adjusted_prices_service.get_daily_prices_async(symbol)
                 )

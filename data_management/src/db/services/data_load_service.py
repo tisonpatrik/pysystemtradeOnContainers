@@ -33,8 +33,8 @@ class DataLoadService:
 
             # Create a Pandas DataFrame from the fetched data
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
-
-            return pl.DataFrame(df_result)
+            pl_frame = pl.DataFrame(df_result)
+            return pl_frame
 
         except Exception as exc:
             self.logger.error(

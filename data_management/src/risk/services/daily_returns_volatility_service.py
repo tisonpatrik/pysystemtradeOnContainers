@@ -28,7 +28,7 @@ class DailyReturnsVolService:
         self.table_name = DailyReturnsVolatility.__tablename__
         self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
         self.time_column = DailyReturnsVolatility.unix_date_time.key
-        self.daily_returns_vol_processor = DailyReturnsVolEstimator()
+        self.daily_returns_vol_estimator = DailyReturnsVolEstimator()
 
     async def insert_daily_returns_vol_for_prices_async(self, prices, symbol):
         """
@@ -40,15 +40,15 @@ class DailyReturnsVolService:
                 symbol,
             )
             daily_returns_vols = (
-                self.daily_returns_vol_processor.process_daily_returns_vol(prices)
+                self.daily_returns_vol_estimator.process_daily_returns_vol(prices)
             )
             prepared_data = prepara_data_to_db(
                 daily_returns_vols, DailyReturnsVolatility, symbol
             )
 
-            # await self.data_insert_service.async_insert_dataframe_to_table(
-            #     prepared_data, self.table_name
-            # )
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                prepared_data, self.table_name
+            )
         except DailyReturnsVolCalculationError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise

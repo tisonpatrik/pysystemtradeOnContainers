@@ -2,6 +2,9 @@ from src.core.utils.logging import AppLogger
 from src.data_seeder.services.daily_returns_vol_seed_service import (
     DailyReturnsVolSeedService,
 )
+from src.data_seeder.services.instrument_vol_seed_service import (
+    InstrumentVolSeedService,
+)
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import (
     CumulativeDailyVolNormalizedReturns,
@@ -11,14 +14,13 @@ from src.risk.models.risk_models import (
 from src.risk.services.cumulative_volatility_returns_service import (
     CumulativeVolatilityReturnsService,
 )
-from src.risk.services.instrument_volatility_service import InstrumentVolatilityService
 
 
 class RiskHandler:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)
-        self.instrument_volatility_service = InstrumentVolatilityService(db_session)
+        self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
         self.cumulative_volatility_returns_service = CumulativeVolatilityReturnsService(
             db_session
         )
@@ -30,8 +32,8 @@ class RiskHandler:
         """
         self.logger.info("Data processing for risk calculations has started")
         models = [
-            DailyReturnsVolatility,
-            # InstrumentVolatility,
+            # DailyReturnsVolatility,
+            InstrumentVolatility,
             # CumulativeDailyVolNormalizedReturns,
         ]
 
@@ -43,13 +45,9 @@ class RiskHandler:
         Data processing for CSV files.
         """
         if model.__tablename__ == "daily_returns_volatility":
-            await self.daily_returns_vol_seed_service.calculate_daily_returns_vol_for_instrument_async(
-                model
-            )
+            await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
         elif model.__tablename__ == "instrument_volatility":
-            await self.instrument_volatility_service.calculate_instrument_volatility_for_instrument_async(
-                model
-            )
+            await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         elif model.__tablename__ == "cumulative_daily_vol_normalized_returns":
             await self.cumulative_volatility_returns_service.calculate_cumulative_volatility_returns_for_instrument_async(
                 model
