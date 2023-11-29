@@ -58,7 +58,6 @@ class PricesFilesProcessor:
             unix_time_converted_data = aggregate_to_day_based_prices(
                 date_time_converted_data,
                 model.unix_date_time.name,
-                model.price.name,
             )
             rounded_data = round_values_in_column(
                 unix_time_converted_data, model.price.name
