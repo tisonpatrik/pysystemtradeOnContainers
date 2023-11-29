@@ -1,5 +1,5 @@
-import polars as pl
 import pandas as pd
+import polars as pl
 from src.core.errors.conversion_errors import DataFrameConversionError
 from src.core.utils.logging import AppLogger
 
@@ -14,10 +14,10 @@ def convert_frame_to_series(
     """
     try:
         # Convert the specified column to datetime format
-        converted_df: pd.DataFrame = data_frame.to_pandas()
+        converted_df = data_frame.to_pandas()
         indexed_df = converted_df.set_index(index_column)
+        series = indexed_df.resample("1B").last()
         series = indexed_df[price_column]
-        series = series.resample("1B").last()
         return series
     except Exception as e:
         # Raise a custom error for any exceptions that may occur

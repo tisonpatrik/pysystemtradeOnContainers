@@ -31,11 +31,10 @@ class AdjustedPricesService:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
                 self.table_name, symbol
             )
-            converted_and_sorted = convert_and_sort_by_time(data, self.time_column)
+            converted_and_sorted = convert_and_sort_by_time(data, self.time_column)            
             series = convert_frame_to_series(
                 converted_and_sorted, self.time_column, self.price_column
             )
-
             return series
         except Exception as exc:
             self.logger.error(

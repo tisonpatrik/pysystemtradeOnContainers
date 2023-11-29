@@ -1,8 +1,12 @@
 """Module for calculating robust volatility for financial instruments."""
 
 
+from src.core.data_types_conversion.to_frame import convert_series_to_frame
 from src.core.data_types_conversion.to_series import convert_frame_to_series
-from src.core.polars.date_time_convertions import convert_and_sort_by_time
+from src.core.polars.date_time_convertions import (
+    convert_and_sort_by_time,
+    convert_datetime_to_unixtime,
+)
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
@@ -10,6 +14,7 @@ from src.raw_data.services.instrument_config_services import InstrumentConfigSer
 from src.raw_data.utils.add_and_populate_column import (
     add_column_and_populate_it_by_value,
 )
+from src.raw_data.utils.rename_columns import rename_columns
 from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolatilityFetchError,
     DailyReturnsVolCalculationError,
@@ -41,20 +46,30 @@ class DailyReturnsVolService:
         """
         try:
             self.logger.info(
-                "Starting the daily returns volatility calculation for %s table.",
-                self.table_name,
+                "Starting the daily returns volatility calculation for %s symbol.",
+                symbol,
             )
             daily_returns_vols = (
                 self.daily_returns_vol_processor.process_daily_returns_vol(prices)
             )
+            framed = convert_series_to_frame(daily_returns_vols)
+            column_names = [
+                column.name
+                for column in DailyReturnsVolatility.__table__.columns
+                if column.name != DailyReturnsVolatility.symbol.name
+            ]
+            renamed_data = rename_columns(framed, column_names)
             populated = add_column_and_populate_it_by_value(
-                data_frame=daily_returns_vols,
+                data_frame=renamed_data,
                 column_name=DailyReturnsVolatility.symbol.key,
                 column_value=symbol,
             )
 
+            unix_time_converted_data = convert_datetime_to_unixtime(
+                populated, DailyReturnsVolatility.unix_date_time.name
+            )
             await self.data_insert_service.async_insert_dataframe_to_table(
-                populated, self.table_name
+                unix_time_converted_data, self.table_name
             )
         except DailyReturnsVolCalculationError as error:
             self.logger.error("An error occurred during processing: %s", error)

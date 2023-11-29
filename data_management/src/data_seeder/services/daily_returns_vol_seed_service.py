@@ -9,9 +9,7 @@ from src.risk.services.daily_returns_volatility_service import DailyReturnsVolSe
 
 
 class DailyReturnsVolSeedService:
-    """
-    Service for calculating daily returns volatility of financial instruments.
-    """
+    """Service for calculating daily returns volatility of financial instruments."""
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
@@ -20,9 +18,7 @@ class DailyReturnsVolSeedService:
         self.daily_returns_vol_service = DailyReturnsVolService(db_session)
 
     async def calculate_daily_returns_vol_for_instrument_async(self, model):
-        """
-        Calculates daily returns volatility of a given financial instrument represented.
-        """
+        """Calculates daily returns volatility of a given financial instrument represented."""
         try:
             self.logger.info(
                 "Starting the process for %s table.",

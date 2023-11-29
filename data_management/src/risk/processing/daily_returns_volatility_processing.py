@@ -1,6 +1,5 @@
 import pandas as pd
 import polars as pl
-from src.core.data_types_conversion.to_frame import convert_series_to_frame
 from src.core.utils.logging import AppLogger
 from src.risk.errors.daily_returns_vol_processing_error import (
     DailyReturnsVolProcessingHaltedError,
@@ -16,7 +15,7 @@ class DailyReturnsVolProcessor:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
 
-    def process_daily_returns_vol(self, daily_prices: pd.Series) -> pl.DataFrame:
+    def process_daily_returns_vol(self, daily_prices: pd.Series) -> pd.Series:
         """
         Process and calculate the volatility for a given instrument configuration.
         """
@@ -30,8 +29,7 @@ class DailyReturnsVolProcessor:
             # Apply the multiplier to the volatility
             # Assuming 'volatility' is the column name in the raw_vol DataFrame
             vol = vol_multiplier * raw_vol
-            framed = convert_series_to_frame(vol)
-            return framed
+            return vol
 
         except Exception as exc:
             self.logger.error(

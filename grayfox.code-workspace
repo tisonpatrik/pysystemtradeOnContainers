@@ -18,7 +18,6 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": true
         },
-        "mypy-type-checker.severity": {"error": "Error", "note": "Information"},
         "isort.args": [
             "--profile",
             "black"
