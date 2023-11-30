@@ -1,8 +1,8 @@
 from src.core.data_types_conversion.to_frame import convert_series_to_frame
 from src.core.errors.polars_errors import DataPreparationError
 from src.core.polars.add_and_populate_column import add_column_and_populate_it_by_value
+from src.core.polars.columns import rename_columns
 from src.core.polars.date_time_convertions import convert_datetime_to_unixtime
-from src.core.polars.rename_columns import rename_columns
 from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()

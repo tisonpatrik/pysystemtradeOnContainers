@@ -1,4 +1,4 @@
-from src.core.polars.rename_columns import rename_columns
+from src.core.polars.columns import rename_columns
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.config_files_errors import ConfigFilesProcessingError
 from src.data_seeder.utils.filter_dataframe import filter_df_by_symbols
@@ -13,7 +13,7 @@ class ConfigFilesProcessor:
         Processes configuration data from a FileTableMapping object.
         """
         try:
-            column_names = [column.name for column in model.__table__.columns]
+            column_names = list(model.data.__annotations__.keys())
             renamed_data = rename_columns(raw_data, column_names)
             filtered_df = filter_df_by_symbols(renamed_data, list_of_symbols)
             return filtered_df

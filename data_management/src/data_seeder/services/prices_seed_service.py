@@ -28,7 +28,7 @@ class PricesSeedService:
         Process and prices for a given table mapping.
         """
         try:
-            self.logger.info("Starting the process for %s table.", model.__tablename__)
+            self.logger.info("Starting the process for %s table.", model.tablename)
             dataframes = self.csv_loader_service.load_multiple_csv_files(
                 model.directory, list_of_symbols
             )
@@ -37,7 +37,7 @@ class PricesSeedService:
             )
             price_data_frames = concatenate_data_frames(processed_data_frames)
             await self.data_insert_service.async_insert_dataframe_to_table(
-                price_data_frames, model.__tablename__
+                price_data_frames, model.tablename
             )
         except PricesFilesProcessingError as error:
             self.logger.error("An error occurred during processing: %s", error)

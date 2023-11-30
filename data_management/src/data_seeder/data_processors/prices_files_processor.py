@@ -1,9 +1,9 @@
 from src.core.polars.add_and_populate_column import add_column_and_populate_it_by_value
+from src.core.polars.columns import rename_columns, retype_dataframe
 from src.core.polars.date_time_convertions import (
     convert_datetime_to_unixtime,
     convert_string_column_to_datetime,
 )
-from src.core.polars.rename_columns import rename_columns
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.prices_data_seed_error import PricesFilesProcessingError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
@@ -43,29 +43,28 @@ class PricesFilesProcessor:
 
     def process_single_dataframe(self, dataframe, model, symbol_name):
         column_names = [
-            column.name
-            for column in model.__table__.columns
-            if column.name != model.symbol.name
+            column_name
+            for column_name in model.data.__annotations__.keys()
+            if column_name != "symbol"  # Exclude the 'symbol' column
         ]
         renamed_data = rename_columns(dataframe, column_names)
         date_time_converted_data = convert_string_column_to_datetime(
-            renamed_data, model.unix_date_time.name
+            renamed_data, "unix_date_time"
         )
-        if model.__tablename__ == "roll_calendars":
+        if model.tablename == "roll_calendars":
             final_data = date_time_converted_data
         else:
             unix_time_converted_data = aggregate_to_day_based_prices(
                 date_time_converted_data,
-                model.unix_date_time.name,
+                "unix_date_time",
             )
-            rounded_data = round_values_in_column(
-                unix_time_converted_data, model.price.name
-            )
+            rounded_data = round_values_in_column(unix_time_converted_data, "price")
             final_data = rounded_data
 
         unix_time_converted_data = convert_datetime_to_unixtime(
-            final_data, model.unix_date_time.name
+            final_data, "unix_date_time"
         )
+        retype_columns = retype_dataframe(unix_time_converted_data, model.data)
         return add_column_and_populate_it_by_value(
-            unix_time_converted_data, model.symbol.name, symbol_name
+            retype_columns, "symbol", symbol_name
         )
