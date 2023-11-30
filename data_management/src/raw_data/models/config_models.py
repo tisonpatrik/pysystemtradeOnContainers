@@ -4,9 +4,6 @@ from src.core.models.base_model import BaseModel
 
 class InstrumentConfig(BaseModel):
     __tablename__ = "instrument_config"
-    file_name: str = "instrumentconfig.csv"
-    directory: str = "/path/in/container/csvconfig"
-
     symbol = Column(String(50), primary_key=True)
     description = Column(Text)
     pointsize = Column(Float)
@@ -20,9 +17,6 @@ class InstrumentConfig(BaseModel):
 
 class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"
-    file_name = "moreinstrumentinfo.csv"
-    directory = "/path/in/container/csvconfig"
-
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
     )
@@ -34,9 +28,6 @@ class InstrumentMetadata(BaseModel):
 
 class RollConfig(BaseModel):
     __tablename__ = "roll_config"
-    file_name = "rollconfig.csv"
-    directory = "/path/in/container/csvconfig"
-
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
     )
@@ -49,9 +40,6 @@ class RollConfig(BaseModel):
 
 class SpreadCost(BaseModel):
     __tablename__ = "spread_cost"
-    file_name = "spreadcosts.csv"
-    directory = "/path/in/container/csvconfig"
-
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
     )

@@ -51,7 +51,6 @@ class PricesFilesProcessor:
         date_time_converted_data = convert_string_column_to_datetime(
             renamed_data, model.unix_date_time.name
         )
-
         if model.__tablename__ == "roll_calendars":
             final_data = date_time_converted_data
         else:

@@ -15,7 +15,6 @@ class AdjustedPrices(BaseModel):
     """
 
     __tablename__ = "adjusted_prices"
-    directory = "/path/in/container/adjusted_prices_csv"
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
@@ -30,7 +29,6 @@ class FxPrices(BaseModel):
     """
 
     __tablename__ = "fx_prices"
-    directory = "/path/in/container/fx_prices_csv"
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
@@ -45,7 +43,6 @@ class MultiplePrices(BaseModel):
     """
 
     __tablename__ = "multiple_prices"
-    directory = "/path/in/container/multiple_prices_csv"
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
@@ -65,7 +62,6 @@ class RollCalendars(BaseModel):
     """
 
     __tablename__ = "roll_calendars"
-    directory = "/path/in/container/roll_calendars_csv"
 
     unix_date_time = Column(Integer)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))

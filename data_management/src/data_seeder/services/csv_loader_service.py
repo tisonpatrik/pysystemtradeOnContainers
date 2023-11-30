@@ -23,7 +23,7 @@ class CsvLoaderService:
         """
         try:
             data_frame = pl.read_csv(
-                full_path, infer_schema_length=500, truncate_ragged_lines=True
+                full_path, infer_schema_length=1410, truncate_ragged_lines=True
             )
             return data_frame
         except Exception as error:
