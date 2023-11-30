@@ -1,11 +1,13 @@
+from src.core.polars.prapare_db_calculations import prepara_data_to_db
 from src.core.utils.logging import AppLogger
-from src.data_seeder.utils.data_aggregators import concatenate_data_frames
+from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.errors.instrument_volatility_errors import (
     InstrumentVolatilityCalculationError,
 )
 from src.risk.estimators.instrument_volatility import InstrumentVolEstimator
+from src.risk.models.risk_models import InstrumentVolatility
 
 
 class InstrumentVolatilityService:
@@ -14,6 +16,8 @@ class InstrumentVolatilityService:
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.multiple_prices_service = MultiplePricesService(db_session)
         self.instrument_vol_estimator = InstrumentVolEstimator()
+        self.table_name = InstrumentVolatility.__tablename__
+        self.data_insert_service = DataInsertService(db_session)
 
     async def insert_instrument_vol_for_prices_async(
         self, multiple_prices, point_size, daily_returns_vol, symbol
@@ -25,12 +29,16 @@ class InstrumentVolatilityService:
                 symbol,
             )
 
-            instrument_volatility = (
-                self.instrument_vol_estimator.get_instrument_currency_vol(
-                    multiple_prices=multiple_prices,
-                    daily_returns_vol=daily_returns_vol,
-                    point_size=point_size,
-                )
+            instrument_vols = self.instrument_vol_estimator.get_instrument_currency_vol(
+                multiple_prices=multiple_prices,
+                daily_returns_vol=daily_returns_vol,
+                point_size=point_size,
+            )
+            prepared_data = prepara_data_to_db(
+                instrument_vols, InstrumentVolatility, symbol
+            )
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                prepared_data, self.table_name
             )
         except Exception as exc:
             self.logger.error(f"Error in calculating instrument volatility: {exc}")

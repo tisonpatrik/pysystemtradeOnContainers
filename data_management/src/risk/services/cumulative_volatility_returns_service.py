@@ -1,37 +1,39 @@
+from src.core.polars.prapare_db_calculations import prepara_data_to_db
 from src.core.utils.logging import AppLogger
-from src.data_seeder.utils.data_aggregators import concatenate_data_frames
+from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.errors.cumulative_volatility_returns_errors import (
     CumulativeVolatilityReturnsCalculationError,
 )
-from src.risk.processing.cumulative_volatility_returns import (
-    CumulativeVolatilityReturnsCalculator,
+from src.risk.estimators.cumulative_daily_vol_normalised_returns import (
+    CumulativeDailyVolNormalisedReturns,
 )
+from src.risk.models.risk_models import CumulativeDailyVolNormalizedReturns
 
 
 class CumulativeVolatilityReturnsService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = InstrumentConfigService(db_session)
-        self.cumulative_volatility_returns_calculator = (
-            CumulativeVolatilityReturnsCalculator(db_session)
+        self.cumulative_daily_vol_normalised_returns = (
+            CumulativeDailyVolNormalisedReturns()
         )
+        self.table_name = CumulativeDailyVolNormalizedReturns.__tablename__
+        self.data_insert_service = DataInsertService(db_session)
 
-    async def calculate_cumulative_volatility_returns_for_instrument_async(self, model):
+    async def insert_cumulative_vol_for_prices_async(self, daily_returns_vol, symbol):
+        """Calculates and insert cumulative volatility of a given prices."""
         try:
-            self.logger.info("Starting the process for %s table.", model.__tablename__)
-            # Fetch instrument configurations
-            instrument_configs = (
-                await self.instrument_config_service.get_instrument_configs()
+            self.logger.info("Starting the cumulative vol for %s symbol.", symbol)
+            cumulative_daily_returns = self.cumulative_daily_vol_normalised_returns.get_cumulative_daily_vol_normalised_returns(
+                daily_returns_vol
             )
-            # Process volatilities
-            processed_volatilities = await self.cumulative_volatility_returns_calculator.get_cumulative_volatilities_async(
-                instrument_configs, model
+            prepared_data = prepara_data_to_db(
+                cumulative_daily_returns, CumulativeDailyVolNormalizedReturns, symbol
             )
-            # Combine individual volatilities into a single DataFrame
-            combined_volatilities = concatenate_data_frames(processed_volatilities)
-            return combined_volatilities
-
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                prepared_data, self.table_name
+            )
         except Exception as exc:
             self.logger.error(
                 f"Error in calculating cumulative volatility returns: {exc}"

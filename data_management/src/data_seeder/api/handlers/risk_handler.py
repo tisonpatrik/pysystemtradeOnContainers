@@ -1,4 +1,7 @@
 from src.core.utils.logging import AppLogger
+from src.data_seeder.services.cumulative_vol_seed_service import (
+    CumulativeVolSeedService,
+)
 from src.data_seeder.services.daily_returns_vol_seed_service import (
     DailyReturnsVolSeedService,
 )
@@ -11,9 +14,6 @@ from src.risk.models.risk_models import (
     DailyReturnsVolatility,
     InstrumentVolatility,
 )
-from src.risk.services.cumulative_volatility_returns_service import (
-    CumulativeVolatilityReturnsService,
-)
 
 
 class RiskHandler:
@@ -21,9 +21,8 @@ class RiskHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)
         self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
-        self.cumulative_volatility_returns_service = CumulativeVolatilityReturnsService(
-            db_session
-        )
+
+        self.cumulative_vol_seed_service = CumulativeVolSeedService(db_session)
         self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
 
     async def seed_calculate_risk_data_async(self):
@@ -33,8 +32,8 @@ class RiskHandler:
         self.logger.info("Data processing for risk calculations has started")
         models = [
             # DailyReturnsVolatility,
-            InstrumentVolatility,
-            # CumulativeDailyVolNormalizedReturns,
+            # InstrumentVolatility,
+            CumulativeDailyVolNormalizedReturns,
         ]
 
         for model in models:
@@ -49,8 +48,6 @@ class RiskHandler:
         elif model.__tablename__ == "instrument_volatility":
             await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         elif model.__tablename__ == "cumulative_daily_vol_normalized_returns":
-            await self.cumulative_volatility_returns_service.calculate_cumulative_volatility_returns_for_instrument_async(
-                model
-            )
+            await self.cumulative_vol_seed_service.seed_cumulative_volatility_async()
         else:
             raise ValueError(f"Unrecognized table name: {model.__tablename__}")

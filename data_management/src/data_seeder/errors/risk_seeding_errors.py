@@ -4,3 +4,7 @@ class DailyReturnsVolSeedingError(Exception):
 
 class InstrumentVolSeedingError(Exception):
     """Exception raised for errors in seeding instrument volatility."""
+
+
+class CumulativeVolatilityReturnsSeedingError(Exception):
+    """Exception raised for errors in seeding cumulative volatility returns."""
