@@ -31,9 +31,7 @@ class CumulativeDailyVolNormalisedReturns:
         returnvol = self.daily_returns_vol_processor.process_daily_returns_vol(
             daily_prices
         ).shift(1)
-        dailyreturns = self.daily_returns_vol_processor.daily_returns(
-            daily_prices
-        ).to_pandas()
+        dailyreturns = self.daily_returns_vol_processor.daily_returns(daily_prices)
         norm_return = dailyreturns / returnvol
 
         return norm_return
