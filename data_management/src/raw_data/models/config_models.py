@@ -23,6 +23,9 @@ class InstrumentMetadata(BaseModel):
     asset_class = Column(String(50))
     sub_class = Column(String(50))
     sub_sub_class = Column(String(50))
+    style = Column(String(50))
+    country = Column(String(50))
+    duration = Column(String(50))
     description = Column(String(100))
 
 

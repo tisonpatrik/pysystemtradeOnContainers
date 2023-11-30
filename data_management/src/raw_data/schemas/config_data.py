@@ -18,6 +18,9 @@ class InstrumentMetadataData:
     asset_class: pl.Utf8
     sub_class: pl.Utf8
     sub_sub_class: pl.Utf8
+    style: pl.Utf8
+    country: pl.Utf8
+    duration: pl.Utf8
     description: pl.Utf8
 
 

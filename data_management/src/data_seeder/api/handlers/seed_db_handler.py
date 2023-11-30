@@ -9,6 +9,7 @@ from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.data_seeder.services.prices_seed_service import PricesSeedService
 from src.raw_data.schemas.config_schemas import (
     InstrumentConfigSchema,
+    InstrumentMetadataSchema,
     RollConfigSchema,
     SpreadCostSchema,
 )
@@ -39,6 +40,7 @@ class SeedDBHandler:
         self.logger.info("Data processing for csv files has started")
         models = [
             InstrumentConfigSchema,
+            InstrumentMetadataSchema,
             RollConfigSchema,
             SpreadCostSchema,
             AdjustedPricesSchema,
@@ -60,7 +62,12 @@ class SeedDBHandler:
         """
         table_name = model.tablename
 
-        if table_name in ["instrument_config", "roll_config", "spread_cost"]:
+        if table_name in [
+            "instrument_config",
+            "instrument_metadata",
+            "roll_config",
+            "spread_cost",
+        ]:
             await self.config_files_seed_service.seed_config_files(
                 list_of_symbols, model
             )
