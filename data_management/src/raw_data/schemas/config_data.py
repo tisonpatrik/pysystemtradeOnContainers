@@ -1,8 +1,7 @@
 import polars as pl
-from pydantic import BaseModel as PydanticBaseModel
 
 
-class InstrumentConfigData(PydanticBaseModel):
+class InstrumentConfigData:
     symbol: pl.Utf8
     description: pl.Utf8
     pointsize: pl.Float32
@@ -14,7 +13,7 @@ class InstrumentConfigData(PydanticBaseModel):
     region: pl.Utf8
 
 
-class InstrumentMetadataData(PydanticBaseModel):
+class InstrumentMetadataData:
     symbol: pl.Utf8
     asset_class: pl.Utf8
     sub_class: pl.Utf8
@@ -22,7 +21,7 @@ class InstrumentMetadataData(PydanticBaseModel):
     description: pl.Utf8
 
 
-class RollConfigData(PydanticBaseModel):
+class RollConfigData:
     symbol: pl.Utf8
     hold_roll_cycle: pl.Utf8
     roll_offset_days: pl.Int64
@@ -31,6 +30,6 @@ class RollConfigData(PydanticBaseModel):
     expiry_offset: pl.Int64
 
 
-class SpreadCostData(PydanticBaseModel):
+class SpreadCostData:
     symbol: pl.Utf8
     spread_cost: pl.Float32

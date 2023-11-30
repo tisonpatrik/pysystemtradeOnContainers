@@ -8,20 +8,24 @@ from src.raw_data.schemas.raw_data_data import (
 
 
 class AdjustedPricesSchema(BaseSchema):
+    tablename = "adjusted_prices"
     directory = "/path/in/container/adjusted_prices_csv"
     data: AdjustedPricesData
 
 
 class FxPricesSchema(BaseSchema):
+    tablename = "fx_prices"
     directory = "/path/in/container/fx_prices_csv"
     data: FxPricesData
 
 
 class MultiplePricesSchema(BaseSchema):
+    tablename = "multiple_prices"
     directory = "/path/in/container/multiple_prices_csv"
     data: MultiplePricesData
 
 
 class RollCalendarsSchema(BaseSchema):
+    tablename = "roll_calendars"
     directory = "/path/in/container/roll_calendars_csv"
     data: RollCalendarsData

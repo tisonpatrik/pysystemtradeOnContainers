@@ -7,12 +7,16 @@ from src.core.utils.logging import AppLogger
 from src.data_seeder.services.config_files_seed_service import ConfigFilesService
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.data_seeder.services.prices_seed_service import PricesSeedService
-from src.raw_data.models.config_models import InstrumentConfig, RollConfig, SpreadCost
-from src.raw_data.models.raw_data_models import (
-    AdjustedPrices,
-    FxPrices,
-    MultiplePrices,
-    RollCalendars,
+from src.raw_data.schemas.config_schemas import (
+    InstrumentConfigSchema,
+    RollConfigSchema,
+    SpreadCostSchema,
+)
+from src.raw_data.schemas.raw_data_schemas import (
+    AdjustedPricesSchema,
+    FxPricesSchema,
+    MultiplePricesSchema,
+    RollCalendarsSchema,
 )
 
 
@@ -34,17 +38,17 @@ class SeedDBHandler:
         """
         self.logger.info("Data processing for csv files has started")
         models = [
-            InstrumentConfig,
-            RollConfig,
-            SpreadCost,
-            AdjustedPrices,
-            FxPrices,
-            MultiplePrices,
-            RollCalendars,
+            InstrumentConfigSchema,
+            RollConfigSchema,
+            SpreadCostSchema,
+            AdjustedPricesSchema,
+            FxPricesSchema,
+            MultiplePricesSchema,
+            RollCalendarsSchema,
         ]
 
         list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
-            AdjustedPrices.directory
+            AdjustedPricesSchema.directory
         )
 
         for model in models:
@@ -54,7 +58,7 @@ class SeedDBHandler:
         """
         Data processing for CSV files.
         """
-        table_name = model.__tablename__
+        table_name = model.tablename
 
         if table_name in ["instrument_config", "roll_config", "spread_cost"]:
             await self.config_files_seed_service.seed_config_files(

@@ -27,16 +27,16 @@ class ConfigFilesService:
         Processes configuration data from a FileTableMapping object.
         """
         try:
-            self.logger.info("Starting the process for %s table.", model.__tablename__)
+            self.logger.info("Starting the process for %s table.", model.tablename)
             full_path = get_full_path(model.directory, model.file_name)
             raw_data = self.csv_loader.load_csv(full_path)
             data = self.config_files_processor.process_config_files(
                 list_of_symbols=list_of_symbols, model=model, raw_data=raw_data
             )
             await self.data_insert_service.async_insert_dataframe_to_table(
-                data, model.__tablename__
+                data, model.tablename
             )
         except Exception as e:
             raise ConfigFilesServiceError(
-                f"Error seeding config files for {model.__tablename__}: {str(e)}"
+                f"Error seeding config files for {model.tablename}: {str(e)}"
             )

@@ -1,20 +1,19 @@
 import polars as pl
-from pydantic import BaseModel as PydanticBaseModel
 
 
-class AdjustedPricesData(PydanticBaseModel):
+class AdjustedPricesData:
     unix_date_time: pl.Int64
     symbol: pl.Utf8
     price: pl.Float32
 
 
-class FxPricesData(PydanticBaseModel):
+class FxPricesData:
     unix_date_time: pl.Int64
     symbol: pl.Utf8
     price: pl.Float32
 
 
-class MultiplePricesData(PydanticBaseModel):
+class MultiplePricesData:
     unix_date_time: pl.Int64
     symbol: pl.Utf8
     carry: pl.Float32
@@ -25,7 +24,7 @@ class MultiplePricesData(PydanticBaseModel):
     forward_contract: pl.Int64
 
 
-class RollCalendarsData(PydanticBaseModel):
+class RollCalendarsData:
     unix_date_time: pl.Int64
     symbol: pl.Utf8
     current_contract: pl.Int64

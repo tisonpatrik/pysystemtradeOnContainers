@@ -1,6 +1,3 @@
-from pydantic import BaseModel as PydanticBaseModel
-
-
-class BaseSchema(PydanticBaseModel):
+class BaseSchema:
     file_name: str
     directory: str
