@@ -18,7 +18,9 @@ class DataLoadService:
         self.db_session = db_session
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def fetch_raw_data_from_table_by_symbol(self, table_name: str, symbol: str):
+    async def fetch_raw_data_from_table_by_symbol_async(
+        self, table_name: str, symbol: str
+    ):
         """
         Asynchronously fetches data by symbol from a specified table into a Pandas DataFrame.
         """
@@ -42,7 +44,7 @@ class DataLoadService:
             )
             raise DataFetchingError(symbol, exc)
 
-    async def fetch_raw_data_from_table(self, table_name: str):
+    async def fetch_raw_data_from_table_async(self, table_name: str):
         try:
             query_str = f"SELECT * FROM {table_name}"
             result = await self.db_session.execute(text(query_str))

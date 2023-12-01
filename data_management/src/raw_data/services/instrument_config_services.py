@@ -5,7 +5,7 @@ This module provides services for fetching and processing instrument config data
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.errors.instrument_config_service import InstrumentConfigError
+from src.raw_data.errors.config_files_errors import InstrumentConfigError
 from src.raw_data.models.config_models import InstrumentConfig
 
 
@@ -18,12 +18,12 @@ class InstrumentConfigService:
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_instrument_configs(self):
+    async def get_instrument_configs_async(self):
         """
         Asynchronously fetch instrument config data.
         """
         try:
-            data = await self.data_loader_service.fetch_raw_data_from_table(
+            data = await self.data_loader_service.fetch_raw_data_from_table_async(
                 InstrumentConfig.__tablename__
             )
             return data
@@ -35,10 +35,10 @@ class InstrumentConfigService:
             )
             raise InstrumentConfigError("Error fetching instrument config", error)
 
-    async def get_point_size_of_instrument(self, symbol):
+    async def get_point_size_of_instrument_async(self, symbol):
         """Asynchronously fetch point size for given instrument."""
         try:
-            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol(
+            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
                 InstrumentConfig.__tablename__, symbol
             )
             return data[InstrumentConfig.pointsize.key][0]

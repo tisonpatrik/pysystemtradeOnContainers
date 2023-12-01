@@ -29,7 +29,7 @@ class CumulativeVolSeedService:
                 CumulativeDailyVolNormalizedReturns.__tablename__,
             )
             instrument_configs = (
-                await self.instrument_config_service.get_instrument_configs()
+                await self.instrument_config_service.get_instrument_configs_async()
             )
             for config in instrument_configs.to_dict(orient="records"):
                 symbol = config[CumulativeDailyVolNormalizedReturns.symbol.key]

@@ -8,11 +8,15 @@ from src.data_seeder.services.daily_returns_vol_seed_service import (
 from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
 )
+from src.data_seeder.services.normalised_price_for_asset_seed_service import (
+    NormalisedPriceForAssetSeedService,
+)
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import (
     CumulativeDailyVolNormalizedReturns,
     DailyReturnsVolatility,
     InstrumentVolatility,
+    NormalisedPriceForAssetClass,
 )
 
 
@@ -24,6 +28,9 @@ class RiskHandler:
 
         self.cumulative_vol_seed_service = CumulativeVolSeedService(db_session)
         self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
+        self.normalised_price_for_asset_seed_service = (
+            NormalisedPriceForAssetSeedService(db_session)
+        )
 
     async def seed_calculate_risk_data_async(self):
         """
@@ -34,6 +41,7 @@ class RiskHandler:
             DailyReturnsVolatility,
             InstrumentVolatility,
             CumulativeDailyVolNormalizedReturns,
+            NormalisedPriceForAssetClass,
         ]
 
         for model in models:
@@ -49,5 +57,7 @@ class RiskHandler:
             await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         elif model.__tablename__ == "cumulative_daily_vol_normalized_returns":
             await self.cumulative_vol_seed_service.seed_cumulative_volatility_async()
+        elif model.__tablename__ == "normalised_price_for_asset_class":
+            await self.normalised_price_for_asset_seed_service.seed_normalised_price_for_asset_class()
         else:
             raise ValueError(f"Unrecognized table name: {model.__tablename__}")

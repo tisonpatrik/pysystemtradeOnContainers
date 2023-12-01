@@ -50,3 +50,21 @@ class CumulativeDailyVolNormalizedReturns(BaseModel):
 
     def __repr__(self):
         return f"<CumulativeDailyVolNormalizedReturns(unix_date_time={self.unix_date_time}, symbol={self.symbol}, normalized_volatility={self.normalized_volatility})>"
+
+
+class NormalisedPriceForAssetClass(BaseModel):
+    """
+    ORM class for the 'normalised_price_for_asset_class' table.
+    Represents cumulative normalized volatility metrics for financial instruments.
+    """
+
+    __tablename__ = "normalised_price_for_asset_class"
+
+    unix_date_time = Column(Integer)
+    symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
+    normalized_price = Column(Float)
+
+    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+
+    def __repr__(self):
+        return f"<NormalisedPriceForAssetClass(unix_date_time={self.unix_date_time}, symbol={self.symbol}, normalized_price={self.normalized_price})>"

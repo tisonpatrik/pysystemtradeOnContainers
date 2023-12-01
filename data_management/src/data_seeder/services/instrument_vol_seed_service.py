@@ -25,7 +25,7 @@ class InstrumentVolSeedService:
                 InstrumentVolatility.__tablename__,
             )
             instrument_configs = (
-                await self.instrument_config_service.get_instrument_configs()
+                await self.instrument_config_service.get_instrument_configs_async()
             )
             for config in instrument_configs.to_dict(orient="records"):
                 symbol = config[InstrumentVolatility.symbol.key]
@@ -34,10 +34,8 @@ class InstrumentVolSeedService:
                         symbol
                     )
                 )
-                point_size = (
-                    await self.instrument_config_service.get_point_size_of_instrument(
-                        symbol
-                    )
+                point_size = await self.instrument_config_service.get_point_size_of_instrument_async(
+                    symbol
                 )
 
                 daily_returns_vol = await self.daily_returns_vol_service.get_daily_returns_volatility_async(
