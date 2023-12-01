@@ -38,9 +38,9 @@ class RiskHandler:
         """
         self.logger.info("Data processing for risk calculations has started")
         models = [
-            DailyReturnsVolatility,
-            InstrumentVolatility,
-            CumulativeDailyVolNormalizedReturns,
+            # DailyReturnsVolatility,
+            # InstrumentVolatility,
+            # CumulativeDailyVolNormalizedReturns,
             NormalisedPriceForAssetClass,
         ]
 

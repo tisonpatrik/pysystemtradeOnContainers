@@ -14,13 +14,15 @@ class InstrumentMetadataService:
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_instrument_metadatas_async(self):
+    async def get_groups_of_assets_by_symbols_async(self):
         """
         Asynchronously fetch instrument metadatas.
         """
         try:
-            data = await self.data_loader_service.fetch_raw_data_from_table_async(
-                InstrumentMetadata.__tablename__
+            data = await self.data_loader_service.fetch_groupeds_by_column_values_async(
+                table_name=InstrumentMetadata.__tablename__,
+                group_by_column=InstrumentMetadata.asset_class.key,
+                concatenate_column=InstrumentMetadata.symbol.key,
             )
             return data
         except Exception as error:
