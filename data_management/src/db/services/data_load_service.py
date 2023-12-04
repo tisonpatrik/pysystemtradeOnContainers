@@ -84,3 +84,49 @@ class DataLoadService:
                 exc_info=True,
             )
             raise DataFetchingError(f"GroupConcatenate{group_by_column}", exc)
+
+    async def fetch_rows_by_column_value_async(
+        self, table_name: str, column_name: str, column_value: str
+    ):
+        """
+        Asynchronously fetches all rows from a specified table where a given column matches a specific value.
+        """
+        try:
+            query_str = (
+                f"SELECT * FROM {table_name} WHERE {column_name} = :column_value"
+            )
+            result = await self.db_session.execute(
+                text(query_str), {"column_value": column_value}
+            )
+
+            rows = result.fetchall()
+            df_result = pd.DataFrame(rows, columns=list(result.keys()))
+            pl_frame = pl.DataFrame(df_result)
+            return pl_frame
+
+        except Exception as exc:
+            self.logger.error(
+                f"Failed to fetch data from table {table_name} where {column_name} = {column_value}: {exc}",
+                exc_info=True,
+            )
+            raise DataFetchingError(f"FetchBy{column_name}", exc)
+
+    async def fetch_unique_column_values_async(self, table_name: str, column_name: str):
+        """
+        Asynchronously fetches unique values from a specified column in a given table.
+        """
+        try:
+            query_str = f"SELECT DISTINCT {column_name} FROM {table_name}"
+            result = await self.db_session.execute(text(query_str))
+
+            rows = result.fetchall()
+            unique_values = [row[0] for row in rows]  # Extracting the unique values
+
+            return unique_values
+
+        except Exception as exc:
+            self.logger.error(
+                f"Failed to fetch unique values from column {column_name} in table {table_name}: {exc}",
+                exc_info=True,
+            )
+            raise DataFetchingError(f"FetchUnique{column_name}", exc)

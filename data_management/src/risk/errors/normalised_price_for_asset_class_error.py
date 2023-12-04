@@ -3,4 +3,8 @@ class NormalisedPriceForAssetClassCalculationError(Exception):
 
 
 class DailyNormalisedPriceForAssetClassFetchError(Exception):
-    """Exception raised for errors in fetching daily vp; normalised price for asset class."""
+    """Exception raised for errors in fetching daily normalised price for asset class."""
+
+
+class DailyNormalisedPriceForAssetCalculationError(Exception):
+    """Exception raised for errors in calculating daily normalised price for asset class."""

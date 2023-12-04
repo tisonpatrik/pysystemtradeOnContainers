@@ -1,39 +1,32 @@
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.risk_seeding_errors import NormalisedPriceForAssetSeedError
-from src.raw_data.services.instrument_config_services import InstrumentConfig
+from src.raw_data.models.config_models import InstrumentConfig
+from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.models.risk_models import NormalisedPriceForAssetClass
-from src.risk.services.daily_volatility_normalised_returns_service import (
-    DailyVolatilityNormalisedReturnsService,
+from src.risk.services.daily_vol_normalised_price_for_asset_class_service import (
+    DailyVolNormalisedPriceForAssetClassService,
 )
 
 
 class NormalisedPriceForAssetSeedService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.instrument_config_service = InstrumentConfig(db_session)
-        self.volatility_returns_service = DailyVolatilityNormalisedReturnsService(
-            db_session
+        self.instrument_config_service = InstrumentConfigService(db_session)
+        self.daily_vol_normalised_price_for_asset_service = (
+            DailyVolNormalisedPriceForAssetClassService(db_session)
         )
 
-    async def seed_normalised_price_for_asset_class(self):
+    async def seed_normalised_price_for_asset_class_async(self):
         """Calculates normalised prices for asset class."""
         try:
             self.logger.info(
                 "Starting the process for %s table.",
                 NormalisedPriceForAssetClass.__tablename__,
             )
-            groups = (
-                await self.instrument_config_service.get_groups_of_assets_by_symbols_async()
+            assets = await self.instrument_config_service.get_unique_values_for_given_column_from_instrumnet_config(
+                InstrumentConfig.asset_class.key
             )
-            for group in groups.iter_rows(named=True):
-                asset_class = group[groups.columns[0]]
-                list_of_instruments = group[groups.columns[1]].split(", ")
-                aggregate_returns_across_instruments_list = [
-                    await self.volatility_returns_service.get_daily_vol_normalised_returns_async(
-                        instrument_code
-                    )
-                    for instrument_code in list_of_instruments
-                ]
+            print(assets)
 
         except NormalisedPriceForAssetSeedError as error:
             self.logger.error("An error occurred during seeding: %s", error)

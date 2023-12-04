@@ -78,7 +78,7 @@ class DailyVolNormalisedPriceForAssetClass(BaseModel):
 
     __tablename__ = "daily_vol_normalised_price_for_asset_class"
     unix_date_time = Column(Integer)
-    asset_class = Column(String(50), ForeignKey("instrument_config.asset_class"))
+    asset_class = Column(String(50))
     normalized_volatility = Column(Float)
 
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, asset_class),)

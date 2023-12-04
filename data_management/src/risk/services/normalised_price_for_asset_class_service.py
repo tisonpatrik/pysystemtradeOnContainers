@@ -16,23 +16,24 @@ class NormalisedPriceForAssetClassService:
             DailyVolNormalisedPriceForAssetClassService(db_session)
         )
 
-    async def insert_normalised_price_for_asset_class_async(
-        self, symbol, cumulative_normalised_price
+    async def get_normalised_price_for_asset_class_async(
+        self, asset_class, cumulative_normalised_price
     ):
-        """Calculates and insert normalised price for asset class."""
+        """Get normalised price for asset class."""
         try:
             self.logger.info(
                 "Starting the normalised price for asset class for %s symbol.",
-                symbol,
-            )
-            asset_class = (
-                await self.instrument_config_service.get_assets_class_by_symbol_async(
-                    symbol
-                )
+                asset_class,
             )
             normalised_price_for_asset_class = await self.daily_vol_normalised_price_for_asset_class_service.get_daily_vol_normalised_price_for_asset_class_async(
                 asset_class
             )
+            normalised_price_for_asset_class_aligned = (
+                normalised_price_for_asset_class.reindex(
+                    cumulative_normalised_price.index
+                ).ffill()
+            )
+            return normalised_price_for_asset_class_aligned
 
         except Exception as exc:
             self.logger.error(

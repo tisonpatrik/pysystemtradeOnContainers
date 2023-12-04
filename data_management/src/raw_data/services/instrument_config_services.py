@@ -66,3 +66,42 @@ class InstrumentConfigService:
                 exc_info=True,
             )
             raise InstrumentConfigError("Error fetching instrument metadata", error)
+
+    async def get_instruments_by_asset_class_async(self, asset_class):
+        """
+        Asynchronously fetch instrument aset class.
+        """
+        try:
+            data = await self.data_loader_service.fetch_rows_by_column_value_async(
+                table_name=InstrumentConfig.__tablename__,
+                column_name=InstrumentConfig.asset_class.key,
+                column_value=asset_class,
+            )
+            return data[InstrumentConfig.asset_class.key][0]
+        except Exception as error:
+            self.logger.error(
+                "Failed to get instrument metadatas asynchronously: %s",
+                error,
+                exc_info=True,
+            )
+            raise InstrumentConfigError("Error fetching instrument metadata", error)
+
+    async def get_unique_values_for_given_column_from_instrumnet_config(
+        self, column_name
+    ):
+        """
+        Asynchronously fetch unique values of given column.
+        """
+        try:
+            data = await self.data_loader_service.fetch_unique_column_values_async(
+                table_name=InstrumentConfig.__tablename__,
+                column_name=column_name,
+            )
+            return data
+        except Exception as error:
+            self.logger.error(
+                "Failed to get instrument metadatas asynchronously: %s",
+                error,
+                exc_info=True,
+            )
+            raise InstrumentConfigError("Error fetching instrument metadata", error)
