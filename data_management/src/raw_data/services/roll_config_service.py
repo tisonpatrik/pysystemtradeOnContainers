@@ -5,11 +5,8 @@ This module provides services for fetching and processing instrument config data
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
+from src.raw_data.errors.config_files_errors import InstrumentConfigError
 from src.raw_data.models.config_models import RollConfig
-
-from data_management.src.raw_data.errors.config_files_errors import (
-    InstrumentConfigError,
-)
 
 
 class RollConfigService:

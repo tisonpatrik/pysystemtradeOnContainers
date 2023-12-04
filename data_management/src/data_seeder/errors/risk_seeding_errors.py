@@ -6,8 +6,8 @@ class InstrumentVolSeedingError(Exception):
     """Exception raised for errors in seeding instrument volatility."""
 
 
-class CumulativeVolatilityReturnsSeedingError(Exception):
-    """Exception raised for errors in seeding cumulative volatility returns."""
+class DailyVolatilityNormalisedReturnsSeedingError(Exception):
+    """Exception raised for errors in seeding daily volatility normalised returns."""
 
 
 class NormalisedPriceForAssetSeedError(Exception):

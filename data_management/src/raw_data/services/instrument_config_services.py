@@ -49,3 +49,20 @@ class InstrumentConfigService:
                 exc_info=True,
             )
             raise InstrumentConfigError("Error fetching instrument config", error)
+
+    async def get_assets_class_by_symbol_async(self, symbol):
+        """
+        Asynchronously fetch instrument metadatas.
+        """
+        try:
+            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
+                InstrumentConfig.__tablename__, symbol
+            )
+            return data[InstrumentConfig.asset_class.key][0]
+        except Exception as error:
+            self.logger.error(
+                "Failed to get instrument metadatas asynchronously: %s",
+                error,
+                exc_info=True,
+            )
+            raise InstrumentConfigError("Error fetching instrument metadata", error)

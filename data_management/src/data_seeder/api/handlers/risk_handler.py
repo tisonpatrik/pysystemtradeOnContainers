@@ -1,9 +1,9 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.services.cumulative_vol_seed_service import (
-    CumulativeVolSeedService,
-)
 from src.data_seeder.services.daily_returns_vol_seed_service import (
     DailyReturnsVolSeedService,
+)
+from src.data_seeder.services.daily_vol_normalized_returns_seed_services import (
+    DailyVolNormalisedReturnsSeedService,
 )
 from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
@@ -13,8 +13,8 @@ from src.data_seeder.services.normalised_price_for_asset_seed_service import (
 )
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import (
-    CumulativeDailyVolNormalizedReturns,
     DailyReturnsVolatility,
+    DailyVolNormalizedReturns,
     InstrumentVolatility,
     NormalisedPriceForAssetClass,
 )
@@ -25,11 +25,12 @@ class RiskHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)
         self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
-
-        self.cumulative_vol_seed_service = CumulativeVolSeedService(db_session)
-        self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
         self.normalised_price_for_asset_seed_service = (
             NormalisedPriceForAssetSeedService(db_session)
+        )
+        self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
+        self.daily_returns_normalised_vol_seed_service = (
+            DailyVolNormalisedReturnsSeedService(db_session)
         )
 
     async def seed_calculate_risk_data_async(self):
@@ -40,7 +41,7 @@ class RiskHandler:
         models = [
             # DailyReturnsVolatility,
             # InstrumentVolatility,
-            # CumulativeDailyVolNormalizedReturns,
+            # DailyVolNormalizedReturns
             NormalisedPriceForAssetClass,
         ]
 
@@ -55,8 +56,8 @@ class RiskHandler:
             await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
         elif model.__tablename__ == "instrument_volatility":
             await self.instrument_vol_seed_service.seed_instrument_volatility_async()
-        elif model.__tablename__ == "cumulative_daily_vol_normalized_returns":
-            await self.cumulative_vol_seed_service.seed_cumulative_volatility_async()
+        elif model.__tablename__ == "daily_vol_normalized_returns":
+            await self.daily_returns_normalised_vol_seed_service.seed_daily_normalised_returns_vol_async()
         elif model.__tablename__ == "normalised_price_for_asset_class":
             await self.normalised_price_for_asset_seed_service.seed_normalised_price_for_asset_class()
         else:
