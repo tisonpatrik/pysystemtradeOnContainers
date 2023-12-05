@@ -41,8 +41,8 @@ class RiskHandler:
         models = [
             # DailyReturnsVolatility,
             # InstrumentVolatility,
-            # DailyVolNormalizedReturns
-            # NormalisedPriceForAssetClass,
+            # DailyVolNormalizedReturns,
+            NormalisedPriceForAssetClass,
         ]
         for model in models:
             await self._get_risk_data_from_raw_file(model)

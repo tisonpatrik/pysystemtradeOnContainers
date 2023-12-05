@@ -27,11 +27,40 @@ def prepara_data_to_db(prices, model, symbol):
         )
         return unix_time_converted_data
 
-    except Exception as e:
+    except Exception as ecx:
         logger.error(
             "An error occurred while preparing data for symbol %s: %s",
             symbol,
-            e,
+            ecx,
             exc_info=True,
         )
-        raise DataPreparationError(symbol, str(e))
+        raise DataPreparationError(symbol, str(ecx))
+
+
+def prepara_asset_data_to_db(prices, model, asset):
+    try:
+        framed = convert_series_to_frame(prices)
+        column_names = [
+            column.name
+            for column in model.__table__.columns
+            if column.name != model.asset_class.name
+        ]
+        renamed_data = rename_columns(framed, column_names)
+        populated = add_column_and_populate_it_by_value(
+            data_frame=renamed_data,
+            column_name=model.asset_class.key,
+            column_value=asset,
+        )
+        unix_time_converted_data = convert_datetime_to_unixtime(
+            populated, model.unix_date_time.name
+        )
+        return unix_time_converted_data
+
+    except Exception as ecx:
+        logger.error(
+            "An error occurred while preparing data for symbol %s: %s",
+            asset,
+            ecx,
+            exc_info=True,
+        )
+        raise DataPreparationError(asset, str(ecx))

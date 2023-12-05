@@ -26,7 +26,10 @@ class NormalisedPriceForAssetSeedService:
             assets = await self.instrument_config_service.get_unique_values_for_given_column_from_instrumnet_config(
                 InstrumentConfig.asset_class.key
             )
-            print(assets)
+            for asset_class in assets:
+                await self.daily_vol_normalised_price_for_asset_service.insert_daily_vol_normalised_price_for_asset_class_async(
+                    asset_class=asset_class
+                )
 
         except NormalisedPriceForAssetSeedError as error:
             self.logger.error("An error occurred during seeding: %s", error)

@@ -77,7 +77,7 @@ class InstrumentConfigService:
                 column_name=InstrumentConfig.asset_class.key,
                 column_value=asset_class,
             )
-            return data[InstrumentConfig.asset_class.key][0]
+            return data[InstrumentConfig.symbol.key]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument metadatas asynchronously: %s",

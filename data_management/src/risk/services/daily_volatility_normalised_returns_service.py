@@ -19,7 +19,7 @@ class DailyVolatilityNormalisedReturnsService:
         self.data_loader_service = DataLoadService(db_session)
         self.daily_vol_normalised_returns = DailyVolNormalisedReturns()
         self.table_name = DailyVolNormalizedReturns.__tablename__
-        self.price_column = DailyVolNormalizedReturns.daily_returns_volatility.key
+        self.price_column = DailyVolNormalizedReturns.normalized_volatility.key
         self.time_column = DailyVolNormalizedReturns.unix_date_time.key
 
     async def insert_daily_vol_normalised_returns_for_prices_async(
