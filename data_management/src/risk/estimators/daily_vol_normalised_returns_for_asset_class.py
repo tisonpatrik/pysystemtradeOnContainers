@@ -21,6 +21,6 @@ class DailyVolNormalisedPriceForAssetClassEstimator:
         # we don't ffill before working out the median as this could lead to
         # bad data
         median_returns = aggregate_returns_across_instruments.median(axis=1)
-
         norm_price = median_returns.cumsum()
+
         return norm_price

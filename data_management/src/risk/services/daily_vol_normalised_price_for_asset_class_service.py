@@ -59,9 +59,9 @@ class DailyVolNormalisedPriceForAssetClassService:
             prepared_data = prepara_asset_data_to_db(
                 returns, DailyVolNormalisedPriceForAssetClass, asset_class
             )
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
-            )
+            # await self.data_insert_service.async_insert_dataframe_to_table(
+            #     prepared_data, self.table_name
+            # )
         except Exception as exc:
             self.logger.error(
                 f"Error in calculating cumulative volatility returns: {exc}"

@@ -4,8 +4,14 @@ from src.raw_data.schemas.config_data import (
     InstrumentMetadataData,
     RollConfigData,
     SpreadCostData,
+    TradableInstrumentsData
 )
 
+class TradableInstruments(BaseSchema):
+    tablename = "tradable_instruments"
+    file_name: str = "tradable_instruments.csv"
+    directory: str = "/path/in/container/csvconfig"
+    data: TradableInstrumentsData = TradableInstrumentsData()
 
 class InstrumentConfigSchema(BaseSchema):
     tablename = "instrument_config"

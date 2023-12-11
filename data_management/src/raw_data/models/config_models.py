@@ -14,6 +14,9 @@ class InstrumentConfig(BaseModel):
     per_trade = Column(Integer)
     region = Column(String(50))
 
+class TradableInstruments(BaseModel):
+    __tablename__ = "tradable_instruments"
+    symbol = Column(String(50), primary_key=True)  
 
 class InstrumentMetadata(BaseModel):
     __tablename__ = "instrument_metadata"

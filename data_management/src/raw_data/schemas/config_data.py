@@ -1,5 +1,7 @@
 import polars as pl
 
+class TradableInstrumentsData:
+    symbol: pl.Utf8
 
 class InstrumentConfigData:
     symbol: pl.Utf8
