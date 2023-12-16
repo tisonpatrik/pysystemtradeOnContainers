@@ -43,8 +43,8 @@ class SeedDBHandler:
             InstrumentMetadataSchema,
             RollConfigSchema,
             SpreadCostSchema,
-            AdjustedPricesSchema,
             FxPricesSchema,
+            AdjustedPricesSchema,
             MultiplePricesSchema,
             RollCalendarsSchema,
         ]
@@ -68,8 +68,8 @@ class SeedDBHandler:
                 list_of_symbols, model
             )
         elif table_name in [
-            "adjusted_prices",
             "fx_prices",
+            "adjusted_prices",
             "multiple_prices",
             "roll_calendars",
         ]:

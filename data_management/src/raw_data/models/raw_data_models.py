@@ -31,7 +31,7 @@ class FxPrices(BaseModel):
     __tablename__ = "fx_prices"
 
     unix_date_time = Column(Integer)
-    symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
+    symbol = Column(String(50))
     price = Column(Float)
 
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)

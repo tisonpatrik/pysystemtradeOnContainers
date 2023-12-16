@@ -30,17 +30,21 @@ class CsvLoaderService:
             self.logger.error("Error loading CSV file from %s: %s", full_path, error)
             raise CsvLoadingError(full_path, str(error))
 
-    def load_multiple_csv_files(self, directory: str, list_of_symbols: List[str]):
+    def load_multiple_csv_files(self, directory: str, list_of_symbols: List[str], ignore_symbols: bool = False):
         """
         Loads multiple CSV files from a given directory and returns a list of DataFrames.
+        Optionally ignores symbol filtering based on the 'ignore_symbols' flag.
         """
         data_frames_dict = {}
         try:
             for filepath in glob.glob(os.path.join(directory, "*.csv")):
                 symbol_name = os.path.splitext(os.path.basename(filepath))[0]
-                if symbol_name in list_of_symbols:
+                
+                # Load CSV if ignore_symbols is True or symbol is in list_of_symbols
+                if ignore_symbols or symbol_name in list_of_symbols:
                     df = self.load_csv(filepath)
                     data_frames_dict[symbol_name] = df
+
             return data_frames_dict
         except Exception as error:
             self.logger.error(
@@ -49,6 +53,7 @@ class CsvLoaderService:
                 error,
             )
             raise MultipleCsvLoadingError(directory, str(error))
+
 
     def get_csv_file_names_for_directory(self, directory):
         """

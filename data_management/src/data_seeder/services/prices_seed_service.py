@@ -30,7 +30,7 @@ class PricesSeedService:
         try:
             self.logger.info("Starting the process for %s table.", model.tablename)
             dataframes = self.csv_loader_service.load_multiple_csv_files(
-                model.directory, list_of_symbols
+                model.directory, list_of_symbols, model.ignore_symbols
             )
             processed_data_frames = self.prices_files_processor.process_price_files(
                 model=model, dataframes=dataframes
