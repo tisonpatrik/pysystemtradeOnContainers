@@ -4,15 +4,15 @@ which is responsible for seeding the database from CSV files.
 """
 
 from src.core.utils.logging import AppLogger
-from src.data_seeder.services.config_files_seed_service import ConfigFilesService
+from src.data_seeder.services.config_files_seed_service import ConfigFilesSeedService
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.data_seeder.services.prices_seed_service import PricesSeedService
 from src.raw_data.schemas.config_schemas import (
     InstrumentConfigSchema,
     InstrumentMetadataSchema,
     RollConfigSchema,
-    SpreadCostSchema,
-)
+    SpreadCostSchema
+    )
 from src.raw_data.schemas.raw_data_schemas import (
     AdjustedPricesSchema,
     FxPricesSchema,
@@ -29,7 +29,7 @@ class SeedDBHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.config_files_seed_service = ConfigFilesService(db_session)
+        self.config_files_seed_service = ConfigFilesSeedService(db_session)
         self.prices_seed_service = PricesSeedService(db_session)
         self.csv_loader = CsvLoaderService()
 
@@ -52,7 +52,6 @@ class SeedDBHandler:
         list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
             AdjustedPricesSchema.directory
         )
-
         for model in models:
             await self._process_data_and_insert_them_into_db(model, list_of_instruments)
 

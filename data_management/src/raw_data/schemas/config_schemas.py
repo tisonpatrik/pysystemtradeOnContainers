@@ -7,7 +7,7 @@ from src.raw_data.schemas.config_data import (
     TradableInstrumentsData
 )
 
-class TradableInstruments(BaseSchema):
+class TradableInstrumentsSchema(BaseSchema):
     tablename = "tradable_instruments"
     file_name: str = "tradable_instruments.csv"
     directory: str = "/path/in/container/csvconfig"

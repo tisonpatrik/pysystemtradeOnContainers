@@ -6,7 +6,7 @@ It uses FastAPI for the API definitions and SQLAlchemy for the database interact
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
-from src.data_seeder.api.handlers.risk_handler import RiskHandler
+from src.data_seeder.api.handlers.seed_risk_handler import SeedRiskHandler
 from src.db.database import get_db
 
 router = APIRouter()
@@ -24,7 +24,7 @@ async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
     """
     try:
         # Business logic is in a separate handler
-        risk_handler = RiskHandler(db_session)
+        risk_handler = SeedRiskHandler(db_session)
         await risk_handler.seed_calculate_risk_data_async()
 
         logger.info("Successfully seeded database with risk data.")

@@ -20,7 +20,7 @@ from src.risk.models.risk_models import (
 )
 
 
-class RiskHandler:
+class SeedRiskHandler:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.data_insert_service = DataInsertService(db_session)

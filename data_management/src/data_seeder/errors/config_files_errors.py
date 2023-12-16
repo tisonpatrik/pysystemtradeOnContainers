@@ -5,3 +5,6 @@ class ConfigFilesProcessingError(Exception):
 
 class ConfigFilesServiceError(Exception):
     """Exception raised for errors in the ConfigFilesService."""
+
+class TradableInstrumentsServiceError(Exception):
+    """Exception raised for errors in the TradableInstrumentsService."""

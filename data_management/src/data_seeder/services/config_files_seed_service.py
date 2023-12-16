@@ -11,7 +11,7 @@ from src.data_seeder.utils.path_validator import get_full_path
 from src.db.services.data_insert_service import DataInsertService
 
 
-class ConfigFilesService:
+class ConfigFilesSeedService:
     """
     Handles the processing of configuration data.
     """
@@ -24,7 +24,7 @@ class ConfigFilesService:
 
     async def seed_config_files(self, list_of_symbols, model):
         """
-        Processes configuration data from a FileTableMapping object.
+        Processes configuration data from a model object.
         """
         try:
             self.logger.info("Starting the process for %s table.", model.tablename)
