@@ -8,3 +8,8 @@ class InstrumentMetadataError(Exception):
     """
     Failed to get get_instrument_metadatas_async config asynchronously: %s
     """
+
+class TradableInstrumentsError(Exception):
+    """
+    Failed to get get_tradable_instruments config asynchronously: %s
+    """

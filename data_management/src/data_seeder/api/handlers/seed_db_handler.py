@@ -5,7 +5,7 @@ which is responsible for seeding the database from CSV files.
 
 from src.core.utils.logging import AppLogger
 from src.data_seeder.services.config_files_seed_service import ConfigFilesSeedService
-from src.data_seeder.services.csv_loader_service import CsvLoaderService
+from src.raw_data.services.tradable_instruments_service import TradableInstrumentsService
 from src.data_seeder.services.prices_seed_service import PricesSeedService
 from src.raw_data.schemas.config_schemas import (
     InstrumentConfigSchema,
@@ -31,7 +31,7 @@ class SeedDBHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.config_files_seed_service = ConfigFilesSeedService(db_session)
         self.prices_seed_service = PricesSeedService(db_session)
-        self.csv_loader = CsvLoaderService()
+        self.tradable_instrument_service = TradableInstrumentsService(db_session)
 
     async def insert_data_from_csv_async(self):
         """
@@ -48,10 +48,7 @@ class SeedDBHandler:
             MultiplePricesSchema,
             RollCalendarsSchema,
         ]
-
-        list_of_instruments = self.csv_loader.get_csv_file_names_for_directory(
-            AdjustedPricesSchema.directory
-        )
+        list_of_instruments = await self.tradable_instrument_service.get_tradable_instruments()
         for model in models:
             await self._process_data_and_insert_them_into_db(model, list_of_instruments)
 
