@@ -39,10 +39,10 @@ class SeedRiskHandler:
         """
         self.logger.info("Data processing for risk calculations has started")
         models = [
-            # DailyReturnsVolatility,
-            # InstrumentVolatility,
-            # DailyVolNormalizedReturns,
-            NormalisedPriceForAssetClass,
+            DailyReturnsVolatility,
+            InstrumentVolatility,
+            DailyVolNormalizedReturns,
+            # NormalisedPriceForAssetClass,
         ]
         for model in models:
             await self._get_risk_data_from_raw_file(model)
