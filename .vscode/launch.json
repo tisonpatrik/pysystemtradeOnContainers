@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "debugpy",
             "name": "Python: Example script",
             "request": "launch",
             "program": "${workspaceFolder}/src/example.py",
