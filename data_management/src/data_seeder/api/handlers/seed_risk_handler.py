@@ -1,23 +1,17 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.services.daily_returns_vol_seed_service import (
-    DailyReturnsVolSeedService,
-)
-from src.data_seeder.services.daily_vol_normalized_returns_seed_services import (
-    DailyVolNormalisedReturnsSeedService,
-)
-from src.data_seeder.services.instrument_vol_seed_service import (
-    InstrumentVolSeedService,
-)
-from src.data_seeder.services.normalised_price_for_asset_seed_service import (
-    NormalisedPriceForAssetSeedService,
-)
+from src.data_seeder.services.daily_returns_vol_seed_service import \
+    DailyReturnsVolSeedService
+from src.data_seeder.services.daily_vol_normalized_returns_seed_services import \
+    DailyVolNormalisedReturnsSeedService
+from src.data_seeder.services.instrument_vol_seed_service import \
+    InstrumentVolSeedService
+from src.data_seeder.services.normalised_price_for_asset_seed_service import \
+    NormalisedPriceForAssetSeedService
 from src.db.services.data_insert_service import DataInsertService
-from src.risk.models.risk_models import (
-    DailyReturnsVolatility,
-    DailyVolNormalizedReturns,
-    InstrumentVolatility,
-    NormalisedPriceForAssetClass,
-)
+from src.risk.models.risk_models import (DailyReturnsVolatility,
+                                         DailyVolNormalizedReturns,
+                                         InstrumentVolatility,
+                                         NormalisedPriceForAssetClass)
 
 
 class SeedRiskHandler:
@@ -42,7 +36,7 @@ class SeedRiskHandler:
             DailyReturnsVolatility,
             InstrumentVolatility,
             DailyVolNormalizedReturns,
-            # NormalisedPriceForAssetClass,
+            NormalisedPriceForAssetClass,
         ]
         for model in models:
             await self._get_risk_data_from_raw_file(model)
