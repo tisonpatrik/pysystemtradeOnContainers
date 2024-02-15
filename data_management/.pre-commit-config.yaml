@@ -13,13 +13,13 @@ repos:
       rev: "6.1.0"
       hooks:
           - id: flake8
-            args: ["--config", ".flake8"]
+            args: ["--config"]
     - repo: https://github.com/nbQA-dev/nbQA
       rev: "1.7.1"
       hooks:
         - id: nbqa-check-ast
         - id: nbqa-flake8
-          args: ["--config", ".flake8"]
+          args: ["--config"]
         - id: nbqa-mypy
           args: ["--config", "mypy.ini"]
         - id: nbqa-isort
