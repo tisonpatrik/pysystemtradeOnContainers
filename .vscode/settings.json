@@ -5,5 +5,15 @@
     "python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3",
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "editor.rulers": [80, 120]
+    "editor.rulers": [80, 120],
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+        "isort.args": [
+            "--profile",
+            "black"
+        ],
+
 }
