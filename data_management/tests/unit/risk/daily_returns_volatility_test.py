@@ -1,6 +1,5 @@
 import pandas as pd
-from src.risk.estimators.daily_returns_volatility import \
-    DailyReturnsVolEstimator
+from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
 
 def load_csv_data(filename):
