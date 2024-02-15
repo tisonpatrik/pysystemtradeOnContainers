@@ -5,7 +5,6 @@
         }
     ],
     "settings": {
-        "python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3",
         "[python]": {
             "editor.defaultFormatter": "ms-python.black-formatter",
             "editor.formatOnSave": true

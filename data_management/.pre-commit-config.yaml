@@ -1,0 +1,35 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.2.0
+      hooks:
+          - id: trailing-whitespace
+          - id: end-of-file-fixer
+          - id: check-yaml
+          - id: check-added-large-files
+          - id: check-ast
+    - repo: https://github.com/PyCQA/flake8
+      rev: "6.1.0"
+      hooks:
+          - id: flake8
+            args: ["--config", ".flake8"]
+    - repo: https://github.com/PyCQA/isort
+      rev: "5.13.2"
+      hooks:
+        - id: isort
+    - repo: https://github.com/nbQA-dev/nbQA
+      rev: "1.7.1"
+      hooks:
+        - id: nbqa-check-ast
+        - id: nbqa-flake8
+          args: ["--config", ".flake8"]
+        - id: nbqa-mypy
+          args: ["--config", "mypy.ini"]
+        - id: nbqa-isort
+    -   repo: https://github.com/avilaton/add-msg-issue-prefix-hook
+        rev: v0.0.9  # Use the ref you want to point at
+        hooks:
+        -   id: add-msg-issue-prefix
+            args:
+              -   "--template={}:"
