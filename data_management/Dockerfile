@@ -18,6 +18,7 @@ COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
 
 # Installing pipenv and the project dependencies
+RUN pip install numpy
 RUN pip install pipenv
 
 # Installing dependencies using pipenv
