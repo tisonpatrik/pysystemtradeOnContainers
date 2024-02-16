@@ -10,8 +10,8 @@ def load_csv_data(filename):
 
 def test_instrument_volatility():
     # Load input and expected data
-    multiple_prices = load_csv_data("multiple_prices")
-    daily_returns_vol = load_csv_data("expected_daily_returns")
+    multiple_prices = load_csv_data("multiple_price")
+    daily_returns_vol = load_csv_data("expected_daily_returns_volatility")
     exptected = load_csv_data("expected_instrument_vol")
     estimator = InstrumentVolEstimator()
     calculated_vol = estimator.get_instrument_currency_vol(
