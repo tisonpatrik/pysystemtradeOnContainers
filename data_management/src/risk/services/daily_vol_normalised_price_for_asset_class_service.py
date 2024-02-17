@@ -1,3 +1,4 @@
+import pandas as pd
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.polars.prapare_db_calculations import prepara_asset_data_to_db
@@ -52,16 +53,18 @@ class DailyVolNormalisedPriceForAssetClassService:
                     instrument_code
                 )
                 aggregate_returns_across_instruments_list.append(normalised_returns)
-
+            aggregated_returns_across_instruments_list = pd.concat(
+                aggregate_returns_across_instruments_list, axis=1, sort=True
+            )
             returns = self.daily_vol_normalised_returns_for_asset_class_estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(
-                aggregate_returns_across_instruments_list
+                aggregated_returns_across_instruments_list
             )
             prepared_data = prepara_asset_data_to_db(
                 returns, DailyVolNormalisedPriceForAssetClass, asset_class
             )
-            # await self.data_insert_service.async_insert_dataframe_to_table(
-            #     prepared_data, self.table_name
-            # )
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                prepared_data, self.table_name
+            )
         except Exception as exc:
             self.logger.error(
                 f"Error in calculating cumulative volatility returns: {exc}"
