@@ -17,7 +17,7 @@ from src.data_seeder.errors.path_validation_error import InvalidFileNameError
 logger = AppLogger.get_instance().get_logger()
 
 
-def load_csv(full_path):
+def load_csv(full_path) -> pd.DataFrame:
     """
     Loads a CSV file from a given path and returns it as a DataFrame.
     """

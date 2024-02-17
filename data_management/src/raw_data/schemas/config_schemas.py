@@ -21,12 +21,12 @@ class InstrumentConfigSchema(pa.DataFrameModel):
 class InstrumentMetadataSchema(pa.DataFrameModel):
     symbol: Series[str] = Field(nullable=False)
     asset_class: Series[str] = Field(nullable=False)
-    sub_class: Series[str]
-    sub_sub_class: Series[str]
-    style: Series[str]
-    country: Series[str]
-    duration: Series[str]
-    description: Series[str]
+    sub_class: Series[str] = Field(nullable=False)
+    sub_sub_class: Series[str] = Field(nullable=True)
+    style: Series[str] = Field(nullable=True)
+    country: Series[str] = Field(nullable=True)
+    duration: Series[float] = Field(nullable=True)
+    description: Series[str] = Field(nullable=True)
 
 
 class RollConfigSchema(pa.DataFrameModel):

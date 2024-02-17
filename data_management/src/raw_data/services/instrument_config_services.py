@@ -2,6 +2,9 @@
 This module provides services for fetching and processing instrument config data asynchronously.
 """
 
+from typing import List
+
+import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
@@ -23,6 +26,12 @@ class InstrumentConfigService:
         self.data_insertion_service = GenericDataInsertionService(
             db_session, self.table_name
         )
+
+    def get_names_of_columns(self) -> List[str]:
+        """
+        Get names of columns in instrument config table.
+        """
+        return [column.name for column in InstrumentConfigModel.__table__.columns]
 
     async def get_instrument_configs_async(self):
         """
@@ -112,17 +121,14 @@ class InstrumentConfigService:
             )
             raise InstrumentConfigError("Error fetching instrument metadata", error)
 
-    async def insert_tradable_instruments(self, raw_data):
+    async def insert_instruments_config_async(self, raw_data: pd.DataFrame):
         """
-        Seed tradable instruments data into db.
+        Insert instruments config data into db.
         """
         try:
-            self.logger.info("Starting the process for %s table.", self.table_name)
             await self.data_insertion_service.insert_data(
                 raw_data, InstrumentConfigSchema
             )
 
         except Exception as exc:
-            self.logger.error(
-                f"Error seeding config files for {self.table_name}: {str(exc)}"
-            )
+            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")

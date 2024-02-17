@@ -4,6 +4,7 @@ Module for handling methods for renaming columns.
 
 from typing import List
 
+import pandas as pd
 import polars as pl
 from src.core.errors.rename_colums_errors import ColumnRenameError
 from src.core.utils.logging import AppLogger
@@ -11,7 +12,9 @@ from src.core.utils.logging import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-def rename_columns(data_frame: pl.DataFrame, new_column_names: List[str]):
+def rename_columns(
+    data_frame: pd.DataFrame, new_column_names: List[str]
+) -> pd.DataFrame:
     """
     Renames DataFrame columns based on the provided list of new column names.
     """

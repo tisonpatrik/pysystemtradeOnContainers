@@ -9,7 +9,6 @@ from src.data_seeder.data_processors.prices_files_processor import PricesFilesPr
 from src.data_seeder.errors.prices_data_seed_error import PricesFilesProcessingError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
 from src.data_seeder.utils.data_aggregators import concatenate_data_frames
-from src.db.services.data_insert_service import DataInsertService
 
 
 class PricesSeedService:
@@ -21,7 +20,6 @@ class PricesSeedService:
         self.logger = AppLogger.get_instance().get_logger()
         self.csv_loader_service = CsvLoaderService()
         self.prices_files_processor = PricesFilesProcessor(db_session)
-        self.data_insert_service = DataInsertService(db_session)
 
     async def process_prices_files(self, model, list_of_symbols):
         """
@@ -35,10 +33,8 @@ class PricesSeedService:
             processed_data_frames = self.prices_files_processor.process_price_files(
                 model=model, dataframes=dataframes
             )
-            price_data_frames = concatenate_data_frames(processed_data_frames)
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                price_data_frames, model.tablename
-            )
+            return concatenate_data_frames(processed_data_frames)
+
         except PricesFilesProcessingError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise

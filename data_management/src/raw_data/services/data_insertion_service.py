@@ -15,7 +15,6 @@ class GenericDataInsertionService:
         Generic method to seed data into db, validating against a given schema.
         """
         try:
-            self.logger.info("Starting the process for %s table.", self.table_name)
             # Validate the raw_data DataFrame against the given schema
             validation_schema.validate(raw_data)
             raw_data = pl.DataFrame(raw_data)

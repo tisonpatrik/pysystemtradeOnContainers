@@ -40,9 +40,9 @@ class TradableInstrumentsService:
             )
             raise TradableInstrumentsError("Error fetching instrument config", error)
 
-    async def insert_tradable_instruments(self, raw_data: pd.DataFrame):
+    async def insert_tradable_instruments_async(self, raw_data: pd.DataFrame):
         """
-        Seed tradable instruments data into db.
+        Insert tradable instruments data into db.
         """
         try:
             self.logger.info("Starting the process for %s table.", self.table_name)
@@ -51,6 +51,4 @@ class TradableInstrumentsService:
             )
 
         except Exception as exc:
-            self.logger.error(
-                f"Error seeding config files for {self.table_name}: {str(exc)}"
-            )
+            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
