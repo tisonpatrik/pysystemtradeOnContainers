@@ -8,15 +8,15 @@ from src.data_seeder.services.daily_vol_normalized_returns_seed_services import 
 from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
 )
-from src.data_seeder.services.normalised_price_for_asset_seed_service import (
-    NormalisedPriceForAssetSeedService,
-)
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import (
     DailyReturnsVolatility,
     DailyVolNormalisedPriceForAssetClass,
     DailyVolNormalizedReturns,
     InstrumentVolatility,
+)
+from src.risk.services.normalised_price_for_asset_class_service import (
+    NormalisedPriceForAssetClassService,
 )
 
 
@@ -26,7 +26,7 @@ class SeedRiskHandler:
         self.data_insert_service = DataInsertService(db_session)
         self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
         self.normalised_price_for_asset_seed_service = (
-            NormalisedPriceForAssetSeedService(db_session)
+            NormalisedPriceForAssetClassService(db_session)
         )
         self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
         self.daily_returns_normalised_vol_seed_service = (
