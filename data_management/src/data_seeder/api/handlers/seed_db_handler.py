@@ -4,20 +4,20 @@ which is responsible for seeding the database from CSV files.
 """
 
 from src.core.utils.logging import AppLogger
-from src.data_seeder.services.config_files_seed_service import ConfigFilesSeedService
-from src.data_seeder.services.prices_seed_service import PricesSeedService
-from src.raw_data.schemas.config_schemas import (
+from src.data_seeder.csv_to_db_configs.config_files_config import (
     InstrumentConfigSchema,
     InstrumentMetadataSchema,
     RollConfigSchema,
     SpreadCostSchema,
 )
-from src.raw_data.schemas.raw_data_schemas import (
+from src.data_seeder.csv_to_db_configs.raw_data_config import (
     AdjustedPricesSchema,
     FxPricesSchema,
     MultiplePricesSchema,
     RollCalendarsSchema,
 )
+from src.data_seeder.services.config_files_seed_service import ConfigFilesSeedService
+from src.data_seeder.services.prices_seed_service import PricesSeedService
 from src.raw_data.services.tradable_instruments_service import (
     TradableInstrumentsService,
 )
