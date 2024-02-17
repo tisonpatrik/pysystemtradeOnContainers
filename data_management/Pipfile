@@ -18,6 +18,7 @@ alembic = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
+pandera = "*"
 
 [requires]
 python_version = "3.10.12"
