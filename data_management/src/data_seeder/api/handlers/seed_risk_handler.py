@@ -14,9 +14,9 @@ from src.data_seeder.services.normalised_price_for_asset_seed_service import (
 from src.db.services.data_insert_service import DataInsertService
 from src.risk.models.risk_models import (
     DailyReturnsVolatility,
+    DailyVolNormalisedPriceForAssetClass,
     DailyVolNormalizedReturns,
     InstrumentVolatility,
-    NormalisedPriceForAssetClass,
 )
 
 
@@ -42,7 +42,7 @@ class SeedRiskHandler:
             DailyReturnsVolatility,
             InstrumentVolatility,
             DailyVolNormalizedReturns,
-            NormalisedPriceForAssetClass,
+            DailyVolNormalisedPriceForAssetClass,
         ]
         for model in models:
             await self._get_risk_data_from_raw_file(model)
