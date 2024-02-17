@@ -1,5 +1,5 @@
 from src.core.utils.logging import AppLogger
-from src.raw_data.services.tradable_instruments_service import (
+from data_management.src.raw_data.services.tradable_instruments_service import (
     TradableInstrumentsService,
 )
 

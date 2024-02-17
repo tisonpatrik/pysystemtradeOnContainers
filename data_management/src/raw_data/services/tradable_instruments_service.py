@@ -7,8 +7,7 @@ from src.raw_data.csv_to_db_configs.config_files_config import TradableInstrumen
 from src.raw_data.errors.config_files_errors import TradableInstrumentsError
 from src.raw_data.errors.tradable_service_erros import TradableInstrumentsServiceError
 from src.raw_data.schemas.config_schemas import TradableInstrumentsSchema
-from src.raw_data.services.csv_loader_service import CsvLoaderService
-from src.raw_data.utils.path_validator import get_full_path
+from src.raw_data.utils.csv_loader import get_full_path, load_csv
 
 
 class TradableInstrumentsService:
@@ -19,7 +18,6 @@ class TradableInstrumentsService:
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
-        self.csv_loader = CsvLoaderService()
         self.data_insert_service = DataInsertService(db_session)
 
     async def get_tradable_instruments(self):
@@ -53,7 +51,7 @@ class TradableInstrumentsService:
             full_path = get_full_path(
                 TradableInstrumentsConfig.directory, TradableInstrumentsConfig.file_name
             )
-            raw_data = self.csv_loader.load_csv(full_path)
+            raw_data = load_csv(full_path)
 
             # Validate the raw_data DataFrame against the schema
             TradableInstrumentsSchema.validate(raw_data)

@@ -7,7 +7,7 @@ Handles all incoming HTTP requests related to this functionality.
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
-from src.data_seeder.api.handlers.seed_db_handler import SeedDBHandler
+from src.data_seeder.api.handlers.seed_raw_data_handler import SeedDBHandler
 from src.db.database import get_db
 
 router = APIRouter()
