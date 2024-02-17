@@ -8,11 +8,11 @@ from typing import List
 
 import pandas as pd
 from src.core.utils.logging import AppLogger
-from src.raw_data.errors.csv_loading_errors import (
+from src.data_seeder.errors.csv_loading_errors import (
     CsvLoadingError,
     MultipleCsvLoadingError,
 )
-from src.raw_data.errors.path_validation_error import InvalidFileNameError
+from src.data_seeder.errors.path_validation_error import InvalidFileNameError
 
 logger = AppLogger.get_instance().get_logger()
 

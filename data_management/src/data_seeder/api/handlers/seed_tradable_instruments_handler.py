@@ -1,5 +1,9 @@
 from src.core.utils.logging import AppLogger
-from data_management.src.raw_data.services.tradable_instruments_service import (
+from src.data_seeder.csv_to_db_configs.config_files_config import (
+    TradableInstrumentsConfig,
+)
+from src.data_seeder.utils.csv_loader import get_full_path, load_csv
+from src.raw_data.services.tradable_instruments_service import (
     TradableInstrumentsService,
 )
 
@@ -21,7 +25,13 @@ class SeedTradableInstrumentsHandler:
             self.logger.info(
                 "Data processing for tradable instruments files has started"
             )
-            await self.tradable_instruments_service.seed_tradable_instruments_files()
+            full_path = get_full_path(
+                TradableInstrumentsConfig.directory, TradableInstrumentsConfig.file_name
+            )
+            raw_data = load_csv(full_path)
+            await self.tradable_instruments_service.insert_tradable_instruments_files(
+                raw_data
+            )
             self.logger.info("Data processing completed successfully")
         except Exception as exc:
             self.logger.error("An error occurred during data processing: %s", str(exc))
