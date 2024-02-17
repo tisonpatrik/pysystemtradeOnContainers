@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.config_files_errors import InstrumentConfigError
-from src.raw_data.models.config_models import RollConfig
+from src.raw_data.models.config_models import RollConfigModel
 
 
 class RollConfigService:
@@ -24,7 +24,7 @@ class RollConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_async(
-                RollConfig.__tablename__
+                RollConfigModel.__tablename__
             )
             return data
         except Exception as error:

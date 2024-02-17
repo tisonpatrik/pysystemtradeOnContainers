@@ -8,7 +8,7 @@ from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint,
 from src.core.models.base_model import BaseModel
 
 
-class AdjustedPrices(BaseModel):
+class AdjustedPricesModel(BaseModel):
     """
     ORM class for the 'adjusted_prices' table. Represents prices adjusted for factors
     like splits and dividends.
@@ -23,7 +23,7 @@ class AdjustedPrices(BaseModel):
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
 
-class FxPrices(BaseModel):
+class FxPricesModel(BaseModel):
     """
     ORM class for the 'fx_prices' table. Represents foreign exchange prices.
     """
@@ -37,7 +37,7 @@ class FxPrices(BaseModel):
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
 
-class MultiplePrices(BaseModel):
+class MultiplePricesModel(BaseModel):
     """
     ORM class for the 'multiple_prices' table. Represents various price-related metrics.
     """
@@ -56,7 +56,7 @@ class MultiplePrices(BaseModel):
     __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
 
 
-class RollCalendars(BaseModel):
+class RollCalendarsModel(BaseModel):
     """
     ORM class for the 'roll_calendars' table. Represents rolling calendar data for futures contracts.
     """

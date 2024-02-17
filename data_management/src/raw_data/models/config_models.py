@@ -2,7 +2,7 @@ from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 from src.core.models.base_model import BaseModel
 
 
-class InstrumentConfig(BaseModel):
+class InstrumentConfigModel(BaseModel):
     __tablename__ = "instrument_config"
     symbol = Column(String(50), primary_key=True)
     description = Column(Text)
@@ -14,11 +14,13 @@ class InstrumentConfig(BaseModel):
     per_trade = Column(Integer)
     region = Column(String(50))
 
-class TradableInstruments(BaseModel):
-    __tablename__ = "tradable_instruments"
-    symbol = Column(String(50), primary_key=True)  
 
-class InstrumentMetadata(BaseModel):
+class TradableInstrumentsModel(BaseModel):
+    __tablename__ = "tradable_instruments"
+    symbol = Column(String(50), primary_key=True)
+
+
+class InstrumentMetadataModel(BaseModel):
     __tablename__ = "instrument_metadata"
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
@@ -32,7 +34,7 @@ class InstrumentMetadata(BaseModel):
     description = Column(String(100))
 
 
-class RollConfig(BaseModel):
+class RollConfigModel(BaseModel):
     __tablename__ = "roll_config"
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
@@ -44,7 +46,7 @@ class RollConfig(BaseModel):
     expiry_offset = Column(Integer)
 
 
-class SpreadCost(BaseModel):
+class SpreadCostModel(BaseModel):
     __tablename__ = "spread_cost"
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True

@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.config_files_errors import InstrumentConfigError
-from src.raw_data.models.config_models import InstrumentConfig
+from src.raw_data.models.config_models import InstrumentConfigModel
 
 
 class InstrumentConfigService:
@@ -24,7 +24,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_async(
-                InstrumentConfig.__tablename__
+                InstrumentConfigModel.__tablename__
             )
             return data
         except Exception as error:
@@ -39,9 +39,9 @@ class InstrumentConfigService:
         """Asynchronously fetch point size for given instrument."""
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                InstrumentConfig.__tablename__, symbol
+                InstrumentConfigModel.__tablename__, symbol
             )
-            return data[InstrumentConfig.pointsize.key][0]
+            return data[InstrumentConfigModel.pointsize.key][0]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument config asynchronously: %s",
@@ -56,9 +56,9 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                InstrumentConfig.__tablename__, symbol
+                InstrumentConfigModel.__tablename__, symbol
             )
-            return data[InstrumentConfig.asset_class.key][0]
+            return data[InstrumentConfigModel.asset_class.key][0]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument metadatas asynchronously: %s",
@@ -73,11 +73,11 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_rows_by_column_value_async(
-                table_name=InstrumentConfig.__tablename__,
-                column_name=InstrumentConfig.asset_class.key,
+                table_name=InstrumentConfigModel.__tablename__,
+                column_name=InstrumentConfigModel.asset_class.key,
                 column_value=asset_class,
             )
-            return data[InstrumentConfig.symbol.key]
+            return data[InstrumentConfigModel.symbol.key]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument metadatas asynchronously: %s",
@@ -94,7 +94,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_unique_column_values_async(
-                table_name=InstrumentConfig.__tablename__,
+                table_name=InstrumentConfigModel.__tablename__,
                 column_name=column_name,
             )
             return data

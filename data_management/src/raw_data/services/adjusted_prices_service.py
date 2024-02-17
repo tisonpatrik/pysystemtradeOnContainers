@@ -8,7 +8,7 @@ from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.prices_series_errors import DailyPricesFetchError
-from src.raw_data.models.raw_data_models import AdjustedPrices
+from src.raw_data.models.raw_data_models import AdjustedPricesModel
 
 
 class AdjustedPricesService:
@@ -19,9 +19,9 @@ class AdjustedPricesService:
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = AdjustedPrices.unix_date_time.key
-        self.table_name = AdjustedPrices.__tablename__
-        self.price_column = AdjustedPrices.price.key
+        self.time_column = AdjustedPricesModel.unix_date_time.key
+        self.table_name = AdjustedPricesModel.__tablename__
+        self.price_column = AdjustedPricesModel.price.key
 
     async def get_daily_prices_async(self, symbol: str):
         """

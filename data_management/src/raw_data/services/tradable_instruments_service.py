@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
+from src.raw_data.csv_to_db_configs.config_files_config import TradableInstrumentsConfig
 from src.raw_data.errors.config_files_errors import TradableInstrumentsError
 from src.raw_data.errors.tradable_service_erros import TradableInstrumentsServiceError
-from src.raw_data.models.config_models import TradableInstruments
 from src.raw_data.schemas.config_schemas import TradableInstrumentsSchema
 from src.raw_data.services.csv_loader_service import CsvLoaderService
 from src.raw_data.utils.path_validator import get_full_path
@@ -28,9 +28,9 @@ class TradableInstrumentsService:
         """
         try:
             data_frame = await self.data_loader_service.fetch_raw_data_from_table_async(
-                TradableInstruments.__tablename__
+                TradableInstrumentsConfig.tablename
             )
-            symbols_list = data_frame[TradableInstruments.symbol.key].to_list()
+            symbols_list = data_frame[TradableInstrumentsSchema.symbol].to_list()
             return symbols_list
 
         except Exception as error:
@@ -47,10 +47,11 @@ class TradableInstrumentsService:
         """
         try:
             self.logger.info(
-                "Starting the process for %s table.", TradableInstruments.tablename
+                "Starting the process for %s table.",
+                TradableInstrumentsConfig.tablename,
             )
             full_path = get_full_path(
-                TradableInstruments.directory, TradableInstruments.file_name
+                TradableInstrumentsConfig.directory, TradableInstrumentsConfig.file_name
             )
             raw_data = self.csv_loader.load_csv(full_path)
 
@@ -59,12 +60,12 @@ class TradableInstrumentsService:
             raw_data = pl.DataFrame(raw_data)
             # Proceed with insertion only if data is valid
             await self.data_insert_service.async_insert_dataframe_to_table(
-                raw_data, TradableInstruments.tablename
+                raw_data, TradableInstrumentsConfig.tablename
             )
         except Exception as exc:
             self.logger.error(
-                f"Error seeding config files for {TradableInstruments.tablename}: {str(exc)}"
+                f"Error seeding config files for {TradableInstrumentsConfig.tablename}: {str(exc)}"
             )
             raise TradableInstrumentsServiceError(
-                f"Error seeding config files for {TradableInstruments.tablename}: {str(exc)}"
+                f"Error seeding config files for {TradableInstrumentsConfig.tablename}: {str(exc)}"
             )

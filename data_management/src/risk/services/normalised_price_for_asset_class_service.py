@@ -1,6 +1,6 @@
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.risk_seeding_errors import NormalisedPriceForAssetSeedError
-from src.raw_data.models.config_models import InstrumentConfig
+from src.raw_data.models.config_models import InstrumentConfigModel
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.errors.normalised_price_for_asset_class_error import (
     NormalisedPriceForAssetClassCalculationError,
@@ -64,7 +64,7 @@ class NormalisedPriceForAssetClassService:
                 DailyVolNormalisedPriceForAssetClass.__tablename__,
             )
             assets = await self.instrument_config_service.get_unique_values_for_given_column_from_instrumnet_config(
-                InstrumentConfig.asset_class.key
+                InstrumentConfigModel.asset_class.key
             )
             for asset_class in assets:
                 await self.daily_vol_normalised_price_for_asset_service.insert_daily_vol_normalised_price_for_asset_class_async(
