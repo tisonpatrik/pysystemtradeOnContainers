@@ -8,7 +8,7 @@ class NormalisedPriceForAssetClass:
 
     def get_normalised_price_for_asset_class(
         self,
-        cumulative_normalised_price: pd.Series,
+        instrument_cumulative_normalised_price: pd.Series,
         normalised_price_for_asset_class: pd.Series,
     ) -> pd.Series:
         """
@@ -17,7 +17,7 @@ class NormalisedPriceForAssetClass:
         """
         normalised_price_for_asset_class_aligned = (
             normalised_price_for_asset_class.reindex(
-                cumulative_normalised_price.index
+                index=instrument_cumulative_normalised_price.index
             ).ffill()
         )
 
