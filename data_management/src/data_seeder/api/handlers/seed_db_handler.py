@@ -5,16 +5,16 @@ which is responsible for seeding the database from CSV files.
 
 from src.core.utils.logging import AppLogger
 from src.data_seeder.csv_to_db_configs.config_files_config import (
-    InstrumentConfigSchema,
-    InstrumentMetadataSchema,
-    RollConfigSchema,
-    SpreadCostSchema,
+    InstrumentConfig,
+    InstrumentMetadata,
+    RollConfig,
+    SpreadCost,
 )
 from src.data_seeder.csv_to_db_configs.raw_data_config import (
-    AdjustedPricesSchema,
+    AdjustedPrices,
     FxPricesSchema,
-    MultiplePricesSchema,
-    RollCalendarsSchema,
+    MultiplePrices,
+    RollCalendars,
 )
 from src.data_seeder.services.config_files_seed_service import ConfigFilesSeedService
 from src.data_seeder.services.prices_seed_service import PricesSeedService
@@ -41,14 +41,14 @@ class SeedDBHandler:
         """
         self.logger.info("Data processing for csv files has started")
         models = [
-            InstrumentConfigSchema,
-            InstrumentMetadataSchema,
-            RollConfigSchema,
-            SpreadCostSchema,
+            InstrumentConfig,
+            InstrumentMetadata,
+            RollConfig,
+            SpreadCost,
             FxPricesSchema,
-            AdjustedPricesSchema,
-            MultiplePricesSchema,
-            RollCalendarsSchema,
+            AdjustedPrices,
+            MultiplePrices,
+            RollCalendars,
         ]
         list_of_instruments = (
             await self.tradable_instrument_service.get_tradable_instruments()

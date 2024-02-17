@@ -1,7 +1,5 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.csv_to_db_configs.config_files_config import (
-    TradableInstrumentsSchema,
-)
+from src.data_seeder.csv_to_db_configs.config_files_config import TradableInstruments
 from src.data_seeder.services.tradable_instrument_seed_service import (
     TradableInstrumentsSeedService,
 )
@@ -25,7 +23,7 @@ class SeedTradableInstrumentsHandler:
                 "Data processing for tradable instruments files has started"
             )
             await self.tradable_instruments_service.seed_tradable_instruments_files(
-                TradableInstrumentsSchema
+                TradableInstruments
             )
             self.logger.info("Data processing completed successfully")
         except Exception as exc:
