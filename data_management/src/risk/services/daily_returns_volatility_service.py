@@ -49,9 +49,9 @@ class DailyReturnsVolService:
                 daily_returns_vols, DailyReturnsVolatility, symbol
             )
 
-            # await self.data_insert_service.async_insert_dataframe_to_table(
-            #     prepared_data, self.table_name
-            # )
+            await self.data_insert_service.async_insert_dataframe_to_table(
+                prepared_data, self.table_name
+            )
         except DailyReturnsVolCalculationError as error:
             self.logger.error("An error occurred during processing: %s", error)
             raise
