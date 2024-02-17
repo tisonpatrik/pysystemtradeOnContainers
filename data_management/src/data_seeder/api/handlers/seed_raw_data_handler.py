@@ -35,7 +35,7 @@ class SeedDBHandler:
         self.prices_seed_service = PricesSeedService(db_session)
         self.tradable_instrument_service = TradableInstrumentsService(db_session)
 
-    async def insert_data_from_csv_async(self):
+    async def seed_data_from_csv_async(self):
         """
         Asynchronously seed the database from CSV files using predefined schemas.
         """

@@ -26,7 +26,7 @@ async def fill_database_async(db_session: AsyncSession = Depends(get_db)):
     try:
         # Business logic is in a separate handler
         seed_db_handler = SeedDBHandler(db_session)
-        await seed_db_handler.insert_data_from_csv_async()
+        await seed_db_handler.seed_data_from_csv_async()
 
         logger.info("Successfully seeded database with raw data.")
         return {

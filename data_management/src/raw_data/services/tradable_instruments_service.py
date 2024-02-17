@@ -1,12 +1,11 @@
-import polars as pl
+import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
-from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.config_files_errors import TradableInstrumentsError
-from src.raw_data.errors.tradable_service_erros import TradableInstrumentsServiceError
 from src.raw_data.models.config_models import TradableInstrumentsModel
 from src.raw_data.schemas.config_schemas import TradableInstrumentsSchema
+from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 
 
 class TradableInstrumentsService:
@@ -17,8 +16,10 @@ class TradableInstrumentsService:
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_insert_service = DataInsertService(db_session)
         self.table_name = TradableInstrumentsModel.__tablename__
+        self.data_insertion_service = GenericDataInsertionService(
+            db_session, self.table_name
+        )
 
     async def get_tradable_instruments(self):
         """
@@ -39,23 +40,17 @@ class TradableInstrumentsService:
             )
             raise TradableInstrumentsError("Error fetching instrument config", error)
 
-    async def insert_tradable_instruments_files(self, raw_data):
+    async def insert_tradable_instruments(self, raw_data: pd.DataFrame):
         """
         Seed tradable instruments data into db.
         """
         try:
             self.logger.info("Starting the process for %s table.", self.table_name)
-            # Validate the raw_data DataFrame against the schema
-            TradableInstrumentsSchema.validate(raw_data)
-            raw_data = pl.DataFrame(raw_data)
-            # Proceed with insertion only if data is valid
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                raw_data, TradableInstrumentsModel.__tablename__
+            await self.data_insertion_service.insert_data(
+                raw_data, TradableInstrumentsSchema
             )
+
         except Exception as exc:
             self.logger.error(
-                f"Error seeding config files for {self.table_name}: {str(exc)}"
-            )
-            raise TradableInstrumentsServiceError(
                 f"Error seeding config files for {self.table_name}: {str(exc)}"
             )

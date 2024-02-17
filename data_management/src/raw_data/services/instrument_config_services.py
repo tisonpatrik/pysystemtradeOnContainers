@@ -7,6 +7,8 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.config_files_errors import InstrumentConfigError
 from src.raw_data.models.config_models import InstrumentConfigModel
+from src.raw_data.schemas.config_schemas import InstrumentConfigSchema
+from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 
 
 class InstrumentConfigService:
@@ -17,6 +19,10 @@ class InstrumentConfigService:
     def __init__(self, db_session: AsyncSession):
         self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
+        self.table_name = InstrumentConfigModel.__tablename__
+        self.data_insertion_service = GenericDataInsertionService(
+            db_session, self.table_name
+        )
 
     async def get_instrument_configs_async(self):
         """
@@ -24,7 +30,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_async(
-                InstrumentConfigModel.__tablename__
+                self.table_name
             )
             return data
         except Exception as error:
@@ -39,9 +45,9 @@ class InstrumentConfigService:
         """Asynchronously fetch point size for given instrument."""
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                InstrumentConfigModel.__tablename__, symbol
+                self.table_name, symbol
             )
-            return data[InstrumentConfigModel.pointsize.key][0]
+            return data[InstrumentConfigSchema.pointsize][0]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument config asynchronously: %s",
@@ -56,9 +62,9 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                InstrumentConfigModel.__tablename__, symbol
+                self.table_name, symbol
             )
-            return data[InstrumentConfigModel.asset_class.key][0]
+            return data[InstrumentConfigSchema.asset_class][0]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument metadatas asynchronously: %s",
@@ -73,11 +79,11 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_rows_by_column_value_async(
-                table_name=InstrumentConfigModel.__tablename__,
-                column_name=InstrumentConfigModel.asset_class.key,
+                table_name=self.table_name,
+                column_name=InstrumentConfigSchema.asset_class,
                 column_value=asset_class,
             )
-            return data[InstrumentConfigModel.symbol.key]
+            return data[InstrumentConfigSchema.symbol]
         except Exception as error:
             self.logger.error(
                 "Failed to get instrument metadatas asynchronously: %s",
@@ -94,7 +100,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.data_loader_service.fetch_unique_column_values_async(
-                table_name=InstrumentConfigModel.__tablename__,
+                table_name=self.table_name,
                 column_name=column_name,
             )
             return data
@@ -105,3 +111,18 @@ class InstrumentConfigService:
                 exc_info=True,
             )
             raise InstrumentConfigError("Error fetching instrument metadata", error)
+
+    async def insert_tradable_instruments(self, raw_data):
+        """
+        Seed tradable instruments data into db.
+        """
+        try:
+            self.logger.info("Starting the process for %s table.", self.table_name)
+            await self.data_insertion_service.insert_data(
+                raw_data, InstrumentConfigSchema
+            )
+
+        except Exception as exc:
+            self.logger.error(
+                f"Error seeding config files for {self.table_name}: {str(exc)}"
+            )

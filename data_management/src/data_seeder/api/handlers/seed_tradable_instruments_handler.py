@@ -17,7 +17,7 @@ class SeedTradableInstrumentsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.tradable_instruments_service = TradableInstrumentsService(db_session)
 
-    async def seed_data_async(self):
+    async def seed_tradable_instruments_async(self):
         """
         Asynchronously seed the database table from CSV file using predefined schemas.
         """
@@ -29,7 +29,7 @@ class SeedTradableInstrumentsHandler:
                 TradableInstrumentsConfig.directory, TradableInstrumentsConfig.file_name
             )
             raw_data = load_csv(full_path)
-            await self.tradable_instruments_service.insert_tradable_instruments_files(
+            await self.tradable_instruments_service.insert_tradable_instruments(
                 raw_data
             )
             self.logger.info("Data processing completed successfully")

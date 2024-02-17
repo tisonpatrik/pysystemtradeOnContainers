@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
-from src.data_seeder.api.handlers.seed_tradable_instruments_handler import SeedTradableInstrumentsHandler
+from src.data_seeder.api.handlers.seed_tradable_instruments_handler import (
+    SeedTradableInstrumentsHandler,
+)
 from src.db.database import get_db
-
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -21,7 +22,7 @@ async def fill_database_async(db_session: AsyncSession = Depends(get_db)):
     try:
         # Business logic is in a separate handler
         seed_handler = SeedTradableInstrumentsHandler(db_session)
-        await seed_handler.seed_data_async()
+        await seed_handler.seed_tradable_instruments_async()
 
         logger.info("Successfully seeded database with tradable instruments data.")
         return {
@@ -30,7 +31,9 @@ async def fill_database_async(db_session: AsyncSession = Depends(get_db)):
         }
 
     except Exception as error:
-        logger.error("Failed to seed database with tradable instruments data: %s", error)
+        logger.error(
+            "Failed to seed database with tradable instruments data: %s", error
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while seeding the database.",
