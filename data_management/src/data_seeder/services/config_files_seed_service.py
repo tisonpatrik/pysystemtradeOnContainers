@@ -7,7 +7,7 @@ from src.core.utils.logging import AppLogger
 from src.data_seeder.data_processors.config_files_processor import ConfigFilesProcessor
 from src.data_seeder.errors.config_files_errors import ConfigFilesServiceError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
-from src.data_seeder.utils.path_validator import get_full_path
+from src.data_seeder.utils.path_validator import get_full_paths
 from src.db.services.data_insert_service import DataInsertService
 
 
@@ -28,7 +28,7 @@ class ConfigFilesSeedService:
         """
         try:
             self.logger.info("Starting the process for %s table.", model.tablename)
-            full_path = get_full_path(model.directory, model.file_name)
+            full_path = get_full_paths(model.directory, model.file_name)
             raw_data = self.csv_loader.load_csv(full_path)
             data = self.config_files_processor.process_config_files(
                 list_of_symbols=list_of_symbols, model=model, raw_data=raw_data

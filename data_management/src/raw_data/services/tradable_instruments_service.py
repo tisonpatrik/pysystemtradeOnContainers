@@ -2,11 +2,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.data_seeder.errors.config_files_errors import TradableInstrumentsServiceError
 from src.data_seeder.services.csv_loader_service import CsvLoaderService
-from src.data_seeder.utils.path_validator import get_full_path
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.config_files_errors import TradableInstrumentsError
 from src.raw_data.models.config_models import TradableInstruments
+from src.raw_data.utils.path_validator import get_full_path
 
 
 class TradableInstrumentsService:

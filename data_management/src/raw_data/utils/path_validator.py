@@ -4,10 +4,10 @@ Provides utilities for validating file paths and raising appropriate exceptions.
 
 import os
 
-from src.data_seeder.errors.path_validation_error import InvalidFileNameError
+from src.raw_data.errors.path_validation_error import InvalidFileNameError
 
 
-def get_full_paths(directory: str, file_name: str) -> str:
+def get_full_path(directory: str, file_name: str) -> str:
     """
     Validates the full file path constructed from the provided directory and file_name.
     """
