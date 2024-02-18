@@ -10,16 +10,11 @@ from src.data_seeder.csv_to_db_configs.config_files_config import (
     RollConfigConfig,
     SpreadCostConfig,
 )
-from src.data_seeder.services.config_files_processing_service import (
-    ConfigFilesSeedService,
-)
+from src.data_seeder.utils.csv_loader import get_full_path, load_csv
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.instrument_metadata_service import InstrumentMetadataService
 from src.raw_data.services.roll_config_service import RollConfigService
 from src.raw_data.services.spread_costs_service import SpreadCostService
-from src.raw_data.services.tradable_instruments_service import (
-    TradableInstrumentsService,
-)
 
 
 class SeeConfigDataHandler:
@@ -30,8 +25,6 @@ class SeeConfigDataHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.config_files_seed_service = ConfigFilesSeedService()
-        self.tradable_instrument_service = TradableInstrumentsService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.instrument_metadata_service = InstrumentMetadataService(db_session)
         self.roll_config_service = RollConfigService(db_session)
@@ -48,46 +41,28 @@ class SeeConfigDataHandler:
             RollConfigConfig,
             SpreadCostConfig,
         ]
-        list_of_instruments = (
-            await self.tradable_instrument_service.get_tradable_instruments()
-        )
         for config in configs:
-            await self._process_data_and_insert_them_into_db(
-                config, list_of_instruments
-            )
+            await self._process_data_and_insert_them_into_db(config)
 
-    async def _process_data_and_insert_them_into_db(self, config, list_of_symbols):
+    async def _process_data_and_insert_them_into_db(self, config):
         """
         Data processing for CSV files.
         """
         table_name = config.tablename
+        full_path = get_full_path(config.directory, config.file_name)
+        raw_data = load_csv(full_path)
+
         if table_name == "instrument_config":
-            column_names = self.instrument_config_service.get_names_of_columns()
-            raw_data = self.config_files_seed_service.process_config_files(
-                list_of_symbols, config, column_names
-            )
             await self.instrument_config_service.insert_instruments_config_async(
                 raw_data
             )
         elif table_name == "instrument_metadata":
-            column_names = self.instrument_metadata_service.get_names_of_columns()
-            raw_data = self.config_files_seed_service.process_config_files(
-                list_of_symbols, config, column_names
-            )
             await self.instrument_metadata_service.insert_instruments_metadata_async(
                 raw_data
             )
         elif table_name == "roll_config":
-            column_names = self.roll_config_service.get_names_of_columns()
-            raw_data = self.config_files_seed_service.process_config_files(
-                list_of_symbols, config, column_names
-            )
             await self.roll_config_service.insert_roll_config_async(raw_data)
-        elif table_name == "spread_cost":
-            column_names = self.spread_costs_service.get_names_of_columns()
-            raw_data = self.config_files_seed_service.process_config_files(
-                list_of_symbols, config, column_names
-            )
+        elif table_name == "spread_costs":
             await self.spread_costs_service.insert_spread_costs_async(raw_data)
         else:
             raise ValueError(f"Unrecognized table name: {table_name}")
