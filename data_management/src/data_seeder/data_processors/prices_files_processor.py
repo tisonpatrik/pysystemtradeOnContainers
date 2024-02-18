@@ -52,7 +52,7 @@ class PricesFilesProcessor:
             renamed_data, "unix_date_time"
         )
         if model.tablename == "roll_calendars":
-            final_data = date_time_converted_data
+            final_data = date_time_converted_data 
         else:
             unix_time_converted_data = aggregate_to_day_based_prices(
                 date_time_converted_data,

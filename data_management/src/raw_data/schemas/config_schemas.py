@@ -38,6 +38,6 @@ class RollConfigSchema(pa.DataFrameModel):
     expiry_offset: Series[int]
 
 
-class SpreadCostSchema(pa.DataFrameModel):
+class SpreadCostsSchema(pa.DataFrameModel):
     symbol: Series[str] = Field(nullable=False)
-    spread_cost: Series[float]
+    spread_costs: Series[float]

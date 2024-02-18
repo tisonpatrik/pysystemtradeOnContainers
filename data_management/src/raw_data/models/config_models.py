@@ -46,9 +46,9 @@ class RollConfigModel(BaseModel):
     expiry_offset = Column(Integer)
 
 
-class SpreadCostModel(BaseModel):
-    __tablename__ = "spread_cost"
+class SpreadCostsModel(BaseModel):
+    __tablename__ = "spread_costs"
     symbol = Column(
         String(50), ForeignKey("instrument_config.symbol"), primary_key=True
     )
-    spread_cost = Column(Float)
+    spread_costs = Column(Float)

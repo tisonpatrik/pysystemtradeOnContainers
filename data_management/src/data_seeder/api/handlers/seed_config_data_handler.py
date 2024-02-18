@@ -16,7 +16,7 @@ from src.data_seeder.services.config_files_processing_service import (
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.instrument_metadata_service import InstrumentMetadataService
 from src.raw_data.services.roll_config_service import RollConfigService
-from src.raw_data.services.spread_cost_service import SpreadCostService
+from src.raw_data.services.spread_costs_service import SpreadCostService
 from src.raw_data.services.tradable_instruments_service import (
     TradableInstrumentsService,
 )
@@ -35,7 +35,7 @@ class SeeConfigDataHandler:
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.instrument_metadata_service = InstrumentMetadataService(db_session)
         self.roll_config_service = RollConfigService(db_session)
-        self.spread_cost_service = SpreadCostService(db_session)
+        self.spread_costs_service = SpreadCostService(db_session)
 
     async def seed_data_from_csv_async(self):
         """
@@ -84,10 +84,10 @@ class SeeConfigDataHandler:
             )
             await self.roll_config_service.insert_roll_config_async(raw_data)
         elif table_name == "spread_cost":
-            column_names = self.spread_cost_service.get_names_of_columns()
+            column_names = self.spread_costs_service.get_names_of_columns()
             raw_data = self.config_files_seed_service.process_config_files(
                 list_of_symbols, config, column_names
             )
-            await self.spread_cost_service.insert_spread_cost_async(raw_data)
+            await self.spread_costs_service.insert_spread_costs_async(raw_data)
         else:
             raise ValueError(f"Unrecognized table name: {table_name}")
