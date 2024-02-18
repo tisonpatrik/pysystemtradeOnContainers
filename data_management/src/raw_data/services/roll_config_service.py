@@ -2,8 +2,6 @@
 This module provides services for fetching and processing instrument config data asynchronously.
 """
 
-from typing import List
-
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
@@ -26,12 +24,6 @@ class RollConfigService:
         self.data_insertion_service = GenericDataInsertionService(
             db_session, self.table_name
         )
-
-    def get_names_of_columns(self) -> List[str]:
-        """
-        Get names of columns in instrument config table.
-        """
-        return [column.name for column in RollConfigModel.__table__.columns]
 
     async def get_instrument_configs(self):
         """

@@ -1,22 +1,22 @@
 class AdjustedPricesConfig:
-    tablename = "adjusted_prices"
-    directory = "/path/in/container/adjusted_prices"
-    ignore_symbols = False
+    tablename: str = "adjusted_prices"
+    directory: str = "/path/in/container/adjusted_prices"
+    file_name: str = "adjusted_prices.csv"
 
 
 class FxPricesSchemaConfig:
-    tablename = "fx_prices"
-    directory = "/path/in/container/fx_prices"
-    ignore_symbols = True
+    tablename: str = "fx_prices"
+    directory: str = "/path/in/container/fx_prices"
+    file_name: str = "fx_prices.csv"
 
 
 class MultiplePricesConfig:
-    tablename = "multiple_prices"
-    directory = "/path/in/container/multiple_prices"
-    ignore_symbols = False
+    tablename: str = "multiple_prices"
+    directory: str = "/path/in/container/multiple_prices"
+    file_name: str = "multiple_prices.csv"
 
 
 class RollCalendarsConfig:
-    tablename = "roll_calendars"
-    directory = "/path/in/container/roll_calendars"
-    ignore_symbols = False
+    tablename: str = "roll_calendars"
+    directory: str = "/path/in/container/roll_calendars"
+    file_name: str = "roll_calendars.csv"

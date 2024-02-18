@@ -2,6 +2,7 @@
 This module provides services for fetching and processing adjusted prices data asynchronously.
 """
 
+import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
@@ -9,6 +10,8 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.errors.prices_series_errors import DailyPricesFetchError
 from src.raw_data.models.raw_data_models import AdjustedPricesModel
+from src.raw_data.schemas.raw_data_schemas import AdjustedPricesSchema
+from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 
 
 class AdjustedPricesService:
@@ -22,6 +25,9 @@ class AdjustedPricesService:
         self.time_column = AdjustedPricesModel.unix_date_time.key
         self.table_name = AdjustedPricesModel.__tablename__
         self.price_column = AdjustedPricesModel.price.key
+        self.data_insertion_service = GenericDataInsertionService(
+            db_session, self.table_name
+        )
 
     async def get_daily_prices_async(self, symbol: str):
         """
@@ -44,3 +50,15 @@ class AdjustedPricesService:
                 exc_info=True,
             )
             raise DailyPricesFetchError(symbol, exc)
+
+    async def insert_adjuted_prices_async(self, raw_data: pd.DataFrame):
+        """
+        Insert adjusted prices data into db.
+        """
+        try:
+            await self.data_insertion_service.insert_data(
+                raw_data, AdjustedPricesSchema
+            )
+
+        except Exception as exc:
+            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")

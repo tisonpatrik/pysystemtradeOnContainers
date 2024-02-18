@@ -18,11 +18,11 @@ class FxPricesSchema(pa.DataFrameModel):
 class MultiplePricesSchema(pa.DataFrameModel):
     unix_date_time: Series[int] = Field(gt=0)
     symbol: Series[str] = Field(nullable=False)
-    carry: Series[float]
+    carry: Series[float] = Field(nullable=True)
     carry_contract: Series[int]
     price: Series[float]
     price_contract: Series[int]
-    forward: Series[float]
+    forward: Series[float] = Field(nullable=True)
     forward_contract: Series[int]
 
 

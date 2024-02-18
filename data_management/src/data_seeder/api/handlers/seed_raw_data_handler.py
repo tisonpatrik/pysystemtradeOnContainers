@@ -4,28 +4,17 @@ which is responsible for seeding the database from CSV files.
 """
 
 from src.core.utils.logging import AppLogger
-from src.data_seeder.csv_to_db_configs.config_files_config import (
-    InstrumentConfigConfig,
-    InstrumentMetadataConfig,
-    RollConfigConfig,
-    SpreadCostConfig,
-)
 from src.data_seeder.csv_to_db_configs.raw_data_config import (
     AdjustedPricesConfig,
     FxPricesSchemaConfig,
     MultiplePricesConfig,
     RollCalendarsConfig,
 )
-from src.data_seeder.services.config_files_processing_service import (
-    ConfigFilesSeedService,
-)
-from src.data_seeder.services.prices_seed_service import PricesSeedService
-from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.raw_data.services.instrument_metadata_service import InstrumentMetadataService
-from src.raw_data.services.roll_config_service import RollConfigService
-from src.raw_data.services.tradable_instruments_service import (
-    TradableInstrumentsService,
-)
+from src.data_seeder.utils.csv_loader import get_full_path, load_csv
+from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
+from src.raw_data.services.fx_prices_service import FxPricesService
+from src.raw_data.services.multiple_prices_service import MultiplePricesService
+from src.raw_data.services.roll_calendars_service import RollCalendarsService
 
 
 class SeedRawDataHandler:
@@ -36,59 +25,43 @@ class SeedRawDataHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.config_files_seed_service = ConfigFilesSeedService()
-        self.prices_seed_service = PricesSeedService(db_session)
-        self.tradable_instrument_service = TradableInstrumentsService(db_session)
-        self.instrument_config_service = InstrumentConfigService(db_session)
-        self.instrument_metadata_service = InstrumentMetadataService(db_session)
-        self.roll_config_service = RollConfigService(db_session)
+        self.adjusted_prices_service = AdjustedPricesService(db_session)
+        self.fx_prices_service = FxPricesService(db_session)
+        self.multiple_prices_service = MultiplePricesService(db_session)
+        self.roll_calendars_service = RollCalendarsService(db_session)
 
     async def seed_data_from_csv_async(self):
         """
         Asynchronously seed the database from CSV files using predefined schemas.
         """
         self.logger.info("Data processing for csv files has started")
-        models = [
-            InstrumentConfigConfig,
-            InstrumentMetadataConfig,
-            RollConfigConfig,
-            SpreadCostConfig,
+        configs = [
             FxPricesSchemaConfig,
             AdjustedPricesConfig,
             MultiplePricesConfig,
             RollCalendarsConfig,
         ]
-        list_of_instruments = (
-            await self.tradable_instrument_service.get_tradable_instruments()
-        )
-        for model in models:
-            await self._process_data_and_insert_them_into_db(model, list_of_instruments)
 
-    async def _process_data_and_insert_them_into_db(self, model, list_of_symbols):
+        for config in configs:
+            await self._process_data_and_insert_them_into_db(config)
+
+    async def _process_data_and_insert_them_into_db(self, config):
         """
         Data processing for CSV files.
         """
-        table_name = model.tablename
-        raw_data = self.config_files_seed_service.process_config_files(
-            list_of_symbols, model
-        )
-        if table_name == "instrument_config":
-            await self.instrument_config_service.insert_instruments_config_async(
-                raw_data
-            )
-        elif table_name == "instrument_metadata":
-            await self.instrument_metadata_service.insert_instruments_metadata_async(
-                raw_data
-            )
-        elif table_name == "roll_config":
-            await self.roll_config_service.insert_roll_config_async(raw_data)
+        table_name = config.tablename
+        full_path = get_full_path(config.directory, config.file_name)
+        raw_data = load_csv(full_path)
 
-        elif table_name in [
-            "fx_prices",
-            "adjusted_prices",
-            "multiple_prices",
-            "roll_calendars",
-        ]:
-            await self.prices_seed_service.process_prices_files(model, list_of_symbols)
+        if table_name == "fx_prices":
+            await self.fx_prices_service.insert_fx_prices_async(raw_data)
+        elif table_name == "adjusted_prices":
+            await self.adjusted_prices_service.insert_adjuted_prices_async(raw_data)
+        elif table_name == "roll_calendars":
+            await self.roll_calendars_service.insert_roll_calendars_async(raw_data)
+        elif table_name == "multiple_prices":
+            await self.multiple_prices_service.insert_multiple_prices_service_async(
+                raw_data
+            )
         else:
             raise ValueError(f"Unrecognized table name: {table_name}")
