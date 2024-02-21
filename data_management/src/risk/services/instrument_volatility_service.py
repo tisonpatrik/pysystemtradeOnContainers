@@ -3,9 +3,6 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
-from src.risk.errors.instrument_volatility_errors import (
-    InstrumentVolatilityCalculationError,
-)
 from src.risk.estimators.instrument_volatility import InstrumentVolEstimator
 from src.risk.models.risk_models import InstrumentVolatility
 
@@ -41,5 +38,8 @@ class InstrumentVolatilityService:
                 prepared_data, self.table_name
             )
         except Exception as exc:
-            self.logger.error(f"Error in calculating instrument volatility: {exc}")
-            raise InstrumentVolatilityCalculationError()
+            error_message = (
+                f"Error in calculating instrument volatility for {symbol}: {exc}"
+            )
+            self.logger.error(error_message)
+            raise ValueError(error_message)

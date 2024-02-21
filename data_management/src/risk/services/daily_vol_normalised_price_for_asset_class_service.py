@@ -6,10 +6,6 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.risk.errors.normalised_price_for_asset_class_error import (
-    DailyNormalisedPriceForAssetCalculationError,
-    DailyNormalisedPriceForAssetClassFetchError,
-)
 from src.risk.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
@@ -66,10 +62,9 @@ class DailyVolNormalisedPriceForAssetClassService:
                 prepared_data, self.table_name
             )
         except Exception as exc:
-            self.logger.error(
-                f"Error in calculating cumulative volatility returns: {exc}"
-            )
-            raise DailyNormalisedPriceForAssetCalculationError()
+            error_message = f"Error in calculating daily normalised price for asset class '{asset_class}': {exc}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
 
     async def get_daily_vol_normalised_price_for_asset_class_async(
         self, asset_class: str
@@ -87,9 +82,6 @@ class DailyVolNormalisedPriceForAssetClassService:
             )
             return series
         except Exception as exc:
-            self.logger.error(
-                "Failed to get daily returns volatility asynchronously: %s",
-                exc,
-                exc_info=True,
-            )
-            raise DailyNormalisedPriceForAssetClassFetchError(asset_class, exc)
+            error_message = f"Failed to get daily normalized price for asset class '{asset_class}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)

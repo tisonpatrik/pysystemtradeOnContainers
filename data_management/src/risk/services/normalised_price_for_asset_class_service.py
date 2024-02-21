@@ -1,10 +1,6 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.errors.risk_seeding_errors import NormalisedPriceForAssetSeedError
 from src.raw_data.models.config_models import InstrumentConfigModel
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.risk.errors.normalised_price_for_asset_class_error import (
-    NormalisedPriceForAssetClassCalculationError,
-)
 from src.risk.estimators.normalised_price_for_asset_class import (
     NormalisedPriceForAssetClass,
 )
@@ -51,10 +47,9 @@ class NormalisedPriceForAssetClassService:
             return normalised_price_for_asset_class_aligned
 
         except Exception as exc:
-            self.logger.error(
-                f"Error in calculating normalised price for asset class: {exc}"
-            )
-            raise NormalisedPriceForAssetClassCalculationError()
+            error_message = f"Error in calculating normalised price for asset class '{asset_class}' with symbol '{symbol}': {exc}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
 
     async def seed_normalised_price_for_asset_class_async(self):
         """Calculates normalised prices for asset class."""
@@ -71,6 +66,7 @@ class NormalisedPriceForAssetClassService:
                     asset_class=asset_class
                 )
 
-        except NormalisedPriceForAssetSeedError as error:
-            self.logger.error("An error occurred during seeding: %s", error)
-            raise
+        except Exception as exc:
+            error_message = f"An error occurred during seeding: {exc}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

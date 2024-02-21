@@ -8,7 +8,3 @@ class InstrumentVolSeedingError(Exception):
 
 class DailyVolatilityNormalisedReturnsSeedingError(Exception):
     """Exception raised for errors in seeding daily volatility normalised returns."""
-
-
-class NormalisedPriceForAssetSeedError(Exception):
-    """Exception raised for errors in seeding normalised prices for asset class."""
