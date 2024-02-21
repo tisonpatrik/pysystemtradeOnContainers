@@ -41,13 +41,10 @@ class MultiplePricesService:
                 converted_and_sorted, self.time_column, self.price_column
             )
             return series
-        except Exception as exc:
-            self.logger.error(
-                "Failed to get denominator prices asynchronously: %s",
-                exc,
-                exc_info=True,
-            )
-            raise DailyPricesFetchError(symbol, exc)
+        except Exception as error:
+            error_message = f"Failed to get denominator denominator for instrument '{symbol}' asynchronously: {error}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def insert_multiple_prices_service_async(self, raw_data: pd.DataFrame):
         """
@@ -59,4 +56,6 @@ class MultiplePricesService:
             )
 
         except Exception as exc:
-            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
+            error_message = f"Error inserting data for {self.table_name}: {str(exc)}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

@@ -34,6 +34,8 @@ class DataInsertService:
                 )
             )
             await self.db_session.commit()
-        except (DataFrameInsertError,) as exc:
+        except Exception as exc:  # Using a more general exception
             await self.db_session.rollback()
-            self.logger.error("An error occurred: %s", exc)
+            error_message = f"An error occurred during DataFrame insertion into table {table_name}: {exc}"
+            self.logger.error(error_message)
+            raise RuntimeError(error_message)

@@ -1,6 +1,5 @@
 import pandas as pd
 import polars as pl
-from src.core.errors.conversion_errors import DataFrameConversionError
 from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
@@ -19,6 +18,8 @@ def convert_frame_to_series(
         series = indexed_df.resample("1B").last()
         series = indexed_df[price_column]
         return series
-    except Exception as e:
-        # Raise a custom error for any exceptions that may occur
-        raise DataFrameConversionError(f"An error occurred during conversion: {e}")
+
+    except Exception as exc:
+        error_message = f"An error occurred during conversion {str(exc)}"
+        logger.error(error_message)
+        raise ValueError(error_message)

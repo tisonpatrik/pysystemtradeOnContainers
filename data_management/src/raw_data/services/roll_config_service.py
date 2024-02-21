@@ -33,13 +33,13 @@ class RollConfigService:
                 self.table_name
             )
             return data
+
         except Exception as error:
-            self.logger.error(
-                "Failed to get instrument config asynchronously: %s",
-                error,
-                exc_info=True,
+            error_message = (
+                f"Failed to get instrument config table asynchronously: {error}"
             )
-            raise InstrumentConfigError("Error fetching instrument config", error)
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def insert_roll_config_async(self, raw_data: pd.DataFrame):
         """
@@ -49,4 +49,6 @@ class RollConfigService:
             await self.data_insertion_service.insert_data(raw_data, RollConfigSchema)
 
         except Exception as exc:
-            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
+            error_message = f"Error inserting data for {self.table_name}: {str(exc)}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

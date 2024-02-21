@@ -6,7 +6,6 @@ from typing import List
 
 import pandas as pd
 import polars as pl
-from src.core.errors.rename_colums_errors import ColumnRenameError
 from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
@@ -21,9 +20,10 @@ def rename_columns(
     try:
         data_frame.columns = new_column_names
         return data_frame
-    except Exception as error:
-        logger.error("Error during column renaming: %s", error)
-        raise ColumnRenameError from error
+    except Exception as exc:
+        error_message = f"rror during column renaming {str(exc)}"
+        logger.error(error_message)
+        raise ValueError(error_message)
 
 
 def retype_dataframe(df: pl.DataFrame, schema):

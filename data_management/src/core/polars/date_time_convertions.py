@@ -3,10 +3,6 @@ Module for date-time related conversion utilities.
 """
 
 import polars as pl
-from src.core.errors.polars_errors import (
-    DateTimeConversionError,
-    InvalidDatetimeColumnError,
-)
 from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
@@ -24,13 +20,11 @@ def convert_string_column_to_datetime(
             pl.col(date_time_column).str.strptime(pl.Datetime, None)
         )
         return converted_df
-    except Exception as exc:
-        logger.error(
-            "Failed to convert column %s to datetime: %s", date_time_column, exc
-        )
-        raise InvalidDatetimeColumnError(
-            f"Failed to convert {date_time_column} to datetime"
-        ) from exc
+
+    except Exception as error:
+        error_message = f"Failed to convert column'{date_time_column}'. {error}"
+        logger.error(error_message, exc_info=True)
+        raise ValueError(error_message)
 
 
 def convert_datetime_to_unixtime(
@@ -45,8 +39,9 @@ def convert_datetime_to_unixtime(
         )
         return data_frame
     except Exception as error:
-        logger.error("Error during unix_date_time conversion: %s", error)
-        raise DateTimeConversionError from error
+        error_message = f"Error during unix_date_time conversion'. {error}"
+        logger.error(error_message, exc_info=True)
+        raise ValueError(error_message)
 
 
 def convert_and_sort_by_time(data_frame: pl.DataFrame, date_time_column: str):

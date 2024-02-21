@@ -1,6 +1,7 @@
 """
 Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
+
 import pandas as pd
 import polars as pl
 from sqlalchemy import text
@@ -38,10 +39,9 @@ class DataLoadService:
             return pl_frame
 
         except Exception as exc:
-            self.logger.error(
-                f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
-            )
-            raise DataFetchingError(symbol, exc)
+            error_message = f"Failed to fetch data from table {table_name} for symbol '{symbol}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def fetch_raw_data_from_table_async(self, table_name: str):
         try:
@@ -56,10 +56,9 @@ class DataLoadService:
             return df_result
 
         except Exception as exc:
-            self.logger.error(
-                f"Failed to fetch data from table {table_name}: {exc}", exc_info=True
-            )
-            raise DataFetchingError(exc)
+            error_message = f"Failed to fetch data from table {table_name}: {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def fetch_groupeds_by_column_values_async(
         self, table_name: str, group_by_column: str, concatenate_column: str
@@ -78,11 +77,11 @@ class DataLoadService:
             return pl_frame
 
         except Exception as exc:
-            self.logger.error(
-                f"Failed to fetch and concatenate data from table {table_name}: {exc}",
-                exc_info=True,
+            error_message = (
+                f"Failed to fetch and concatenate data from table {table_name}: {exc}"
             )
-            raise DataFetchingError(f"GroupConcatenate{group_by_column}", exc)
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def fetch_rows_by_column_value_async(
         self, table_name: str, column_name: str, column_value: str
@@ -104,11 +103,9 @@ class DataLoadService:
             return pl_frame
 
         except Exception as exc:
-            self.logger.error(
-                f"Failed to fetch data from table {table_name} where {column_name} = {column_value}: {exc}",
-                exc_info=True,
-            )
-            raise DataFetchingError(f"FetchBy{column_name}", exc)
+            error_message = f"Failed to fetch rows by column {column_name} from table {table_name}: {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def fetch_unique_column_values_async(self, table_name: str, column_name: str):
         """
@@ -119,13 +116,11 @@ class DataLoadService:
             result = await self.db_session.execute(text(query_str))
 
             rows = result.fetchall()
-            unique_values = [row[0] for row in rows]  # Extracting the unique values
+            unique_values = [row[0] for row in rows]
 
             return unique_values
 
         except Exception as exc:
-            self.logger.error(
-                f"Failed to fetch unique values from column {column_name} in table {table_name}: {exc}",
-                exc_info=True,
-            )
-            raise DataFetchingError(f"FetchUnique{column_name}", exc)
+            error_message = f"Failed to fetch unique values from column {column_name} in table {table_name}: {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)

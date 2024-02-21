@@ -30,14 +30,12 @@ class TradableInstrumentsService:
             )
             symbols_list = data_frame[TradableInstrumentsSchema.symbol].to_list()
             return symbols_list
-
         except Exception as error:
-            self.logger.error(
-                "Failed to get instrument config asynchronously: %s",
-                error,
-                exc_info=True,
+            error_message = (
+                f"Failed to get tradable instruments table asynchronously: {error}"
             )
-            raise TradableInstrumentsError("Error fetching instrument config", error)
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def insert_tradable_instruments_async(self, raw_data: pd.DataFrame):
         """
@@ -50,4 +48,6 @@ class TradableInstrumentsService:
             )
 
         except Exception as exc:
-            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
+            error_message = f"Error inserting data for {self.table_name}: {str(exc)}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
