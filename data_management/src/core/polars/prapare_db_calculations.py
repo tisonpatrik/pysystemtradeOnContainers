@@ -1,5 +1,4 @@
 from src.core.data_types_conversion.to_frame import convert_series_to_frame
-from src.core.errors.polars_errors import DataPreparationError
 from src.core.polars.add_and_populate_column import add_column_and_populate_it_by_value
 from src.core.polars.columns import rename_columns
 from src.core.polars.date_time_convertions import convert_datetime_to_unixtime
@@ -27,14 +26,12 @@ def prepara_data_to_db(prices, model, symbol):
         )
         return unix_time_converted_data
 
-    except Exception as ecx:
-        logger.error(
-            "An error occurred while preparing data for symbol %s: %s",
-            symbol,
-            ecx,
-            exc_info=True,
+    except Exception as error:
+        error_message = (
+            f"An error occurred while preparing data for symbol'{symbol}'. {error}"
         )
-        raise DataPreparationError(symbol, str(ecx))
+        logger.error(error_message, exc_info=True)
+        raise ValueError(error_message)
 
 
 def prepara_asset_data_to_db(prices, model, asset):
@@ -55,12 +52,9 @@ def prepara_asset_data_to_db(prices, model, asset):
             populated, model.unix_date_time.name
         )
         return unix_time_converted_data
-
-    except Exception as ecx:
-        logger.error(
-            "An error occurred while preparing data for symbol %s: %s",
-            asset,
-            ecx,
-            exc_info=True,
+    except Exception as error:
+        error_message = (
+            f"An error occurred while preparing data for symbol'{asset}'. {error}"
         )
-        raise DataPreparationError(asset, str(ecx))
+        logger.error(error_message, exc_info=True)
+        raise ValueError(error_message)
