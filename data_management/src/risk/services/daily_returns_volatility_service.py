@@ -7,10 +7,6 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.risk.errors.daily_returns_vol_processing_error import (
-    DailyReturnsVolatilityFetchError,
-    DailyReturnsVolCalculationError,
-)
 from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from src.risk.models.risk_models import DailyReturnsVolatility
 
@@ -49,9 +45,10 @@ class DailyReturnsVolService:
             await self.data_insert_service.async_insert_dataframe_to_table(
                 prepared_data, self.table_name
             )
-        except DailyReturnsVolCalculationError as error:
-            self.logger.error("An error occurred during processing: %s", error)
-            raise
+        except Exception as error:
+            error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
 
     async def get_daily_returns_volatility_async(self, symbol: str):
         """
@@ -67,9 +64,6 @@ class DailyReturnsVolService:
             )
             return series
         except Exception as exc:
-            self.logger.error(
-                "Failed to get daily returns volatility asynchronously: %s",
-                exc,
-                exc_info=True,
-            )
-            raise DailyReturnsVolatilityFetchError(symbol, exc)
+            error_message = f"Failed to get daily returns volatility asynchronously for symbol '{symbol}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)

@@ -1,7 +1,6 @@
 """Module for calculating robust volatility for financial instruments."""
 
 from src.core.utils.logging import AppLogger
-from src.data_seeder.errors.risk_seeding_errors import DailyReturnsVolSeedingError
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.models.risk_models import DailyReturnsVolatility
@@ -35,6 +34,7 @@ class DailyReturnsVolSeedService:
                 await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
                     daily_prices, symbol
                 )
-        except DailyReturnsVolSeedingError as error:
-            self.logger.error("An error occurred during seeding: %s", error)
-            raise
+        except Exception as error:
+            error_message = f"An error occurred during the daily returns volatility seeding process: {error}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

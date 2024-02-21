@@ -6,7 +6,6 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.errors.config_files_errors import InstrumentConfigError
 from src.raw_data.models.config_models import RollConfigModel
 from src.raw_data.schemas.config_schemas import RollConfigSchema
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService

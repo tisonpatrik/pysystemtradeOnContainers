@@ -1,7 +1,4 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.errors.risk_seeding_errors import (
-    DailyVolatilityNormalisedReturnsSeedingError,
-)
 from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.models.risk_models import DailyVolNormalizedReturns
@@ -39,6 +36,7 @@ class DailyVolNormalisedReturnsSeedService:
                 await self.daily_vol_normalised_returns_service.insert_daily_vol_normalised_returns_for_prices_async(
                     daily_prices, symbol
                 )
-        except DailyVolatilityNormalisedReturnsSeedingError as error:
-            self.logger.error("An error occurred during seeding: %s", error)
-            raise
+        except Exception as error:
+            error_message = f"An error occurred during seeding: {error}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

@@ -1,7 +1,6 @@
 import polars as pl
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.errors.insert_to_db_erros import InsertDataToDatabaseError
 
 
 class GenericDataInsertionService:
@@ -25,4 +24,4 @@ class GenericDataInsertionService:
         except Exception as exc:
             error_message = f"Error seeding data for {self.table_name}: {str(exc)}"
             self.logger.error(error_message)
-            raise InsertDataToDatabaseError(error_message)
+            raise ValueError(error_message)

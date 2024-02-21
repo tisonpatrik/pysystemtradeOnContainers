@@ -1,5 +1,4 @@
 from src.core.utils.logging import AppLogger
-from src.data_seeder.errors.risk_seeding_errors import InstrumentVolSeedingError
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.models.risk_models import InstrumentVolatility
@@ -47,6 +46,7 @@ class InstrumentVolSeedService:
                     daily_returns_vol=daily_returns_vol,
                     symbol=symbol,
                 )
-        except InstrumentVolSeedingError as error:
-            self.logger.error("An error occurred during seeding: %s", error)
-            raise
+        except Exception as error:
+            error_message = f"An error occurred during the instrument volatility seeding process: {error}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

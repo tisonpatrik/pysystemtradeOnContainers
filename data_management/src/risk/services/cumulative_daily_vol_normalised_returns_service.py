@@ -1,7 +1,4 @@
 from src.core.utils.logging import AppLogger
-from src.risk.errors.cumulative_volatility_returns_errors import (
-    CumulativeVolatilityReturnsCalculationError,
-)
 from src.risk.estimators.comulative_vol_normalised_returns import (
     CumulativeVolNormalisedReturns,
 )
@@ -32,9 +29,6 @@ class CumulativeDailyVolatilityNormalisedReturnsService:
             )
             return cumulative_normalised_returns
         except Exception as exc:
-            self.logger.error(
-                "Failed to get daily returns volatility asynchronously: %s",
-                exc,
-                exc_info=True,
-            )
-            raise CumulativeVolatilityReturnsCalculationError(symbol, exc)
+            error_message = f"Failed to get cumulative returns volatility asynchronously for symbol '{symbol}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)

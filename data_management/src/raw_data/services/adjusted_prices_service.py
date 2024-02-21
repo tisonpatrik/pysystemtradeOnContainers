@@ -8,7 +8,6 @@ from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
 from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.errors.prices_series_errors import DailyPricesFetchError
 from src.raw_data.models.raw_data_models import AdjustedPricesModel
 from src.raw_data.schemas.raw_data_schemas import AdjustedPricesSchema
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
@@ -43,13 +42,9 @@ class AdjustedPricesService:
             )
             return series
         except Exception as exc:
-            self.logger.error(
-                "Failed to get adjusted prices asynchronously for symbol '%s': %s",
-                symbol,
-                exc,
-                exc_info=True,
-            )
-            raise DailyPricesFetchError(symbol, exc)
+            error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
 
     async def insert_adjuted_prices_async(self, raw_data: pd.DataFrame):
         """
@@ -61,4 +56,6 @@ class AdjustedPricesService:
             )
 
         except Exception as exc:
-            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
+            error_message = f"Error inserting data for {self.table_name}: {str(exc)}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)

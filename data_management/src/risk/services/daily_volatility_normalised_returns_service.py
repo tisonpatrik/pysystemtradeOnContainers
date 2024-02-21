@@ -4,10 +4,6 @@ from src.core.polars.prapare_db_calculations import prepara_data_to_db
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
-from src.risk.errors.cumulative_volatility_returns_errors import (
-    DailyVolatilityReturnsCalculationError,
-    DailyVolatilityReturnsFetchError,
-)
 from src.risk.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
 from src.risk.models.risk_models import DailyVolNormalizedReturns
 
@@ -40,10 +36,9 @@ class DailyVolatilityNormalisedReturnsService:
                 prepared_data, self.table_name
             )
         except Exception as exc:
-            self.logger.error(
-                f"Error in calculating cumulative volatility returns: {exc}"
-            )
-            raise DailyVolatilityReturnsCalculationError()
+            error_message = f"Error in calculating cumulative volatility returns for {symbol}: {exc}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
 
     async def get_daily_vol_normalised_returns_async(self, symbol: str):
         """
@@ -58,10 +53,8 @@ class DailyVolatilityNormalisedReturnsService:
                 converted_and_sorted, self.time_column, self.price_column
             )
             return series
+
         except Exception as exc:
-            self.logger.error(
-                "Failed to get daily returns volatility asynchronously: %s",
-                exc,
-                exc_info=True,
-            )
-            raise DailyVolatilityReturnsFetchError(symbol, exc)
+            error_message = f"Failed to get daily returns volatility asynchronously for symbol '{symbol}': {exc}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
