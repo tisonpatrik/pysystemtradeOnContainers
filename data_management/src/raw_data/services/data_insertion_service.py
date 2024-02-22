@@ -1,4 +1,3 @@
-import polars as pl
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 
@@ -16,7 +15,6 @@ class GenericDataInsertionService:
         try:
             # Validate the raw_data DataFrame against the given schema
             validation_schema.validate(raw_data)
-            raw_data = pl.DataFrame(raw_data)
             # Proceed with insertion only if data is valid
             await self.data_insert_service.async_insert_dataframe_to_table(
                 raw_data, self.table_name

@@ -2,7 +2,7 @@
 This module provides functionalities for inserting data into a database asynchronously.
 """
 
-import polars as pl
+import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
 
@@ -17,7 +17,7 @@ class DataInsertService:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def async_insert_dataframe_to_table(
-        self, data_frame: pl.DataFrame, table_name: str
+        self, data_frame: pd.DataFrame, table_name: str
     ):
         """
         Asynchronously inserts a DataFrame into a PostgreSQL table.
@@ -27,9 +27,8 @@ class DataInsertService:
             table_name (str): The name of the PostgreSQL table.
         """
         try:
-            pandas_data_frame = data_frame.to_pandas()
             await self.db_session.run_sync(
-                lambda session: pandas_data_frame.to_sql(
+                lambda session: data_frame.to_sql(
                     table_name, session.bind, index=False, if_exists="append"
                 )
             )
