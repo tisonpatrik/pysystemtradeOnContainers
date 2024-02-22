@@ -5,8 +5,8 @@ This module provides services for fetching and processing fx prices data asynchr
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.raw_data_models import FxPricesModel
+from src.app.schemas.raw_data_schemas import FxPricesSchema
 from src.core.utils.logging import AppLogger
-from src.raw_data.schemas.raw_data_schemas import FxPricesSchema
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 
 

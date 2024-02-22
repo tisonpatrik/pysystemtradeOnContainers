@@ -5,8 +5,8 @@ This module provides services for fetching and processing instrument config data
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import InstrumentMetadataModel
+from src.app.schemas.config_schemas import InstrumentMetadataSchema
 from src.core.utils.logging import AppLogger
-from src.raw_data.schemas.config_schemas import InstrumentMetadataSchema
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 
 
