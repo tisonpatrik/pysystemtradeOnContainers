@@ -3,7 +3,6 @@ Module for asynchronous data loading from a database into a Pandas DataFrame.
 """
 
 import pandas as pd
-import polars as pl
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.utils.logging import AppLogger
@@ -35,8 +34,7 @@ class DataLoadService:
 
             # Create a Pandas DataFrame from the fetched data
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
-            pl_frame = pl.DataFrame(df_result)
-            return pl_frame
+            return df_result
 
         except Exception as exc:
             error_message = f"Failed to fetch data from table {table_name} for symbol '{symbol}': {exc}"
@@ -73,8 +71,7 @@ class DataLoadService:
 
             rows = result.fetchall()
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
-            pl_frame = pl.DataFrame(df_result)
-            return pl_frame
+            return df_result
 
         except Exception as exc:
             error_message = (
@@ -99,8 +96,7 @@ class DataLoadService:
 
             rows = result.fetchall()
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
-            pl_frame = pl.DataFrame(df_result)
-            return pl_frame
+            return df_result
 
         except Exception as exc:
             error_message = f"Failed to fetch rows by column {column_name} from table {table_name}: {exc}"

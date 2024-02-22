@@ -34,7 +34,7 @@ def prepara_data_to_db(prices, model, symbol):
         raise ValueError(error_message)
 
 
-def prepara_asset_data_to_db(prices, model, asset):
+def prepare_asset_data_to_db(prices, model, asset):
     try:
         framed = convert_series_to_frame(prices)
         column_names = [

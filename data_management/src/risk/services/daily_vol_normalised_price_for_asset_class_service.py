@@ -1,7 +1,7 @@
 import pandas as pd
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.polars.date_time_convertions import convert_and_sort_by_time
-from src.core.polars.prapare_db_calculations import prepara_asset_data_to_db
+from src.core.polars.prapare_db_calculations import prepare_asset_data_to_db
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
@@ -55,7 +55,7 @@ class DailyVolNormalisedPriceForAssetClassService:
             returns = self.daily_vol_normalised_returns_for_asset_class_estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(
                 aggregated_returns_across_instruments_list
             )
-            prepared_data = prepara_asset_data_to_db(
+            prepared_data = prepare_asset_data_to_db(
                 returns, DailyVolNormalisedPriceForAssetClass, asset_class
             )
             await self.data_insert_service.async_insert_dataframe_to_table(
