@@ -1,3 +1,9 @@
+from src.app.models.risk_models import (
+    DailyReturnsVolatility,
+    DailyVolNormalisedPriceForAssetClass,
+    DailyVolNormalizedReturns,
+    InstrumentVolatility,
+)
 from src.core.utils.logging import AppLogger
 from src.data_seeder.services.daily_returns_vol_seed_service import (
     DailyReturnsVolSeedService,
@@ -9,12 +15,6 @@ from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
 )
 from src.db.services.data_insert_service import DataInsertService
-from data_management.src.app.models.risk_models import (
-    DailyReturnsVolatility,
-    DailyVolNormalisedPriceForAssetClass,
-    DailyVolNormalizedReturns,
-    InstrumentVolatility,
-)
 from src.risk.services.normalised_price_for_asset_class_service import (
     NormalisedPriceForAssetClassService,
 )

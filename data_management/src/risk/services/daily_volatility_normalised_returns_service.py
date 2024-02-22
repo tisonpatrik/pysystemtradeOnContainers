@@ -1,3 +1,4 @@
+from src.app.models.risk_models import DailyVolNormalizedReturns
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.pandas.date_time_convertions import convert_and_sort_by_time
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
@@ -5,7 +6,6 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.risk.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
-from data_management.src.app.models.risk_models import DailyVolNormalizedReturns
 
 
 class DailyVolatilityNormalisedReturnsService:

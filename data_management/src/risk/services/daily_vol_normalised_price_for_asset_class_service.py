@@ -1,4 +1,5 @@
 import pandas as pd
+from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.pandas.date_time_convertions import convert_and_sort_by_time
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
@@ -9,7 +10,6 @@ from src.raw_data.services.instrument_config_services import InstrumentConfigSer
 from src.risk.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from data_management.src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.risk.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
