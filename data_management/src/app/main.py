@@ -3,12 +3,12 @@ Main entry point for the FastAPI application.
 """
 
 from fastapi import FastAPI
-from src.core.utils.logging import AppLogger
-from src.data_seeder.api.routes.seed_raw_data_route import router as seed_db_router
-from src.data_seeder.api.routes.seed_risk_router import router as risk_router
-from src.data_seeder.api.routes.seed_tradable_instruments_route import (
+from src.api.routes.seed_raw_data_route import router as seed_db_router
+from src.api.routes.seed_risk_router import router as risk_router
+from src.api.routes.seed_tradable_instruments_route import (
     router as tradable_instruments_router,
 )
+from src.core.utils.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 
