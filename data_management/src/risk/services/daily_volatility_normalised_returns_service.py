@@ -5,7 +5,7 @@ from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.risk.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
-from src.risk.models.risk_models import DailyVolNormalizedReturns
+from data_management.src.app.models.risk_models import DailyVolNormalizedReturns
 
 
 class DailyVolatilityNormalisedReturnsService:

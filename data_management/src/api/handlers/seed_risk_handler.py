@@ -9,7 +9,7 @@ from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
 )
 from src.db.services.data_insert_service import DataInsertService
-from src.risk.models.risk_models import (
+from data_management.src.app.models.risk_models import (
     DailyReturnsVolatility,
     DailyVolNormalisedPriceForAssetClass,
     DailyVolNormalizedReturns,

@@ -4,8 +4,8 @@ This module provides services for fetching and processing roll calendars data as
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.app.models.raw_data_models import RollCalendarsModel
 from src.core.utils.logging import AppLogger
-from src.raw_data.models.raw_data_models import RollCalendarsModel
 from src.raw_data.schemas.raw_data_schemas import RollCalendarsSchema
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
 

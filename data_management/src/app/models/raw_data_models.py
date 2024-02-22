@@ -5,7 +5,7 @@ These classes facilitate database interactions in a Pythonic way.
 """
 
 from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint, String
-from src.core.models.base_model import BaseModel
+from src.app.models.base_model import BaseModel
 
 
 class AdjustedPricesModel(BaseModel):

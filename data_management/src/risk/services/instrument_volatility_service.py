@@ -4,7 +4,7 @@ from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.risk.estimators.instrument_volatility import InstrumentVolEstimator
-from src.risk.models.risk_models import InstrumentVolatility
+from data_management.src.app.models.risk_models import InstrumentVolatility
 
 
 class InstrumentVolatilityService:

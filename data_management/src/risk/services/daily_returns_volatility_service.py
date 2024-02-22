@@ -8,7 +8,7 @@ from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
-from src.risk.models.risk_models import DailyReturnsVolatility
+from data_management.src.app.models.risk_models import DailyReturnsVolatility
 
 
 class DailyReturnsVolService:

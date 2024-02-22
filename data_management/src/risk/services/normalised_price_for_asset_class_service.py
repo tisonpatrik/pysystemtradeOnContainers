@@ -1,15 +1,18 @@
+from src.app.models.config_models import InstrumentConfigModel
 from src.core.utils.logging import AppLogger
-from src.raw_data.models.config_models import InstrumentConfigModel
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.estimators.normalised_price_for_asset_class import (
     NormalisedPriceForAssetClass,
 )
-from src.risk.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.risk.services.cumulative_daily_vol_normalised_returns_service import (
     CumulativeDailyVolatilityNormalisedReturnsService,
 )
 from src.risk.services.daily_vol_normalised_price_for_asset_class_service import (
     DailyVolNormalisedPriceForAssetClassService,
+)
+
+from data_management.src.app.models.risk_models import (
+    DailyVolNormalisedPriceForAssetClass,
 )
 
 

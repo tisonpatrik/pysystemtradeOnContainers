@@ -9,7 +9,7 @@ from src.raw_data.services.instrument_config_services import InstrumentConfigSer
 from src.risk.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from src.risk.models.risk_models import DailyVolNormalisedPriceForAssetClass
+from data_management.src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.risk.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
-from src.core.models.base_model import BaseModel
+from src.app.models.base_model import BaseModel
 
 
 class InstrumentConfigModel(BaseModel):
