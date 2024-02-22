@@ -1,5 +1,5 @@
 import pandas as pd
-from src.risk.estimators.instrument_volatility import InstrumentVolEstimator
+from src.estimators.instrument_volatility import InstrumentVolEstimator
 
 
 def load_csv_data(filename):

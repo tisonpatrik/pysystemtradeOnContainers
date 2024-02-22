@@ -9,7 +9,7 @@ from src.app.schemas.raw_data_schemas import AdjustedPricesSchema
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.pandas.date_time_convertions import convert_and_sort_by_time
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.services.data_insertion_service import GenericDataInsertionService
+from src.services.data_insertion_service import GenericDataInsertionService
 
 from common.logging.logging import AppLogger
 

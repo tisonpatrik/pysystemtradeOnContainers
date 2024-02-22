@@ -1,5 +1,5 @@
 import pandas as pd
-from src.risk.estimators.volatility import mixed_vol_calc
+from src.estimators.volatility import mixed_vol_calc
 
 from common.logging.logging import AppLogger
 

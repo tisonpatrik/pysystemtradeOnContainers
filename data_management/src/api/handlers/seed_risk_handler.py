@@ -14,7 +14,7 @@ from src.data_seeder.services.instrument_vol_seed_service import (
     InstrumentVolSeedService,
 )
 from src.db.services.data_insert_service import DataInsertService
-from src.risk.services.normalised_price_for_asset_class_service import (
+from src.services.normalised_price_for_asset_class_service import (
     NormalisedPriceForAssetClassService,
 )
 

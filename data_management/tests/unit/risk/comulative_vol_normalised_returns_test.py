@@ -1,5 +1,5 @@
 import pandas as pd
-from src.risk.estimators.comulative_vol_normalised_returns import (
+from src.estimators.comulative_vol_normalised_returns import (
     CumulativeVolNormalisedReturns,
 )
 

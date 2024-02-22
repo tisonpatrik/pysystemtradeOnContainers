@@ -1,8 +1,8 @@
 from src.app.models.risk_models import InstrumentVolatility
-from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.raw_data.services.multiple_prices_service import MultiplePricesService
-from src.risk.services.daily_returns_volatility_service import DailyReturnsVolService
-from src.risk.services.instrument_volatility_service import InstrumentVolatilityService
+from src.services.daily_returns_volatility_service import DailyReturnsVolService
+from src.services.instrument_config_services import InstrumentConfigService
+from src.services.instrument_volatility_service import InstrumentVolatilityService
+from src.services.multiple_prices_service import MultiplePricesService
 
 from common.logging.logging import AppLogger
 

@@ -1,7 +1,7 @@
-from src.risk.estimators.comulative_vol_normalised_returns import (
+from src.estimators.comulative_vol_normalised_returns import (
     CumulativeVolNormalisedReturns,
 )
-from src.risk.services.daily_volatility_normalised_returns_service import (
+from src.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
 

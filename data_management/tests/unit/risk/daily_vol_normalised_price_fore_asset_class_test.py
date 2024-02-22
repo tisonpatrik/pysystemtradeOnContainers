@@ -1,5 +1,5 @@
 import pandas as pd
-from src.risk.estimators.daily_vol_normalised_returns_for_asset_class import (
+from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
 

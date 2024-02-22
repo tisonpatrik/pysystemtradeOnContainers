@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import RollConfigModel
 from src.app.schemas.config_schemas import RollConfigSchema
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.services.data_insertion_service import GenericDataInsertionService
+from src.services.data_insertion_service import GenericDataInsertionService
 
 from common.logging.logging import AppLogger
 

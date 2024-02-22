@@ -1,9 +1,9 @@
 from src.app.models.risk_models import InstrumentVolatility
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.db.services.data_insert_service import DataInsertService
-from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.raw_data.services.multiple_prices_service import MultiplePricesService
-from src.risk.estimators.instrument_volatility import InstrumentVolEstimator
+from src.estimators.instrument_volatility import InstrumentVolEstimator
+from src.services.instrument_config_services import InstrumentConfigService
+from src.services.multiple_prices_service import MultiplePricesService
 
 from common.logging.logging import AppLogger
 

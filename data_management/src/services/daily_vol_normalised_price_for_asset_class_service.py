@@ -5,11 +5,11 @@ from src.core.pandas.date_time_convertions import convert_and_sort_by_time
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
-from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.risk.estimators.daily_vol_normalised_returns_for_asset_class import (
+from src.services.instrument_config_services import InstrumentConfigService
+from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from src.risk.services.daily_volatility_normalised_returns_service import (
+from src.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
 

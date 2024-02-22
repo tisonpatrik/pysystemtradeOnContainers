@@ -2,9 +2,7 @@ from src.data_seeder.csv_to_db_configs.config_files_config import (
     TradableInstrumentsConfig,
 )
 from src.data_seeder.utils.csv_loader import get_full_path, load_csv
-from src.raw_data.services.tradable_instruments_service import (
-    TradableInstrumentsService,
-)
+from src.services.tradable_instruments_service import TradableInstrumentsService
 
 from common.logging.logging import AppLogger
 

@@ -6,7 +6,7 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import SpreadCostsModel
 from src.app.schemas.config_schemas import SpreadCostsSchema
-from src.raw_data.services.data_insertion_service import GenericDataInsertionService
+from src.services.data_insertion_service import GenericDataInsertionService
 
 from common.logging.logging import AppLogger
 

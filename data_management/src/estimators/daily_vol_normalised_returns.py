@@ -1,5 +1,5 @@
 import pandas as pd
-from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
 from common.logging.logging import AppLogger
 

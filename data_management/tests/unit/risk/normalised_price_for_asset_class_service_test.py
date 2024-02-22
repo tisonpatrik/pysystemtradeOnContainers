@@ -1,7 +1,5 @@
 import pandas as pd
-from src.risk.estimators.normalised_price_for_asset_class import (
-    NormalisedPriceForAssetClass,
-)
+from src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
 
 
 def load_csv_data(filename):

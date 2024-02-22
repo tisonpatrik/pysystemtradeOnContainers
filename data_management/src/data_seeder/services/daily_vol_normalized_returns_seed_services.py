@@ -1,9 +1,9 @@
 from src.app.models.risk_models import DailyVolNormalizedReturns
-from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
-from src.raw_data.services.instrument_config_services import InstrumentConfigService
-from src.risk.services.daily_volatility_normalised_returns_service import (
+from src.services.adjusted_prices_service import AdjustedPricesService
+from src.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
+from src.services.instrument_config_services import InstrumentConfigService
 
 from common.logging.logging import AppLogger
 
