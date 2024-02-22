@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
 
@@ -25,6 +26,15 @@ def test_daily_returns():
         check_index_type="equiv",
         obj="CalculatedVol",
     )
+
+
+def test_process_daily_returns_vol_exception():
+    estimator = DailyReturnsVolEstimator()
+    invalid_daily_prices = pd.Series(["a", "b", "c"])
+    with pytest.raises(ValueError) as exc_info:
+        estimator.process_daily_returns_vol(invalid_daily_prices)
+
+    assert "General error processing daily returns volatility" in str(exc_info.value)
 
 
 def test_process_daily_returns_vol():
