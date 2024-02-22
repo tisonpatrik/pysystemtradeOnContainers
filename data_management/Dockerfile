@@ -8,12 +8,13 @@ RUN apk update \
 # Setting the working directory in the container
 WORKDIR /home/app
 
-
 COPY data_management/requirements.txt ./
 
 COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
 
+COPY data_management/.env ./
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
