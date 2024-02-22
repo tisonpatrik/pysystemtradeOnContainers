@@ -1,4 +1,4 @@
-from src.core.polars.prapare_db_calculations import prepara_data_to_db
+from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
