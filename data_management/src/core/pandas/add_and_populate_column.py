@@ -3,7 +3,8 @@ This module contains utility functions for adding and populating columns in a pa
 """
 
 import pandas as pd
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

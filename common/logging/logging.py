@@ -9,7 +9,8 @@ import logging
 
 from rich.console import Console
 from rich.logging import RichHandler
-from src.core.utils.singleton import SingletonMeta
+
+from common.logging.singleton import SingletonMeta
 
 
 class AppLogger(metaclass=SingletonMeta):

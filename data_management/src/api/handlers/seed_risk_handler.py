@@ -4,7 +4,6 @@ from src.app.models.risk_models import (
     DailyVolNormalizedReturns,
     InstrumentVolatility,
 )
-from src.core.utils.logging import AppLogger
 from src.data_seeder.services.daily_returns_vol_seed_service import (
     DailyReturnsVolSeedService,
 )
@@ -18,6 +17,8 @@ from src.db.services.data_insert_service import DataInsertService
 from src.risk.services.normalised_price_for_asset_class_service import (
     NormalisedPriceForAssetClassService,
 )
+
+from common.logging.logging import AppLogger
 
 
 class SeedRiskHandler:

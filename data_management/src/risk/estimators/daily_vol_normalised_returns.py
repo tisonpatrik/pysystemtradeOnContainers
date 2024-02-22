@@ -1,6 +1,7 @@
 import pandas as pd
-from src.core.utils.logging import AppLogger
 from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+
+from common.logging.logging import AppLogger
 
 
 class DailyVolNormalisedReturns:

@@ -3,7 +3,8 @@ Module for date-time related conversion utilities.
 """
 
 import pandas as pd
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

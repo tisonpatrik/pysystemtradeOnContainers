@@ -5,7 +5,8 @@ Module for handling methods for renaming columns.
 from typing import List
 
 import pandas as pd
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

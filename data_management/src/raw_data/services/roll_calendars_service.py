@@ -6,8 +6,9 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.raw_data_models import RollCalendarsModel
 from src.app.schemas.raw_data_schemas import RollCalendarsSchema
-from src.core.utils.logging import AppLogger
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
+
+from common.logging.logging import AppLogger
 
 
 class RollCalendarsService:

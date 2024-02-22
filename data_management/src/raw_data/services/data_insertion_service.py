@@ -1,5 +1,6 @@
-from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
+
+from common.logging.logging import AppLogger
 
 
 class GenericDataInsertionService:

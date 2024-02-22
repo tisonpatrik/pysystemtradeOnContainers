@@ -3,7 +3,6 @@ This module contains the SeedDBHandler class,
 which is responsible for seeding the database from CSV files.
 """
 
-from src.core.utils.logging import AppLogger
 from src.data_seeder.csv_to_db_configs.raw_data_config import (
     AdjustedPricesConfig,
     FxPricesSchemaConfig,
@@ -15,6 +14,8 @@ from src.raw_data.services.adjusted_prices_service import AdjustedPricesService
 from src.raw_data.services.fx_prices_service import FxPricesService
 from src.raw_data.services.multiple_prices_service import MultiplePricesService
 from src.raw_data.services.roll_calendars_service import RollCalendarsService
+
+from common.logging.logging import AppLogger
 
 
 class SeedRawDataHandler:

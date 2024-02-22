@@ -8,12 +8,13 @@ RUN apk update \
 # Setting the working directory in the container
 WORKDIR /home/app
 
-COPY data_management/requirements.txt ./
+COPY common/ ./common
 
 COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
 
 COPY data_management/.env ./
+COPY data_management/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 

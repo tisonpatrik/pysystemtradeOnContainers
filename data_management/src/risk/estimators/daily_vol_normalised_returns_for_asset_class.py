@@ -1,7 +1,8 @@
 from typing import List
 
 import pandas as pd
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 
 class DailyVolNormalisedPriceForAssetClassEstimator:

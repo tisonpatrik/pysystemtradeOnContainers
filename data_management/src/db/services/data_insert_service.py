@@ -4,7 +4,8 @@ This module provides functionalities for inserting data into a database asynchro
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 
 class DataInsertService:

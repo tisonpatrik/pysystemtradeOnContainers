@@ -5,7 +5,8 @@ Module for asynchronous data loading from a database into a Pandas DataFrame.
 import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 
 class DataLoadService:

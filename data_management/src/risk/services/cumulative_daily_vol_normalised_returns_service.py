@@ -1,10 +1,11 @@
-from src.core.utils.logging import AppLogger
 from src.risk.estimators.comulative_vol_normalised_returns import (
     CumulativeVolNormalisedReturns,
 )
 from src.risk.services.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
+
+from common.logging.logging import AppLogger
 
 
 class CumulativeDailyVolatilityNormalisedReturnsService:

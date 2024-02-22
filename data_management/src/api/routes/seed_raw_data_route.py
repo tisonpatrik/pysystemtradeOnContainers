@@ -9,7 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_config_data_handler import SeeConfigDataHandler
 from src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
 from src.app.dependencies import get_db
-from src.core.utils.logging import AppLogger
+
+from common.logging.logging import AppLogger
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

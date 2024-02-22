@@ -4,11 +4,12 @@ from src.app.models.risk_models import DailyReturnsVolatility
 from src.core.data_types_conversion.to_series import convert_frame_to_series
 from src.core.pandas.date_time_convertions import convert_and_sort_by_time
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.core.utils.logging import AppLogger
 from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.instrument_config_services import InstrumentConfigService
 from src.risk.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+
+from common.logging.logging import AppLogger
 
 
 class DailyReturnsVolService:

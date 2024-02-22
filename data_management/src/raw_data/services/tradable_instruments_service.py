@@ -2,9 +2,10 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import TradableInstrumentsModel
 from src.app.schemas.config_schemas import TradableInstrumentsSchema
-from src.core.utils.logging import AppLogger
 from src.db.services.data_load_service import DataLoadService
 from src.raw_data.services.data_insertion_service import GenericDataInsertionService
+
+from common.logging.logging import AppLogger
 
 
 class TradableInstrumentsService:
