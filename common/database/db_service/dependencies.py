@@ -9,7 +9,7 @@ as well as a method to get a database session.
 from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from src.app.settings import settings as global_settings
+from common.database.db_service.settings import settings as global_settings
 
 from common.logging.logging import AppLogger
 

@@ -1,7 +1,9 @@
-from src.core.data_types_conversion.to_frame import convert_series_to_frame
-from src.core.pandas.add_and_populate_column import add_column_and_populate_it_by_value
-from src.core.pandas.columns import rename_columns
-from src.core.pandas.date_time_convertions import convert_datetime_to_unixtime
+from src.utils.converter import convert_series_to_frame
+from src.utils.table_operations import (
+    add_column_and_populate_it_by_value,
+    convert_datetime_to_unixtime,
+    rename_columns,
+)
 
 from common.logging.logging import AppLogger
 

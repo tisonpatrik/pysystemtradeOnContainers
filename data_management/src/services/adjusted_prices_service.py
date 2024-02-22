@@ -6,10 +6,10 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.raw_data_models import AdjustedPricesModel
 from src.app.schemas.raw_data_schemas import AdjustedPricesSchema
-from src.core.data_types_conversion.to_series import convert_frame_to_series
-from src.core.pandas.date_time_convertions import convert_and_sort_by_time
+from src.utils.table_operations import convert_and_sort_by_time
 from src.db.services.data_load_service import DataLoadService
 from src.services.data_insertion_service import GenericDataInsertionService
+from src.utils.converter import convert_frame_to_series
 
 from common.logging.logging import AppLogger
 

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_tradable_instruments_handler import (
     SeedTradableInstrumentsHandler,
 )
-from src.app.dependencies import get_db
+from common.database.db_service.dependencies import get_db
 
 from common.logging.logging import AppLogger
 
