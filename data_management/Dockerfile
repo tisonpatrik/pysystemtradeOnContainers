@@ -1,36 +1,19 @@
-# data_management/Dockerfile
-# Using the specified Python version
-FROM python:3.12-slim-bookworm AS base
+FROM python:3.12-alpine AS base
 
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends curl git build-essential \
-    && apt-get autoremove -y
+RUN apk update \
+    && apk upgrade \
+    && apk add --no-cache curl git build-base \
+    && rm -rf /var/cache/apk/*
 
 # Setting the working directory in the container
 WORKDIR /home/app
 
-# Copying the poetry dependency files to the working directory
-COPY data_management/Pipfile data_management/Pipfile.lock* ./
 
-# Copying the source code and other directories to the working directory
+COPY data_management/requirements.txt ./
+
 COPY data_management/src/ ./src
 COPY data_management/tests/ ./tests
 
-# Installing pipenv and the project dependencies
-RUN pip install numpy
-RUN pip install pipenv
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Installing dependencies using pipenv
-RUN pipenv install --system --deploy --ignore-pipfile
-
-# cleanup
-RUN apt-get purge -y curl git build-essential \
-    && apt-get clean -y \
-    && rm -rf /root/.cache \
-    && rm -rf /var/apt/lists/* \
-    && rm -rf /var/cache/apt/*
-
-# Specifying the default command to run the FastAPI app with uvicorn
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-
