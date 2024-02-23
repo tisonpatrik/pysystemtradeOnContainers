@@ -5,16 +5,16 @@ from src.app.models.risk_models import (
     InstrumentVolatility,
 )
 from src.db.services.data_insert_service import DataInsertService
-from src.services.daily_returns_vol_seed_service import DailyReturnsVolSeedService
-from src.services.daily_vol_normalized_returns_seed_services import (
+from src.services.risk.daily_returns_vol_seed_service import DailyReturnsVolSeedService
+from src.services.risk.daily_vol_normalized_returns_seed_services import (
     DailyVolNormalisedReturnsSeedService,
 )
-from src.services.instrument_vol_seed_service import InstrumentVolSeedService
-from src.services.normalised_price_for_asset_class_service import (
-    NormalisedPriceForAssetClassService,
-)
+from src.services.risk.instrument_vol_seed_service import InstrumentVolSeedService
 
 from common.logging.logging import AppLogger
+from data_management.src.services.risk.normalised_price_for_asset_class_service import (
+    NormalisedPriceForAssetClassService,
+)
 
 
 class SeedRiskHandler:

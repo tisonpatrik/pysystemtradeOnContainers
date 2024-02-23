@@ -1,5 +1,7 @@
 from src.app.csv_to_db_configs.config_files_config import TradableInstrumentsConfig
-from src.services.tradable_instruments_service import TradableInstrumentsService
+from src.services.raw_data.tradable_instruments_service import (
+    TradableInstrumentsService,
+)
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.logging.logging import AppLogger

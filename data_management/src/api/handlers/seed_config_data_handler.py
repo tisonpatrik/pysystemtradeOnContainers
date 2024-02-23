@@ -9,10 +9,10 @@ from src.app.csv_to_db_configs.config_files_config import (
     RollConfigConfig,
     SpreadCostConfig,
 )
-from src.services.instrument_config_services import InstrumentConfigService
-from src.services.instrument_metadata_service import InstrumentMetadataService
-from src.services.roll_config_service import RollConfigService
-from src.services.spread_costs_service import SpreadCostService
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
+from src.services.raw_data.instrument_metadata_service import InstrumentMetadataService
+from src.services.raw_data.roll_config_service import RollConfigService
+from src.services.raw_data.spread_costs_service import SpreadCostService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.logging.logging import AppLogger

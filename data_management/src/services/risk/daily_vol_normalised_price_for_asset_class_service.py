@@ -6,10 +6,10 @@ from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from src.services.daily_volatility_normalised_returns_service import (
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
+from src.services.risk.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
-from src.services.instrument_config_services import InstrumentConfigService
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import convert_and_sort_by_time
 

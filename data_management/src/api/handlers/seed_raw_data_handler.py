@@ -9,13 +9,15 @@ from src.app.csv_to_db_configs.raw_data_config import (
     MultiplePricesConfig,
     RollCalendarsConfig,
 )
-from src.services.adjusted_prices_service import AdjustedPricesService
-from src.services.fx_prices_service import FxPricesService
-from src.services.multiple_prices_service import MultiplePricesService
-from src.services.roll_calendars_service import RollCalendarsService
+from src.services.raw_data.fx_prices_service import FxPricesService
+from src.services.raw_data.multiple_prices_service import MultiplePricesService
+from src.services.raw_data.roll_calendars_service import RollCalendarsService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.logging.logging import AppLogger
+from data_management.src.services.raw_data.adjusted_prices_service import (
+    AdjustedPricesService,
+)
 
 
 class SeedRawDataHandler:
