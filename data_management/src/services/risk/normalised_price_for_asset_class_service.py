@@ -2,14 +2,14 @@ from src.app.models.config_models import InstrumentConfigModel
 from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
+from src.services.risk.cumulative_daily_vol_normalised_returns_service import (
+    CumulativeDailyVolatilityNormalisedReturnsService,
+)
 from src.services.risk.daily_vol_normalised_price_for_asset_class_service import (
     DailyVolNormalisedPriceForAssetClassService,
 )
 
 from common.logging.logging import AppLogger
-from data_management.src.services.risk.cumulative_daily_vol_normalised_returns_service import (
-    CumulativeDailyVolatilityNormalisedReturnsService,
-)
 
 
 class NormalisedPriceForAssetClassService:

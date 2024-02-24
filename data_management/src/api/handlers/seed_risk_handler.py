@@ -10,11 +10,11 @@ from src.services.risk.daily_vol_normalized_returns_seed_services import (
     DailyVolNormalisedReturnsSeedService,
 )
 from src.services.risk.instrument_vol_seed_service import InstrumentVolSeedService
-
-from common.logging.logging import AppLogger
-from data_management.src.services.risk.normalised_price_for_asset_class_service import (
+from src.services.risk.normalised_price_for_asset_class_service import (
     NormalisedPriceForAssetClassService,
 )
+
+from common.logging.logging import AppLogger
 
 
 class SeedRiskHandler:
