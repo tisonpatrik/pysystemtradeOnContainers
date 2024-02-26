@@ -1,11 +1,12 @@
 import pandas as pd
 from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
+from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
-from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
+from src.services.data_insertion_service import GenericDataInsertionService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
@@ -19,7 +20,6 @@ from common.logging.logging import AppLogger
 class DailyVolNormalisedPriceForAssetClassService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_insert_service = DataInsertService(db_session)
         self.data_loader_service = DataLoadService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_volatility_normalised_returns_service = (
@@ -33,6 +33,7 @@ class DailyVolNormalisedPriceForAssetClassService:
         self.price_column = (
             DailyVolNormalisedPriceForAssetClass.normalized_volatility.key
         )
+        self.repository = GenericDataInsertionService(db_session, self.table_name)
 
     async def insert_daily_vol_normalised_price_for_asset_class_async(
         self, asset_class
@@ -59,8 +60,8 @@ class DailyVolNormalisedPriceForAssetClassService:
             prepared_data = prepare_asset_data_to_db(
                 returns, DailyVolNormalisedPriceForAssetClass, asset_class
             )
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
+            await self.repository.insert_data_async(
+                prepared_data, DailyVolNormalisedPriceForAssetClassSchema
             )
         except Exception as exc:
             error_message = f"Error in calculating daily normalised price for asset class '{asset_class}': {exc}"

@@ -1,8 +1,9 @@
 from src.app.models.risk_models import DailyVolNormalizedReturns
+from src.app.schemas.risk_schemas import DailyVolNormalizedReturnsSchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
+from src.services.data_insertion_service import GenericDataInsertionService
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import convert_and_sort_by_time
 
@@ -12,12 +13,14 @@ from common.logging.logging import AppLogger
 class DailyVolatilityNormalisedReturnsService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_insert_service = DataInsertService(db_session)
         self.data_loader_service = DataLoadService(db_session)
         self.daily_vol_normalised_returns = DailyVolNormalisedReturns()
         self.table_name = DailyVolNormalizedReturns.__tablename__
         self.price_column = DailyVolNormalizedReturns.normalized_volatility.key
         self.time_column = DailyVolNormalizedReturns.unix_date_time.key
+        self.repository = GenericDataInsertionService(
+            db_session, table_name=self.table_name
+        )
 
     async def insert_daily_vol_normalised_returns_for_prices_async(
         self, daily_prices, symbol
@@ -33,8 +36,8 @@ class DailyVolatilityNormalisedReturnsService:
             prepared_data = prepara_data_to_db(
                 daily_returns, DailyVolNormalizedReturns, symbol
             )
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
+            await self.repository.insert_data_async(
+                prepared_data, DailyVolNormalizedReturnsSchema
             )
         except Exception as exc:
             error_message = f"Error in calculating cumulative volatility returns for {symbol}: {exc}"

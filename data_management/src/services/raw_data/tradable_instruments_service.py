@@ -44,7 +44,7 @@ class TradableInstrumentsService:
         """
         try:
             self.logger.info("Starting the process for %s table.", self.table_name)
-            await self.data_insertion_service.insert_data(
+            await self.data_insertion_service.insert_data_async(
                 raw_data, TradableInstrumentsSchema
             )
 

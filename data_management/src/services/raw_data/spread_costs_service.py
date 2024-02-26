@@ -28,7 +28,9 @@ class SpreadCostService:
         Insert spread costs data into db.
         """
         try:
-            await self.data_insertion_service.insert_data(raw_data, SpreadCostsSchema)
+            await self.data_insertion_service.insert_data_async(
+                raw_data, SpreadCostsSchema
+            )
 
         except Exception as exc:
             self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")

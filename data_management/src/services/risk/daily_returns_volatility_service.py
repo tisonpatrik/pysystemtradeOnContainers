@@ -1,10 +1,11 @@
 """Module for calculating robust volatility for financial instruments."""
 
 from src.app.models.risk_models import DailyReturnsVolatility
+from src.app.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.db.services.data_insert_service import DataInsertService
 from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+from src.services.data_insertion_service import GenericDataInsertionService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import convert_and_sort_by_time
@@ -18,14 +19,14 @@ class DailyReturnsVolService:
     """
 
     def __init__(self, db_session):
-        self.logger = AppLogger.get_instance().get_logger()
-        self.data_loader_service = DataLoadService(db_session)
-        self.data_insert_service = DataInsertService(db_session)
-        self.instrument_config_service = InstrumentConfigService(db_session)
         self.table_name = DailyReturnsVolatility.__tablename__
         self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
         self.time_column = DailyReturnsVolatility.unix_date_time.key
+        self.logger = AppLogger.get_instance().get_logger()
+        self.data_loader_service = DataLoadService(db_session)
+        self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_returns_vol_estimator = DailyReturnsVolEstimator()
+        self.repository = GenericDataInsertionService(db_session, self.table_name)
 
     async def insert_daily_returns_vol_for_prices_async(self, prices, symbol):
         """
@@ -43,8 +44,8 @@ class DailyReturnsVolService:
                 daily_returns_vols, DailyReturnsVolatility, symbol
             )
 
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
+            await self.repository.insert_data_async(
+                prepared_data, DailyReturnsVolatilitySchema
             )
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"

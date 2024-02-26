@@ -52,7 +52,7 @@ class MultiplePricesService:
         Insert multiple prices prices data into db.
         """
         try:
-            await self.data_insertion_service.insert_data(
+            await self.data_insertion_service.insert_data_async(
                 raw_data, MultiplePricesSchema
             )
 

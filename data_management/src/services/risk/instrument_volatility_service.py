@@ -1,7 +1,8 @@
 from src.app.models.risk_models import InstrumentVolatility
+from src.app.schemas.risk_schemas import InstrumentVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.db.services.data_insert_service import DataInsertService
 from src.estimators.instrument_volatility import InstrumentVolEstimator
+from src.services.data_insertion_service import GenericDataInsertionService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
 
@@ -15,7 +16,9 @@ class InstrumentVolatilityService:
         self.multiple_prices_service = MultiplePricesService(db_session)
         self.instrument_vol_estimator = InstrumentVolEstimator()
         self.table_name = InstrumentVolatility.__tablename__
-        self.data_insert_service = DataInsertService(db_session)
+        self.repository = GenericDataInsertionService(
+            db_session, table_name=self.table_name
+        )
 
     async def insert_instrument_vol_for_prices_async(
         self, multiple_prices, point_size, daily_returns_vol, symbol
@@ -35,8 +38,8 @@ class InstrumentVolatilityService:
             prepared_data = prepara_data_to_db(
                 instrument_vols, InstrumentVolatility, symbol
             )
-            await self.data_insert_service.async_insert_dataframe_to_table(
-                prepared_data, self.table_name
+            await self.repository.insert_data_async(
+                prepared_data, InstrumentVolatilitySchema
             )
         except Exception as exc:
             error_message = (

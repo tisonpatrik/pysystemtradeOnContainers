@@ -4,7 +4,6 @@ from src.app.models.risk_models import (
     DailyVolNormalizedReturns,
     InstrumentVolatility,
 )
-from src.db.services.data_insert_service import DataInsertService
 from src.services.risk.daily_returns_vol_seed_service import DailyReturnsVolSeedService
 from src.services.risk.daily_vol_normalized_returns_seed_services import (
     DailyVolNormalisedReturnsSeedService,
@@ -20,7 +19,6 @@ from common.logging.logging import AppLogger
 class SeedRiskHandler:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_insert_service = DataInsertService(db_session)
         self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
         self.normalised_price_for_asset_seed_service = (
             NormalisedPriceForAssetClassService(db_session)

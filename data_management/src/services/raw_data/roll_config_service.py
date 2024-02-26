@@ -47,7 +47,9 @@ class RollConfigService:
         Insert roll config data into db.
         """
         try:
-            await self.data_insertion_service.insert_data(raw_data, RollConfigSchema)
+            await self.data_insertion_service.insert_data_async(
+                raw_data, RollConfigSchema
+            )
 
         except Exception as exc:
             error_message = f"Error inserting data for {self.table_name}: {str(exc)}"

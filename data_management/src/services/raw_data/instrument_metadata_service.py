@@ -28,7 +28,7 @@ class InstrumentMetadataService:
         Insert instruments metadata data into db.
         """
         try:
-            await self.data_insertion_service.insert_data(
+            await self.data_insertion_service.insert_data_async(
                 raw_data, InstrumentMetadataSchema
             )
 
