@@ -73,10 +73,10 @@ class InstrumentConfigService:
         try:
             data = await self.data_loader_service.fetch_rows_by_column_value_async(
                 table_name=self.table_name,
-                column_name=InstrumentConfigSchema.asset_class,
+                column_name=InstrumentConfigSchema.asset_class.Name,
                 column_value=asset_class,
             )
-            return data[InstrumentConfigSchema.symbol]
+            return data[InstrumentConfigSchema.symbol.Name]
 
         except Exception as error:
             error_message = f"Failed to get instruments by asset class '{asset_class}' asynchronously: {error}"

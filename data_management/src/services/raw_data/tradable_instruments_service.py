@@ -29,7 +29,7 @@ class TradableInstrumentsService:
             data_frame = await self.data_loader_service.fetch_raw_data_from_table_async(
                 self.table_name
             )
-            symbols_list = data_frame[TradableInstrumentsSchema.symbol].to_list()
+            symbols_list = data_frame[TradableInstrumentsSchema.symbol.Name].to_list()
             return symbols_list
         except Exception as error:
             error_message = (
