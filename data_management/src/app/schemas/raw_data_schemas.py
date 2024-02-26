@@ -3,19 +3,19 @@ from pandera import Field
 from pandera.typing import Series
 
 
-class AdjustedPricesSchema(pa.SeriesSchema):
+class AdjustedPricesSchema(pa.DataFrameModel):
     unix_date_time: Series[int] = Field(gt=0)
     symbol: Series[str] = Field(nullable=False)
     price: Series[float]
 
 
-class FxPricesSchema(pa.SeriesSchema):
+class FxPricesSchema(pa.DataFrameModel):
     unix_date_time: Series[int] = Field(gt=0)
     symbol: Series[str] = Field(nullable=False)
     price: Series[float]
 
 
-class MultiplePricesSchema(pa.SeriesSchema):
+class MultiplePricesSchema(pa.DataFrameModel):
     unix_date_time: Series[int] = Field(gt=0)
     symbol: Series[str] = Field(nullable=False)
     carry: Series[float] = Field(nullable=True)
@@ -26,7 +26,7 @@ class MultiplePricesSchema(pa.SeriesSchema):
     forward_contract: Series[int]
 
 
-class RollCalendarsSchema(pa.SeriesSchema):
+class RollCalendarsSchema(pa.DataFrameModel):
     unix_date_time: Series[int] = Field(gt=0)
     symbol: Series[str] = Field(nullable=False)
     current_contract: Series[int]
