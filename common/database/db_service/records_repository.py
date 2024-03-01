@@ -7,22 +7,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from common.logging.logging import AppLogger
 
 
-class Repository:
+class RecordsRepository:
     """
-    SQL Alchemy implementation of the IRepository.
+    SQL Alchemy implementation of the records repository.
     """
 
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def insert_data_async(self, data: pd.DataFrame | pd.Series, table_name: str):
-        # Convert pd.Series to pd.DataFrame if necessary
-        if isinstance(data, pd.Series):
-            data = (
-                data.to_frame().T
-            )  # Convert Series to DataFrame; transpose if needed to match column layout
-
+    async def insert_records_async(self, data: pd.DataFrame, table_name: str):
         try:
             await self.db_session.run_sync(
                 lambda session: data.to_sql(
@@ -36,7 +30,9 @@ class Repository:
             self.logger.error(error_message)
             raise Error(error_message)
 
-    async def fetch_data(self, table_name: str, conditions: dict) -> pd.DataFrame:
+    async def fetch_records_async(
+        self, table_name: str, conditions: dict
+    ) -> pd.DataFrame:
         try:
             query = f"SELECT * FROM {table_name}"
             if conditions:
