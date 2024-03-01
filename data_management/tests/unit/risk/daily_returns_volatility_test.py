@@ -40,7 +40,7 @@ def test_process_daily_returns_vol_exception():
 def test_process_daily_returns_vol():
     # Load input and expected data
     daily_prices = load_csv_data("daily_prices")
-    expected_vol = load_csv_data("expected_daily_returns_vol")
+    expected_vol = load_csv_data("expected_daily_returns_volatility")
 
     estimator = DailyReturnsVolEstimator()
     calculated_vol = estimator.process_daily_returns_vol(daily_prices)

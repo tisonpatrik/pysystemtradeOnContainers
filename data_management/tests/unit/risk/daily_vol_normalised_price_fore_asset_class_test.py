@@ -20,7 +20,7 @@ def test_daily_returns():
     # Load input and expected data
     daily_prices = load_csv_dataframes("aggregate_returns_across_instruments")
     expected_vol = load_csv_series(
-        "expected_daily_daily_vol_normalised_returns_for_list_of_instruments"
+        "expected_daily_vol_normalised_returns_for_list_of_instruments"
     )
 
     estimator = DailyVolNormalisedPriceForAssetClassEstimator()

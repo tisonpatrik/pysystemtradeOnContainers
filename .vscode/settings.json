@@ -2,7 +2,7 @@
     "python.testing.pytestArgs": [
         "tests"
     ],
-    "python.defaultInterpreterPath": "/home/patrik/.local/share/virtualenvs/data_management-Wu7PrKX0/bin/python3",
+    "python.defaultInterpreterPath": ".venv/bin/python3",
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "editor.rulers": [80, 120],

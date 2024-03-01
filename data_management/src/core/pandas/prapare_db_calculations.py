@@ -12,6 +12,7 @@ logger = AppLogger.get_instance().get_logger()
 
 def prepara_data_to_db(prices, model, symbol):
     try:
+        prices.dropna(inplace=True)
         framed = convert_series_to_frame(prices)
         column_names = [
             column.name

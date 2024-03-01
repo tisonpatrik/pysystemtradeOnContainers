@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "debugpy",
-            "name": "gray_fox",
+            "name": "data_management",
             "request": "launch",
             "program": "${workspaceFolder}/src/app/main.py",
             "console": "integratedTerminal",
