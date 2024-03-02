@@ -1,4 +1,4 @@
-from common.database.db_service.records_repository import RecordsRepository
+from common.database.db_service.repositories.records_repository import RecordsRepository
 from common.logging.logging import AppLogger
 
 

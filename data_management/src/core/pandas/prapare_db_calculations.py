@@ -1,7 +1,6 @@
 from src.utils.converter import convert_series_to_frame
 from src.utils.table_operations import (
     add_column_and_populate_it_by_value,
-    convert_datetime_to_unixtime,
     rename_columns,
 )
 
@@ -25,10 +24,7 @@ def prepara_data_to_db(prices, model, symbol):
             column_name=model.symbol.key,
             column_value=symbol,
         )
-        unix_time_converted_data = convert_datetime_to_unixtime(
-            populated, model.unix_date_time.name
-        )
-        return unix_time_converted_data
+        return populated
 
     except Exception as error:
         error_message = (
@@ -52,10 +48,7 @@ def prepare_asset_data_to_db(prices, model, asset):
             column_name=model.asset_class.key,
             column_value=asset,
         )
-        unix_time_converted_data = convert_datetime_to_unixtime(
-            populated, model.unix_date_time.name
-        )
-        return unix_time_converted_data
+        return populated
     except Exception as error:
         error_message = (
             f"An error occurred while preparing data for symbol'{asset}'. {error}"

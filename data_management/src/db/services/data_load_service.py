@@ -30,10 +30,8 @@ class DataLoadService:
             # Execute the query asynchronously with matching parameter key
             result = await self.db_session.execute(text(query_str), {"symbol": symbol})
 
-            # Fetch all rows
             rows = result.fetchall()
 
-            # Create a Pandas DataFrame from the fetched data
             df_result = pd.DataFrame(rows, columns=list(result.keys()))
             return df_result
 
@@ -47,7 +45,6 @@ class DataLoadService:
             query_str = f"SELECT * FROM {table_name}"
             result = await self.db_session.execute(text(query_str))
 
-            # Asynchronously fetch all rows
             rows = result.fetchall()
 
             df_result = pd.DataFrame(rows, columns=list(result.keys()))

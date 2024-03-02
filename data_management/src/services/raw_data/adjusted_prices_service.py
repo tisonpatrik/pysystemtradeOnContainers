@@ -9,8 +9,9 @@ from src.app.schemas.raw_data_schemas import AdjustedPricesSchema
 from src.db.services.data_load_service import DataLoadService
 from src.services.data_insertion_service import GenericDataInsertionService
 from src.utils.converter import convert_frame_to_series
-from src.utils.table_operations import convert_and_sort_by_time
+from src.utils.table_operations import sort_by_time
 
+from common.database.db_service.repositories.series_repository import SeriesRepository
 from common.logging.logging import AppLogger
 
 
@@ -28,6 +29,7 @@ class AdjustedPricesService:
         self.data_insertion_service = GenericDataInsertionService(
             db_session, self.table_name
         )
+        self.pandas_repository = SeriesRepository(db_session, AdjustedPricesModel)
 
     async def get_daily_prices_async(self, symbol: str):
         """
@@ -37,7 +39,7 @@ class AdjustedPricesService:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
                 self.table_name, symbol
             )
-            converted_and_sorted = convert_and_sort_by_time(data, self.time_column)
+            converted_and_sorted = sort_by_time(data, self.time_column)
             series = convert_frame_to_series(
                 converted_and_sorted, self.time_column, self.price_column
             )
