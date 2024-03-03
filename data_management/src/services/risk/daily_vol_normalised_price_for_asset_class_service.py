@@ -45,20 +45,20 @@ class DailyVolNormalisedPriceForAssetClassService:
                 asset_class
             )
             aggregate_returns_across_instruments_list = []
-            for instrument_code in list_of_instruments:
-                normalised_returns = await self.daily_volatility_normalised_returns_service.get_daily_vol_normalised_returns_async(
-                    instrument_code
-                )
-                aggregate_returns_across_instruments_list.append(normalised_returns)
-            aggregated_returns_across_instruments_list = pd.concat(
-                aggregate_returns_across_instruments_list, axis=1, sort=True
-            )
-            returns = self.daily_vol_normalised_returns_for_asset_class_estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(
-                aggregated_returns_across_instruments_list
-            )
-            prepared_data = prepare_asset_data_to_db(
-                returns, DailyVolNormalisedPriceForAssetClass, asset_class
-            )
+            # for instrument_code in list_of_instruments:
+            #     normalised_returns = await self.daily_volatility_normalised_returns_service.get_daily_vol_normalised_returns_async(
+            #         instrument_code
+            #     )
+            #     aggregate_returns_across_instruments_list.append(normalised_returns)
+            # aggregated_returns_across_instruments_list = pd.concat(
+            #     aggregate_returns_across_instruments_list, axis=1, sort=True
+            # )
+            # returns = self.daily_vol_normalised_returns_for_asset_class_estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(
+            #     aggregated_returns_across_instruments_list
+            # )
+            # prepared_data = prepare_asset_data_to_db(
+            #     returns, DailyVolNormalisedPriceForAssetClass, asset_class
+            # )
             # await self.repository.insert_data_async(
             #     prepared_data, DailyVolNormalisedPriceForAssetClassSchema
             # )

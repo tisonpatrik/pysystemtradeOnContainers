@@ -57,10 +57,11 @@ class NormalisedPriceForAssetClassService:
                 DailyVolNormalisedPriceForAssetClass.__tablename__,
             )
             assets = await self.instrument_config_service.get_assets_async()
-            for asset_class in assets:
-                await self.daily_vol_normalised_price_for_asset_service.insert_daily_vol_normalised_price_for_asset_class_async(
-                    asset_class=asset_class
-                )
+            print("neco")
+            # for asset_class in assets:
+            #     await self.daily_vol_normalised_price_for_asset_service.insert_daily_vol_normalised_price_for_asset_class_async(
+            #         asset_class=asset_class
+            #     )
 
         except Exception as exc:
             error_message = f"An error occurred during seeding: {exc}"

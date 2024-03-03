@@ -1,6 +1,5 @@
-from typing import Generic, Optional, Type, TypeVar
+from typing import Generic, List, Optional, Type, TypeVar
 
-import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -48,15 +47,14 @@ class EntityRepository(Generic[T]):
             self.logger.error(error_message)
             raise
 
-    async def get_all_async(self) -> pd.DataFrame:
+    async def get_all_async(self) -> List[T]:
         """
         Fetches all entities of a type and returns them as a pandas DataFrame.
         """
         try:
             result = await self.db_session.execute(select(self.entity_class))
             entities = result.scalars().all()
-            df = pd.DataFrame(entities)
-            return df
+            return list(entities)
         except Exception as exc:
             error_message = f"Error fetching all entities: {exc}"
             self.logger.error(error_message)

@@ -29,14 +29,15 @@ class DailyVolNormalisedReturnsSeedService:
             instrument_configs = (
                 await self.instrument_config_service.get_instrument_configs_async()
             )
-            for config in instrument_configs.to_dict(orient="records"):
-                symbol = config[DailyVolNormalizedReturns.symbol.key]
-                daily_prices = (
-                    await self.adjusted_prices_service.get_daily_prices_async(symbol)
-                )
-                await self.daily_vol_normalised_returns_service.insert_daily_vol_normalised_returns_for_prices_async(
-                    daily_prices, symbol
-                )
+            print("neco")
+            # for config in instrument_configs:
+            #     symbol = config[DailyVolNormalizedReturns.symbol.key]
+            #     daily_prices = (
+            #         await self.adjusted_prices_service.get_daily_prices_async(symbol)
+            #     )
+            #     await self.daily_vol_normalised_returns_service.insert_daily_vol_normalised_returns_for_prices_async(
+            #         daily_prices, symbol
+            #     )
         except Exception as error:
             error_message = f"An error occurred during seeding: {error}"
             self.logger.error(error_message)

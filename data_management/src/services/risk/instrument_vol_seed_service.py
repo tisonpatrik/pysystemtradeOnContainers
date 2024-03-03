@@ -27,26 +27,28 @@ class InstrumentVolSeedService:
             instrument_configs = (
                 await self.instrument_config_service.get_instrument_configs_async()
             )
-            for config in instrument_configs.to_dict(orient="records"):
-                symbol = config[InstrumentVolatility.symbol.key]
-                multiple_prices = (
-                    await self.multiple_prices_service.get_denominator_prices_async(
-                        symbol
-                    )
-                )
-                point_size = await self.instrument_config_service.get_point_size_of_instrument_async(
-                    symbol
-                )
+            print("neco")
 
-                daily_returns_vol = await self.daily_returns_vol_service.get_daily_returns_volatility_async(
-                    symbol
-                )
-                await self.instrument_volatility_service.insert_instrument_vol_for_prices_async(
-                    multiple_prices=multiple_prices,
-                    point_size=point_size,
-                    daily_returns_vol=daily_returns_vol,
-                    symbol=symbol,
-                )
+            # for config in instrument_configs:
+            #     symbol = config[InstrumentVolatility.symbol.key]
+            #     multiple_prices = (
+            #         await self.multiple_prices_service.get_denominator_prices_async(
+            #             symbol
+            #         )
+            #     )
+            #     point_size = await self.instrument_config_service.get_point_size_of_instrument_async(
+            #         symbol
+            #     )
+
+            #     daily_returns_vol = await self.daily_returns_vol_service.get_daily_returns_volatility_async(
+            #         symbol
+            #     )
+            #     await self.instrument_volatility_service.insert_instrument_vol_for_prices_async(
+            #         multiple_prices=multiple_prices,
+            #         point_size=point_size,
+            #         daily_returns_vol=daily_returns_vol,
+            #         symbol=symbol,
+            #     )
         except Exception as error:
             error_message = f"An error occurred during the instrument volatility seeding process: {error}"
             self.logger.error(error_message)

@@ -24,13 +24,13 @@ class InstrumentConfigService:
             db_session=db_session, entity_class=InstrumentConfigModel
         )
 
-    async def get_instrument_configs_async(self) -> pd.DataFrame:
+    async def get_instrument_configs_async(self):
         """
         Asynchronously fetch instrument consfig data.
         """
         try:
             data = await self.repository.get_all_async()
-            return data
+            print("neco")
         except Exception as error:
             error_message = f"Failed to get instrument config asynchronously for table '{table_name}': {error}"
             self.logger.error(error_message, exc_info=True)
@@ -40,7 +40,7 @@ class InstrumentConfigService:
         """Asynchronously fetch point size for given instrument."""
         try:
             data = await self.repository.get_all_async()
-            return data[InstrumentConfigSchema.pointsize][0]
+            # return data[InstrumentConfigSchema.pointsize][0]
         except Exception as error:
             error_message = f"Failed to get point size for instrument '{symbol}' asynchronously: {error}"
             self.logger.error(error_message, exc_info=True)
@@ -52,7 +52,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.repository.get_all_async()
-            return data[InstrumentConfigSchema.asset_class][0]
+            print("neco")
 
         except Exception as error:
             error_message = f"Failed to get instrument metadatas for instrument '{symbol}' asynchronously: {error}"
@@ -65,7 +65,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.repository.get_all_async()
-            return data[InstrumentConfigSchema.symbol]
+            print("neco")
 
         except Exception as error:
             error_message = f"Failed to get instruments by asset class '{asset_class}' asynchronously: {error}"
@@ -78,8 +78,7 @@ class InstrumentConfigService:
         """
         try:
             data = await self.repository.get_all_async()
-            unique_values = data[InstrumentConfigSchema.asset_class].unique().tolist()
-            return unique_values
+            print("neco")
         except Exception as error:
             error_message = f"Failed to get assets values asynchronously: {error}"
             self.logger.error(error_message, exc_info=True)
