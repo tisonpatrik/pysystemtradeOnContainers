@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint, String
-from common.database.db_service.models.base_model import BaseModel
+from sqlalchemy import Column, DateTime, Float, ForeignKey, PrimaryKeyConstraint, String
+
+from common.database.models.base_model import BaseModel
 
 
 class DailyReturnsVolatility(BaseModel):
@@ -9,14 +10,14 @@ class DailyReturnsVolatility(BaseModel):
 
     __tablename__ = "daily_returns_volatility"
 
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     daily_returns_volatility = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
     def __repr__(self):
-        return f"<DailyReturnsVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.daily_returns_volatility})>"
+        return f"<DailyReturnsVolatility(unix_date_time={self.date_time}, symbol={self.symbol}, volatility={self.daily_returns_volatility})>"
 
 
 class InstrumentVolatility(BaseModel):
@@ -25,14 +26,14 @@ class InstrumentVolatility(BaseModel):
     """
 
     __tablename__ = "instrument_volatility"
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     instrument_volatility = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
     def __repr__(self):
-        return f"<InstrumentVolatility(unix_date_time={self.unix_date_time}, symbol={self.symbol}, volatility={self.instrument_volatility})>"
+        return f"<InstrumentVolatility(unix_date_time={self.date_time}, symbol={self.symbol}, volatility={self.instrument_volatility})>"
 
 
 class DailyVolNormalizedReturns(BaseModel):
@@ -42,14 +43,14 @@ class DailyVolNormalizedReturns(BaseModel):
     """
 
     __tablename__ = "daily_vol_normalized_returns"
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     normalized_volatility = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
     def __repr__(self):
-        return f"<DailyVolNormalizedReturns(unix_date_time={self.unix_date_time}, symbol={self.symbol}, normalized_volatility={self.normalized_volatility})>"
+        return f"<DailyVolNormalizedReturns(unix_date_time={self.date_time}, symbol={self.symbol}, normalized_volatility={self.normalized_volatility})>"
 
 
 class DailyVolNormalisedPriceForAssetClass(BaseModel):
@@ -59,11 +60,11 @@ class DailyVolNormalisedPriceForAssetClass(BaseModel):
     """
 
     __tablename__ = "daily_vol_normalised_price_for_asset_class"
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     asset_class = Column(String(50))
     normalized_volatility = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, asset_class),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, asset_class),)
 
     def __repr__(self):
-        return f"<DailyVolNormalisedPriceForAssetClass(unix_date_time={self.unix_date_time}, asset_class={self.asset_class}, normalized_volatility={self.normalized_volatility})>"
+        return f"<DailyVolNormalisedPriceForAssetClass(unix_date_time={self.date_time}, asset_class={self.asset_class}, normalized_volatility={self.normalized_volatility})>"

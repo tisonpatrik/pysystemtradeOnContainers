@@ -8,9 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_config_data_handler import SeeConfigDataHandler
 from src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
-from common.database.db_service.dependencies import get_db
 
-from common.logging.logging import AppLogger
+from common.database.dependencies import get_db
+from common.logging.logger import AppLogger
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

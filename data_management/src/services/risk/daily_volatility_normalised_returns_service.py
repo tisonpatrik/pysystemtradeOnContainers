@@ -3,11 +3,12 @@ from src.app.schemas.risk_schemas import DailyVolNormalizedReturnsSchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
-from src.services.data_insertion_service import GenericDataInsertionService
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
+
+table_name = DailyVolNormalizedReturns.__tablename__
 
 
 class DailyVolatilityNormalisedReturnsService:
@@ -15,12 +16,8 @@ class DailyVolatilityNormalisedReturnsService:
         self.logger = AppLogger.get_instance().get_logger()
         self.data_loader_service = DataLoadService(db_session)
         self.daily_vol_normalised_returns = DailyVolNormalisedReturns()
-        self.table_name = DailyVolNormalizedReturns.__tablename__
         self.price_column = DailyVolNormalizedReturns.normalized_volatility.key
-        self.time_column = DailyVolNormalizedReturns.unix_date_time.key
-        self.repository = GenericDataInsertionService(
-            db_session, table_name=self.table_name
-        )
+        self.time_column = DailyVolNormalizedReturns.date_time.key
 
     async def insert_daily_vol_normalised_returns_for_prices_async(
         self, daily_prices, symbol
@@ -36,9 +33,10 @@ class DailyVolatilityNormalisedReturnsService:
             prepared_data = prepara_data_to_db(
                 daily_returns, DailyVolNormalizedReturns, symbol
             )
-            await self.repository.insert_data_async(
-                prepared_data, DailyVolNormalizedReturnsSchema
-            )
+            # await self.repository.insert_data_async(
+            #     prepared_data, DailyVolNormalizedReturnsSchema
+            # )
+            print("neco")
         except Exception as exc:
             error_message = f"Error in calculating cumulative volatility returns for {symbol}: {exc}"
             self.logger.error(error_message)
@@ -50,7 +48,7 @@ class DailyVolatilityNormalisedReturnsService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                self.table_name, symbol
+                table_name, symbol
             )
             converted_and_sorted = sort_by_time(data, self.time_column)
             series = convert_frame_to_series(

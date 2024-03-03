@@ -1,12 +1,13 @@
-from typing import Generic, List, Optional, Type, TypeVar
+from typing import Generic, Optional, Type, TypeVar
 
+import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from common.database.db_service.models.entity_model import EntityModel
-from common.logging.logging import AppLogger
+from common.database.models.base_model import BaseModel
+from common.logging.logger import AppLogger
 
-T = TypeVar("T", bound=EntityModel)
+T = TypeVar("T", bound=BaseModel)
 
 
 class EntityRepository(Generic[T]):
@@ -19,7 +20,7 @@ class EntityRepository(Generic[T]):
         self.entity_class = entity_class
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def add_async(self, entity: T) -> None:
+    async def insert_async(self, entity: T) -> None:
         """
         Adds a new entity to the database.
         """
@@ -47,14 +48,15 @@ class EntityRepository(Generic[T]):
             self.logger.error(error_message)
             raise
 
-    async def get_all_async(self) -> List[T]:
+    async def get_all_async(self) -> pd.DataFrame:
         """
-        Fetches all entities of a type.
+        Fetches all entities of a type and returns them as a pandas DataFrame.
         """
         try:
             result = await self.db_session.execute(select(self.entity_class))
             entities = result.scalars().all()
-            return list(entities)
+            df = pd.DataFrame(entities)
+            return df
         except Exception as exc:
             error_message = f"Error fetching all entities: {exc}"
             self.logger.error(error_message)

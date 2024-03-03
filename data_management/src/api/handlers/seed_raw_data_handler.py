@@ -15,7 +15,7 @@ from src.services.raw_data.multiple_prices_service import MultiplePricesService
 from src.services.raw_data.roll_calendars_service import RollCalendarsService
 from src.utils.csv_loader import get_full_path, load_csv
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 
 class SeedRawDataHandler:

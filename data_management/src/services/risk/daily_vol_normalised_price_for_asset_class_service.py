@@ -6,7 +6,6 @@ from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from src.services.data_insertion_service import GenericDataInsertionService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
@@ -14,7 +13,9 @@ from src.services.risk.daily_volatility_normalised_returns_service import (
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
+
+table_name = DailyVolNormalisedPriceForAssetClass.__tablename_
 
 
 class DailyVolNormalisedPriceForAssetClassService:
@@ -28,12 +29,10 @@ class DailyVolNormalisedPriceForAssetClassService:
         self.daily_vol_normalised_returns_for_asset_class_estimator = (
             DailyVolNormalisedPriceForAssetClassEstimator()
         )
-        self.table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
-        self.time_column = DailyVolNormalisedPriceForAssetClass.unix_date_time.key
+        self.time_column = DailyVolNormalisedPriceForAssetClass.date_time.key
         self.price_column = (
             DailyVolNormalisedPriceForAssetClass.normalized_volatility.key
         )
-        self.repository = GenericDataInsertionService(db_session, self.table_name)
 
     async def insert_daily_vol_normalised_price_for_asset_class_async(
         self, asset_class
@@ -60,9 +59,10 @@ class DailyVolNormalisedPriceForAssetClassService:
             prepared_data = prepare_asset_data_to_db(
                 returns, DailyVolNormalisedPriceForAssetClass, asset_class
             )
-            await self.repository.insert_data_async(
-                prepared_data, DailyVolNormalisedPriceForAssetClassSchema
-            )
+            # await self.repository.insert_data_async(
+            #     prepared_data, DailyVolNormalisedPriceForAssetClassSchema
+            # )
+            print("neco")
         except Exception as exc:
             error_message = f"Error in calculating daily normalised price for asset class '{asset_class}': {exc}"
             self.logger.error(error_message)
@@ -76,7 +76,7 @@ class DailyVolNormalisedPriceForAssetClassService:
         """
         try:
             data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                self.table_name, asset_class
+                table_name, asset_class
             )
             converted_and_sorted = sort_by_time(data, self.time_column)
             series = convert_frame_to_series(

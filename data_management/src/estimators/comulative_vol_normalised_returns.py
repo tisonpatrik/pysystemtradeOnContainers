@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 
 class CumulativeVolNormalisedReturns:

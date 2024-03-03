@@ -6,7 +6,7 @@ import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 
 class DataLoadService:
@@ -53,28 +53,6 @@ class DataLoadService:
 
         except Exception as exc:
             error_message = f"Failed to fetch data from table {table_name}: {exc}"
-            self.logger.error(error_message, exc_info=True)
-            raise ValueError(error_message)
-
-    async def fetch_groupeds_by_column_values_async(
-        self, table_name: str, group_by_column: str, concatenate_column: str
-    ):
-        """
-        Asynchronously fetches data from a specified table, groups by one column,
-        and concatenates the values from another column.
-        """
-        try:
-            query_str = f"SELECT {group_by_column}, string_agg({concatenate_column}, ', ') AS ConcatenatedValues FROM {table_name} GROUP BY {group_by_column}"
-            result = await self.db_session.execute(text(query_str))
-
-            rows = result.fetchall()
-            df_result = pd.DataFrame(rows, columns=list(result.keys()))
-            return df_result
-
-        except Exception as exc:
-            error_message = (
-                f"Failed to fetch and concatenate data from table {table_name}: {exc}"
-            )
             self.logger.error(error_message, exc_info=True)
             raise ValueError(error_message)
 

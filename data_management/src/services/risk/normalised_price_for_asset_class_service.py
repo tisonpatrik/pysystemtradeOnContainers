@@ -9,7 +9,7 @@ from src.services.risk.daily_vol_normalised_price_for_asset_class_service import
     DailyVolNormalisedPriceForAssetClassService,
 )
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 
 class NormalisedPriceForAssetClassService:
@@ -57,9 +57,7 @@ class NormalisedPriceForAssetClassService:
                 "Starting the process for %s table.",
                 DailyVolNormalisedPriceForAssetClass.__tablename__,
             )
-            assets = await self.instrument_config_service.get_unique_values_for_given_column_from_instrumnet_config(
-                InstrumentConfigModel.asset_class.key
-            )
+            assets = await self.instrument_config_service.get_assets_async()
             for asset_class in assets:
                 await self.daily_vol_normalised_price_for_asset_service.insert_daily_vol_normalised_price_for_asset_class_async(
                     asset_class=asset_class

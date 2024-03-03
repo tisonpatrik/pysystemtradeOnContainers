@@ -4,8 +4,17 @@ including adjusted prices, FX prices, multiple prices, and roll calendars.
 These classes facilitate database interactions in a Pythonic way.
 """
 
-from sqlalchemy import Column, Float, ForeignKey, Integer, PrimaryKeyConstraint, String
-from common.database.db_service.models.base_model import BaseModel
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    PrimaryKeyConstraint,
+    String,
+)
+
+from common.database.models.base_model import BaseModel
 
 
 class AdjustedPricesModel(BaseModel):
@@ -16,11 +25,11 @@ class AdjustedPricesModel(BaseModel):
 
     __tablename__ = "adjusted_prices"
 
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     price = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
 
 class FxPricesModel(BaseModel):
@@ -30,11 +39,11 @@ class FxPricesModel(BaseModel):
 
     __tablename__ = "fx_prices"
 
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50))
     price = Column(Float)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
 
 class MultiplePricesModel(BaseModel):
@@ -44,7 +53,7 @@ class MultiplePricesModel(BaseModel):
 
     __tablename__ = "multiple_prices"
 
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     carry = Column(Float)
     carry_contract = Column(Integer)
@@ -53,7 +62,7 @@ class MultiplePricesModel(BaseModel):
     forward = Column(Float)
     forward_contract = Column(Integer)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)
 
 
 class RollCalendarsModel(BaseModel):
@@ -63,10 +72,10 @@ class RollCalendarsModel(BaseModel):
 
     __tablename__ = "roll_calendars"
 
-    unix_date_time = Column(Integer)
+    date_time = Column(DateTime)
     symbol = Column(String(50), ForeignKey("instrument_config.symbol"))
     current_contract = Column(Integer)
     next_contract = Column(Integer)
     carry_contract = Column(Integer)
 
-    __table_args__ = (PrimaryKeyConstraint(unix_date_time, symbol),)
+    __table_args__ = (PrimaryKeyConstraint(date_time, symbol),)

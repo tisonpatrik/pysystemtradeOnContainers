@@ -1,2 +1,6 @@
 # grayfox
-activate enviroment - poetry shell
+pipenv run alembic upgrade head
+
+pipenv run alembic revision --autogenerate -m "Update models"
+
+pipenv run alembic upgrade head

@@ -6,7 +6,7 @@ import os
 
 import pandas as pd
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

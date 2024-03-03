@@ -5,7 +5,7 @@ from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
 
 
 class DailyReturnsVolSeedService:

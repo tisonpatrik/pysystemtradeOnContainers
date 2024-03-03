@@ -2,11 +2,12 @@ from src.app.models.risk_models import InstrumentVolatility
 from src.app.schemas.risk_schemas import InstrumentVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.estimators.instrument_volatility import InstrumentVolEstimator
-from src.services.data_insertion_service import GenericDataInsertionService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
+
+table_name = InstrumentVolatility.__tablename__
 
 
 class InstrumentVolatilityService:
@@ -15,10 +16,6 @@ class InstrumentVolatilityService:
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.multiple_prices_service = MultiplePricesService(db_session)
         self.instrument_vol_estimator = InstrumentVolEstimator()
-        self.table_name = InstrumentVolatility.__tablename__
-        self.repository = GenericDataInsertionService(
-            db_session, table_name=self.table_name
-        )
 
     async def insert_instrument_vol_for_prices_async(
         self, multiple_prices, point_size, daily_returns_vol, symbol
@@ -38,9 +35,10 @@ class InstrumentVolatilityService:
             prepared_data = prepara_data_to_db(
                 instrument_vols, InstrumentVolatility, symbol
             )
-            await self.repository.insert_data_async(
-                prepared_data, InstrumentVolatilitySchema
-            )
+            # await self.repository.insert_data_async(
+            #     prepared_data, InstrumentVolatilitySchema
+            # )
+            print("neco")
         except Exception as exc:
             error_message = (
                 f"Error in calculating instrument volatility for {symbol}: {exc}"

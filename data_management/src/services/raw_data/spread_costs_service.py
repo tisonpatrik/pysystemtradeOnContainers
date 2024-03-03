@@ -6,9 +6,10 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import SpreadCostsModel
 from src.app.schemas.config_schemas import SpreadCostsSchema
-from src.services.data_insertion_service import GenericDataInsertionService
 
-from common.logging.logging import AppLogger
+from common.logging.logger import AppLogger
+
+table_name = SpreadCostsModel.__tablename__
 
 
 class SpreadCostService:
@@ -18,19 +19,16 @@ class SpreadCostService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.table_name = SpreadCostsModel.__tablename__
-        self.data_insertion_service = GenericDataInsertionService(
-            db_session, self.table_name
-        )
 
     async def insert_spread_costs_async(self, raw_data: pd.DataFrame):
         """
         Insert spread costs data into db.
         """
         try:
-            await self.data_insertion_service.insert_data_async(
-                raw_data, SpreadCostsSchema
-            )
+            # await self.data_insertion_service.insert_data_async(
+            #     raw_data, SpreadCostsSchema
+            # )
+            print("neco")
 
         except Exception as exc:
-            self.logger.error(f"Error inserting data for {self.table_name}: {str(exc)}")
+            self.logger.error(f"Error inserting data for {table_name}: {str(exc)}")
