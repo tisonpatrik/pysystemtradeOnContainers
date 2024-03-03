@@ -14,7 +14,7 @@ from sqlalchemy import (
     String,
 )
 
-from common.database.models.base_model import BaseModel
+from common.database.base_model import BaseModel
 
 
 class AdjustedPricesModel(BaseModel):

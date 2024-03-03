@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import InstrumentConfigModel
 from src.app.schemas.config_schemas import InstrumentConfigSchema
 
-from common.database.repositories.entity_repository import EntityRepository
+from common.database.repository import Repository
 from common.logging.logger import AppLogger
 
 table_name = InstrumentConfigModel.__tablename__
@@ -20,7 +20,7 @@ class InstrumentConfigService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = EntityRepository(
+        self.repository = Repository(
             db_session=db_session, entity_class=InstrumentConfigModel
         )
 

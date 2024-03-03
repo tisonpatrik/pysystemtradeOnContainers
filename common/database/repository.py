@@ -4,13 +4,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from common.database.models.base_model import BaseModel
+from common.database.base_model import BaseModel
 from common.logging.logger import AppLogger
 
 T = TypeVar("T", bound=BaseModel)
 
 
-class EntityRepository(Generic[T]):
+class Repository(Generic[T]):
     """
     Generic repository for CRUD operations on entities.
     """
@@ -30,6 +30,27 @@ class EntityRepository(Generic[T]):
         except SQLAlchemyError as exc:
             await self.db_session.rollback()
             error_message = f"Error adding {self.entity_class.__name__}: {exc}"
+            self.logger.error(error_message)
+            raise
+
+    async def insert_many_async(self, entities: List[T]) -> None:
+        """
+        Adds multiple new entities to the database in a bulk operation.
+
+        :param entities: List of entity instances to be added.
+        """
+        try:
+            # Add all entities to the session. This doesn't perform the actual database insert.
+            self.db_session.add_all(entities)
+
+            # Commit the transaction to insert entities into the database.
+            await self.db_session.commit()
+        except SQLAlchemyError as exc:
+            # Rollback the transaction if any exception occurs to avoid partial inserts.
+            await self.db_session.rollback()
+            error_message = (
+                f"Error adding multiple {self.entity_class.__name__} entities: {exc}"
+            )
             self.logger.error(error_message)
             raise
 
