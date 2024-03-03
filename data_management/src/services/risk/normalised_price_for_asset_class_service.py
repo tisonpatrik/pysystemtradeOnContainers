@@ -1,4 +1,3 @@
-from src.app.models.config_models import InstrumentConfigModel
 from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
 from src.services.raw_data.instrument_config_services import InstrumentConfigService

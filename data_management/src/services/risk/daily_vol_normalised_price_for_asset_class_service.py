@@ -15,7 +15,7 @@ from src.utils.table_operations import sort_by_time
 
 from common.logging.logger import AppLogger
 
-table_name = DailyVolNormalisedPriceForAssetClass.__tablename_
+table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
 
 
 class DailyVolNormalisedPriceForAssetClassService:
