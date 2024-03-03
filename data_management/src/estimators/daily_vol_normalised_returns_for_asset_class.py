@@ -2,7 +2,7 @@ from typing import List
 
 import pandas as pd
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class DailyVolNormalisedPriceForAssetClassEstimator:

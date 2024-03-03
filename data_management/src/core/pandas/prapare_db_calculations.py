@@ -4,7 +4,7 @@ from src.utils.table_operations import (
     rename_columns,
 )
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

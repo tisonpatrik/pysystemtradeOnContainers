@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import InstrumentMetadataModel
 from src.app.schemas.config_schemas import InstrumentMetadataSchema
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = InstrumentMetadataModel.__tablename__
 

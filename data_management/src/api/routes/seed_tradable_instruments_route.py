@@ -4,8 +4,8 @@ from src.api.handlers.seed_tradable_instruments_handler import (
     SeedTradableInstrumentsHandler,
 )
 
-from common.database.dependencies import get_db
-from common.logging.logger import AppLogger
+from common.src.database.dependencies import get_db
+from common.src.logging.logger import AppLogger
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

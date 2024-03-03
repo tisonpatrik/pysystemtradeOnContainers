@@ -4,7 +4,7 @@ from src.app.models.config_models import TradableInstrumentsModel
 from src.app.schemas.config_schemas import TradableInstrumentsSchema
 from src.db.services.data_load_service import DataLoadService
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = TradableInstrumentsModel.__tablename__
 

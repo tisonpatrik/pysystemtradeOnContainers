@@ -8,7 +8,8 @@ from src.api.routes.seed_risk_router import router as risk_router
 from src.api.routes.seed_tradable_instruments_route import (
     router as tradable_instruments_router,
 )
-from common.logging.logger import AppLogger
+
+from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

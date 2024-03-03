@@ -4,8 +4,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from common.database.base_model import BaseModel
-from common.logging.logger import AppLogger
+from common.src.database.base_model import BaseModel
+from common.src.logging.logger import AppLogger
 
 T = TypeVar("T", bound=BaseModel)
 

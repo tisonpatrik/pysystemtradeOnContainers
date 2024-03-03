@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, Float, ForeignKey, PrimaryKeyConstraint, String
 
-from common.database.base_model import BaseModel
+from common.src.database.base_model import BaseModel
 
 
 class DailyReturnsVolatility(BaseModel):

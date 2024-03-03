@@ -6,7 +6,7 @@ from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturn
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = DailyVolNormalizedReturns.__tablename__
 

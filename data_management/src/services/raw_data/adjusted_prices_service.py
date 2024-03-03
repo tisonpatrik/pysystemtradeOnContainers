@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.raw_data_models import AdjustedPricesModel
 from src.utils.converter import convert_frame_to_series
 
-from common.database.repository import Repository
-from common.logging.logger import AppLogger
+from common.src.database.repository import Repository
+from common.src.logging.logger import AppLogger
 
 
 class AdjustedPricesService:

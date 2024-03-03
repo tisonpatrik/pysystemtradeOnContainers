@@ -5,7 +5,7 @@ from src.services.risk.daily_volatility_normalised_returns_service import (
     DailyVolatilityNormalisedReturnsService,
 )
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class CumulativeDailyVolatilityNormalisedReturnsService:

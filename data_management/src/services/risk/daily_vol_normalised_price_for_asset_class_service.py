@@ -13,7 +13,7 @@ from src.services.risk.daily_volatility_normalised_returns_service import (
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
 

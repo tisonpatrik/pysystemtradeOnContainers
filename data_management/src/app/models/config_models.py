@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 
-from common.database.base_model import BaseModel
+from common.src.database.base_model import BaseModel
 
 
 class InstrumentConfigModel(BaseModel):

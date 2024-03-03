@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
 

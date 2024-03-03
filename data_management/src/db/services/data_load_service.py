@@ -6,7 +6,7 @@ import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class DataLoadService:

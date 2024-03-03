@@ -13,7 +13,7 @@ from src.services.risk.normalised_price_for_asset_class_service import (
     NormalisedPriceForAssetClassService,
 )
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class SeedRiskHandler:

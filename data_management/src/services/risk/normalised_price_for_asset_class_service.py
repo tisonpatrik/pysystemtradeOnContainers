@@ -8,7 +8,7 @@ from src.services.risk.daily_vol_normalised_price_for_asset_class_service import
     DailyVolNormalisedPriceForAssetClassService,
 )
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class NormalisedPriceForAssetClassService:

@@ -15,7 +15,7 @@ from src.services.raw_data.roll_config_service import RollConfigService
 from src.services.raw_data.spread_costs_service import SpreadCostService
 from src.utils.csv_loader import get_full_path, load_csv
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class SeeConfigDataHandler:

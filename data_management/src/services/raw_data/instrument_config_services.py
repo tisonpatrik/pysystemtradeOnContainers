@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import InstrumentConfigModel
 from src.app.schemas.config_schemas import InstrumentConfigSchema
 
-from common.database.repository import Repository
-from common.logging.logger import AppLogger
+from common.src.database.repository import Repository
+from common.src.logging.logger import AppLogger
 
 table_name = InstrumentConfigModel.__tablename__
 

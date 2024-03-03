@@ -4,7 +4,7 @@ from src.services.raw_data.tradable_instruments_service import (
 )
 from src.utils.csv_loader import get_full_path, load_csv
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 
 class SeedTradableInstrumentsHandler:

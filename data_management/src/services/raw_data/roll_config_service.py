@@ -8,7 +8,7 @@ from src.app.models.config_models import RollConfigModel
 from src.app.schemas.config_schemas import RollConfigSchema
 from src.db.services.data_load_service import DataLoadService
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = RollConfigModel.__tablename__
 

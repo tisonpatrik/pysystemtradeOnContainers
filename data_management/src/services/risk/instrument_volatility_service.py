@@ -5,7 +5,7 @@ from src.estimators.instrument_volatility import InstrumentVolEstimator
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
 
-from common.logging.logger import AppLogger
+from common.src.logging.logger import AppLogger
 
 table_name = InstrumentVolatility.__tablename__
 
