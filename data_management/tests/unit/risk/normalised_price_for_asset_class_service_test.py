@@ -3,7 +3,7 @@ from src.estimators.normalised_price_for_asset_class import NormalisedPriceForAs
 
 
 def load_csv_data(filename):
-    filepath = f"tests/test_data/{filename}.csv"
+    filepath = f"data_management/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath, index_col="index")
     return pd.Series(data["price"], name="price")
 

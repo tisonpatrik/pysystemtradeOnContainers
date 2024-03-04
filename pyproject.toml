@@ -6,7 +6,7 @@ testpaths = [
     "data_management/tests"
 ]
 pythonpath = [
+    ".",
     "data_management",
     "common"
-
 ]

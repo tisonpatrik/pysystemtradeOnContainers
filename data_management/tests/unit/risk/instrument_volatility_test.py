@@ -3,7 +3,7 @@ from src.estimators.instrument_volatility import InstrumentVolEstimator
 
 
 def load_csv_data(filename):
-    filepath = f"tests/test_data/{filename}.csv"
+    filepath = f"data_management/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return pd.Series(data["price"])
 

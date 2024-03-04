@@ -5,13 +5,13 @@ from src.estimators.daily_vol_normalised_returns_for_asset_class import (
 
 
 def load_csv_series(filename):
-    filepath = f"tests/test_data/{filename}.csv"
+    filepath = f"data_management/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return pd.Series(data["price"])
 
 
 def load_csv_dataframes(filename):
-    filepath = f"tests/test_data/{filename}.csv"
+    filepath = f"data_management/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return pd.DataFrame(data)
 
