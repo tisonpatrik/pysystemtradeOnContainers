@@ -6,7 +6,6 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import RollConfigModel
 from src.app.schemas.config_schemas import RollConfigSchema
-from src.db.services.data_load_service import DataLoadService
 
 from common.src.logging.logger import AppLogger
 
@@ -19,7 +18,6 @@ class RollConfigService:
     """
 
     def __init__(self, db_session: AsyncSession):
-        self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_instrument_configs(self):

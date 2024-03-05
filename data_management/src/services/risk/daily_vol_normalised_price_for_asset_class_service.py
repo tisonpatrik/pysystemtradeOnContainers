@@ -2,7 +2,6 @@ import pandas as pd
 from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
-from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
@@ -21,7 +20,6 @@ table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
 class DailyVolNormalisedPriceForAssetClassService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_loader_service = DataLoadService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_volatility_normalised_returns_service = (
             DailyVolatilityNormalisedReturnsService(db_session)
@@ -75,14 +73,16 @@ class DailyVolNormalisedPriceForAssetClassService:
         Asynchronously fetches daily normalised price for asset class by symbol and returns them as Pandas Series.
         """
         try:
-            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                table_name, asset_class
-            )
-            converted_and_sorted = sort_by_time(data, self.time_column)
-            series = convert_frame_to_series(
-                converted_and_sorted, self.time_column, self.price_column
-            )
-            return series
+            # data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
+            #     table_name, asset_class
+            # )
+            # converted_and_sorted = sort_by_time(data, self.time_column)
+            # series = convert_frame_to_series(
+            #     converted_and_sorted, self.time_column, self.price_column
+            # )
+            # return series
+            print("neco")
+
         except Exception as exc:
             error_message = f"Failed to get daily normalized price for asset class '{asset_class}': {exc}"
             self.logger.error(error_message, exc_info=True)

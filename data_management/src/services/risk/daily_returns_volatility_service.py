@@ -3,7 +3,6 @@
 from src.app.models.risk_models import DailyReturnsVolatility
 from src.app.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.db.services.data_load_service import DataLoadService
 from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.utils.converter import convert_frame_to_series
@@ -23,7 +22,6 @@ class DailyReturnsVolService:
         self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
         self.time_column = DailyReturnsVolatility.date_time.key
         self.logger = AppLogger.get_instance().get_logger()
-        self.data_loader_service = DataLoadService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_returns_vol_estimator = DailyReturnsVolEstimator()
 
@@ -57,14 +55,16 @@ class DailyReturnsVolService:
         Asynchronously fetches daily returns volatility by symbol and returns them as Pandas Series.
         """
         try:
-            data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
-                table_name, symbol
-            )
-            converted_and_sorted = sort_by_time(data, self.time_column)
-            series = convert_frame_to_series(
-                converted_and_sorted, self.time_column, self.price_column
-            )
-            return series
+            # data = await self.data_loader_service.fetch_raw_data_from_table_by_symbol_async(
+            #     table_name, symbol
+            # )
+            # converted_and_sorted = sort_by_time(data, self.time_column)
+            # series = convert_frame_to_series(
+            #     converted_and_sorted, self.time_column, self.price_column
+            # )
+            # return series
+            print("neco")
+
         except Exception as exc:
             error_message = f"Failed to get daily returns volatility asynchronously for symbol '{symbol}': {exc}"
             self.logger.error(error_message, exc_info=True)

@@ -2,7 +2,6 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models.config_models import TradableInstrumentsModel
 from src.app.schemas.config_schemas import TradableInstrumentsSchema
-from src.db.services.data_load_service import DataLoadService
 
 from common.src.logging.logger import AppLogger
 
@@ -15,7 +14,6 @@ class TradableInstrumentsService:
     """
 
     def __init__(self, db_session: AsyncSession):
-        self.data_loader_service = DataLoadService(db_session)
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_tradable_instruments(self):
@@ -23,11 +21,13 @@ class TradableInstrumentsService:
         Asynchronously fetch tradable instruments data.
         """
         try:
-            data_frame = await self.data_loader_service.fetch_raw_data_from_table_async(
-                table_name
-            )
-            symbols_list = data_frame[TradableInstrumentsSchema.symbol].to_list()
-            return symbols_list
+            # data_frame = await self.data_loader_service.fetch_raw_data_from_table_async(
+            #     table_name
+            # )
+            # symbols_list = data_frame[TradableInstrumentsSchema.symbol].to_list()
+            # return symbols_list
+            print("neco")
+
         except Exception as error:
             error_message = (
                 f"Failed to get tradable instruments table asynchronously: {error}"

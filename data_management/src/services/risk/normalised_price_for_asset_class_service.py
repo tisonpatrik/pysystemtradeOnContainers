@@ -31,18 +31,19 @@ class NormalisedPriceForAssetClassService:
     ):
         """Get normalised price for asset class."""
         try:
-            normalised_price_for_asset_class = await self.daily_vol_normalised_price_for_asset_class_service.get_daily_vol_normalised_price_for_asset_class_async(
-                asset_class
-            )
-            normalised_price_for_given_instrument = await self.cumulative_daily_volatility_normalised_returns_service.get_cumulative_vol_for_prices_async(
-                symbol
-            )
-            normalised_price_for_asset_class_aligned = self.normalised_price_for_asset_class.get_normalised_price_for_asset_class(
-                normalised_price_for_given_instrument,
-                normalised_price_for_asset_class,
-            )
+            # normalised_price_for_asset_class = await self.daily_vol_normalised_price_for_asset_class_service.get_daily_vol_normalised_price_for_asset_class_async(
+            #     asset_class
+            # )
+            # normalised_price_for_given_instrument = await self.cumulative_daily_volatility_normalised_returns_service.get_cumulative_vol_for_prices_async(
+            #     symbol
+            # )
+            # normalised_price_for_asset_class_aligned = self.normalised_price_for_asset_class.get_normalised_price_for_asset_class(
+            #     normalised_price_for_given_instrument,
+            #     normalised_price_for_asset_class,
+            # )
 
-            return normalised_price_for_asset_class_aligned
+            # return normalised_price_for_asset_class_aligned
+            print("neco")
 
         except Exception as exc:
             error_message = f"Error in calculating normalised price for asset class '{asset_class}' with symbol '{symbol}': {exc}"
