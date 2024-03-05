@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   seeder:
     build:
       context: .
@@ -12,7 +11,26 @@ services:
       - db_postgres
     ports:
       - "8000:8000"
-
+  raw_data:
+    build:
+      context: .
+      dockerfile: raw_data/Dockerfile
+    hostname: raw_data
+    container_name: raw_data
+    depends_on:
+      - db_postgres
+    ports:
+      - "8001:8000"
+  risk:
+    build:
+      context: .
+      dockerfile: risk/Dockerfile
+    hostname: risk
+    container_name: risk
+    depends_on:
+      - db_postgres
+    ports:
+      - "8002:8000"
   data_management:
     build:
       context: .
@@ -22,8 +40,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8001:8000"
-
+      - "8003:8000"
   db_postgres:
     image: postgres:latest
     container_name: postgres
