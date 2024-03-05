@@ -1,43 +1,37 @@
 import pandera as pa
 from pandera import Field
-from pandera.typing import Series
-
-
-class TradableInstrumentsSchema(pa.DataFrameModel):
-    symbol: Series[str] = Field(nullable=False)
-
 
 class InstrumentConfigSchema(pa.DataFrameModel):
-    symbol: Series[str] = Field(nullable=False)
-    description: Series[str]
-    pointsize: Series[float]
-    asset_class: Series[str]
-    per_block: Series[float]
-    percentage: Series[float]
-    per_trade: Series[int]
-    region: Series[str]
+    symbol: str = Field(nullable=False)
+    description: str
+    pointsize: float
+    asset_class: str
+    per_block: float
+    percentage: float
+    per_trade: int
+    region: str
 
 
 class InstrumentMetadataSchema(pa.DataFrameModel):
-    symbol: Series[str] = Field(nullable=False)
-    asset_class: Series[str] = Field(nullable=False)
-    sub_class: Series[str] = Field(nullable=False)
-    sub_sub_class: Series[str] = Field(nullable=True)
-    style: Series[str] = Field(nullable=True)
-    country: Series[str] = Field(nullable=True)
-    duration: Series[float] = Field(nullable=True)
-    description: Series[str] = Field(nullable=True)
+    symbol: str = Field(nullable=False)
+    asset_class: str = Field(nullable=False)
+    sub_class: str = Field(nullable=False)
+    sub_sub_class: str = Field(nullable=True)
+    style: str = Field(nullable=True)
+    country: str = Field(nullable=True)
+    duration: float = Field(nullable=True)
+    description: str = Field(nullable=True)
 
 
 class RollConfigSchema(pa.DataFrameModel):
-    symbol: Series[str] = Field(nullable=False)
-    hold_roll_cycle: Series[str]
-    roll_offset_days: Series[int]
-    carry_offset: Series[int]
-    priced_roll_cycle: Series[str]
-    expiry_offset: Series[int]
+    symbol: str = Field(nullable=False)
+    hold_roll_cycle: str
+    roll_offset_days: int
+    carry_offset: int
+    priced_roll_cycle: str
+    expiry_offset: int
 
 
 class SpreadCostsSchema(pa.DataFrameModel):
-    symbol: Series[str] = Field(nullable=False)
-    spread_costs: Series[float]
+    symbol: str = Field(nullable=False)
+    spread_costs: float

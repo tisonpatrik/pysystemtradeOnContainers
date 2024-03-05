@@ -16,11 +16,6 @@ class InstrumentConfigModel(BaseModel):
     region = Column(String(50))
 
 
-class TradableInstrumentsModel(BaseModel):
-    __tablename__ = "tradable_instruments"
-    symbol = Column(String(50), primary_key=True)
-
-
 class InstrumentMetadataModel(BaseModel):
     __tablename__ = "instrument_metadata"
     symbol = Column(

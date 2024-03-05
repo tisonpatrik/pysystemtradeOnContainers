@@ -1,9 +1,3 @@
-class TradableInstrumentsConfig:
-    tablename: str = "tradable_instruments"
-    file_name: str = "tradable_instruments.csv"
-    directory: str = "/path/in/container/csvconfig"
-
-
 class InstrumentConfigConfig:
     tablename: str = "instrument_config"
     file_name: str = "instrument_config.csv"
