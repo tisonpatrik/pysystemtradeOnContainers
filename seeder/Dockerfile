@@ -9,7 +9,6 @@ RUN apk update \
 WORKDIR /home/app
 
 COPY common/ ./common
-COPY data_management/ ./data_management
 
 COPY seeder/src/ ./src
 COPY seeder/tests/ ./tests
