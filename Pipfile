@@ -4,20 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
+alembic = "*"
 fastapi = "*"
-sqlalchemy = "*"
+pandas = "*"
+pandera = "*"
 pydantic = "*"
 pydantic-settings = "*"
-uvicorn = "*"
-asyncpg = "*"
-rich = "*"
-alembic = "*"
 pytest = "*"
+pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
-pandera = "*"
-pytest-asyncio = "*"
+rich = "*"
+sqlalchemy = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3.10.12"

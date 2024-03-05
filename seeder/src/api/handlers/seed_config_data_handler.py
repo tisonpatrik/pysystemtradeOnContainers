@@ -22,7 +22,7 @@ from data_management.src.services.raw_data.roll_config_service import RollConfig
 from data_management.src.services.raw_data.spread_costs_service import SpreadCostService
 
 
-class SeeConfigDataHandler:
+class SeedConfigDataHandler:
     """
     This class provides methods to seed the database
     asynchronously from CSV files according to given schemas.

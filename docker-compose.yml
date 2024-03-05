@@ -1,6 +1,18 @@
 version: "3.9"
 
 services:
+
+  seeder:
+    build:
+      context: .
+      dockerfile: seeder/Dockerfile
+    hostname: seeder
+    container_name: seeder
+    depends_on:
+      - db_postgres
+    ports:
+      - "8000:8000"
+
   data_management:
     build:
       context: .
@@ -10,10 +22,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8000:8000"
-    volumes:
-      - /home/patrik/repos/pysystemtrade_preprocessing/data:/path/in/container:rw
-      - ./data_management/src:/home/app/src
+      - "8001:8000"
 
   db_postgres:
     image: postgres:latest
