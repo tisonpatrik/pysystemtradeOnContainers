@@ -14,10 +14,7 @@ down:
 	@docker compose -f ./docker-compose.yml down --remove-orphans
 
 tests: run
-	@docker exec -it data_management poetry run pytest
+	@echo "IMPLEMENT IT"
 
-migrate-create:
-	@alembic revision --autogenerate -m "${commit}"
-
-migrate-apply:
-	@alembic upgrade head
+seed:
+	@pipenv run  uvicorn seeder.src.main:app --reload
