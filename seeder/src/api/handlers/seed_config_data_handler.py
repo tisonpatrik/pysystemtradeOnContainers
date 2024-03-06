@@ -3,7 +3,7 @@ This module contains the SeeConfigDataHandler class,
 which is responsible for seeding the database from CSV files.
 """
 
-from src.utils.csv_loader import get_full_path, load_csv
+from seeder.src.utils.csv_loader import get_full_path, load_csv
 
 from common.src.logging.logger import AppLogger
 from data_management.src.app.csv_to_db_configs.config_files_config import (

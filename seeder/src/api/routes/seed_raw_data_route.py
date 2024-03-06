@@ -6,11 +6,11 @@ Handles all incoming HTTP requests related to this functionality.
 # Third-Party Libraries
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.api.handlers.seed_config_data_handler import SeeConfigDataHandler
-from src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
 
 from common.src.database.dependencies import get_db
 from common.src.logging.logger import AppLogger
+from seeder.src.api.handlers.seed_config_data_handler import SeeConfigDataHandler
+from seeder.src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
