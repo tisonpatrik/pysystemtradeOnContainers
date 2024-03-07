@@ -1,5 +1,8 @@
 from typing import Optional
 
+import pandas as pd
+from pydantic import validator
+
 from common.src.validations.base_schema import BaseSchema
 
 
@@ -24,6 +27,13 @@ class InstrumentMetadataSchema(BaseSchema):
     country: Optional[str] = None
     duration: Optional[float] = None
     description: Optional[str] = None
+
+    @validator("style", "country", "sub_sub_class", pre=True, allow_reuse=True)
+    @classmethod
+    def check_nan_and_convert(cls, v):
+        if pd.isna(v):
+            return None
+        return v
 
 
 class RollConfigSchema(BaseSchema):

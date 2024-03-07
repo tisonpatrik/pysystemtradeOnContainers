@@ -13,16 +13,10 @@ from seeder.src.csv_to_db_configs.config_files_config import (
 from seeder.src.services.instrument_config_seed_service import (
     InstrumentConfigSeedService,
 )
+from seeder.src.services.instrument_metadata_seed_service import (
+    InstrumentMetadataSeedService,
+)
 from seeder.src.utils.csv_loader import get_full_path, load_csv
-
-# from data_management.src.services.raw_data.instrument_config_services import (
-#     InstrumentConfigService,
-# )
-# from data_management.src.services.raw_data.instrument_metadata_service import (
-#     InstrumentMetadataService,
-# )
-# from data_management.src.services.raw_data.roll_config_service import RollConfigService
-# from data_management.src.services.raw_data.spread_costs_service import SpreadCostService
 
 
 class SeedConfigDataHandler:
@@ -34,9 +28,9 @@ class SeedConfigDataHandler:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_seed_service = InstrumentConfigSeedService(db_session)
-        # self.instrument_metadata_service = InstrumentMetadataService(db_session)
-        # self.roll_config_service = RollConfigService(db_session)
-        # self.spread_costs_service = SpreadCostService(db_session)
+        self.instrument_metadata_seed_service = InstrumentMetadataSeedService(
+            db_session
+        )
 
     async def seed_data_from_csv_async(self):
         """
@@ -46,8 +40,8 @@ class SeedConfigDataHandler:
         configs = [
             InstrumentConfigConfig,
             InstrumentMetadataConfig,
-            RollConfigConfig,
-            SpreadCostConfig,
+            # RollConfigConfig,
+            # SpreadCostConfig,
         ]
         for config in configs:
             await self._process_data_and_insert_them_into_db(config)
@@ -61,11 +55,13 @@ class SeedConfigDataHandler:
         raw_data = load_csv(full_path)
 
         if table_name == "instrument_config":
-            await self.instrument_config_seed_service.seed_instrument_config(raw_data)
-        # elif table_name == "instrument_metadata":
-        #     await self.instrument_metadata_service.insert_instruments_metadata_async(
-        #         raw_data
-        #     )
+            await self.instrument_config_seed_service.seed_instrument_config_async(
+                raw_data
+            )
+        elif table_name == "instrument_metadata":
+            await self.instrument_metadata_seed_service.seed_instrument_metadata_async(
+                raw_data
+            )
         # elif table_name == "roll_config":
         #     await self.roll_config_service.insert_roll_config_async(raw_data)
         # elif table_name == "spread_costs":

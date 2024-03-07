@@ -6,3 +6,4 @@ Base = declarative_base()
 
 class BaseModel(Base):
     __abstract__ = True
+    Base = Base
