@@ -24,7 +24,6 @@ async def seed_risk_data(db_session: AsyncSession = Depends(get_db)):
     Fills the risk table with data.
     """
     try:
-        # Business logic is in a separate handler
         risk_handler = SeedRiskHandler(db_session)
         await risk_handler.seed_calculate_risk_data_async()
 

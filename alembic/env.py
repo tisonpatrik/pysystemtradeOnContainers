@@ -21,7 +21,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from data_management.src.app.models.config_models import BaseModel
+from raw_data.src.models.config_models import BaseModel
 from data_management.src.app.models.raw_data_models import BaseModel
 from data_management.src.app.models.risk_models import BaseModel
 
