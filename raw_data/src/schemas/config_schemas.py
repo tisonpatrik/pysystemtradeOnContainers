@@ -7,6 +7,7 @@ class InstrumentConfigSchema(BaseSchema):
     symbol: str
     description: str
     pointsize: float
+    currency: str
     asset_class: str
     per_block: float
     percentage: float

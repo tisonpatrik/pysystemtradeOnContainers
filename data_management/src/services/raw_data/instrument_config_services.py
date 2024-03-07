@@ -4,11 +4,11 @@ This module provides services for fetching and processing instrument config data
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from raw_data.src.models.config_models import InstrumentConfigModel
-from raw_data.src.schemas.config_schemas import InstrumentConfigSchema
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.config_models import InstrumentConfigModel
+from raw_data.src.schemas.config_schemas import InstrumentConfigSchema
 
 table_name = InstrumentConfigModel.__tablename__
 
@@ -20,9 +20,7 @@ class InstrumentConfigService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(
-            db_session=db_session, entity_class=InstrumentConfigModel
-        )
+        self.repository = Repository(db_session, InstrumentConfigSchema)
 
     async def get_instrument_configs_async(self):
         """

@@ -1,13 +1,13 @@
-from typing import Generic, List, Optional, Type, TypeVar
+from typing import Generic, List, Type, TypeVar
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from common.src.database.base_model import BaseModel
 from common.src.logging.logger import AppLogger
+from common.src.validations.base_schema import BaseSchema
 
-T = TypeVar("T", bound=BaseModel)
+T = TypeVar("T", bound=BaseSchema)
 
 
 class Repository(Generic[T]):
@@ -15,9 +15,9 @@ class Repository(Generic[T]):
     Generic repository for CRUD operations on entities.
     """
 
-    def __init__(self, db_session: AsyncSession, entity_class: Type[T]):
+    def __init__(self, db_session: AsyncSession, schema: Type[T]):
         self.db_session = db_session
-        self.entity_class = entity_class
+        self.entity_class = schema
         self.logger = AppLogger.get_instance().get_logger()
 
     async def insert_async(self, entity: T) -> None:
@@ -40,32 +40,14 @@ class Repository(Generic[T]):
         :param entities: List of entity instances to be added.
         """
         try:
-            # Add all entities to the session. This doesn't perform the actual database insert.
             self.db_session.add_all(entities)
 
-            # Commit the transaction to insert entities into the database.
             await self.db_session.commit()
         except SQLAlchemyError as exc:
-            # Rollback the transaction if any exception occurs to avoid partial inserts.
             await self.db_session.rollback()
             error_message = (
                 f"Error adding multiple {self.entity_class.__name__} entities: {exc}"
             )
-            self.logger.error(error_message)
-            raise
-
-    async def get_by_id_async(self, id: int) -> Optional[T]:
-        """
-        Fetches an entity by its ID.
-        """
-        try:
-            result = await self.db_session.execute(
-                select(self.entity_class).where(self.entity_class.id == id)
-            )
-            entity = result.scalars().first()
-            return entity
-        except SQLAlchemyError as exc:
-            error_message = f"Error fetching {self.entity_class.__name__} by ID: {exc}"
             self.logger.error(error_message)
             raise
 
@@ -92,17 +74,5 @@ class Repository(Generic[T]):
         except SQLAlchemyError as exc:
             await self.db_session.rollback()
             error_message = f"Error deleting {self.entity_class.__name__}: {exc}"
-            self.logger.error(error_message)
-            raise
-
-    async def update_async(self) -> None:
-        """
-        Commits current transactions to update the entity in the database.
-        """
-        try:
-            await self.db_session.commit()
-        except SQLAlchemyError as exc:
-            await self.db_session.rollback()
-            error_message = f"Error updating {self.entity_class.__name__}: {exc}"
             self.logger.error(error_message)
             raise
