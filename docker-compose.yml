@@ -11,6 +11,11 @@ services:
       - db_postgres
     ports:
       - "8000:8000"
+    networks:
+      default:
+        aliases:
+          - raw_data.dev
+
   risk:
     build:
       context: .
@@ -21,6 +26,11 @@ services:
       - db_postgres
     ports:
       - "8001:8000"
+    networks:
+      default:
+        aliases:
+          - risk.dev
+
   data_management:
     build:
       context: .
@@ -31,6 +41,11 @@ services:
       - db_postgres
     ports:
       - "8002:8000"
+    networks:
+      default:
+        aliases:
+          - data_management.dev
+
   db_postgres:
     image: postgres:latest
     container_name: postgres
@@ -44,7 +59,10 @@ services:
       - "5432:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
-      - /home/patrik/repos/pysystemtrade_preprocessing/data:/path/in/container:rw
+    networks:
+      default:
+        aliases:
+          - db_postgres.dev
 
   pg-admin:
     image: dpage/pgadmin4
@@ -54,6 +72,16 @@ services:
       - PGADMIN_LISTEN_PORT=5050
     ports:
       - "5050:5050"
+    networks:
+      default:
+        aliases:
+          - pgadmin.dev
+
 volumes:
   db-postgres:
     driver: local
+
+networks:
+  default:
+    name: grayfox_network
+    driver: bridge
