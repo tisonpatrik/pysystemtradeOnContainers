@@ -11,6 +11,8 @@ services:
       - db_postgres
     ports:
       - "8000:8000"
+    volumes:
+      - ./raw_data/src:/home/app/src
   risk:
     build:
       context: .
@@ -21,6 +23,8 @@ services:
       - db_postgres
     ports:
       - "8001:8000"
+    volumes:
+      - ./risk/src:/home/app/src
   data_management:
     build:
       context: .
@@ -31,6 +35,8 @@ services:
       - db_postgres
     ports:
       - "8002:8000"
+    volumes:
+      - ./data_management/src:/home/app/src
   db_postgres:
     image: postgres:latest
     container_name: postgres

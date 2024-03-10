@@ -1,18 +1,11 @@
-import sys
-from pathlib import Path
-
-root_path = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(root_path))
-
-
 """
 Main entry point for the FastAPI application.
 """
 
 from fastapi import FastAPI
+from seeder.src.api.routes.seed_config_files_route import router as seed_config_router
 
 from common.src.logging.logger import AppLogger
-from seeder.src.api.routes.seed_config_files_route import router as seed_config_router
 
 # from seeder.src.api.routes.seed_raw_data_route import router as seed_db_router
 # from seeder.src.api.routes.seed_risk_router import router as risk_router

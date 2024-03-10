@@ -54,7 +54,7 @@ async def get_instrument_config_count():
     try:
         async with AsyncClient() as client:
             response = await client.get(
-                "http://localhost:8000/test_router/get_count_of_instrument_config_items/"
+                "http://localhost:8000/test_router/get_instrument_config_items_count_async/"
             )
             if response.status_code == 200:
                 count = response.json()["count"]
