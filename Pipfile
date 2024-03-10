@@ -5,18 +5,15 @@ name = "pypi"
 
 [packages]
 alembic = "*"
-asyncpg = "*"
 fastapi = "*"
 pandas = "*"
 pandera = "*"
-pydantic = "*"
 pydantic-settings = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
 pytest-xdist = "*"
 rich = "*"
-sqlalchemy = "*"
 uvicorn = "*"
 sqlmodel = "*"
 
