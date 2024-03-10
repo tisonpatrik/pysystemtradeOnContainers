@@ -17,6 +17,8 @@ rich = "*"
 uvicorn = "*"
 sqlmodel = "*"
 asyncpg = "*"
+requests = "*"
+httpx = "*"
 
 [requires]
 python_version = "3.10.12"

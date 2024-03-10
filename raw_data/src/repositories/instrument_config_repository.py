@@ -5,8 +5,6 @@ from src.schemas.config_schemas import InstrumentConfigSchema
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 
-table_name = InstrumentConfig.__tablename__
-
 
 class InstrumentConfigService:
     """
