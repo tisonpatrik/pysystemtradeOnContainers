@@ -4,12 +4,12 @@ This module provides services for fetching and processing instrument config data
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from raw_data.src.models.config_models import RollConfigModel
-from raw_data.src.schemas.config_schemas import RollConfigSchema
 
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.config_models import RollConfig
+from raw_data.src.schemas.config_schemas import RollConfigSchema
 
-table_name = RollConfigModel.__tablename__
+table_name = RollConfig.__tablename__
 
 
 class RollConfigService:

@@ -1,5 +1,4 @@
 import pandas as pd
-from src.app.models.risk_models import DailyVolNormalisedPriceForAssetClass
 from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
 from src.estimators.daily_vol_normalised_returns_for_asset_class import (
@@ -13,6 +12,7 @@ from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClass
 
 table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
 
@@ -27,10 +27,8 @@ class DailyVolNormalisedPriceForAssetClassService:
         self.daily_vol_normalised_returns_for_asset_class_estimator = (
             DailyVolNormalisedPriceForAssetClassEstimator()
         )
-        self.time_column = DailyVolNormalisedPriceForAssetClass.date_time.key
-        self.price_column = (
-            DailyVolNormalisedPriceForAssetClass.normalized_volatility.key
-        )
+        self.time_column = DailyVolNormalisedPriceForAssetClass.date_time
+        self.price_column = DailyVolNormalisedPriceForAssetClass.normalized_volatility
 
     async def insert_daily_vol_normalised_price_for_asset_class_async(
         self, asset_class

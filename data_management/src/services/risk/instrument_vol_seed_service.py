@@ -1,4 +1,4 @@
-from src.app.models.risk_models import InstrumentVolatility
+from risk.src.models.risk_models import InstrumentVolatility
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
 from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService

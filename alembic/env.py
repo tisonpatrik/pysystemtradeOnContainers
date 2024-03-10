@@ -21,11 +21,11 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from data_management.src.app.models.raw_data_models import BaseModel
-from data_management.src.app.models.risk_models import BaseModel
+# from data_management.src.app.models.risk_models import BaseModel
 from raw_data.src.models.config_models import BaseModel
+from raw_data.src.models.raw_data_models import BaseModel
 
-target_metadata = BaseModel.Base.metadata
+target_metadata = BaseModel.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

@@ -1,4 +1,4 @@
-from src.app.models.risk_models import InstrumentVolatility
+from risk.src.models.risk_models import InstrumentVolatility
 from src.app.schemas.risk_schemas import InstrumentVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.estimators.instrument_volatility import InstrumentVolEstimator

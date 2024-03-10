@@ -1,6 +1,6 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from src.app.models.risk_models import DailyReturnsVolatility
+from risk.src.models.risk_models import DailyReturnsVolatility
 from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService

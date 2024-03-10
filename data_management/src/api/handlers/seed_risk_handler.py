@@ -1,4 +1,4 @@
-from src.app.models.risk_models import (
+from risk.src.models.risk_models import (
     DailyReturnsVolatility,
     DailyVolNormalisedPriceForAssetClass,
     DailyVolNormalizedReturns,

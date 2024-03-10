@@ -7,10 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.config_models import InstrumentConfigModel
+from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.schemas.config_schemas import InstrumentConfigSchema
 
-table_name = InstrumentConfigModel.__tablename__
+table_name = InstrumentConfig.__tablename__
 
 
 class InstrumentConfigService:
@@ -20,7 +20,7 @@ class InstrumentConfigService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, InstrumentConfigSchema)
+        self.repository = Repository(db_session, InstrumentConfig)
 
     async def get_instrument_configs_async(self):
         """

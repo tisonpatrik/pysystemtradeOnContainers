@@ -4,12 +4,12 @@ This module provides services for fetching and processing multiple prices data a
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.app.models.raw_data_models import MultiplePricesModel
 from src.app.schemas.raw_data_schemas import MultiplePricesSchema
 from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.raw_data_models import MultiplePricesModel
 
 table_name = MultiplePricesModel.__tablename__
 
@@ -21,8 +21,8 @@ class MultiplePricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = MultiplePricesModel.date_time.key
-        self.price_column = MultiplePricesModel.price.key
+        self.time_column = MultiplePricesModel.date_time
+        self.price_column = MultiplePricesModel.price
 
     async def get_denominator_prices_async(self, symbol: str):
         """

@@ -1,4 +1,4 @@
-from src.app.models.risk_models import DailyVolNormalizedReturns
+from risk.src.models.risk_models import DailyVolNormalizedReturns
 from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_volatility_normalised_returns_service import (

@@ -1,50 +1,42 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
+from typing import Optional
+
+from sqlmodel import Field
 
 from common.src.database.base_model import BaseModel
 
 
-class InstrumentConfigModel(BaseModel):
-    __tablename__ = "instrument_config"
-    symbol = Column(String(50), primary_key=True)
-    description = Column(Text)
-    pointsize = Column(Float)
-    currency = Column(String(10))
-    asset_class = Column(String(50))
-    per_block = Column(Float)
-    percentage = Column(Float)
-    per_trade = Column(Integer)
-    region = Column(String(50))
+class InstrumentConfig(BaseModel, table=True):
+    symbol: str = Field(primary_key=True)
+    description: str
+    pointsize: float
+    currency: str
+    asset_class: str
+    per_block: float
+    percentage: float
+    per_trade: int
+    region: str
 
 
-class InstrumentMetadataModel(BaseModel):
-    __tablename__ = "instrument_metadata"
-    symbol = Column(
-        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
-    )
-    asset_class = Column(String(50))
-    sub_class = Column(String(50))
-    sub_sub_class = Column(String(50))
-    style = Column(String(50))
-    country = Column(String(50))
-    duration = Column(String(50))
-    description = Column(String(100))
+class InstrumentMetadata(BaseModel, table=True):
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    asset_class: str
+    sub_class: str
+    sub_sub_class: Optional[str]
+    style: Optional[str]
+    country: Optional[str]
+    duration: Optional[int]
+    description: str
 
 
-class RollConfigModel(BaseModel):
-    __tablename__ = "roll_config"
-    symbol = Column(
-        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
-    )
-    hold_roll_cycle = Column(String(50))
-    roll_offset_days = Column(Integer)
-    carry_offset = Column(Integer)
-    priced_roll_cycle = Column(String(50))
-    expiry_offset = Column(Integer)
+class RollConfig(BaseModel, table=True):
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    hold_roll_cycle: str
+    roll_offset_days: int
+    carry_offset: int
+    priced_roll_cycle: str
+    expiry_offset: int
 
 
-class SpreadCostsModel(BaseModel):
-    __tablename__ = "spread_costs"
-    symbol = Column(
-        String(50), ForeignKey("instrument_config.symbol"), primary_key=True
-    )
-    spread_costs = Column(Float)
+class SpreadCosts(BaseModel, table=True):
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    percentage: float

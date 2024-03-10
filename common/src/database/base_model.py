@@ -1,9 +1,6 @@
 # base_model.py
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
+from sqlmodel import SQLModel
 
 
-class BaseModel(Base):
+class BaseModel(SQLModel):
     __abstract__ = True
-    Base = Base

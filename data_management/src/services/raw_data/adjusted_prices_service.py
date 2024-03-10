@@ -4,11 +4,11 @@ This module provides services for fetching and processing adjusted prices data a
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.app.models.raw_data_models import AdjustedPricesModel
 from src.utils.converter import convert_frame_to_series
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.raw_data_models import AdjustedPrices
 
 
 class AdjustedPricesService:
@@ -18,11 +18,11 @@ class AdjustedPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = AdjustedPricesModel.date_time.key
-        self.table_name = AdjustedPricesModel.__tablename__
-        self.price_column = AdjustedPricesModel.price.key
+        self.time_column = AdjustedPrices.date_time
+        self.table_name = AdjustedPrices.__tablename__
+        self.price_column = AdjustedPrices.price
 
-        self.repository = Repository(db_session, AdjustedPricesModel)
+        self.repository = Repository(db_session, AdjustedPrices)
 
     async def get_daily_prices_async(self, symbol: str):
         """

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "10c58d0a3821cd874567409e0b2e982fbd518b8d41c7d573bc0f0303290bed79"
+            "sha256": "e24dba67017d12b9d8ac5709afaef12c6a7203ebe339d455d6c6d57236790063"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -739,6 +739,15 @@
             "markers": "python_version >= '3.7'",
             "version": "==2.0.28"
         },
+        "sqlmodel": {
+            "hashes": [
+                "sha256:966656f18a8e9a2d159eb215b07fb0cf5222acfae3362707ca611848a8a06bd1",
+                "sha256:b972f5d319580d6c37ecc417881f6ec4d1ad3ed3583d0ac0ed43234a28bf605a"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7' and python_version < '4.0'",
+            "version": "==0.0.16"
+        },
         "starlette": {
             "hashes": [
                 "sha256:13d429aa93a61dc40bf503e8c801db1f1bca3dc706b10ef2434a36123568f044",
@@ -768,7 +777,7 @@
                 "sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475",
                 "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"
             ],
-            "markers": "python_version >= '3.8'",
+            "markers": "python_version < '3.11'",
             "version": "==4.10.0"
         },
         "typing-inspect": {

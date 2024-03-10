@@ -4,12 +4,12 @@ This module provides services for fetching and processing spread costs data asyn
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from raw_data.src.models.config_models import SpreadCostsModel
-from raw_data.src.schemas.config_schemas import SpreadCostsSchema
 
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.config_models import SpreadCosts
+from raw_data.src.schemas.config_schemas import SpreadCostsSchema
 
-table_name = SpreadCostsModel.__tablename__
+table_name = SpreadCosts.__tablename__
 
 
 class SpreadCostService:

@@ -1,6 +1,5 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from src.app.models.risk_models import DailyReturnsVolatility
 from src.app.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
@@ -9,6 +8,7 @@ from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from risk.src.models.risk_models import DailyReturnsVolatility
 
 table_name = DailyReturnsVolatility.__tablename__
 
@@ -19,8 +19,8 @@ class DailyReturnsVolService:
     """
 
     def __init__(self, db_session):
-        self.price_column = DailyReturnsVolatility.daily_returns_volatility.key
-        self.time_column = DailyReturnsVolatility.date_time.key
+        self.price_column = DailyReturnsVolatility.daily_returns_volatility
+        self.time_column = DailyReturnsVolatility.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_returns_vol_estimator = DailyReturnsVolEstimator()

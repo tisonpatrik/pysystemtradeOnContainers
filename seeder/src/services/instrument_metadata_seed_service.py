@@ -3,10 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.config_models import InstrumentMetadataModel
-from raw_data.src.schemas.config_schemas import InstrumentMetadataSchema
-
-table_name = InstrumentMetadataModel.__tablename__
+from raw_data.src.models.config_models import InstrumentMetadata
 
 
 class InstrumentMetadataSeedService:
@@ -16,15 +13,14 @@ class InstrumentMetadataSeedService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, InstrumentMetadataSchema)
+        self.repository = Repository(db_session, InstrumentMetadata)
 
     async def seed_instrument_metadata_async(self, raw_data: pd.DataFrame):
         """
         Seed instrument config data.
         """
-        self.logger.info(f"Seeding {table_name} data: ")
+        self.logger.info(f"Seeding {InstrumentMetadata.__tablename__} data: ")
         data = [
-            InstrumentMetadataSchema(**row.to_dict())
-            for index, row in raw_data.iterrows()
+            InstrumentMetadata(**row.to_dict()) for index, row in raw_data.iterrows()
         ]
         await self.repository.insert_many_async(data)
