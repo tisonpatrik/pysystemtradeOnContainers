@@ -17,7 +17,6 @@ class InstrumentVolatility(BaseModel, table=True):
     instrument_volatility: float
 
 
-
 class DailyVolNormalizedReturns(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
@@ -26,7 +25,5 @@ class DailyVolNormalizedReturns(BaseModel, table=True):
 
 class DailyVolNormalisedPriceForAssetClass(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
-    asset_clas: str = Field(
-        primary_key=True, foreign_key="instrumentconfig.asset_class"
-    )
+    asset_clas: str
     normalized_volatility: float

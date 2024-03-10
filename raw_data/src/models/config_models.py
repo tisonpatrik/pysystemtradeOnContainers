@@ -18,7 +18,7 @@ class InstrumentConfig(BaseModel, table=True):
 
 
 class InstrumentMetadata(BaseModel, table=True):
-    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     asset_class: str
     sub_class: str
     sub_sub_class: Optional[str]
@@ -29,7 +29,7 @@ class InstrumentMetadata(BaseModel, table=True):
 
 
 class RollConfig(BaseModel, table=True):
-    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     hold_roll_cycle: str
     roll_offset_days: int
     carry_offset: int
@@ -38,5 +38,5 @@ class RollConfig(BaseModel, table=True):
 
 
 class SpreadCosts(BaseModel, table=True):
-    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     percentage: float
