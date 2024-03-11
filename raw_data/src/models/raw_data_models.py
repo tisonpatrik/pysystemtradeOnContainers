@@ -11,13 +11,13 @@ class AdjustedPrices(BaseModel, table=True):
     price: float
 
 
-class FxPricesModel(BaseModel, table=True):
+class FxPrices(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     price: float
 
 
-class MultiplePricesModel(BaseModel, table=True):
+class MultiplePrices(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     carry: float
@@ -28,7 +28,7 @@ class MultiplePricesModel(BaseModel, table=True):
     forward_contract: int
 
 
-class RollCalendarsModel(BaseModel):
+class RollCalendars(BaseModel):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     current_contract: int

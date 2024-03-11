@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.api.handlers.seed_config_data_handler import SeedConfigDataHandler
+from src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
 
 from common.src.database.dependencies import get_db
 from common.src.logging.logger import AppLogger
@@ -20,7 +20,7 @@ async def seed_raw_data_files_async(db_session: AsyncSession = Depends(get_db)):
     """
     try:
         # Business logic is in a separate handler
-        seed_db_handler = SeedConfigDataHandler(db_session)
+        seed_db_handler = SeedRawDataHandler(db_session)
         await seed_db_handler.seed_data_from_csv_async()
 
         logger.info("Successfully seeded database with raw data.")

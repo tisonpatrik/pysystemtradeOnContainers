@@ -42,9 +42,9 @@ class SeedRawDataHandler:
         self.logger.info("Data processing for csv files has started")
         configs = [
             FxPricesSchemaConfig,
-            AdjustedPricesConfig,
-            MultiplePricesConfig,
-            RollCalendarsConfig,
+            # AdjustedPricesConfig,
+            # MultiplePricesConfig,
+            # RollCalendarsConfig,
         ]
 
         for config in configs:

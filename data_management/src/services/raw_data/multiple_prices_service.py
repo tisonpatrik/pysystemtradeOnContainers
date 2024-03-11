@@ -9,9 +9,9 @@ from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import MultiplePricesModel
+from raw_data.src.models.raw_data_models import MultiplePrices
 
-table_name = MultiplePricesModel.__tablename__
+table_name = MultiplePrices.__tablename__
 
 
 class MultiplePricesService:
@@ -21,8 +21,8 @@ class MultiplePricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = MultiplePricesModel.date_time
-        self.price_column = MultiplePricesModel.price
+        self.time_column = MultiplePrices.date_time
+        self.price_column = MultiplePrices.price
 
     async def get_denominator_prices_async(self, symbol: str):
         """
