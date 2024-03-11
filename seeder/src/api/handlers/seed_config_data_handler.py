@@ -11,6 +11,8 @@ from src.csv_to_db_configs.config_files_config import (
 )
 from src.services.instrument_config_seed_service import InstrumentConfigSeedService
 from src.services.instrument_metadata_seed_service import InstrumentMetadataSeedService
+from src.services.roll_config_seed_service import RollConfigSeedService
+from src.services.spread_cost_seed_service import SpreadCostSeedService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.src.logging.logger import AppLogger
@@ -28,6 +30,8 @@ class SeedConfigDataHandler:
         self.instrument_metadata_seed_service = InstrumentMetadataSeedService(
             db_session
         )
+        self.roll_config_seed_service = RollConfigSeedService(db_session)
+        self.spread_cost_seed_service = SpreadCostSeedService(db_session)
 
     async def seed_data_from_csv_async(self):
         """
@@ -37,8 +41,8 @@ class SeedConfigDataHandler:
         configs = [
             InstrumentConfigConfig,
             InstrumentMetadataConfig,
-            # RollConfigConfig,
-            # SpreadCostConfig,
+            RollConfigConfig,
+            SpreadCostConfig,
         ]
         for config in configs:
             await self._process_data_and_insert_them_into_db(config)
@@ -59,9 +63,9 @@ class SeedConfigDataHandler:
             await self.instrument_metadata_seed_service.seed_instrument_metadata_async(
                 raw_data
             )
-        # elif table_name == "roll_config":
-        #     await self.roll_config_service.insert_roll_config_async(raw_data)
-        # elif table_name == "spread_costs":
-        #     await self.spread_costs_service.insert_spread_costs_async(raw_data)
+        elif table_name == "roll_config":
+            await self.roll_config_seed_service.seed_roll_config_async(raw_data)
+        elif table_name == "spread_costs":
+            await self.spread_cost_seed_service.seed_spread_costs_async(raw_data)
         else:
             raise ValueError(f"Unrecognized table name: {table_name}")

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlmodel import Field
 
 from common.src.database.base_model import BaseModel
@@ -21,10 +19,6 @@ class InstrumentMetadata(BaseModel, table=True):
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     asset_class: str
     sub_class: str
-    sub_sub_class: Optional[str]
-    style: Optional[str]
-    country: Optional[str]
-    duration: Optional[int]
     description: str
 
 
@@ -39,4 +33,4 @@ class RollConfig(BaseModel, table=True):
 
 class SpreadCosts(BaseModel, table=True):
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
-    percentage: float
+    spread_costs: float

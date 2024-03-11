@@ -8,7 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
-from raw_data.src.schemas.config_schemas import InstrumentConfigSchema
 
 table_name = InstrumentConfig.__tablename__
 

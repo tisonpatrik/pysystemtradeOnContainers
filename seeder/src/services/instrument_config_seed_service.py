@@ -20,5 +20,5 @@ class InstrumentConfigSeedService:
         Seed instrument config data.
         """
         self.logger.info(f"Seeding {InstrumentConfig.__tablename__} data: ")
-        data = [InstrumentConfig(**row.to_dict()) for index, row in raw_data.iterrows()]
+        data = [InstrumentConfig(**row.to_dict()) for _, row in raw_data.iterrows()]
         await self.repository.insert_many_async(data)
