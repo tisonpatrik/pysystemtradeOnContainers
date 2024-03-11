@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+
   raw_data:
     build:
       context: .
@@ -13,6 +14,7 @@ services:
       - "8000:8000"
     volumes:
       - ./raw_data/src:/home/app/src
+
   risk:
     build:
       context: .
@@ -25,6 +27,7 @@ services:
       - "8001:8000"
     volumes:
       - ./risk/src:/home/app/src
+
   data_management:
     build:
       context: .
@@ -37,6 +40,7 @@ services:
       - "8002:8000"
     volumes:
       - ./data_management/src:/home/app/src
+
   db_postgres:
     image: postgres:latest
     container_name: postgres
@@ -59,6 +63,7 @@ services:
       - PGADMIN_LISTEN_PORT=5050
     ports:
       - "5050:5050"
+
 volumes:
   db-postgres:
     driver: local
