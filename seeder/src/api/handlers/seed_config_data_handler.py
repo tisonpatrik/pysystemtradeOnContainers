@@ -3,20 +3,17 @@ This module contains the SeeConfigDataHandler class,
 which is responsible for seeding the database from CSV files.
 """
 
-from common.src.logging.logger import AppLogger
-from seeder.src.csv_to_db_configs.config_files_config import (
+from src.csv_to_db_configs.config_files_config import (
     InstrumentConfigConfig,
     InstrumentMetadataConfig,
     RollConfigConfig,
     SpreadCostConfig,
 )
-from seeder.src.services.instrument_config_seed_service import (
-    InstrumentConfigSeedService,
-)
-from seeder.src.services.instrument_metadata_seed_service import (
-    InstrumentMetadataSeedService,
-)
-from seeder.src.utils.csv_loader import get_full_path, load_csv
+from src.services.instrument_config_seed_service import InstrumentConfigSeedService
+from src.services.instrument_metadata_seed_service import InstrumentMetadataSeedService
+from src.utils.csv_loader import get_full_path, load_csv
+
+from common.src.logging.logger import AppLogger
 
 
 class SeedConfigDataHandler:

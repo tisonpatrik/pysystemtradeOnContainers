@@ -17,7 +17,6 @@ rich = "*"
 uvicorn = "*"
 sqlmodel = "*"
 asyncpg = "*"
-requests = "*"
 httpx = "*"
 
 [requires]
