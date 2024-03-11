@@ -9,10 +9,14 @@ from src.csv_to_db_configs.config_files_config import (
     RollConfigConfig,
     SpreadCostConfig,
 )
-from src.services.instrument_config_seed_service import InstrumentConfigSeedService
-from src.services.instrument_metadata_seed_service import InstrumentMetadataSeedService
-from src.services.roll_config_seed_service import RollConfigSeedService
-from src.services.spread_cost_seed_service import SpreadCostSeedService
+from src.services.config.instrument_config_seed_service import (
+    InstrumentConfigSeedService,
+)
+from src.services.config.instrument_metadata_seed_service import (
+    InstrumentMetadataSeedService,
+)
+from src.services.config.roll_config_seed_service import RollConfigSeedService
+from src.services.config.spread_cost_seed_service import SpreadCostSeedService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.src.logging.logger import AppLogger
