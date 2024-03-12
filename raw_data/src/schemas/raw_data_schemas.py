@@ -1,37 +1,35 @@
 from datetime import datetime
 
-import pandas as pd
 import pandera as pa
-from pandera import Field
 from pandera.typing import Series
 
 
 class AdjustedPricesSchema(pa.DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = Field(nullable=False)
+    symbol: Series[str]
     price: Series[float]
 
 
 class FxPricesSchema(pa.DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = Field(nullable=False)
+    symbol: Series[str]
     price: Series[float]
 
 
 class MultiplePricesSchema(pa.DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = Field(nullable=False)
-    carry: Series[float] = Field(nullable=True)
+    symbol: Series[str]
+    carry: Series[float] = pa.Field(nullable=True)
     carry_contract: Series[int]
     price: Series[float]
     price_contract: Series[int]
-    forward: Series[float] = Field(nullable=True)
+    forward: Series[float] = pa.Field(nullable=True)
     forward_contract: Series[int]
 
 
 class RollCalendarsSchema(pa.DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = Field(nullable=False)
+    symbol: Series[str]
     current_contract: Series[int]
     next_contract: Series[int]
     carry_contract: Series[int]

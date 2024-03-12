@@ -9,17 +9,13 @@ from src.csv_to_db_configs.raw_data_config import (
     MultiplePricesConfig,
     RollCalendarsConfig,
 )
-
-# from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
+from src.services.raw_data.seed_adjusted_prices_service import SeedAdjustedPricesService
 from src.services.raw_data.seed_fx_prices_service import SeedFxPricesService
-
-# from src.services.raw_data.multiple_prices_service import MultiplePricesService
-# from src.services.raw_data.roll_calendars_service import RollCalendarsService
+from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePricesService
+from src.services.raw_data.seed_roll_calendars_service import SeedRollCalendarsService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.src.logging.logger import AppLogger
-
-# Business logic is in a separate handler
 
 
 class SeedRawDataHandler:
@@ -30,10 +26,10 @@ class SeedRawDataHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        # self.adjusted_prices_service = AdjustedPricesService(db_session)
+        self.adjusted_prices_service = SeedAdjustedPricesService(db_session)
         self.fx_prices_service = SeedFxPricesService(db_session)
-        # self.multiple_prices_service = MultiplePricesService(db_session)
-        # self.roll_calendars_service = RollCalendarsService(db_session)
+        self.multiple_prices_service = SeedMultiplePricesService(db_session)
+        self.roll_calendars_service = SeedRollCalendarsService(db_session)
 
     async def seed_data_from_csv_async(self):
         """
@@ -42,9 +38,9 @@ class SeedRawDataHandler:
         self.logger.info("Data processing for csv files has started")
         configs = [
             FxPricesSchemaConfig,
-            # AdjustedPricesConfig,
-            # MultiplePricesConfig,
-            # RollCalendarsConfig,
+            AdjustedPricesConfig,
+            MultiplePricesConfig,
+            RollCalendarsConfig,
         ]
 
         for config in configs:
@@ -60,13 +56,15 @@ class SeedRawDataHandler:
 
         if table_name == "fx_prices":
             await self.fx_prices_service.seed_fx_prices_async(raw_data)
-        # elif table_name == "adjusted_prices":
-        #     await self.adjusted_prices_service.insert_adjuted_prices_async(raw_data)
-        # elif table_name == "roll_calendars":
-        #     await self.roll_calendars_service.insert_roll_calendars_async(raw_data)
-        # elif table_name == "multiple_prices":
-        #     await self.multiple_prices_service.insert_multiple_prices_service_async(
-        #         raw_data
-        #     )
+        elif table_name == "adjusted_prices":
+            await self.adjusted_prices_service.seed_adjusted_prices_async(raw_data)
+        elif table_name == "roll_calendars":
+            await self.roll_calendars_service.seed_roll_calendars_service_async(
+                raw_data
+            )
+        elif table_name == "multiple_prices":
+            await self.multiple_prices_service.seed_multiple_prices_service_async(
+                raw_data
+            )
         else:
             raise ValueError(f"Unrecognized table name: {table_name}")

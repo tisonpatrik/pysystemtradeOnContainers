@@ -28,7 +28,7 @@ class MultiplePrices(BaseModel, table=True):
     forward_contract: int
 
 
-class RollCalendars(BaseModel):
+class RollCalendars(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     current_contract: int
