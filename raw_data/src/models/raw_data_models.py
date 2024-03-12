@@ -13,7 +13,7 @@ class AdjustedPrices(BaseModel, table=True):
 
 class FxPrices(BaseModel, table=True):
     date_time: datetime = Field(primary_key=True)
-    symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
+    symbol: str
     price: float
 
 

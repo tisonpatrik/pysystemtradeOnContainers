@@ -1,5 +1,6 @@
 import pandas as pd
 from pandera.errors import SchemaError
+from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.repository import Repository
@@ -22,6 +23,8 @@ class SeedFxPricesService:
         Insert fx prices data into db.
         """
         try:
+            date_time = inspect(FxPrices).c.date_time.key
+            raw_data[date_time] = pd.to_datetime(raw_data[date_time])
             FxPricesSchema.validate(raw_data, lazy=True)
             data_models = [FxPrices(**row.to_dict()) for _, row in raw_data.iterrows()]
             await self.repository.insert_many_async(data_models)
