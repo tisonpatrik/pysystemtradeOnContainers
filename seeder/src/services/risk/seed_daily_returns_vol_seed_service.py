@@ -5,6 +5,7 @@
 # from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService
 
 import pandas as pd
+from pandera.errors import SchemaErrors
 from sqlalchemy import inspect
 
 from common.src.database.entity_repository import EntityRepository
@@ -12,6 +13,7 @@ from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
+from raw_data.src.schemas.raw_data_schemas import AdjustedPricesSchema
 from risk.src.models.risk_models import DailyReturnsVolatility
 
 
@@ -20,7 +22,7 @@ class DailyReturnsVolSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.risk_repository = EntityRepository(db_session, DailyReturnsVolatility)
+        self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
         self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
         self.prices_repository = RecordsRepository(db_session, AdjustedPrices)
 
@@ -38,18 +40,31 @@ class DailyReturnsVolSeedService:
             instrument_configs = await self.instrument_repository.get_all_async()
             for config in instrument_configs:
                 symbol = config.symbol
-                symbol_column = inspect(InstrumentConfig).c.symbol.key
                 prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
                     symbol
                 )
-                data_frame = pd.DataFrame(prices)
+
+                if prices.empty:
+                    self.logger.info(f"DataFrame for symbol {symbol} is empty.")
+                    continue
+                # validated = AdjustedPricesSchema.validate(prices, lazy=True)
 
                 # print(data_frame.head())
 
                 # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
                 #     daily_prices, symbol
                 # )
-        except Exception as error:
-            error_message = f"An error occurred during the daily returns volatility seeding process: {error}"
+        except SchemaErrors as err:
+            # Logování specifických vadných řádků
+            for index, failure_case in err.failure_cases.iterrows():
+                error_detail = (
+                    f"Chyba ve sloupci '{failure_case['column']}', "
+                    f"chybná hodnota: {failure_case['failure_case']}, "
+                    f"na indexu: {failure_case['index']}"
+                )
+                self.logger.error(error_detail)
+
+            # Raisování vyjímky s celkovým sumářem chyb
+            error_message = f"An error occurred during the daily returns volatility seeding process: {err}"
             self.logger.error(error_message)
             raise ValueError(error_message)

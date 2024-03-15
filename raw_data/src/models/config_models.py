@@ -4,6 +4,7 @@ from common.src.database.base_model import BaseEntity
 
 
 class InstrumentConfig(BaseEntity, table=True):
+    __name__ = "insturment_config"
     symbol: str = Field(primary_key=True)
     description: str
     pointsize: float
@@ -16,6 +17,7 @@ class InstrumentConfig(BaseEntity, table=True):
 
 
 class InstrumentMetadata(BaseEntity, table=True):
+    __name__ = "insturment_metadata"
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     asset_class: str
     sub_class: str
@@ -23,6 +25,7 @@ class InstrumentMetadata(BaseEntity, table=True):
 
 
 class RollConfig(BaseEntity, table=True):
+    __name__ = "roll_config"
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     hold_roll_cycle: str
     roll_offset_days: int
@@ -32,5 +35,6 @@ class RollConfig(BaseEntity, table=True):
 
 
 class SpreadCosts(BaseEntity, table=True):
+    __name__ = "spred_costs"
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     spread_costs: float

@@ -1,7 +1,7 @@
 import asyncio
 from logging.config import fileConfig
 
-from sqlalchemy import pool
+from sqlalchemy import MetaData, pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
@@ -22,10 +22,22 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 from raw_data.src.models.config_models import BaseEntity
-from raw_data.src.models.raw_data_models import BaseRecord
-from risk.src.models.risk_models import BaseEntity
+from raw_data.src.models.raw_data_models import BaseRecord as RawDataBaseRecord
+from risk.src.models.risk_models import BaseRecord as RiskBaseRecord
 
-target_metadata = BaseEntity.metadata
+combined_metadata = MetaData()
+
+
+for metadata in (
+    BaseEntity.metadata,
+    RawDataBaseRecord.metadata,
+    RiskBaseRecord.metadata,
+):
+    for table in metadata.tables.values():
+        combined_metadata._add_table(table.name, table.schema, table)
+
+target_metadata = combined_metadata
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
