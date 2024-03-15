@@ -3,7 +3,7 @@ from pandera.errors import SchemaError
 from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.repository import Repository
+from common.src.database.entity_repository import EntityRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import RollCalendars
 from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
@@ -13,7 +13,7 @@ class SeedRollCalendarsService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, RollCalendars)
+        self.repository = EntityRepository(db_session, RollCalendars)
 
     async def seed_roll_calendars_service_async(self, raw_data: pd.DataFrame):
 

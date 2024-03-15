@@ -3,7 +3,7 @@ from pandera.errors import SchemaError
 from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.repository import Repository
+from common.src.database.entity_repository import EntityRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import FxPrices
 from raw_data.src.schemas.raw_data_schemas import FxPricesSchema
@@ -13,7 +13,7 @@ class SeedFxPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, FxPrices)
+        self.repository = EntityRepository(db_session, FxPrices)
 
     async def seed_fx_prices_async(self, raw_data: pd.DataFrame):
         try:

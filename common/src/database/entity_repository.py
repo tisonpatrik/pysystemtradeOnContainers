@@ -12,7 +12,7 @@ from common.src.logging.logger import AppLogger
 T = TypeVar("T", bound=BaseEntity)
 
 
-class Repository(Generic[T]):
+class EntityRepository(Generic[T]):
     """
     Generic repository for CRUD operations on entities.
     """

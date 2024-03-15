@@ -6,7 +6,7 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.utils.converter import convert_frame_to_series
 
-from common.src.database.repository import Repository
+from common.src.database.entity_repository import EntityRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import AdjustedPrices
 
@@ -22,7 +22,7 @@ class AdjustedPricesService:
         self.table_name = AdjustedPrices.__tablename__
         self.price_column = AdjustedPrices.price
 
-        self.repository = Repository(db_session, AdjustedPrices)
+        self.repository = EntityRepository(db_session, AdjustedPrices)
 
     async def get_daily_prices_async(self, symbol: str):
         """

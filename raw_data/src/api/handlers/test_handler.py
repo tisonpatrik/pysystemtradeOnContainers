@@ -1,6 +1,6 @@
 from src.models.config_models import InstrumentConfig
 
-from common.src.database.repository import Repository
+from common.src.database.entity_repository import EntityRepository
 from common.src.logging.logger import AppLogger
 
 
@@ -12,7 +12,7 @@ class TestHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, InstrumentConfig)
+        self.repository = EntityRepository(db_session, InstrumentConfig)
 
     async def get_config_items_count_async(self):
         """

@@ -7,7 +7,7 @@
 import pandas as pd
 from sqlalchemy import inspect
 
-from common.src.database.repository import Repository
+from common.src.database.entity_repository import EntityRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
@@ -19,9 +19,9 @@ class DailyReturnsVolSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.risk_repository = Repository(db_session, DailyReturnsVolatility)
-        self.prices_repository = Repository(db_session, AdjustedPrices)
-        self.instrument_repository = Repository(db_session, InstrumentConfig)
+        self.risk_repository = EntityRepository(db_session, DailyReturnsVolatility)
+        self.prices_repository = EntityRepository(db_session, AdjustedPrices)
+        self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
 
         # self.instrument_config_service = InstrumentConfigService(db_session)
         # self.adjusted_prices_service = AdjustedPricesService(db_session)
@@ -42,6 +42,7 @@ class DailyReturnsVolSeedService:
                     filters={symbol_column: symbol}
                 )
                 data_frame = pd.DataFrame(prices)
+
                 # print(data_frame.head())
 
                 # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
