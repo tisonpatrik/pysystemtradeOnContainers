@@ -9,7 +9,7 @@ from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import RollCalendars
 from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
 
-table_name = RollCalendars.__tablename__
+table_name = RollCalendars.__name__
 
 
 class RollCalendarsService:

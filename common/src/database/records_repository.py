@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
+from typing import Generic, Type, TypeVar
 
 import pandas as pd
 from sqlalchemy import text

@@ -6,9 +6,11 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.utils.converter import convert_frame_to_series
 
-from common.src.database.entity_repository import EntityRepository
+from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import AdjustedPrices
+
+table_name = AdjustedPrices.__name__
 
 
 class AdjustedPricesService:
@@ -19,10 +21,9 @@ class AdjustedPricesService:
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
         self.time_column = AdjustedPrices.date_time
-        self.table_name = AdjustedPrices.__tablename__
         self.price_column = AdjustedPrices.price
 
-        self.repository = EntityRepository(db_session, AdjustedPrices)
+        self.repository = RecordsRepository(db_session, AdjustedPrices)
 
     async def get_daily_prices_async(self, symbol: str):
         """
@@ -47,6 +48,6 @@ class AdjustedPricesService:
             print("neco")
 
         except Exception as exc:
-            error_message = f"Error inserting data for {self.table_name}: {str(exc)}"
+            error_message = f"Error inserting data for {table_name}: {str(exc)}"
             self.logger.error(error_message)
             raise ValueError(error_message)

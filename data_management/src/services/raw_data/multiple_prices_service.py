@@ -11,7 +11,7 @@ from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import MultiplePrices
 from raw_data.src.schemas.raw_data_schemas import MultiplePricesSchema
 
-table_name = MultiplePrices.__tablename__
+table_name = MultiplePrices.__name__
 
 
 class MultiplePricesService:

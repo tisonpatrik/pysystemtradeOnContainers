@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 from raw_data.src.models.config_models import BaseEntity
-from raw_data.src.models.raw_data_models import BaseEntity
+from raw_data.src.models.raw_data_models import BaseRecord
 from risk.src.models.risk_models import BaseEntity
 
 target_metadata = BaseEntity.metadata
