@@ -10,6 +10,7 @@ WORKDIR /home/app
 
 COPY common/ ./common
 COPY raw_data ./raw_data
+COPY risk ./risk
 
 COPY seeder/src/ ./src
 COPY seeder/tests/ ./tests

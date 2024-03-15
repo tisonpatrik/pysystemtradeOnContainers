@@ -6,6 +6,7 @@ from common.src.database.base_model import BaseModel
 
 
 class AdjustedPrices(BaseModel, table=True):
+
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     price: float

@@ -1,8 +1,10 @@
-from typing import Generic, List, Type, TypeVar
+from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.attributes import QueryableAttribute
 
 from common.src.database.base_model import BaseModel
 from common.src.logging.logger import AppLogger
@@ -74,5 +76,35 @@ class Repository(Generic[T]):
         except SQLAlchemyError as exc:
             await self.db_session.rollback()
             error_message = f"Error deleting {self.entity_class.__name__}: {exc}"
+            self.logger.error(error_message)
+            raise
+
+    async def get_related_data_async(
+        self,
+        relations: Optional[List[QueryableAttribute]] = None,
+        filters: Optional[Dict[str, Any]] = None,
+    ) -> List[T]:
+        """
+        Fetches entities of a type along with their specified relations and optional filters.
+
+        :param relations: List of relation names to join load.
+        :param filters: Optional filters to apply on the query.
+        """
+        try:
+            query = select(self.entity_class)
+
+            if relations:
+                for relation in relations:
+                    query = query.options(joinedload(relation))
+
+            if filters:
+                for key, value in filters.items():
+                    query = query.filter(getattr(self.entity_class, key) == value)
+
+            result = await self.db_session.execute(query)
+            entities = result.scalars().all()
+            return list(entities)  # Explicitní konverze na List[T]
+        except SQLAlchemyError as exc:
+            error_message = f"Error fetching related {self.entity_class.__name__} data with filters {filters}: {exc}"
             self.logger.error(error_message)
             raise
