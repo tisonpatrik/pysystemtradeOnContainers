@@ -6,10 +6,10 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.attributes import QueryableAttribute
 
-from common.src.database.base_model import BaseModel
+from common.src.database.base_model import BaseEntity
 from common.src.logging.logger import AppLogger
 
-T = TypeVar("T", bound=BaseModel)
+T = TypeVar("T", bound=BaseEntity)
 
 
 class Repository(Generic[T]):

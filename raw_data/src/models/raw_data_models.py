@@ -2,23 +2,23 @@ from datetime import datetime
 
 from sqlmodel import Field
 
-from common.src.database.base_model import BaseModel
+from common.src.database.base_model import BaseEntity
 
 
-class AdjustedPrices(BaseModel, table=True):
+class AdjustedPrices(BaseEntity, table=True):
 
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     price: float
 
 
-class FxPrices(BaseModel, table=True):
+class FxPrices(BaseEntity, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str
     price: float
 
 
-class MultiplePrices(BaseModel, table=True):
+class MultiplePrices(BaseEntity, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     carry: float
@@ -29,7 +29,7 @@ class MultiplePrices(BaseModel, table=True):
     forward_contract: int
 
 
-class RollCalendars(BaseModel, table=True):
+class RollCalendars(BaseEntity, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrumentconfig.symbol")
     current_contract: int

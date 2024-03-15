@@ -42,7 +42,7 @@ class DailyReturnsVolSeedService:
                     filters={symbol_column: symbol}
                 )
                 data_frame = pd.DataFrame(prices)
-                print(data_frame.head())
+                # print(data_frame.head())
 
                 # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
                 #     daily_prices, symbol
