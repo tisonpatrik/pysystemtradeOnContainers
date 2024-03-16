@@ -1,9 +1,10 @@
+import asyncio
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.orm.attributes import QueryableAttribute
 
 from common.src.database.base_model import BaseEntity
@@ -24,18 +25,22 @@ class EntityRepository(Generic[T]):
 
     async def insert_many_async(self, entities: List[T]) -> None:
         """
-        Adds multiple new entities to the database in a bulk operation.
-
-        :param entities: List of entity instances to be added.
+        Adds multiple new entities to the database in a bulk operation using `bulk_save_objects`,
+        run in a thread pool for async compatibility.
         """
-        try:
-            self.db_session.add_all(entities)
+        sync_session = self.db_session.sync_session
 
-            await self.db_session.commit()
+        def do_bulk_save(sync_session: Session, entities: List[T]):
+            sync_session.bulk_save_objects(entities)
+            sync_session.commit()
+
+        try:
+            loop = asyncio.get_running_loop()
+            await loop.run_in_executor(None, do_bulk_save, sync_session, entities)
         except SQLAlchemyError as exc:
-            await self.db_session.rollback()
+            sync_session.rollback()
             error_message = (
-                f"Error adding multiple {self.entity_class.__name__} entities: {exc}"
+                f"Error during bulk insert of {type(entities[0]).__name__}: {exc}"
             )
             self.logger.error(error_message)
             raise

@@ -28,6 +28,8 @@ async def get_db() -> AsyncGenerator:
         global_settings.database_url.unicode_string(),  # type: ignore
         future=True,
         echo=False,
+        pool_size=10,
+        max_overflow=20,
     )
     # expire_on_commit=False will prevent attributes from being expired
     # after commit.
