@@ -61,7 +61,10 @@ class DailyReturnsVolSeedService:
                     ],
                 )
                 validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-                # await self.risk_repository.async_insert_dataframe_to_table(validated)
+                await self.risk_repository.async_insert_dataframe_to_table(validated)
+            self.logger.info(
+                f"Successfully inserted {DailyReturnsVolatility.__name__} calculations for {len(instrument_configs)} instruments."
+            )
 
         except SchemaError as schema_exc:
             self.logger.error(f"Schema validation error: {schema_exc.failure_cases}")
