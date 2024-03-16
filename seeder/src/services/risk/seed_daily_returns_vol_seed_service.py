@@ -5,9 +5,9 @@ from pandera.errors import SchemaErrors
 from common.src.database.entity_repository import EntityRepository
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
-from common.src.validations.prices_schemas import DailyPrices
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
+from raw_data.src.schemas.raw_data_schemas import AdjustedPricesSchema
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
 
@@ -35,12 +35,15 @@ class DailyReturnsVolSeedService:
                 prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
                     symbol
                 )
-                # daily_returns_vols = self.estimator.process_daily_returns_vol(
-                #     transformed_df
-                # )
-                # print(daily_returns_vols.head())
+                prices = prices[
+                    [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
+                ]
+                indexed_df = prices.set_index(AdjustedPricesSchema.date_time)
+                series = indexed_df.resample("1B").last()
+                series = indexed_df[AdjustedPricesSchema.price]
+                daily_returns_vols = self.estimator.process_daily_returns_vol(series)
+                print(daily_returns_vols.head())
 
-                # validated = AdjustedPricesSchema.validate(prices, lazy=True)
                 # await self.risk_repository.async_insert_dataframe_to_table(validated)
         except SchemaErrors as err:
             error_message = f"An error occurred during the daily returns volatility seeding process: {err}"

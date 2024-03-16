@@ -1,7 +1,10 @@
 from datetime import datetime
 
+import pandas as pd
 import pandera as pa
-from pandera.typing import Series
+from pandera.typing import DataFrame, Series
+
+from common.src.validations.prices_schemas import DailyPrices
 
 
 class AdjustedPricesSchema(pa.DataFrameModel):
