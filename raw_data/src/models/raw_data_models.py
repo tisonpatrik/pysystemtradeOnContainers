@@ -5,21 +5,21 @@ from sqlmodel import Field
 from common.src.database.base_model import BaseRecord
 
 
-class AdjustedPrices(BaseRecord, table=True):
+class AdjustedPricesModel(BaseRecord, table=True):
     __tablename__ = "adjusted_prices"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     price: float
 
 
-class FxPrices(BaseRecord, table=True):
+class FxPricesModel(BaseRecord, table=True):
     __tablename__ = "fx_prices"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True)
     price: float
 
 
-class MultiplePrices(BaseRecord, table=True):
+class MultiplePricesModel(BaseRecord, table=True):
     __tablename__ = "multiple_prices"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
@@ -31,7 +31,7 @@ class MultiplePrices(BaseRecord, table=True):
     forward_contract: int
 
 
-class RollCalendars(BaseRecord, table=True):
+class RollCalendarsModel(BaseRecord, table=True):
     __tablename__ = "roll_calendars"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")

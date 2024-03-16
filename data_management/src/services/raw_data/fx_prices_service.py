@@ -7,9 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import FxPrices
+from raw_data.src.models.raw_data_models import FxPricesModel
 
-table_name = FxPrices.__name__
+table_name = FxPricesModel.__name__
 
 
 class FxPricesService:
@@ -19,7 +19,7 @@ class FxPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = RecordsRepository(db_session, FxPrices)
+        self.repository = RecordsRepository(db_session, FxPricesModel)
 
     async def insert_fx_prices_async(self, raw_data: pd.DataFrame):
         """

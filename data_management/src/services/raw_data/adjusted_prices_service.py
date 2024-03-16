@@ -8,9 +8,9 @@ from src.utils.converter import convert_frame_to_series
 
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import AdjustedPrices
+from raw_data.src.models.raw_data_models import AdjustedPricesModel
 
-table_name = AdjustedPrices.__name__
+table_name = AdjustedPricesModel.__name__
 
 
 class AdjustedPricesService:
@@ -20,10 +20,10 @@ class AdjustedPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = AdjustedPrices.date_time
-        self.price_column = AdjustedPrices.price
+        self.time_column = AdjustedPricesModel.date_time
+        self.price_column = AdjustedPricesModel.price
 
-        self.repository = RecordsRepository(db_session, AdjustedPrices)
+        self.repository = RecordsRepository(db_session, AdjustedPricesModel)
 
     async def get_daily_prices_async(self, symbol: str):
         """

@@ -5,29 +5,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import MultiplePrices
-from raw_data.src.schemas.raw_data_schemas import MultiplePricesSchema
+from raw_data.src.models.raw_data_models import MultiplePricesModel
+from raw_data.src.schemas.raw_data_schemas import MultiplePrices
 
 
 class SeedMultiplePricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = RecordsRepository(db_session, MultiplePrices)
+        self.repository = RecordsRepository(db_session, MultiplePricesModel)
 
     async def seed_multiple_prices_service_async(self, raw_data: pd.DataFrame):
         try:
-            date_time = MultiplePricesSchema.date_time
+            date_time = MultiplePrices.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
-            validated = DataFrame[MultiplePricesSchema](raw_data)
+            validated = DataFrame[MultiplePrices](raw_data)
             await self.repository.async_insert_dataframe_to_table(validated)
             self.logger.info(
-                f"Successfully inserted {len(raw_data)} records into {MultiplePrices.__name__}."
+                f"Successfully inserted {len(raw_data)} records into {MultiplePricesModel.__name__}."
             )
 
         except SchemaError as schema_exc:
-            self.logger.error(f"Schema validation error: {schema_exc}")
-        except Exception as exc:
-            self.logger.error(
-                f"Error inserting data for {MultiplePrices.__name__}: {str(exc)}"
-            )
+            self.logger.error(f"Schema validation error: {schema_exc.failure_cases}")
+            raise

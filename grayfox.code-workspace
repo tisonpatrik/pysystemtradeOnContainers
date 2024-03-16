@@ -9,7 +9,6 @@
         "python.analysis.diagnosticMode": "workspace",
         "python.languageServer": "Pylance",
         "python.analysis.logLevel": "Information",
-        "vsintellicode.features.python.deepLearning": "disabled",
         "python.analysis.inlayHints.variableTypes": false,
         "python.analysis.persistAllIndices": false,
         "python.missingPackage.severity": "Information",

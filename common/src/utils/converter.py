@@ -29,7 +29,6 @@ def convert_frame_to_series(
     try:
         # Convert the specified column to datetime format
         indexed_df = data_frame.set_index(index_column)
-        series = indexed_df.resample("1B").last()
         series = indexed_df[price_column]
         return series
 

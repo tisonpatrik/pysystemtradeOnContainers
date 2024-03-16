@@ -1,15 +1,22 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from pandera.errors import SchemaErrors
+from pandera.errors import SchemaError
+from pandera.typing import DataFrame
 
 from common.src.database.entity_repository import EntityRepository
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_frame_to_series, convert_series_to_frame
+from common.src.utils.table_operations import (
+    add_column_and_populate_it_by_value,
+    rename_columns,
+)
 from raw_data.src.models.config_models import InstrumentConfig
-from raw_data.src.models.raw_data_models import AdjustedPrices
-from raw_data.src.schemas.raw_data_schemas import AdjustedPricesSchema
+from raw_data.src.models.raw_data_models import AdjustedPricesModel
+from raw_data.src.schemas.raw_data_schemas import AdjustedPrices
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
+from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema
 
 
 class DailyReturnsVolSeedService:
@@ -19,7 +26,7 @@ class DailyReturnsVolSeedService:
         self.logger = AppLogger.get_instance().get_logger()
         self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
         self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
-        self.prices_repository = RecordsRepository(db_session, AdjustedPrices)
+        self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel)
         self.estimator = DailyReturnsVolEstimator()
 
     async def seed_daily_returns_vol_async(self):
@@ -32,20 +39,36 @@ class DailyReturnsVolSeedService:
             instrument_configs = await self.instrument_repository.get_all_async()
             for config in instrument_configs:
                 symbol = config.symbol
-                prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
+                adjusted_prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
                     symbol
                 )
-                prices = prices[
-                    [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-                ]
-                indexed_df = prices.set_index(AdjustedPricesSchema.date_time)
-                series = indexed_df.resample("1B").last()
-                series = indexed_df[AdjustedPricesSchema.price]
-                daily_returns_vols = self.estimator.process_daily_returns_vol(series)
-                print(daily_returns_vols.head())
-
+                prices = convert_frame_to_series(
+                    adjusted_prices,
+                    AdjustedPrices.date_time,
+                    AdjustedPrices.price,
+                )
+                daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
+                framed = convert_series_to_frame(daily_returns_vols)
+                populated = add_column_and_populate_it_by_value(
+                    framed, DailyReturnsVolatilitySchema.symbol, symbol
+                )
+                renamed = rename_columns(
+                    populated,
+                    [
+                        DailyReturnsVolatilitySchema.date_time,
+                        DailyReturnsVolatilitySchema.daily_returns_volatility,
+                        DailyReturnsVolatilitySchema.symbol,
+                    ],
+                )
+                validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
                 # await self.risk_repository.async_insert_dataframe_to_table(validated)
-        except SchemaErrors as err:
-            error_message = f"An error occurred during the daily returns volatility seeding process: {err}"
-            self.logger.error(error_message)
-            raise ValueError(error_message)
+
+        except SchemaError as schema_exc:
+            self.logger.error(f"Schema validation error: {schema_exc.failure_cases}")
+            raise
+
+        except Exception as e:
+            self.logger.error(
+                "An unexpected error occurred during the seeding process: %s", str(e)
+            )
+            raise

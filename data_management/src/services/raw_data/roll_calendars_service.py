@@ -6,10 +6,10 @@ import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import RollCalendars
-from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
+from raw_data.src.models.raw_data_models import RollCalendarsModel
+from raw_data.src.schemas.raw_data_schemas import RollCalendars
 
-table_name = RollCalendars.__name__
+table_name = RollCalendarsModel.__name__
 
 
 class RollCalendarsService:
