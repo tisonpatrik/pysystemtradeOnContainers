@@ -13,7 +13,7 @@ T = TypeVar("T", bound=BaseRecord)
 class RecordsRepository(Generic[T]):
     def __init__(self, db_session: AsyncSession, schema: Type[T]):
         self.db_session = db_session
-        self.table__name = schema.__name__
+        self.table__name = schema.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
     async def async_insert_dataframe_to_table(self, data_frame: pd.DataFrame):
