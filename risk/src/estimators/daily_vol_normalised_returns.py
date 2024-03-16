@@ -12,10 +12,11 @@ class DailyVolNormalisedReturns:
         Get returns normalised by recent vol
         Useful statistic, also used for some trading rules
         """
-        returnvol = self.daily_returns_vol_estimator.process_daily_returns_vol(
-            daily_prices
-        ).shift(1)
-        dailyreturns = self.daily_returns_vol_estimator.daily_returns(daily_prices)
-        norm_return = dailyreturns / returnvol
+        # returnvol = self.daily_returns_vol_estimator.process_daily_returns_vol(
+        #     daily_prices
+        # ).shift(1)
+        # dailyreturns = self.daily_returns_vol_estimator.daily_returns(daily_prices)
+        # norm_return = dailyreturns / returnvol
 
-        return norm_return
+        # return norm_return
+        return daily_prices

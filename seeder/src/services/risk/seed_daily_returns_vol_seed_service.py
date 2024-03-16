@@ -1,14 +1,11 @@
 """Module for calculating robust volatility for financial instruments."""
 
-# from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
-# from src.services.raw_data.instrument_config_services import InstrumentConfigService
-# from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService
-
 from pandera.errors import SchemaErrors
 
 from common.src.database.entity_repository import EntityRepository
 from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
+from common.src.validations.prices_schemas import DailyPrices
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
@@ -25,10 +22,6 @@ class DailyReturnsVolSeedService:
         self.prices_repository = RecordsRepository(db_session, AdjustedPrices)
         self.estimator = DailyReturnsVolEstimator()
 
-        # self.instrument_config_service = InstrumentConfigService(db_session)
-        # self.adjusted_prices_service = AdjustedPricesService(db_session)
-        # self.daily_returns_vol_service = DailyReturnsVolService(db_session)
-
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
         try:
@@ -42,7 +35,10 @@ class DailyReturnsVolSeedService:
                 prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
                     symbol
                 )
-                # daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
+                # daily_returns_vols = self.estimator.process_daily_returns_vol(
+                #     transformed_df
+                # )
+                # print(daily_returns_vols.head())
 
                 # validated = AdjustedPricesSchema.validate(prices, lazy=True)
                 # await self.risk_repository.async_insert_dataframe_to_table(validated)
