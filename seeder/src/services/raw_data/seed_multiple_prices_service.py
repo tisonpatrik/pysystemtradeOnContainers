@@ -1,5 +1,6 @@
 import pandas as pd
 from pandera.errors import SchemaError
+from pandera.typing import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.records_repository import RecordsRepository
@@ -18,9 +19,8 @@ class SeedMultiplePricesService:
         try:
             date_time = MultiplePricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
-            MultiplePricesSchema.validate(raw_data, lazy=True)
-
-            await self.repository.async_insert_dataframe_to_table(raw_data)
+            validated = DataFrame[MultiplePricesSchema](raw_data)
+            await self.repository.async_insert_dataframe_to_table(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {MultiplePrices.__name__}."
             )

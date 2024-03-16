@@ -1,6 +1,6 @@
 import pandas as pd
 from pandera.errors import SchemaError
-from sqlalchemy import inspect
+from pandera.typing import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.database.records_repository import RecordsRepository
@@ -19,8 +19,8 @@ class SeedFxPricesService:
         try:
             date_time = FxPricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
-            FxPricesSchema.validate(raw_data, lazy=True)
-            await self.repository.async_insert_dataframe_to_table(raw_data)
+            validated = DataFrame[FxPricesSchema](raw_data)
+            await self.repository.async_insert_dataframe_to_table(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {FxPrices.__name__}."
             )
