@@ -1,15 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-
 
 class InstrumentVolEstimator:
-    """
-    Class for calculating instrument volatility of financial instruments.
-    """
-
-    def __init__(self):
-        self.logger = AppLogger.get_instance().get_logger()
 
     def get_instrument_currency_vol(
         self,

@@ -1,11 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-
 
 class NormalisedPriceForAssetClass:
-    def __init__(self):
-        self.logger = AppLogger.get_instance().get_logger()
 
     def get_normalised_price_for_asset_class(
         self,

@@ -1,13 +1,7 @@
-from typing import List
-
 import pandas as pd
-
-from common.src.logging.logger import AppLogger
 
 
 class DailyVolNormalisedPriceForAssetClassEstimator:
-    def __init__(self):
-        self.logger = AppLogger.get_instance().get_logger()
 
     def aggregate_daily_vol_normalised_returns_for_list_of_instruments(
         self,

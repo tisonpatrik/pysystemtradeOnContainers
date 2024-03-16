@@ -1,11 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-
 
 class CumulativeVolNormalisedReturns:
-    def __init__(self):
-        self.logger = AppLogger.get_instance().get_logger()
 
     def get_cumulative_daily_vol_normalised_returns(
         self,

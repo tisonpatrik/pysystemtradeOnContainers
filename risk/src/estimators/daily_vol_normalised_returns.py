@@ -1,12 +1,10 @@
 import pandas as pd
-from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
-from common.src.logging.logger import AppLogger
+from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
 
 class DailyVolNormalisedReturns:
     def __init__(self):
-        self.logger = AppLogger.get_instance().get_logger()
         self.daily_returns_vol_estimator = DailyReturnsVolEstimator()
 
     def get_daily_vol_normalised_returns(self, daily_prices: pd.Series) -> pd.Series:

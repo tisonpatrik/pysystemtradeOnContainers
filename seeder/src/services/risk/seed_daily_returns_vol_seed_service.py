@@ -11,8 +11,7 @@ from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
-
-# from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
 
 
@@ -24,7 +23,7 @@ class DailyReturnsVolSeedService:
         self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
         self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
         self.prices_repository = RecordsRepository(db_session, AdjustedPrices)
-        # self.estimator = DailyReturnsVolEstimator()
+        self.estimator = DailyReturnsVolEstimator()
 
         # self.instrument_config_service = InstrumentConfigService(db_session)
         # self.adjusted_prices_service = AdjustedPricesService(db_session)
