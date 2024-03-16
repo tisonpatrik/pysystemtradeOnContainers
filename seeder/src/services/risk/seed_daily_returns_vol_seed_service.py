@@ -11,7 +11,8 @@ from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPrices
-from raw_data.src.schemas.raw_data_schemas import AdjustedPricesSchema
+
+# from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
 
 
@@ -23,6 +24,7 @@ class DailyReturnsVolSeedService:
         self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
         self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
         self.prices_repository = RecordsRepository(db_session, AdjustedPrices)
+        # self.estimator = DailyReturnsVolEstimator()
 
         # self.instrument_config_service = InstrumentConfigService(db_session)
         # self.adjusted_prices_service = AdjustedPricesService(db_session)
@@ -41,6 +43,7 @@ class DailyReturnsVolSeedService:
                 prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
                     symbol
                 )
+                # daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
 
                 # validated = AdjustedPricesSchema.validate(prices, lazy=True)
                 # await self.risk_repository.async_insert_dataframe_to_table(validated)
