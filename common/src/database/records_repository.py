@@ -49,7 +49,6 @@ class RecordsRepository(Generic[T]):
             query_str = "SELECT * FROM {} WHERE symbol = :symbol".format(
                 self.table_name
             )
-            print(query_str)
             # Execute the query asynchronously with matching parameter key
             result = await self.db_session.execute(text(query_str), {"symbol": symbol})
 

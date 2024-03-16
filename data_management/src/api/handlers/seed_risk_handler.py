@@ -1,10 +1,3 @@
-from risk.src.models.risk_models import (
-    DailyReturnsVolatility,
-    DailyVolNormalisedPriceForAssetClass,
-    DailyVolNormalizedReturns,
-    InstrumentVolatility,
-)
-from src.services.risk.daily_returns_vol_seed_service import DailyReturnsVolSeedService
 from src.services.risk.daily_vol_normalized_returns_seed_services import (
     DailyVolNormalisedReturnsSeedService,
 )
@@ -14,6 +7,12 @@ from src.services.risk.normalised_price_for_asset_class_service import (
 )
 
 from common.src.logging.logger import AppLogger
+from risk.src.models.risk_models import (
+    DailyReturnsVolatility,
+    DailyVolNormalisedPriceForAssetClass,
+    DailyVolNormalizedReturns,
+    InstrumentVolatility,
+)
 
 
 class SeedRiskHandler:
@@ -23,7 +22,6 @@ class SeedRiskHandler:
         self.normalised_price_for_asset_seed_service = (
             NormalisedPriceForAssetClassService(db_session)
         )
-        self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
         self.daily_returns_normalised_vol_seed_service = (
             DailyVolNormalisedReturnsSeedService(db_session)
         )
@@ -46,9 +44,7 @@ class SeedRiskHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ == "daily_returns_volatility":
-            await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
-        elif model.__tablename__ == "instrument_volatility":
+        if model.__tablename__ == "instrument_volatility":
             await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         elif model.__tablename__ == "daily_vol_normalized_returns":
             await self.daily_returns_normalised_vol_seed_service.seed_daily_normalised_returns_vol_async()

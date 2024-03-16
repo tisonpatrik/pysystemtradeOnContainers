@@ -4,9 +4,7 @@
 # from src.services.raw_data.instrument_config_services import InstrumentConfigService
 # from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService
 
-import pandas as pd
 from pandera.errors import SchemaErrors
-from sqlalchemy import inspect
 
 from common.src.database.entity_repository import EntityRepository
 from common.src.database.records_repository import RecordsRepository
@@ -44,27 +42,9 @@ class DailyReturnsVolSeedService:
                     symbol
                 )
 
-                if prices.empty:
-                    self.logger.info(f"DataFrame for symbol {symbol} is empty.")
-                    continue
-                AdjustedPricesSchema.validate(prices, lazy=True)
-
-            # print(prices.head())
-
-            # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
-            #     daily_prices, symbol
-            # )
+                # validated = AdjustedPricesSchema.validate(prices, lazy=True)
+                # await self.risk_repository.async_insert_dataframe_to_table(validated)
         except SchemaErrors as err:
-            # Logování specifických vadných řádků
-            for index, failure_case in err.failure_cases.iterrows():
-                error_detail = (
-                    f"Chyba ve sloupci '{failure_case['column']}', "
-                    f"chybná hodnota: {failure_case['failure_case']}, "
-                    f"na indexu: {failure_case['index']}"
-                )
-                self.logger.error(error_detail)
-
-            # Raisování vyjímky s celkovým sumářem chyb
             error_message = f"An error occurred during the daily returns volatility seeding process: {err}"
             self.logger.error(error_message)
             raise ValueError(error_message)

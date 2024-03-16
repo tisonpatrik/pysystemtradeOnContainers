@@ -13,6 +13,9 @@ services:
       - "7999:8000"
     volumes:
       - ./seeder/src:/home/app/src
+      - ./common:/home/app/common
+      - ./risk:/home/app/risk
+      - ./raw_data:/home/app/raw_data
       - /home/patrik/repos/pysystemtrade_preprocessing/data:/path/in/container:rw
 
   raw_data:
@@ -27,6 +30,8 @@ services:
       - "8000:8000"
     volumes:
       - ./raw_data/src:/home/app/src
+      - ./common:/home/app/common
+
 
   risk:
     build:
@@ -40,6 +45,7 @@ services:
       - "8001:8000"
     volumes:
       - ./risk/src:/home/app/src
+      - ./common:/home/app/common
 
   data_management:
     build:
