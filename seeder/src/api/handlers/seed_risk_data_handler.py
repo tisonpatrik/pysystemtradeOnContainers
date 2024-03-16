@@ -48,7 +48,7 @@ class SeedRiskDataHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ == "dailyreturnsvolatility":
+        if model.__tablename__ == "daily_returns_volatility":
             await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
         # elif model.__tablename__ == "instrument_volatility":
         #     await self.instrument_vol_seed_service.seed_instrument_volatility_async()

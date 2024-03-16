@@ -15,7 +15,7 @@ class AdjustedPrices(BaseRecord, table=True):
 class FxPrices(BaseRecord, table=True):
     __tablename__ = "fx_prices"
     date_time: datetime = Field(primary_key=True)
-    symbol: str
+    symbol: str = Field(primary_key=True)
     price: float
 
 
@@ -23,7 +23,12 @@ class MultiplePrices(BaseRecord, table=True):
     __tablename__ = "multiple_prices"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
-    carry: float
+    carry: float = Field(default=None, nullable=True)
+    carry_contract: int
+    price: float
+    price_contract: int
+    forward: float = Field(default=None, nullable=True)
+    forward_contract: int
 
 
 class RollCalendars(BaseRecord, table=True):
@@ -31,3 +36,5 @@ class RollCalendars(BaseRecord, table=True):
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     current_contract: int
+    next_contract: int
+    carry_contract: int

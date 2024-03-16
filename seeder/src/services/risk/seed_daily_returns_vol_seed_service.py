@@ -47,13 +47,13 @@ class DailyReturnsVolSeedService:
                 if prices.empty:
                     self.logger.info(f"DataFrame for symbol {symbol} is empty.")
                     continue
-                # validated = AdjustedPricesSchema.validate(prices, lazy=True)
+                AdjustedPricesSchema.validate(prices, lazy=True)
 
-                # print(data_frame.head())
+            # print(prices.head())
 
-                # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
-                #     daily_prices, symbol
-                # )
+            # await self.daily_returns_vol_service.insert_daily_returns_vol_for_prices_async(
+            #     daily_prices, symbol
+            # )
         except SchemaErrors as err:
             # Logování specifických vadných řádků
             for index, failure_case in err.failure_cases.iterrows():
