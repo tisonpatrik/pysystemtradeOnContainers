@@ -4,12 +4,6 @@ import pandera as pa
 from pandera.typing import Series
 
 
-class AdjustedPrices(pa.DataFrameModel):
-    date_time: Series[datetime]
-    symbol: Series[str]
-    price: Series[float]
-
-
 class FxPrices(pa.DataFrameModel):
     date_time: Series[datetime]
     symbol: Series[str]

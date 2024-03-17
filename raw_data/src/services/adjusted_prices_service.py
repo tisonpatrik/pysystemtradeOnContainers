@@ -5,11 +5,12 @@ This module provides services for fetching and processing adjusted prices data a
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.records_repository import RecordsRepository
+from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from common.src.db.repository import Repository
+from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPrices, DailyPrices
+
 table_name = AdjustedPricesModel.__name__
 
 
@@ -20,20 +21,22 @@ class AdjustedPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = AdjustedPricesModel.date_time
-        self.price_column = AdjustedPricesModel.price
+        self.time_column = AdjustedPrices.date_time
+        self.price_column = AdjustedPrices.price
 
-        self.repository = RecordsRepository(db_session, AdjustedPricesModel)
+        self.repository = Repository(db_session, AdjustedPricesModel)
 
     async def get_daily_prices_async(self, symbol: str):
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            # data = await self.repository.fetch_records_async(self.table_name, symbol)
-            # series = convert_frame_to_series(data, self.time_column, self.price_column)
-            # return series
-            print("neco")
+            dict = {AdjustedPrices.symbol: symbol}
+            columns = [AdjustedPrices.date_time, AdjustedPrices.price]
+            data = await self.repository.fetch_filtered_data_to_df_async(dict, columns)
+            series = convert_frame_to_series(data, self.time_column, self.price_column)
+
+            return series
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"
             self.logger.error(error_message, exc_info=True)

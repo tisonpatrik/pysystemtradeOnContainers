@@ -17,7 +17,7 @@ from common.src.utils.table_operations import (
 )
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from raw_data.src.schemas.raw_data_schemas import AdjustedPrices
+from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPrices
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
 from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema
