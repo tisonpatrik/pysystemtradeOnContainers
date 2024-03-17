@@ -46,8 +46,9 @@ class DailyReturnsVolSeedService:
                 await self.instrument_repository.fetch_data_to_df_async()
             )
             for config in instrument_configs.itertuples():
-                symbol = config.symbol  # Access attributes directly
+                # symbol = config.symbol  # Access attributes directly
                 adjusted_prices = await self.prices_repository.fetch_data_to_df_async()
+
             #     print(adjusted_prices.head())
             #     prices = convert_frame_to_series(
             #         adjusted_prices,
