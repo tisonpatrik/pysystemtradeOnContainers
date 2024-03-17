@@ -25,9 +25,6 @@ class Repository(Generic[T]):
             if records:
                 columns = [key for key in records[0].keys()]
                 df = pd.DataFrame.from_records(data=records, columns=columns)
-                self.logger.info(
-                    f"Fetched data from {self.entity_class.__tablename__} into DataFrame, total records: {len(records)}"
-                )
                 return df
             else:
                 self.logger.info(
@@ -70,9 +67,6 @@ class Repository(Generic[T]):
             records = await self.conn.fetch(query, *values)
             if records:
                 df = pd.DataFrame.from_records(data=records, columns=columns)
-                self.logger.info(
-                    f"Fetched filtered data from {self.entity_class.__tablename__} into DataFrame, total records: {len(records)}"
-                )
                 return df
             else:
                 self.logger.info(

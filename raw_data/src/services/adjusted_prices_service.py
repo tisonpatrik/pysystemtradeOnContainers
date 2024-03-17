@@ -3,6 +3,7 @@ This module provides services for fetching and processing adjusted prices data a
 """
 
 import pandas as pd
+from pandera.typing import DataFrame, Series
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.db.repository import Repository
@@ -26,7 +27,7 @@ class AdjustedPricesService:
 
         self.repository = Repository(db_session, AdjustedPricesModel)
 
-    async def get_daily_prices_async(self, symbol: str):
+    async def get_daily_prices_async(self, symbol: str) -> Series[DailyPrices]:
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
@@ -35,8 +36,8 @@ class AdjustedPricesService:
             columns = [AdjustedPrices.date_time, AdjustedPrices.price]
             data = await self.repository.fetch_filtered_data_to_df_async(dict, columns)
             series = convert_frame_to_series(data, self.time_column, self.price_column)
-
-            return series
+            validated = Series[DailyPrices](series)
+            return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"
             self.logger.error(error_message, exc_info=True)
