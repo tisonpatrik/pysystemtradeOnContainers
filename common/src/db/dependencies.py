@@ -14,6 +14,12 @@ if global_settings.database_url is None:
 pool: Pool = None  # Initialize the pool variable globally
 
 
+async def set_timeouts(connection: asyncpg.Connection):
+    # Set a statement timeout (in milliseconds)
+    await connection.execute("SET statement_timeout TO 30000")
+    # Additional connection configuration can be performed here
+
+
 async def _init_pool():
     global pool
     connection_string = global_settings.database_url.unicode_string()  # type: ignore
@@ -23,6 +29,8 @@ async def _init_pool():
         max_size=10,
         max_queries=50000,
         max_inactive_connection_lifetime=300,
+        command_timeout=30,  # Statement timeout in seconds
+        init=set_timeouts,  # Connection initialization function
     )
 
 
@@ -30,6 +38,6 @@ async def get_db() -> AsyncGenerator[asyncpg.Connection, None]:
     global pool
     if pool is None:
         await _init_pool()
-    async with pool.acquire() as conn:  # Use a connection from the pool
+    async with pool.acquire() as conn:
         logger.debug("Database connection acquired from the pool.")
         yield conn
