@@ -1,10 +1,14 @@
 """Module for calculating robust volatility for financial instruments."""
 
+from typing import List
+
+import pandas as pd
 from pandera.errors import SchemaError
 from pandera.typing import DataFrame
 
 from common.src.database.entity_repository import EntityRepository
 from common.src.database.records_repository import RecordsRepository
+from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series, convert_series_to_frame
 from common.src.utils.table_operations import (
@@ -24,10 +28,11 @@ class DailyReturnsVolSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
-        self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
-        self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel)
+        # self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility)
+        # self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
+        # self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel)
         self.estimator = DailyReturnsVolEstimator()
+        self.repository = Repository(db_session)
 
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
@@ -36,32 +41,36 @@ class DailyReturnsVolSeedService:
                 "Starting the process for %s table.",
                 DailyReturnsVolatility.__tablename__,
             )
-            instrument_configs = await self.instrument_repository.get_all_async()
-            for config in instrument_configs:
+            instrument_configs = await self.repository.fetch_data_to_df_async(
+                InstrumentConfig.__tablename__
+            )
+            configs = self.dataframe_to_instrument_configs(instrument_configs)
+            for config in configs:
                 symbol = config.symbol
-                adjusted_prices = await self.prices_repository.fetch_raw_data_from_table_by_symbol_async(
-                    symbol
-                )
-                prices = convert_frame_to_series(
-                    adjusted_prices,
-                    AdjustedPrices.date_time,
-                    AdjustedPrices.price,
-                )
-                daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
-                framed = convert_series_to_frame(daily_returns_vols)
-                populated = add_column_and_populate_it_by_value(
-                    framed, DailyReturnsVolatilitySchema.symbol, symbol
-                )
-                renamed = rename_columns(
-                    populated,
-                    [
-                        DailyReturnsVolatilitySchema.date_time,
-                        DailyReturnsVolatilitySchema.daily_returns_volatility,
-                        DailyReturnsVolatilitySchema.symbol,
-                    ],
-                )
-                validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-                await self.risk_repository.async_insert_dataframe_to_table(validated)
+                adjusted_prices = await self.repository.fetch_data_to_df_async(symbol)
+                print(adjusted_prices.head())
+                # prices = convert_frame_to_series(
+                #     adjusted_prices,
+                #     AdjustedPrices.date_time,
+                #     AdjustedPrices.price,
+                # )
+                # daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
+                # framed = convert_series_to_frame(daily_returns_vols)
+                # populated = add_column_and_populate_it_by_value(
+                #     framed, DailyReturnsVolatilitySchema.symbol, symbol
+                # )
+                # renamed = rename_columns(
+                #     populated,
+                #     [
+                #         DailyReturnsVolatilitySchema.date_time,
+                #         DailyReturnsVolatilitySchema.daily_returns_volatility,
+                #         DailyReturnsVolatilitySchema.symbol,
+                #     ],
+                # )
+                # validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
+                # await self.repository.insert_many_async(
+                #     validated, DailyReturnsVolatility.__tablename__
+                # )
             self.logger.info(
                 f"Successfully inserted {DailyReturnsVolatility.__name__} calculations for {len(instrument_configs)} instruments."
             )
@@ -75,3 +84,23 @@ class DailyReturnsVolSeedService:
                 "An unexpected error occurred during the seeding process: %s", str(e)
             )
             raise
+
+    def dataframe_to_instrument_configs(
+        self, df: pd.DataFrame
+    ) -> List[InstrumentConfig]:
+        instrument_configs = [
+            InstrumentConfig(
+                __tablename__=InstrumentConfig.__tablename__,
+                symbol=row["symbol"],
+                description=row["description"],
+                pointsize=row["pointsize"],
+                currency=row["currency"],
+                asset_class=row["asset_class"],
+                per_block=row["per_block"],
+                percentage=row["percentage"],
+                per_trade=row["per_trade"],
+                region=row["region"],
+            )
+            for index, row in df.iterrows()
+        ]
+        return instrument_configs

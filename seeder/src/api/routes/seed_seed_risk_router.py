@@ -1,8 +1,12 @@
+from typing import AsyncGenerator
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+
+# from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_risk_data_handler import SeedRiskDataHandler
 
-from common.src.database.dependencies import get_db
+# from common.src.database.dependencies import get_db
+from common.src.db.dependencies import get_db
 from common.src.logging.logger import AppLogger
 
 router = APIRouter()
@@ -14,7 +18,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_201_CREATED,
     name="Seed Database with raw data files",
 )
-async def seed_risk_data_async(db_session: AsyncSession = Depends(get_db)):
+async def seed_risk_data_async(db_session: AsyncGenerator = Depends(get_db)):
     """
     Fills the database tables with data.
     """
