@@ -2,7 +2,6 @@ from typing import Generic, Type, TypeVar, Union
 
 import pandas as pd
 from asyncpg import Connection
-from sqlmodel import col
 
 from common.src.database.base_model import BaseEntity, BaseRecord
 from common.src.logging.logger import AppLogger
@@ -24,7 +23,6 @@ class Repository(Generic[T]):
             query = f'SELECT * FROM "{self.entity_class.__tablename__}";'
             records = await self.conn.fetch(query)
             if records:
-                # df = pd.DataFrame([dict(record) for record in records])
                 columns = [key for key in records[0].keys()]
                 df = pd.DataFrame.from_records(data=records, columns=columns)
                 self.logger.info(

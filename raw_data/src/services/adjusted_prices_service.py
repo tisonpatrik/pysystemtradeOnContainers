@@ -9,7 +9,7 @@ from common.src.database.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-
+from common.src.db.repository import Repository
 table_name = AdjustedPricesModel.__name__
 
 

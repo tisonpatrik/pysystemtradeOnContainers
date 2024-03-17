@@ -42,33 +42,37 @@ class DailyReturnsVolSeedService:
                 "Starting the process for %s table.",
                 DailyReturnsVolatility.__tablename__,
             )
+            all_adjusted_prices = await self.prices_repository.fetch_data_to_df_async()
             instrument_configs = (
                 await self.instrument_repository.fetch_data_to_df_async()
             )
             for config in instrument_configs.itertuples():
-                # symbol = config.symbol  # Access attributes directly
-                adjusted_prices = await self.prices_repository.fetch_data_to_df_async()
+                symbol = str(config.symbol)
 
-            #     print(adjusted_prices.head())
-            #     prices = convert_frame_to_series(
-            #         adjusted_prices,
-            #         AdjustedPrices.date_time,
-            #         AdjustedPrices.price,
-            #     )
-            #     daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
-            #     framed = convert_series_to_frame(daily_returns_vols)
-            #     populated = add_column_and_populate_it_by_value(
-            #         framed, DailyReturnsVolatilitySchema.symbol, symbol
-            #     )
-            #     renamed = rename_columns(
-            #         populated,
-            #         [
-            #             DailyReturnsVolatilitySchema.date_time,
-            #             DailyReturnsVolatilitySchema.daily_returns_volatility,
-            #             DailyReturnsVolatilitySchema.symbol,
-            #         ],
-            #     )
-            #     validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
+                # Filter for the current symbol
+                adjusted_prices = all_adjusted_prices[
+                    all_adjusted_prices[AdjustedPrices.symbol] == symbol
+                ]
+
+                prices = convert_frame_to_series(
+                    adjusted_prices,
+                    AdjustedPrices.date_time,
+                    AdjustedPrices.price,
+                )
+                daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
+                framed = convert_series_to_frame(daily_returns_vols)
+                populated = add_column_and_populate_it_by_value(
+                    framed, DailyReturnsVolatilitySchema.symbol, symbol
+                )
+                renamed = rename_columns(
+                    populated,
+                    [
+                        DailyReturnsVolatilitySchema.date_time,
+                        DailyReturnsVolatilitySchema.daily_returns_volatility,
+                        DailyReturnsVolatilitySchema.symbol,
+                    ],
+                )
+                validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
             #     await self.repository.insert_many_async(
             #         validated, DailyReturnsVolatility.__tablename__
             #     )
