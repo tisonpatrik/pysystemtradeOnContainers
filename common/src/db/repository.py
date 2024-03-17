@@ -1,51 +1,66 @@
-import asyncpg
-import pandas as pd
+from typing import Generic, Type, TypeVar, Union
 
+import pandas as pd
+from asyncpg import Connection
+
+from common.src.database.base_model import BaseEntity, BaseRecord
 from common.src.logging.logger import AppLogger
 
+T = TypeVar("T", bound=Union[BaseEntity, BaseRecord])
 
-class Repository:
-    """
-    Generic repository for CRUD operations on entities.
-    """
 
-    def __init__(self, pool: asyncpg.pool.Pool):
-        self.pool = pool
+class Repository(Generic[T]):
+    def __init__(self, conn: Connection, schema: Type[T]):
+        self.conn = conn
+        self.entity_class = schema
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def insert_many_async(self, df: pd.DataFrame, table: str) -> None:
+    async def fetch_data_to_df_async(self) -> pd.DataFrame:
         """
-        Asynchronously builds and executes a bulk insert query using an asyncpg connection.
+        Fetches all data from the entity's table asynchronously and loads it into a pandas DataFrame.
         """
-        async with self.pool.acquire() as conn:  # Correctly acquiring a connection from the pool
-            tuples = [tuple(x) for x in df.to_numpy()]
-            cols = ",".join(list(df.columns))
-            placeholders = ", ".join(["$" + str(i + 1) for i in range(len(tuples[0]))])
-            query = f"INSERT INTO {table} ({cols}) VALUES ({placeholders})"
-            try:
-                await conn.executemany(query, tuples)
-                self.logger.info(f"Inserted {len(tuples)} rows into {table}")
-            except asyncpg.DatabaseError as error:
-                self.logger.error(f"Error executing bulk insert into {table}: {error}")
-                raise
+        try:
+            query = f'SELECT * FROM "{self.entity_class.__tablename__}";'
+            records = await self.conn.fetch(query)
+            if records:
+                df = pd.DataFrame([dict(record) for record in records])
+                self.logger.info(
+                    f"Fetched data from {self.entity_class.__tablename__} into DataFrame"
+                )
+                return df
+            else:
+                self.logger.info(
+                    f"No data fetched from {self.entity_class.__tablename__}"
+                )
+                return pd.DataFrame()
+        except Exception as e:
+            self.logger.error(
+                f"Error fetching data from {self.entity_class.__tablename__}: {e}"
+            )
+            raise
 
-    async def fetch_data_to_df_async(self, table_name: str) -> pd.DataFrame:
+    async def new_fetch_data_to_df_async(self) -> pd.DataFrame:
         """
-        Fetches data from the database asynchronously and loads it into a pandas DataFrame.
+        Fetches all data from the entity's table asynchronously using a cursor
+        and loads it into a pandas DataFrame for efficient memory usage.
+        Utilizes connection pooling for improved performance and security.
         """
-        return pd.DataFrame()
-        # async with self.pool.acquire() as conn:  # Correctly acquiring a connection from the pool
-        #     query = f"SELECT * FROM {table_name};"
-        #     try:
-        #         records = await conn.fetch(query)
-        #         if records:
-        #             df = pd.DataFrame(records)
-        #             df.columns = [key for key in records[0].keys()]
-        #             self.logger.info(f"Fetched data from {table_name} into DataFrame")
-        #             return df
-        #         else:
-        #             self.logger.info(f"No data fetched from {table_name}")
-        #             return pd.DataFrame()
-        #     except Exception as error:
-        #         self.logger.error(f"Error fetching data from {table_name}: {error}")
-        #         raise
+        async with self.conn.transaction():
+            # Use a cursor for efficient row fetching
+            cursor = await self.conn.cursor(
+                f'SELECT * FROM "{self.entity_class.__tablename__}";'
+            )
+            records = []
+            async for record in cursor:
+                records.append(dict(record))
+
+        if records:
+            df = pd.DataFrame(records)
+            self.logger.info(
+                f"Fetched data from {self.entity_class.__tablename__} into DataFrame"
+            )
+        else:
+            df = pd.DataFrame()
+            self.logger.info(f"No data fetched from {self.entity_class.__tablename__}")
+
+        return df

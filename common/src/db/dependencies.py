@@ -1,6 +1,5 @@
-from typing import AsyncGenerator
-
 import asyncpg
+from asyncpg import Connection
 from asyncpg.pool import Pool
 
 from common.src.database.settings import settings as global_settings
@@ -34,7 +33,7 @@ async def _init_pool():
     )
 
 
-async def get_db() -> AsyncGenerator[asyncpg.Connection, None]:
+async def get_db() -> Connection:
     global pool
     if pool is None:
         await _init_pool()

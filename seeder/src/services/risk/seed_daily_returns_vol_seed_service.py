@@ -32,7 +32,8 @@ class DailyReturnsVolSeedService:
         # self.instrument_repository = EntityRepository(db_session, InstrumentConfig)
         # self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel)
         self.estimator = DailyReturnsVolEstimator()
-        self.repository = Repository(db_session)
+        self.instrument_repository = Repository(db_session, InstrumentConfig)
+        self.prices_repository = Repository(db_session, AdjustedPricesModel)
 
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
@@ -41,36 +42,35 @@ class DailyReturnsVolSeedService:
                 "Starting the process for %s table.",
                 DailyReturnsVolatility.__tablename__,
             )
-            instrument_configs = await self.repository.fetch_data_to_df_async(
-                InstrumentConfig.__tablename__
+            instrument_configs = (
+                await self.instrument_repository.fetch_data_to_df_async()
             )
-            configs = self.dataframe_to_instrument_configs(instrument_configs)
-            for config in configs:
-                symbol = config.symbol
-                adjusted_prices = await self.repository.fetch_data_to_df_async(symbol)
-                print(adjusted_prices.head())
-                # prices = convert_frame_to_series(
-                #     adjusted_prices,
-                #     AdjustedPrices.date_time,
-                #     AdjustedPrices.price,
-                # )
-                # daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
-                # framed = convert_series_to_frame(daily_returns_vols)
-                # populated = add_column_and_populate_it_by_value(
-                #     framed, DailyReturnsVolatilitySchema.symbol, symbol
-                # )
-                # renamed = rename_columns(
-                #     populated,
-                #     [
-                #         DailyReturnsVolatilitySchema.date_time,
-                #         DailyReturnsVolatilitySchema.daily_returns_volatility,
-                #         DailyReturnsVolatilitySchema.symbol,
-                #     ],
-                # )
-                # validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-                # await self.repository.insert_many_async(
-                #     validated, DailyReturnsVolatility.__tablename__
-                # )
+            for config in instrument_configs.itertuples():
+                symbol = config.symbol  # Access attributes directly
+                adjusted_prices = await self.prices_repository.fetch_data_to_df_async()
+            #     print(adjusted_prices.head())
+            #     prices = convert_frame_to_series(
+            #         adjusted_prices,
+            #         AdjustedPrices.date_time,
+            #         AdjustedPrices.price,
+            #     )
+            #     daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
+            #     framed = convert_series_to_frame(daily_returns_vols)
+            #     populated = add_column_and_populate_it_by_value(
+            #         framed, DailyReturnsVolatilitySchema.symbol, symbol
+            #     )
+            #     renamed = rename_columns(
+            #         populated,
+            #         [
+            #             DailyReturnsVolatilitySchema.date_time,
+            #             DailyReturnsVolatilitySchema.daily_returns_volatility,
+            #             DailyReturnsVolatilitySchema.symbol,
+            #         ],
+            #     )
+            #     validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
+            #     await self.repository.insert_many_async(
+            #         validated, DailyReturnsVolatility.__tablename__
+            #     )
             self.logger.info(
                 f"Successfully inserted {DailyReturnsVolatility.__name__} calculations for {len(instrument_configs)} instruments."
             )
@@ -84,23 +84,3 @@ class DailyReturnsVolSeedService:
                 "An unexpected error occurred during the seeding process: %s", str(e)
             )
             raise
-
-    def dataframe_to_instrument_configs(
-        self, df: pd.DataFrame
-    ) -> List[InstrumentConfig]:
-        instrument_configs = [
-            InstrumentConfig(
-                __tablename__=InstrumentConfig.__tablename__,
-                symbol=row["symbol"],
-                description=row["description"],
-                pointsize=row["pointsize"],
-                currency=row["currency"],
-                asset_class=row["asset_class"],
-                per_block=row["per_block"],
-                percentage=row["percentage"],
-                per_trade=row["per_trade"],
-                region=row["region"],
-            )
-            for index, row in df.iterrows()
-        ]
-        return instrument_configs
