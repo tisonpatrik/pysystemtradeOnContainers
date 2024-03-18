@@ -8,7 +8,8 @@ from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from risk.src.models.risk_models import DailyReturnsVolatility
-from risk.src.services.daily_returns_volatility_service import DailyReturnsVolService
+from risk.src.services.daily_returns_volatility_service import \
+    DailyReturnsVolService
 
 
 class DailyReturnsVolSeedService:
@@ -30,18 +31,10 @@ class DailyReturnsVolSeedService:
                 DailyReturnsVolatility.__tablename__,
             )
 
-            instrument_configs = (
-                await self.instrument_repository.fetch_data_to_df_async()
-            )
+            instrument_configs = await self.instrument_repository.fetch_data_to_df_async()
             for config in instrument_configs.itertuples():
-                prices = await self.prices_service.get_daily_prices_async(
-                    str(config.symbol)
-                )
-                daily_returns_vol = (
-                    self.daily_returns_vol_service.calculate_daily_returns_vol_async(
-                        prices
-                    )
-                )
+                prices = await self.prices_service.get_daily_prices_async(str(config.symbol))
+                daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)
                 )

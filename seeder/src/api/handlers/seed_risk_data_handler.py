@@ -5,9 +5,7 @@
 # from src.services.risk.normalised_price_for_asset_class_service import (
 #     NormalisedPriceForAssetClassService,
 # )
-from seeder.src.services.risk.seed_daily_returns_vol_service import (
-    DailyReturnsVolSeedService,
-)
+from src.services.risk.seed_daily_returns_vol_service import DailyReturnsVolSeedService
 
 from common.src.logging.logger import AppLogger
 from risk.src.models.risk_models import (
