@@ -15,10 +15,25 @@ class Repository(Generic[T]):
         self.logger = AppLogger.get_instance().get_logger()
 
     async def insert_data_async(self, data: List[T]) -> None:
-        """
-        Inserts the provided data into the entity's table asynchronously.
-        """
+        if not data:
+            self.logger.warning("Attempted to insert empty data list.")
+            return
 
+        # Assuming model_dump() correctly serializes your data model instance to a dictionary
+        columns = data[0].model_dump().keys()
+        placeholders = ', '.join(f'${i+1}' for i in range(len(columns)))
+        query = f"INSERT INTO {self.table} ({', '.join(columns)}) VALUES ({placeholders})"
+        self.logger.debug(f"Constructed query: {query}")
+
+        async with self.conn.transaction():
+            try:
+                prepared_stmt = await self.conn.prepare(query)
+                # Ensure the model_dump method is called to convert each BaseModel instance to a dict
+                await prepared_stmt.executemany([tuple(item.model_dump().values()) for item in data])
+                self.logger.info(f"Successfully inserted {len(data)} records into '{self.table}'.")
+            except Exception as e:
+                self.logger.error(f"Failed to insert data into '{self.table}': {e}")
+                raise e
 
     async def fetch_data_async(self) -> List[Record]:
         """

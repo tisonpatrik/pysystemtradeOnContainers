@@ -20,5 +20,5 @@ class SpreadCostSeedService:
         Seed instrument config data.
         """
         self.logger.info(f"Seeding {SpreadCosts.__tablename__} data: ")
-        data = [SpreadCosts(**row.to_dict()) for _, row in raw_data.iterrows()]
-        # await self.repository.insert_many_async(data)
+        data = list(map(lambda row: SpreadCosts(**row[1].to_dict()), raw_data.iterrows()))
+        await self.repository.insert_data_async(data)
