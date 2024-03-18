@@ -5,7 +5,7 @@ This module provides services for fetching and processing fx prices data asynchr
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.records_repository import RecordsRepository
+from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import FxPricesModel
 
@@ -19,7 +19,7 @@ class FxPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = RecordsRepository(db_session, FxPricesModel)
+        # self.repository = RecordsRepository(db_session, FxPricesModel)
 
     async def insert_fx_prices_async(self, raw_data: pd.DataFrame):
         """

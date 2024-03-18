@@ -3,24 +3,24 @@ from pandera.errors import SchemaError
 from pandera.typing import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.records_repository import RecordsRepository
+from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import MultiplePricesModel
-from raw_data.src.schemas.raw_data_schemas import MultiplePrices
+from raw_data.src.schemas.raw_data_schemas import MultiplePricesSchema
 
 
 class SeedMultiplePricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = RecordsRepository(db_session, MultiplePricesModel)
+        self.repository = RecordsRepository(db_session, MultiplePricesModel, MultiplePricesSchema)
 
     async def seed_multiple_prices_service_async(self, raw_data: pd.DataFrame):
         try:
-            date_time = MultiplePrices.date_time
+            date_time = MultiplePricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
-            validated = DataFrame[MultiplePrices](raw_data)
-            await self.repository.async_insert_dataframe_to_table(validated)
+            validated = DataFrame[MultiplePricesSchema](raw_data)
+            await self.repository.insert_data_async(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {MultiplePricesModel.__name__}."
             )

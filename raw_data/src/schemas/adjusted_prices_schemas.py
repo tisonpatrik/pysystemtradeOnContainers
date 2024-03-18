@@ -1,15 +1,13 @@
-from datetime import datetime
 
 import pandera as pa
 from pandera.typing import Series
 
+from common.src.validation.base_schema import BaseSchema
 
-class AdjustedPrices(pa.DataFrameModel):
-    date_time: Series[datetime]
+
+class AdjustedPricesSchema(BaseSchema):
     symbol: Series[str]
     price: Series[float]
 
-
-class DailyPrices(pa.DataFrameModel):
-    date_time: Series[datetime]
+class DailyPricesSchema(BaseSchema):
     price: Series[float]

@@ -6,12 +6,12 @@ import pandas as pd
 from pandera.typing import Series
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.db.repository import Repository
+from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from raw_data.src.schemas.adjusted_prices_schemas import (AdjustedPrices,
-                                                          DailyPrices)
+from raw_data.src.schemas.adjusted_prices_schemas import (AdjustedPricesSchema,
+                                                          DailyPricesSchema)
 
 table_name = AdjustedPricesModel.__name__
 
@@ -23,21 +23,21 @@ class AdjustedPricesService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.time_column = AdjustedPrices.date_time
-        self.price_column = AdjustedPrices.price
+        self.time_column = AdjustedPricesSchema.date_time
+        self.price_column = AdjustedPricesSchema.price
 
-        self.repository = Repository(db_session, AdjustedPricesModel)
+        self.repository = RecordsRepository(db_session, AdjustedPricesModel, AdjustedPricesSchema)
 
-    async def get_daily_prices_async(self, symbol: str) -> Series[DailyPrices]:
+    async def get_daily_prices_async(self, symbol: str) -> Series[DailyPricesSchema]:
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            dict = {AdjustedPrices.symbol: symbol}
-            columns = [AdjustedPrices.date_time, AdjustedPrices.price]
+            dict = {AdjustedPricesSchema.symbol: symbol}
+            columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
             data = await self.repository.fetch_filtered_data_to_df_async(dict, columns)
             series = convert_frame_to_series(data, self.time_column, self.price_column)
-            validated = Series[DailyPrices](series)
+            validated = Series[DailyPricesSchema](series)
             return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"

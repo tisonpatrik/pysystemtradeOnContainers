@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import RollCalendarsModel
-from raw_data.src.schemas.raw_data_schemas import RollCalendars
+from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
 
 table_name = RollCalendarsModel.__name__
 

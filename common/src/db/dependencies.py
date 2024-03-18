@@ -2,7 +2,7 @@ import asyncpg
 from asyncpg import Connection
 from asyncpg.pool import Pool
 
-from common.src.database.settings import settings as global_settings
+from common.src.db.settings import settings as global_settings
 from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()

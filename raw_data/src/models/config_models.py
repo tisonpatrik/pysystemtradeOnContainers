@@ -1,6 +1,6 @@
 from sqlmodel import Field
 
-from common.src.database.base_model import BaseEntity
+from common.src.db.base_model import BaseEntity
 
 
 class InstrumentConfig(BaseEntity, table=True):

@@ -1,19 +1,25 @@
-from typing import Any, Dict, Generic, List, Type, TypeVar, Union
+from typing import Any, Dict, Generic, List, Type, TypeVar
 
 import pandas as pd
 from asyncpg import Connection
+from pandera.typing import DataFrame
 
-from common.src.database.base_model import BaseEntity, BaseRecord
+from common.src.db.base_model import BaseEntity
 from common.src.logging.logger import AppLogger
 
-T = TypeVar("T", bound=Union[BaseEntity, BaseRecord])
+T = TypeVar("T", bound=BaseEntity)
 
-
-class Repository(Generic[T]):
+class EntitiesRepository(Generic[T]):
     def __init__(self, conn: Connection, schema: Type[T]):
         self.conn = conn
         self.entity_class = schema
         self.logger = AppLogger.get_instance().get_logger()
+
+    async def insert_data_async(self, data: DataFrame[T]) -> None:
+        """
+        Inserts the provided data into the entity's table asynchronously.
+        """
+
 
     async def fetch_data_to_df_async(self) -> pd.DataFrame:
         """

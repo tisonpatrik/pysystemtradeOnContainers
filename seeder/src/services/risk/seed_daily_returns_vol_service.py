@@ -2,12 +2,15 @@
 
 from pandera.errors import SchemaError
 
-from common.src.db.repository import Repository
+from common.src.db.entities_repository import EntitiesRepository
+from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.config_models import InstrumentConfig
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
+from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from risk.src.models.risk_models import DailyReturnsVolatility
+from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from risk.src.services.daily_returns_volatility_service import \
     DailyReturnsVolService
 
@@ -17,9 +20,9 @@ class DailyReturnsVolSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.instrument_repository = Repository(db_session, InstrumentConfig)
-        self.prices_repository = Repository(db_session, AdjustedPricesModel)
-        self.risk_repository = Repository(db_session, DailyReturnsVolatility)
+        self.instrument_repository = EntitiesRepository(db_session, InstrumentConfig)
+        self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel, AdjustedPricesSchema)
+        self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility, DailyReturnsVolatilitySchema)
         self.prices_service = AdjustedPricesService(db_session)
         self.daily_returns_vol_service = DailyReturnsVolService(db_session)
 

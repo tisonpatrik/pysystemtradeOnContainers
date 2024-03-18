@@ -1,29 +1,24 @@
-from datetime import datetime
-
 import pandera as pa
 from pandera.typing import Series
 
+from common.src.validation.base_schema import BaseSchema
 
-class DailyReturnsVolatilitySchema(pa.DataFrameModel):
-    date_time: Series[datetime]
+
+class DailyReturnsVolatilitySchema(BaseSchema):
     symbol: Series[str] = pa.Field(nullable=False)
     daily_returns_volatility: Series[float]
 
-class DailyReturnsVol(pa.DataFrameModel):
-    date_time: Series[datetime]
+class DailyReturnsVol(BaseSchema):
     daily_returns_volatility: Series[float]
 
-class InstrumentVolatilitySchema(pa.DataFrameModel):
-    date_time: Series[datetime]
+class InstrumentVolatilitySchema(BaseSchema):
     symbol: Series[str] = pa.Field(nullable=False)
     instrument_volatility: Series[float]
 
-class DailyVolNormalizedReturnsSchema(pa.DataFrameModel):
-    date_time: Series[datetime]
+class DailyVolNormalizedReturnsSchema(BaseSchema):
     symbol: Series[str] = pa.Field(nullable=False)
     normalized_volatility: Series[float]
 
-class DailyVolNormalisedPriceForAssetClassSchema(pa.DataFrameModel):
-    date_time: Series[datetime]
+class DailyVolNormalisedPriceForAssetClassSchema(BaseSchema):
     asset_class: Series[str] = pa.Field(nullable=False)
     normalized_volatility: Series[float]

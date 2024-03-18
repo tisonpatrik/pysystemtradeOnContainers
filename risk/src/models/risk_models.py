@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field
 
-from common.src.database.base_model import BaseRecord
+from common.src.db.base_model import BaseRecord
 
 
 class DailyReturnsVolatility(BaseRecord, table=True):

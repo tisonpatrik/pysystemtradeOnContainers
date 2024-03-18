@@ -3,25 +3,25 @@ from pandera.errors import SchemaError
 from pandera.typing import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.database.records_repository import RecordsRepository
+from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import RollCalendarsModel
-from raw_data.src.schemas.raw_data_schemas import RollCalendars
+from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
 
 
 class SeedRollCalendarsService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = RecordsRepository(db_session, RollCalendarsModel)
+        self.repository = RecordsRepository(db_session, RollCalendarsModel, RollCalendarsSchema)
 
     async def seed_roll_calendars_service_async(self, raw_data: pd.DataFrame):
 
         try:
-            date_time = RollCalendars.date_time
+            date_time = RollCalendarsSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
-            validated = DataFrame[RollCalendars](raw_data)
-            await self.repository.async_insert_dataframe_to_table(validated)
+            validated = DataFrame[RollCalendarsSchema](raw_data)
+            await self.repository.insert_data_async(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {RollCalendarsModel.__name__}."
             )

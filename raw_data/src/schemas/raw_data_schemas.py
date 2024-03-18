@@ -1,17 +1,15 @@
-from datetime import datetime
-
 import pandera as pa
 from pandera.typing import Series
 
+from common.src.validation.base_schema import BaseSchema
 
-class FxPrices(pa.DataFrameModel):
-    date_time: Series[datetime]
+
+class FxPricesSchema(BaseSchema):
     symbol: Series[str]
     price: Series[float]
 
 
-class MultiplePrices(pa.DataFrameModel):
-    date_time: Series[datetime]
+class MultiplePricesSchema(BaseSchema):
     symbol: Series[str]
     carry: Series[float] = pa.Field(nullable=True)
     carry_contract: Series[int]
@@ -21,8 +19,7 @@ class MultiplePrices(pa.DataFrameModel):
     forward_contract: Series[int]
 
 
-class RollCalendars(pa.DataFrameModel):
-    date_time: Series[datetime]
+class RollCalendarsSchema(BaseSchema):
     symbol: Series[str]
     current_contract: Series[int]
     next_contract: Series[int]

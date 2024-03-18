@@ -9,7 +9,7 @@ from src.utils.table_operations import sort_by_time
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from raw_data.src.models.raw_data_models import MultiplePricesModel
-from raw_data.src.schemas.raw_data_schemas import MultiplePrices
+from raw_data.src.schemas.raw_data_schemas import MultiplePricesSchema
 
 table_name = MultiplePricesModel.__name__
 
