@@ -1,6 +1,6 @@
-from src.models.config_models import InstrumentConfig
+from src.models.instrument_config_models import InstrumentConfig
 
-from common.src.db.entities_repository import EntitiesRepository
+from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 
 
@@ -12,7 +12,7 @@ class TestHandler:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = EntitiesRepository(db_session, InstrumentConfig)
+        self.repository = Repository(db_session, InstrumentConfig)
 
     async def get_config_items_count_async(self):
         """
@@ -20,7 +20,7 @@ class TestHandler:
         """
         try:
             self.logger.info("Retrieving count of configuration items")
-            items = await self.repository.fetch_data_to_df_async()
+            items = await self.repository.fetch_data_async()
             count = len(items)
             self.logger.info(f"Retrieved count of config items: {count}")
             return count

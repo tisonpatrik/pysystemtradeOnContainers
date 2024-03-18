@@ -3,17 +3,15 @@ This module provides services for fetching and processing adjusted prices data a
 """
 
 import pandas as pd
+from asyncpg import Connection
 from pandera.typing import Series
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.db.records_repository import RecordsRepository
+from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
 from raw_data.src.schemas.adjusted_prices_schemas import (AdjustedPricesSchema,
                                                           DailyPricesSchema)
-
-table_name = AdjustedPricesModel.__name__
 
 
 class AdjustedPricesService:
@@ -21,23 +19,24 @@ class AdjustedPricesService:
     Service for dealing with operations related to adjusted prices.
     """
 
-    def __init__(self, db_session: AsyncSession):
+    def __init__(self, db_session: Connection):
         self.logger = AppLogger.get_instance().get_logger()
         self.time_column = AdjustedPricesSchema.date_time
         self.price_column = AdjustedPricesSchema.price
-
-        self.repository = RecordsRepository(db_session, AdjustedPricesModel, AdjustedPricesSchema)
+        self.repository = Repository(db_session, AdjustedPricesModel)
 
     async def get_daily_prices_async(self, symbol: str) -> Series[DailyPricesSchema]:
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            dict = {AdjustedPricesSchema.symbol: symbol}
+            filter = {AdjustedPricesSchema.symbol: symbol}
             columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-            data = await self.repository.fetch_filtered_data_to_df_async(dict, columns)
+            data = await self.repository.fetch_filtered_data_to_df_async(columns= columns, filter_by=filter)
+            data = pd.DataFrame(data)
             series = convert_frame_to_series(data, self.time_column, self.price_column)
             validated = Series[DailyPricesSchema](series)
+            print("FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUCK")
             return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"
@@ -53,6 +52,6 @@ class AdjustedPricesService:
             print("neco")
 
         except Exception as exc:
-            error_message = f"Error inserting data for {table_name}: {str(exc)}"
+            error_message = f"Error inserting data for {AdjustedPricesModel.__name__}: {str(exc)}"
             self.logger.error(error_message)
             raise ValueError(error_message)

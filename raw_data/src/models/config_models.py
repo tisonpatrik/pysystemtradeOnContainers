@@ -1,22 +1,9 @@
 from sqlmodel import Field
 
-from common.src.db.base_model import BaseEntity
+from common.src.db.base_model import BaseModel
 
 
-class InstrumentConfig(BaseEntity, table=True):
-    __tablename__ = "insturment_config"
-    symbol: str = Field(primary_key=True)
-    description: str
-    pointsize: float
-    currency: str
-    asset_class: str
-    per_block: float
-    percentage: float
-    per_trade: int
-    region: str
-
-
-class InstrumentMetadata(BaseEntity, table=True):
+class InstrumentMetadata(BaseModel, table=True):
     __tablename__ = "insturment_metadata"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     asset_class: str
@@ -24,7 +11,7 @@ class InstrumentMetadata(BaseEntity, table=True):
     description: str
 
 
-class RollConfig(BaseEntity, table=True):
+class RollConfig(BaseModel, table=True):
     __tablename__ = "roll_config"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     hold_roll_cycle: str
@@ -34,7 +21,7 @@ class RollConfig(BaseEntity, table=True):
     expiry_offset: int
 
 
-class SpreadCosts(BaseEntity, table=True):
+class SpreadCosts(BaseModel, table=True):
     __tablename__ = "spred_costs"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     spread_costs: float

@@ -1,9 +1,9 @@
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.db.entities_repository import EntitiesRepository
+from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.config_models import InstrumentConfig
+from raw_data.src.models.instrument_config_models import InstrumentConfig
 
 
 class InstrumentConfigSeedService:
@@ -13,7 +13,7 @@ class InstrumentConfigSeedService:
 
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = EntitiesRepository(db_session, InstrumentConfig)
+        self.repository = Repository(db_session, InstrumentConfig)
 
     async def seed_instrument_config_async(self, raw_data: pd.DataFrame):
         """

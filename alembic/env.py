@@ -21,15 +21,15 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from raw_data.src.models.config_models import BaseEntity
-from raw_data.src.models.raw_data_models import BaseRecord as RawDataBaseRecord
-from risk.src.models.risk_models import BaseRecord as RiskBaseRecord
+from raw_data.src.models.config_models import BaseModel
+from raw_data.src.models.raw_data_models import BaseModel as RawDataBaseRecord
+from risk.src.models.risk_models import BaseModel as RiskBaseRecord
 
 combined_metadata = MetaData()
 
 
 for metadata in (
-    BaseEntity.metadata,
+    BaseModel.metadata,
     RawDataBaseRecord.metadata,
     RiskBaseRecord.metadata,
 ):

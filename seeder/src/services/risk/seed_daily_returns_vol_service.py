@@ -1,30 +1,24 @@
 """Module for calculating robust volatility for financial instruments."""
 
+from asyncpg import Connection
 from pandera.errors import SchemaError
 
-from common.src.db.entities_repository import EntitiesRepository
-from common.src.db.records_repository import RecordsRepository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.config_models import InstrumentConfig
-from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
+from raw_data.src.services.instrument_config_service import \
+    InstrumentConfigService
 from risk.src.models.risk_models import DailyReturnsVolatility
-from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema
-from risk.src.services.daily_returns_volatility_service import \
-    DailyReturnsVolService
+from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolSeedService:
     """Service for seeding daily returns volatility of financial instruments."""
 
-    def __init__(self, db_session):
+    def __init__(self, db_session:Connection):
         self.logger = AppLogger.get_instance().get_logger()
-        self.instrument_repository = EntitiesRepository(db_session, InstrumentConfig)
-        self.prices_repository = RecordsRepository(db_session, AdjustedPricesModel, AdjustedPricesSchema)
-        self.risk_repository = RecordsRepository(db_session, DailyReturnsVolatility, DailyReturnsVolatilitySchema)
         self.prices_service = AdjustedPricesService(db_session)
         self.daily_returns_vol_service = DailyReturnsVolService(db_session)
+        self.instrument_config_service = InstrumentConfigService(db_session)
 
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
@@ -33,9 +27,9 @@ class DailyReturnsVolSeedService:
                 "Starting the process for %s table.", DailyReturnsVolatility.__tablename__,
             )
 
-            instrument_configs = await self.instrument_repository.fetch_data_to_df_async()
-            for config in instrument_configs.itertuples():
-                prices = await self.prices_service.get_daily_prices_async(str(config.symbol))
+            instrument_configs = await self.instrument_config_service.get_list_of_instruments_async()
+            for config in instrument_configs:
+                prices = await self.prices_service.get_daily_prices_async(config.symbol)
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)
