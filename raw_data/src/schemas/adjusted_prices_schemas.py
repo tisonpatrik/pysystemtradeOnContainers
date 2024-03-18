@@ -1,5 +1,4 @@
 
-import pandera as pa
 from pandera.typing import Series
 
 from common.src.validation.base_schema import BaseSchema

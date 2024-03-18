@@ -14,6 +14,26 @@ class Repository(Generic[T]):
         self.table = model.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
+            
+    async def insert_dataframe_async(self, dataframe: pd.DataFrame) -> None:
+        if dataframe.empty:
+            self.logger.warning("Attempted to insert an empty dataframe.")
+            return
+
+        columns = list(dataframe.columns)
+        placeholders = ', '.join(f'${i+1}' for i, _ in enumerate(columns))
+        query = f"INSERT INTO {self.table} ({', '.join(columns)}) VALUES ({placeholders})"
+
+        entries = list(dataframe.itertuples(index=False, name=None))
+
+        async with self.conn.transaction():
+            try:
+                prepared_stmt = await self.conn.prepare(query)
+                await prepared_stmt.executemany(entries)
+            except Exception as e:
+                self.logger.error(f"Failed to insert data into '{self.table}': {e}")
+                raise e  
+                  
     async def insert_data_async(self, data: List[T]) -> None:
         if not data:
             self.logger.warning("Attempted to insert empty data list.")
@@ -28,9 +48,7 @@ class Repository(Generic[T]):
         async with self.conn.transaction():
             try:
                 prepared_stmt = await self.conn.prepare(query)
-                # Ensure the model_dump method is called to convert each BaseModel instance to a dict
                 await prepared_stmt.executemany([tuple(item.model_dump().values()) for item in data])
-                self.logger.info(f"Successfully inserted {len(data)} records into '{self.table}'.")
             except Exception as e:
                 self.logger.error(f"Failed to insert data into '{self.table}': {e}")
                 raise e

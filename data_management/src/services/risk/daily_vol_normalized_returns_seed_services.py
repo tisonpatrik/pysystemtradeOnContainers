@@ -1,11 +1,11 @@
-from risk.src.models.risk_models import DailyVolNormalizedReturns
 from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
-from src.services.raw_data.instrument_config_services import InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import (
-    DailyVolatilityNormalisedReturnsService,
-)
+from src.services.raw_data.instrument_config_services import \
+    InstrumentConfigService
+from src.services.risk.daily_volatility_normalised_returns_service import \
+    DailyVolatilityNormalisedReturnsService
 
 from common.src.logging.logger import AppLogger
+from risk.src.models.risk_models import DailyVolNormalizedReturns
 
 
 class DailyVolNormalisedReturnsSeedService:
