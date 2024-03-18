@@ -3,16 +3,17 @@ This module contains the SeedDBHandler class,
 which is responsible for seeding the database from CSV files.
 """
 
-from src.csv_to_db_configs.raw_data_config import (
-    AdjustedPricesConfig,
-    FxPricesSchemaConfig,
-    MultiplePricesConfig,
-    RollCalendarsConfig,
-)
-from src.services.raw_data.seed_adjusted_prices_service import SeedAdjustedPricesService
+from src.csv_to_db_configs.raw_data_config import (AdjustedPricesConfig,
+                                                   FxPricesSchemaConfig,
+                                                   MultiplePricesConfig,
+                                                   RollCalendarsConfig)
+from src.services.raw_data.seed_adjusted_prices_service import \
+    SeedAdjustedPricesService
 from src.services.raw_data.seed_fx_prices_service import SeedFxPricesService
-from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePricesService
-from src.services.raw_data.seed_roll_calendars_service import SeedRollCalendarsService
+from src.services.raw_data.seed_multiple_prices_service import \
+    SeedMultiplePricesService
+from src.services.raw_data.seed_roll_calendars_service import \
+    SeedRollCalendarsService
 from src.utils.csv_loader import get_full_path, load_csv
 
 from common.src.logging.logger import AppLogger
@@ -53,11 +54,11 @@ class SeedRawDataHandler:
         table_name = config.tablename
         full_path = get_full_path(config.directory, config.file_name)
         raw_data = load_csv(full_path)
-
-        if table_name == "fx_prices":
-            await self.fx_prices_service.seed_fx_prices_async(raw_data)
-        elif table_name == "adjusted_prices":
+        if table_name == "adjusted_prices":
             await self.adjusted_prices_service.seed_adjusted_prices_async(raw_data)
+        elif table_name == "fx_prices":
+            await self.fx_prices_service.seed_fx_prices_async(raw_data)
+
         elif table_name == "roll_calendars":
             await self.roll_calendars_service.seed_roll_calendars_service_async(
                 raw_data
