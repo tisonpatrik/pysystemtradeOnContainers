@@ -1,17 +1,17 @@
 import pandas as pd
-from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema
+from src.app.schemas.risk_schemas import \
+    DailyVolNormalisedPriceForAssetClassSchema
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
-from src.estimators.daily_vol_normalised_returns_for_asset_class import (
-    DailyVolNormalisedPriceForAssetClassEstimator,
-)
-from src.services.raw_data.instrument_config_services import InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import (
-    DailyVolatilityNormalisedReturnsService,
-)
-from src.utils.converter import convert_frame_to_series
+from src.estimators.daily_vol_normalised_returns_for_asset_class import \
+    DailyVolNormalisedPriceForAssetClassEstimator
+from src.services.raw_data.instrument_config_services import \
+    InstrumentConfigService
+from src.services.risk.daily_volatility_normalised_returns_service import \
+    DailyVolatilityNormalisedReturnsService
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_series_to_frame
 from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClass
 
 table_name = DailyVolNormalisedPriceForAssetClass.__tablename__

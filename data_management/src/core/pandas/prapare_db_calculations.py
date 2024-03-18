@@ -1,10 +1,8 @@
-from src.utils.converter import convert_series_to_frame
-from src.utils.table_operations import (
-    add_column_and_populate_it_by_value,
-    rename_columns,
-)
+from src.utils.table_operations import (add_column_and_populate_it_by_value,
+                                        rename_columns)
 
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_series_to_frame
 
 logger = AppLogger.get_instance().get_logger()
 

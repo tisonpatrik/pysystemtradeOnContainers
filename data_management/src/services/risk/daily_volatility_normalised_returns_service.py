@@ -1,10 +1,11 @@
 from src.app.schemas.risk_schemas import DailyVolNormalizedReturnsSchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
-from src.utils.converter import convert_frame_to_series
+from src.estimators.daily_vol_normalised_returns import \
+    DailyVolNormalisedReturns
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_series_to_frame
 from risk.src.models.risk_models import DailyVolNormalizedReturns
 
 table_name = DailyVolNormalizedReturns.__tablename__

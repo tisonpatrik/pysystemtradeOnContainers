@@ -4,10 +4,10 @@ This module provides services for fetching and processing multiple prices data a
 
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.utils.converter import convert_frame_to_series
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_series_to_frame
 from raw_data.src.models.raw_data_models import MultiplePricesModel
 from raw_data.src.schemas.raw_data_schemas import MultiplePrices
 

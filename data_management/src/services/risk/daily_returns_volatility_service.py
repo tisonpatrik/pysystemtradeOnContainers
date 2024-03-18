@@ -3,11 +3,12 @@
 from src.app.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
-from src.services.raw_data.instrument_config_services import InstrumentConfigService
-from src.utils.converter import convert_frame_to_series
+from src.services.raw_data.instrument_config_services import \
+    InstrumentConfigService
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
+from common.src.utils.converter import convert_series_to_frame
 from risk.src.models.risk_models import DailyReturnsVolatility
 
 table_name = DailyReturnsVolatility.__tablename__
