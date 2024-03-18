@@ -33,10 +33,9 @@ class AdjustedPricesService:
             filter = {AdjustedPricesSchema.symbol: symbol}
             columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
             data = await self.repository.fetch_filtered_data_to_df_async(columns= columns, filter_by=filter)
-            data = pd.DataFrame(data)
-            series = convert_frame_to_series(data, self.time_column, self.price_column)
+            data_frame = pd.DataFrame(data)
+            series = convert_frame_to_series(data_frame, self.time_column, self.price_column)
             validated = Series[DailyPricesSchema](series)
-            print("FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUCK")
             return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously for symbol '{symbol}': {exc}"

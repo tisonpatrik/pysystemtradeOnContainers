@@ -42,7 +42,7 @@ class Repository(Generic[T]):
 
     async def fetch_filtered_data_to_df_async(
         self, columns: List[str], filter_by: Optional[Dict[str, Any]] = None
-    ) -> List[T]:
+    ) -> List[Record]:
         """
         Fetches data based on the provided conditions (if any) and specified columns from the entity's table asynchronously.
 
