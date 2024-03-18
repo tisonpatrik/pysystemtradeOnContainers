@@ -27,14 +27,13 @@ class DailyReturnsVolSeedService:
         """Seed daily returns volatility."""
         try:
             self.logger.info(
-                "Starting the process for %s table.",
-                DailyReturnsVolatility.__tablename__,
+                "Starting the process for %s table.", DailyReturnsVolatility.__tablename__,
             )
 
             instrument_configs = await self.instrument_repository.fetch_data_to_df_async()
             for config in instrument_configs.itertuples():
                 prices = await self.prices_service.get_daily_prices_async(str(config.symbol))
-                daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
+                daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)
                 )

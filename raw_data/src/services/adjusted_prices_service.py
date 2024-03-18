@@ -3,14 +3,15 @@ This module provides services for fetching and processing adjusted prices data a
 """
 
 import pandas as pd
-from pandera.typing import DataFrame, Series
+from pandera.typing import Series
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPrices, DailyPrices
+from raw_data.src.schemas.adjusted_prices_schemas import (AdjustedPrices,
+                                                          DailyPrices)
 
 table_name = AdjustedPricesModel.__name__
 

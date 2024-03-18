@@ -1,17 +1,17 @@
 """Module for calculating robust volatility for financial instruments."""
 
-from pandera.typing import DataFrame
+from pandera.typing import DataFrame, Series
 
 from common.src.db.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import (
-    add_column_and_populate_it_by_value,
-    rename_columns,
-)
-from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
+    add_column_and_populate_it_by_value, rename_columns)
+from risk.src.estimators.daily_returns_volatility import \
+    DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolatility
-from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema
+from risk.src.schemas.risk_schemas import (DailyReturnsVol,
+                                           DailyReturnsVolatilitySchema)
 
 table_name = DailyReturnsVolatility.__tablename__
 
@@ -53,13 +53,13 @@ class DailyReturnsVolService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def calculate_daily_returns_vol_async(self, prices):
+    async def calculate_daily_returns_vol_async(self, prices)->Series[DailyReturnsVol]:
         """
         Calculates and inserts daily returns volatility for given prices.
         """
         try:
             daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
-            return daily_returns_vols
+            return Series[DailyReturnsVol](daily_returns_vols)
 
         except Exception as error:
             error_message = f"An error occurred during the processing: {error}"
