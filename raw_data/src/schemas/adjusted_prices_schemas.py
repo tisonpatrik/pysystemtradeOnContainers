@@ -10,6 +10,6 @@ class AdjustedPricesSchema(pa.DataFrameModel):
     symbol: Series[str]
     price: Series[float]
 
-class DailyPricesSchema(pa.DataFrameModel):
+class DailyPricesSchema(pa.SeriesSchema):
     date_time: Series[datetime]
     price: Series[float]

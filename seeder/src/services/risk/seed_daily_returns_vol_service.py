@@ -3,7 +3,10 @@
 from asyncpg import Connection
 from pandera.errors import SchemaError
 
+from common.src.db.statement_factory import StatementFactory
 from common.src.logging.logger import AppLogger
+from raw_data.src.models.raw_data_models import AdjustedPricesModel
+from raw_data.src.schemas.adjusted_prices_schemas import DailyPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from raw_data.src.services.instrument_config_service import \
     InstrumentConfigService
@@ -19,6 +22,7 @@ class DailyReturnsVolSeedService:
         self.prices_service = AdjustedPricesService(db_session)
         self.daily_returns_vol_service = DailyReturnsVolService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
+        self.statement_factory = StatementFactory(db_session, AdjustedPricesModel.__tablename__)
 
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
@@ -29,7 +33,9 @@ class DailyReturnsVolSeedService:
             instrument_configs = await self.instrument_config_service.get_list_of_instruments_async()
             
             for config in instrument_configs:
-                prices = await self.prices_service.get_daily_prices_async(config.symbol, f"symbol = '{config.symbol}'")
+                columns = [DailyPricesSchema.date_time, DailyPricesSchema.price]
+                statement = await self.statement_factory.create_fetch_statement_with_where(columns, f"symbol = '{config.symbol}'")
+                prices = await self.prices_service.get_daily_prices_async(statement)
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)
