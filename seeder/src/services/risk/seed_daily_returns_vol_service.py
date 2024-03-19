@@ -26,10 +26,10 @@ class DailyReturnsVolSeedService:
             self.logger.info(
                 "Starting the process for %s table.", DailyReturnsVolatility.__tablename__,
             )
-
             instrument_configs = await self.instrument_config_service.get_list_of_instruments_async()
+            
             for config in instrument_configs:
-                prices = await self.prices_service.get_daily_prices_async(config.symbol)
+                prices = await self.prices_service.get_daily_prices_async(config.symbol, f"symbol = '{config.symbol}'")
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)
