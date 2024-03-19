@@ -26,7 +26,6 @@ class InstrumentConfigService:
         Asynchronously fetch instrument consfig data.
         """
         try:
-            data = await self.repository.fetch_data_async()
             print("neco")
         except Exception as error:
             error_message = f"Failed to get instrument config asynchronously for table '{table_name}': {error}"
@@ -36,8 +35,8 @@ class InstrumentConfigService:
     async def get_point_size_of_instrument_async(self, symbol):
         """Asynchronously fetch point size for given instrument."""
         try:
-            data = await self.repository.fetch_data_async()
             # return data[InstrumentConfigSchema.pointsize][0]
+            print("neco")
         except Exception as error:
             error_message = f"Failed to get point size for instrument '{symbol}' asynchronously: {error}"
             self.logger.error(error_message, exc_info=True)
@@ -48,7 +47,6 @@ class InstrumentConfigService:
         Asynchronously fetch instrument metadatas.
         """
         try:
-            data = await self.repository.fetch_data_async()
             print("neco")
 
         except Exception as error:
@@ -61,7 +59,6 @@ class InstrumentConfigService:
         Asynchronously fetch instrument aset class.
         """
         try:
-            data = await self.repository.fetch_data_async()
             print("neco")
 
         except Exception as error:
@@ -74,7 +71,6 @@ class InstrumentConfigService:
         Asynchronously fetch instrument config data.
         """
         try:
-            data = await self.repository.fetch_data_async()
             print("neco")
         except Exception as error:
             error_message = f"Failed to get assets values asynchronously: {error}"

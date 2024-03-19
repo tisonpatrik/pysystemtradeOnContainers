@@ -16,44 +16,30 @@ class Repository(Generic[T]):
         self.logger = AppLogger.get_instance().get_logger()
 
             
-    # async def insert_many_async(self, prepared_statement:PreparedStatement, entries: list[Tuple]) -> None:
-    #     async with self.conn.transaction():
-    #         try:
-    #             await prepared_statement.executemany(entries, timeout=20)
-    #         except Exception as e:
-    #             self.logger.error(f"Failed to insert data into '{self.table}': {e}")
-    #             raise e
+    async def fetch_many_async(self, prepared_statement:PreparedStatement)->list[Record]:
+        async with self.conn.transaction():
+            try:
+               results = await prepared_statement.fetch(timeout=20)
+               return results
+            except Exception as e:
+                self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
+                raise e
 
     async def insert_dataframe_async(self, data: pd.DataFrame) -> None:
         if data.empty:
             self.logger.warning("Attempted to insert empty data list.")
             return
-        records= data.to_numpy()
-        await self.conn.copy_records_to_table(
-            table_name=self.table, 
-            records= records,
-            columns = list(data.columns))
 
+        records = data.to_numpy()
 
-    async def fetch_data_async(self) -> list[Record]:
-        """
-        Fetches all data from the entity's table asynchronously and loads it into a pandas DataFrame.
-        """
         try:
-            query = f'SELECT * FROM "{self.table}";'
-            records = await self.conn.fetch(query)
-            if records:
-                return records
-            else:
-                msg = f"No data found in {self.table}"
-                self.logger.info(msg)
-                raise ValueError(msg)
+            async with self.conn.transaction():
+                await self.conn.copy_records_to_table(
+                    table_name=self.table,
+                    records=records,
+                    columns=list(data.columns))
         except Exception as e:
-            self.logger.error(
-                f"Error fetching data from {self.table}: {e}"
-            )
-            raise
-
+            self.logger.error(f"Failed to insert data into the database: {str(e)}")
 
     async def fetch_filtered_data_to_df_async(
         self, columns: list[str], filter_by: Optional[Dict[str, Any]] = None

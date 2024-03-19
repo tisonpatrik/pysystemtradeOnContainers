@@ -1,8 +1,13 @@
+import pydantic
+from pydantic import BaseModel as Model
 from sqlmodel import Field
 
 from common.src.db.base_model import BaseModel
 
 
+class Instrument(Model):
+    symbol: str
+    
 class InstrumentConfig(BaseModel, table=True):
     __tablename__ = "insturment_config"
     symbol: str = Field(primary_key=True)
@@ -16,5 +21,4 @@ class InstrumentConfig(BaseModel, table=True):
     region: str
 
 
-class Instrument(BaseModel):
-    symbol: str
+

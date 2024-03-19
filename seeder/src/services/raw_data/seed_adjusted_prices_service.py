@@ -15,7 +15,7 @@ class SeedAdjustedPricesService:
     def __init__(self, db_session: AsyncSession):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = Repository(db_session, AdjustedPricesModel)
-        self.statement_factory = StatementFactory(db_session)
+        self.statement_factory = StatementFactory(db_session, AdjustedPricesModel.__tablename__)
 
     async def seed_adjusted_prices_async(self, raw_data: pd.DataFrame):
         try:
