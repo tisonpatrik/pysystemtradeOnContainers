@@ -1,3 +1,4 @@
+from socket import timeout
 from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar
 
 from asyncpg import Connection, Record
@@ -18,7 +19,7 @@ class Repository(Generic[T]):
     async def insert_many_async(self, prepared_statement:PreparedStatement, entries: list[Tuple]) -> None:
         async with self.conn.transaction():
             try:
-                await prepared_statement.executemany(entries)
+                await prepared_statement.executemany(entries, timeout=20)
             except Exception as e:
                 self.logger.error(f"Failed to insert data into '{self.table}': {e}")
                 raise e

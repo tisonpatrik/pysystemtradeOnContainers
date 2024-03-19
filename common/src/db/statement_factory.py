@@ -43,7 +43,7 @@ class StatementFactory():
             raise
     
 
-    async def create_fetch_statement(self, conn: Connection, table: str, columns: list[str]) -> PreparedStatement:
-        placeholders = ', '.join(f'${i+1}' for i, _ in enumerate(columns))
-        query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
-        return await conn.prepare(query)
+    # async def create_fetch_statement(self, conn: Connection, table: str, columns: list[str]) -> PreparedStatement:
+    #     placeholders = ', '.join(f'${i+1}' for i, _ in enumerate(columns))
+    #     query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
+    #     return await conn.prepare(query)
