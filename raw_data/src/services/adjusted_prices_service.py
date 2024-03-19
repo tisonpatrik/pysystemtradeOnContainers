@@ -31,7 +31,7 @@ class AdjustedPricesService:
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            columns = [DailyPricesSchema.date_time, DailyPricesSchema.price]
+            columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
             data = await self.repository.fetch_many_async(statement)
             data_frame = pd.DataFrame(data, columns=columns)
             series = convert_frame_to_series(data_frame, self.time_column, self.price_column)
