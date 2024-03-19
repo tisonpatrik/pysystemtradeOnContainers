@@ -20,5 +20,4 @@ class RollConfigSeedService:
         Seed instrument config data.
         """
         self.logger.info(f"Seeding {RollConfig.__tablename__} data: ")
-        data = list(map(lambda row: RollConfig(**row[1].to_dict()), raw_data.iterrows()))
-        await self.repository.insert_data_async(data)
+        await self.repository.insert_dataframe_async(raw_data)

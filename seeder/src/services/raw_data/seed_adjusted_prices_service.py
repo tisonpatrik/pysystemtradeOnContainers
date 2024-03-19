@@ -22,9 +22,7 @@ class SeedAdjustedPricesService:
             date_time = AdjustedPricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
             validated = DataFrame[AdjustedPricesSchema](raw_data)
-            statement = await self.statement_factory.create_insert_statement_async(table, list(validated.columns))
-            entries = self.statement_factory.prepare_data(validated)
-            await self.repository.insert_many_async(statement,entries)
+            await self.repository.insert_dataframe_async(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {AdjustedPricesModel.__name__}."
             )

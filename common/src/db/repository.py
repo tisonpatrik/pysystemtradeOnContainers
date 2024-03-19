@@ -1,6 +1,6 @@
-from socket import timeout
 from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar
 
+import pandas as pd
 from asyncpg import Connection, Record
 from asyncpg.prepared_stmt import PreparedStatement
 
@@ -16,33 +16,24 @@ class Repository(Generic[T]):
         self.logger = AppLogger.get_instance().get_logger()
 
             
-    async def insert_many_async(self, prepared_statement:PreparedStatement, entries: list[Tuple]) -> None:
-        async with self.conn.transaction():
-            try:
-                await prepared_statement.executemany(entries, timeout=20)
-            except Exception as e:
-                self.logger.error(f"Failed to insert data into '{self.table}': {e}")
-                raise e
-            
-    
-    async def insert_data_async(self, data: list[T]) -> None:
-        if not data:
+    # async def insert_many_async(self, prepared_statement:PreparedStatement, entries: list[Tuple]) -> None:
+    #     async with self.conn.transaction():
+    #         try:
+    #             await prepared_statement.executemany(entries, timeout=20)
+    #         except Exception as e:
+    #             self.logger.error(f"Failed to insert data into '{self.table}': {e}")
+    #             raise e
+
+    async def insert_dataframe_async(self, data: pd.DataFrame) -> None:
+        if data.empty:
             self.logger.warning("Attempted to insert empty data list.")
             return
+        records= data.to_numpy()
+        await self.conn.copy_records_to_table(
+            table_name=self.table, 
+            records= records,
+            columns = list(data.columns))
 
-        # Assuming model_dump() correctly serializes your data model instance to a dictionary
-        columns = data[0].model_dump().keys()
-        placeholders = ', '.join(f'${i+1}' for i in range(len(columns)))
-        query = f"INSERT INTO {self.table} ({', '.join(columns)}) VALUES ({placeholders})"
-        self.logger.debug(f"Constructed query: {query}")
-
-        async with self.conn.transaction():
-            try:
-                prepared_stmt = await self.conn.prepare(query)
-                await prepared_stmt.executemany([tuple(item.model_dump().values()) for item in data])
-            except Exception as e:
-                self.logger.error(f"Failed to insert data into '{self.table}': {e}")
-                raise e
 
     async def fetch_data_async(self) -> list[Record]:
         """
