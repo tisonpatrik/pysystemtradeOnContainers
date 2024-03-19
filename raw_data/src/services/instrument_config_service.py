@@ -1,4 +1,3 @@
-from typing import List
 
 from asyncpg import Connection
 
@@ -18,7 +17,7 @@ class InstrumentConfigService:
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = Repository(self.db_session, InstrumentConfig)
 
-    async def get_list_of_instruments_async(self) -> List[InstrumentConfig]:
+    async def get_list_of_instruments_async(self) -> list[InstrumentConfig]:
         """
         Asynchronously fetch instrument consfig data.
         """

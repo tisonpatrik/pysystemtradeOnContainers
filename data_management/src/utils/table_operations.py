@@ -2,7 +2,6 @@
 This module contains utility functions for adding and populating columns in a pandas DataFrame.
 """
 
-from typing import List
 
 import pandas as pd
 
@@ -28,7 +27,7 @@ def add_column_and_populate_it_by_value(
 
 
 def rename_columns(
-    data_frame: pd.DataFrame, new_column_names: List[str]
+    data_frame: pd.DataFrame, new_column_names: list[str]
 ) -> pd.DataFrame:
     """
     Renames DataFrame columns based on the provided list of new column names.

@@ -1,7 +1,7 @@
-from typing import Any, Dict, Generic, List, Optional, Tuple, Type, TypeVar
+from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar
 
-import pandas as pd
 from asyncpg import Connection, Record
+from asyncpg.prepared_stmt import PreparedStatement
 
 from common.src.db.base_model import BaseModel
 from common.src.logging.logger import AppLogger
@@ -15,26 +15,16 @@ class Repository(Generic[T]):
         self.logger = AppLogger.get_instance().get_logger()
 
             
-    async def insert_dataframe_async(self, dataframe: pd.DataFrame) -> None:
-        if dataframe.empty:
-            self.logger.warning("Attempted to insert an empty dataframe.")
-            return
-
-        columns = list(dataframe.columns)
-        placeholders = ', '.join(f'${i+1}' for i, _ in enumerate(columns))
-        query = f"INSERT INTO {self.table} ({', '.join(columns)}) VALUES ({placeholders})"
-
-        entries = list(dataframe.itertuples(index=False, name=None))
-
+    async def insert_many_async(self, prepared_statement:PreparedStatement, entries: list[Tuple]) -> None:
         async with self.conn.transaction():
             try:
-                prepared_stmt = await self.conn.prepare(query)
-                await prepared_stmt.executemany(entries)
+                await prepared_statement.executemany(entries)
             except Exception as e:
                 self.logger.error(f"Failed to insert data into '{self.table}': {e}")
-                raise e  
-                  
-    async def insert_data_async(self, data: List[T]) -> None:
+                raise e
+            
+    
+    async def insert_data_async(self, data: list[T]) -> None:
         if not data:
             self.logger.warning("Attempted to insert empty data list.")
             return
@@ -53,7 +43,7 @@ class Repository(Generic[T]):
                 self.logger.error(f"Failed to insert data into '{self.table}': {e}")
                 raise e
 
-    async def fetch_data_async(self) -> List[Record]:
+    async def fetch_data_async(self) -> list[Record]:
         """
         Fetches all data from the entity's table asynchronously and loads it into a pandas DataFrame.
         """
@@ -74,12 +64,12 @@ class Repository(Generic[T]):
 
 
     async def fetch_filtered_data_to_df_async(
-        self, columns: List[str], filter_by: Optional[Dict[str, Any]] = None
-    ) -> List[Record]:
+        self, columns: list[str], filter_by: Optional[Dict[str, Any]] = None
+    ) -> list[Record]:
         """
         Fetches data based on the provided conditions (if any) and specified columns from the entity's table asynchronously.
 
-        :param columns: List of column names to be fetched.
+        :param columns: list of column names to be fetched.
         :param filter_by: Optional dictionary with {column_name: value} pairs for filtering the data.
         """
         try:
@@ -107,7 +97,7 @@ class Repository(Generic[T]):
             raise Exception(error_msg) from error
         
 
-    async def _construct_where_clause(self, filter_by: Dict[str, Any]) -> Tuple[str, List[Any]]:
+    async def _construct_where_clause(self, filter_by: Dict[str, Any]) -> Tuple[str, list[Any]]:
         """
         Constructs a WHERE clause for SQL queries based on the provided filtering criteria.
 
