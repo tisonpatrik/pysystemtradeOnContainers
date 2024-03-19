@@ -20,7 +20,7 @@ class SeedMultiplePricesService:
             date_time = MultiplePricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
             validated = DataFrame[MultiplePricesSchema](raw_data)
-            # await self.repository.insert_data_async(validated)
+            await self.repository.insert_dataframe_async(validated)
             self.logger.info(
                 f"Successfully inserted {len(raw_data)} records into {MultiplePricesModel.__name__}."
             )
