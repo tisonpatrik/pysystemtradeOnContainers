@@ -1,26 +1,15 @@
 {
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
     "python.defaultInterpreterPath": ".venv/bin/python3",
+    "python.testing.pytestArgs": ["tests"],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "python.analysis.autoImportCompletions": true,
-    "python.analysis.diagnosticMode": "workspace",
-    "python.analysis.inlayHints.variableTypes": false,
-    "python.analysis.persistAllIndices": false,
-    "python.missingPackage.severity": "Information",
-    "python.analysis.useLibraryCodeForTypes": false,
-    "python.analysis.addImport.exactMatchOnly": true,
-    "python.analysis.typeCheckingMode": "basic",
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        },
-        "black-formatter.args": [
-            "--profile",
-            "120"
-        ],
-
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "black-formatter.args": [
+        "--line-length",
+        "120"
+    ]
 }
