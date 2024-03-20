@@ -7,7 +7,7 @@ from asyncpg import Connection
 from asyncpg.prepared_stmt import PreparedStatement
 from pandera.typing import Series
 
-from common.src.db.repository import Repository
+from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel

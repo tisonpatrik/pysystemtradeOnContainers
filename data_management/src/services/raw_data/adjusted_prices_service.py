@@ -5,7 +5,7 @@ This module provides services for fetching and processing adjusted prices data a
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.db.repository import BaseModel
+from common.src.database.repository import BaseModel
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from raw_data.src.models.raw_data_models import AdjustedPricesModel

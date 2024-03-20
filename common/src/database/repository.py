@@ -4,7 +4,7 @@ import pandas as pd
 from asyncpg import Connection, Record
 from asyncpg.prepared_stmt import PreparedStatement
 
-from common.src.db.base_model import BaseModel
+from common.src.database.base_model import BaseModel
 from common.src.logging.logger import AppLogger
 
 T = TypeVar("T", bound=BaseModel)

@@ -2,7 +2,7 @@
 
 from pandera.typing import DataFrame, Series
 
-from common.src.db.repository import Repository
+from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import (

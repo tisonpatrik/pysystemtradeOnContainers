@@ -1,8 +1,8 @@
+from asyncpg import Connection
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_config_data_handler import SeedConfigDataHandler
 
-from common.src.db.dependencies import get_db
+from common.src.database.dependencies import get_db
 from common.src.logging.logger import AppLogger
 
 router = APIRouter()
@@ -14,7 +14,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_201_CREATED,
     name="Seed Database with config data files",
 )
-async def seed_config_files_async(db_session: AsyncSession = Depends(get_db)):
+async def seed_config_files_async(db_session: Connection = Depends(get_db)):
     """
     Fills the database tables with data.
     """

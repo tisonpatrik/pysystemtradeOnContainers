@@ -3,8 +3,8 @@ from pandera.errors import SchemaError
 from pandera.typing import DataFrame
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.src.db.repository import Repository
-from common.src.db.statement_factory import StatementFactory
+from common.src.database.repository import Repository
+from common.src.database.statement_factory import StatementFactory
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
