@@ -9,18 +9,18 @@ from common.src.logging.logger import AppLogger
 
 T = TypeVar("T", bound=BaseModel)
 
+
 class Repository(Generic[T]):
     def __init__(self, conn: Connection, model: Type[T]):
         self.conn = conn
         self.table = model.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
-            
-    async def fetch_many_async(self, prepared_statement:PreparedStatement)->list[Record]:
+    async def fetch_many_async(self, prepared_statement: PreparedStatement) -> list[Record]:
         async with self.conn.transaction():
             try:
-               results = await prepared_statement.fetch(timeout=20)
-               return results
+                results = await prepared_statement.fetch(timeout=20)
+                return results
             except Exception as e:
                 self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
                 raise e
@@ -35,9 +35,8 @@ class Repository(Generic[T]):
         try:
             async with self.conn.transaction():
                 await self.conn.copy_records_to_table(
-                    table_name=self.table,
-                    records=records,
-                    columns=list(data.columns))
+                    table_name=self.table, records=records, columns=list(data.columns)
+                )
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")
 
@@ -52,10 +51,10 @@ class Repository(Generic[T]):
         """
         try:
             where_clause, values = await self._construct_where_clause(filter_by if filter_by else {})
-            
+
             select_clause = ", ".join([f'"{col}"' for col in columns])
             query = f'SELECT {select_clause} FROM "{self.table}"{where_clause};'
-            
+
             records = await self.conn.fetch(query, *values)
             if records:
                 return records
@@ -73,7 +72,6 @@ class Repository(Generic[T]):
             error_msg += f" for columns {columns}: {error}"
             self.logger.error(error_msg)
             raise Exception(error_msg) from error
-        
 
     async def _construct_where_clause(self, filter_by: Dict[str, Any]) -> Tuple[str, list[Any]]:
         """

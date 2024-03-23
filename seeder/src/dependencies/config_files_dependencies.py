@@ -1,4 +1,3 @@
-from asyncpg import Connection
 from fastapi import Depends
 from src.services.config.instrument_config_seed_service import InstrumentConfigSeedService
 from src.services.config.instrument_metadata_seed_service import InstrumentMetadataSeedService

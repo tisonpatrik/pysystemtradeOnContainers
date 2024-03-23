@@ -1,0 +1,2 @@
+from fastapi import Depends
+from src.services.risk.seed_daily_returns_vol_service import DailyReturnsVolSeedService
