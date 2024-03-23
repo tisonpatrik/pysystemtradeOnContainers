@@ -3,16 +3,14 @@ This module provides services for fetching and processing adjusted prices data a
 """
 
 import pandas as pd
-from asyncpg import Connection
-from asyncpg.prepared_stmt import PreparedStatement
 from pandera.typing import Series
 
 from common.src.database.repository import Repository
+from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
-from raw_data.src.schemas.adjusted_prices_schemas import (AdjustedPricesSchema,
-                                                          DailyPricesSchema)
+from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema, DailyPricesSchema
 
 
 class AdjustedPricesService:
@@ -20,13 +18,13 @@ class AdjustedPricesService:
     Service for dealing with operations related to adjusted prices.
     """
 
-    def __init__(self, db_session: Connection):
+    def __init__(self, repository: Repository[AdjustedPricesModel]):
         self.logger = AppLogger.get_instance().get_logger()
         self.time_column = AdjustedPricesSchema.date_time
         self.price_column = AdjustedPricesSchema.price
-        self.repository = Repository(db_session, AdjustedPricesModel)
+        self.repository = repository
 
-    async def get_daily_prices_async(self, statement: PreparedStatement) -> Series[DailyPricesSchema]:
+    async def get_daily_prices_async(self, statement: Statement) -> Series[DailyPricesSchema]:
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """

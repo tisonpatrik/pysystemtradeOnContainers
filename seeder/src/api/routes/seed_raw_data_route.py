@@ -1,9 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_raw_data_handler import SeedRawDataHandler
+from src.services.raw_data.seed_adjusted_prices_service import SeedAdjustedPricesService
+from src.services.raw_data.seed_fx_prices_service import SeedFxPricesService
+from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePricesService
+from src.services.raw_data.seed_roll_calendars_service import SeedRollCalendarsService
 
-from common.src.database.dependencies import get_db
 from common.src.logging.logger import AppLogger
+from src.dependencies.raw_data_dependencies import (
+    get_seed_adjusted_prices_service,
+    get_seed_fx_prices_service,
+    get_seed_multiple_prices_service,
+    get_seed_roll_calendars_service,
+)
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -14,12 +22,22 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_201_CREATED,
     name="Seed Database with raw data files",
 )
-async def seed_raw_data_files_async(db_session: AsyncSession = Depends(get_db)):
+async def seed_raw_data_files_route_async(
+    seed_adjusted_prices_service: SeedAdjustedPricesService = Depends(get_seed_adjusted_prices_service),
+    seed_fx_prices_service: SeedFxPricesService = Depends(get_seed_fx_prices_service),
+    seed_multiple_prices_service: SeedMultiplePricesService = Depends(get_seed_multiple_prices_service),
+    seed_roll_calendars_service: SeedRollCalendarsService = Depends(get_seed_roll_calendars_service),
+):
     """
     Fills the database tables with data.
     """
     try:
-        seed_db_handler = SeedRawDataHandler(db_session)
+        seed_db_handler = SeedRawDataHandler(
+            seed_adjusted_prices_service,
+            seed_fx_prices_service,
+            seed_multiple_prices_service,
+            seed_roll_calendars_service,
+        )
         await seed_db_handler.seed_data_from_csv_async()
 
         logger.info("Successfully seeded database with raw data.")

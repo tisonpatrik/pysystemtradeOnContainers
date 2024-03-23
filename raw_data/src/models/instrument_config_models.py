@@ -7,8 +7,9 @@ from common.src.database.base_model import BaseModel
 
 class Instrument(Model):
     symbol: str
-    
-class InstrumentConfig(BaseModel, table=True):
+
+
+class InstrumentConfigModel(BaseModel, table=True):
     __tablename__ = "insturment_config"
     symbol: str = Field(primary_key=True)
     description: str
@@ -19,6 +20,3 @@ class InstrumentConfig(BaseModel, table=True):
     percentage: float
     per_trade: int
     region: str
-
-
-

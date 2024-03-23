@@ -3,7 +3,7 @@ from sqlmodel import Field
 from common.src.database.base_model import BaseModel
 
 
-class InstrumentMetadata(BaseModel, table=True):
+class InstrumentMetadataModel(BaseModel, table=True):
     __tablename__ = "insturment_metadata"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     asset_class: str
@@ -11,7 +11,7 @@ class InstrumentMetadata(BaseModel, table=True):
     description: str
 
 
-class RollConfig(BaseModel, table=True):
+class RollConfigModel(BaseModel, table=True):
     __tablename__ = "roll_config"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     hold_roll_cycle: str
@@ -21,7 +21,7 @@ class RollConfig(BaseModel, table=True):
     expiry_offset: int
 
 
-class SpreadCosts(BaseModel, table=True):
+class SpreadCostsModel(BaseModel, table=True):
     __tablename__ = "spred_costs"
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     spread_costs: float

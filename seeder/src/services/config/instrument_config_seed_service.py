@@ -1,9 +1,8 @@
 import pandas as pd
-from asyncpg import Connection
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.instrument_config_models import InstrumentConfig
+from raw_data.src.models.instrument_config_models import InstrumentConfigModel
 
 
 class InstrumentConfigSeedService:
@@ -11,13 +10,13 @@ class InstrumentConfigSeedService:
     Service for seeding instrument config data.
     """
 
-    def __init__(self, db_session: Connection):
+    def __init__(self, repository: Repository[InstrumentConfigModel]):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = Repository(db_session, InstrumentConfig)
+        self.repository = repository
 
     async def seed_instrument_config_async(self, raw_data: pd.DataFrame):
         """
         Seed instrument config data.
         """
-        self.logger.info(f"Seeding {InstrumentConfig.__tablename__} data: ")
+        self.logger.info(f"Seeding {InstrumentConfigModel.__tablename__} data: ")
         await self.repository.insert_dataframe_async(raw_data)

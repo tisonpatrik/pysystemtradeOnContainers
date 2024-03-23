@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from src.api.handlers.seed_config_data_handler import SeedConfigDataHandler
-from src.dependencies.dependencies import (
+from src.dependencies.config_files_dependencies import (
     get_instrument_metadata_seed_service,
     get_roll_config_seed_service,
     get_seed_config_service,

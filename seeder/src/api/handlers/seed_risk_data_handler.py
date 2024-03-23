@@ -23,7 +23,7 @@ class SeedRiskDataHandler:
         # self.normalised_price_for_asset_seed_service = (
         #     NormalisedPriceForAssetClassService(db_session)
         # )
-        self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
+        # self.daily_returns_vol_seed_service = DailyReturnsVolSeedService(db_session)
         # self.daily_returns_normalised_vol_seed_service = (
         #     DailyVolNormalisedReturnsSeedService(db_session)
         # )
@@ -46,13 +46,13 @@ class SeedRiskDataHandler:
         """
         Data processing for CSV files.
         """
-        if model.__tablename__ == "daily_returns_volatility":
-            await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
+        # if model.__tablename__ == "daily_returns_volatility":
+        #     await self.daily_returns_vol_seed_service.seed_daily_returns_vol_async()
         # elif model.__tablename__ == "instrument_volatility":
         #     await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         # elif model.__tablename__ == "daily_vol_normalized_returns":
         #     await self.daily_returns_normalised_vol_seed_service.seed_daily_normalised_returns_vol_async()
         # elif model.__tablename__ == "daily_vol_normalised_price_for_asset_class":
         #     await self.normalised_price_for_asset_seed_service.seed_normalised_price_for_asset_class_async()
-        else:
-            raise ValueError(f"Unrecognized table name: {model.__tablename__}")
+        # else:
+        #     raise ValueError(f"Unrecognized table name: {model.__tablename__}")

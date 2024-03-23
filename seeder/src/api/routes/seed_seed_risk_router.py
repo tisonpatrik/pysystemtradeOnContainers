@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.api.handlers.seed_risk_data_handler import SeedRiskDataHandler
 
 # from common.src.database.dependencies import get_db
-from common.src.database.dependencies import get_db
+from common.src.dependencies.db_dependencies import get_db
 from common.src.logging.logger import AppLogger
 
 router = APIRouter()
