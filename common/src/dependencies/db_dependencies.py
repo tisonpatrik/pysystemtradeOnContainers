@@ -1,3 +1,5 @@
+from typing import Optional
+
 import asyncpg
 from asyncpg import Connection
 from asyncpg.pool import Pool
@@ -10,7 +12,7 @@ logger = AppLogger.get_instance().get_logger()
 if global_settings.database_url is None:
     raise ValueError("Database URL must be set")
 
-pool: Pool = None  # Initialize the pool variable globally
+pool: Optional[Pool] = None  # Initialize the pool variable globally
 
 
 async def set_timeouts(connection: asyncpg.Connection):
@@ -37,6 +39,7 @@ async def get_db() -> Connection:
     global pool
     if pool is None:
         await _init_pool()
-    async with pool.acquire() as conn:
-        logger.debug("Database connection acquired from the pool.")
-        yield conn
+    if pool is not None:  # Explicitly check if pool is not None before using it
+        return await pool.acquire()
+    else:
+        raise Exception("Database pool was not initialized")

@@ -17,10 +17,9 @@ class Repository(Generic[T]):
         self.logger = AppLogger.get_instance().get_logger()
 
     async def fetch_many_async(self, statemant: Statement) -> list[Record]:
-        
+
         async with self.conn.transaction():
             try:
-
                 results = await statemant.get_statement().fetch(timeout=20)
                 return results
             except Exception as e:
