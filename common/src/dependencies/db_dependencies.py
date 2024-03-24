@@ -1,8 +1,5 @@
-from typing import Optional
-
 import asyncpg
 from asyncpg import Connection
-from asyncpg.pool import Pool
 
 from common.src.database.settings import settings as global_settings
 from common.src.logging.logger import AppLogger
@@ -12,8 +9,6 @@ logger = AppLogger.get_instance().get_logger()
 if global_settings.database_url is None:
     raise ValueError("Database URL must be set")
 
-pool: Optional[Pool] = None  # Initialize the pool variable globally
-
 
 async def set_timeouts(connection: asyncpg.Connection):
     # Set a statement timeout (in milliseconds)
@@ -22,7 +17,6 @@ async def set_timeouts(connection: asyncpg.Connection):
 
 
 async def _init_pool():
-    global pool
     connection_string = global_settings.database_url.unicode_string()  # type: ignore
     pool = await asyncpg.create_pool(
         dsn=connection_string,
@@ -33,13 +27,9 @@ async def _init_pool():
         command_timeout=30,  # Statement timeout in seconds
         init=set_timeouts,  # Connection initialization function
     )
+    return pool
 
 
 async def get_db() -> Connection:
-    global pool
-    if pool is None:
-        await _init_pool()
-    if pool is not None:  # Explicitly check if pool is not None before using it
-        return await pool.acquire()
-    else:
-        raise Exception("Database pool was not initialized")
+    pool = await _init_pool()
+    return await pool.acquire()
