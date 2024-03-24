@@ -7,7 +7,7 @@ from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
-from risk.src.models.risk_models import DailyReturnsVolatility
+from risk.src.models.risk_models import DailyReturnsVolModel
 from risk.src.schemas.risk_schemas import DailyReturnsVol, DailyReturnsVolatilitySchema
 
 
@@ -16,9 +16,9 @@ class DailyReturnsVolService:
     Service for calculating daily returns volatility of financial instruments.
     """
 
-    def __init__(self, repository: Repository[DailyReturnsVolatility]):
-        self.price_column = DailyReturnsVolatility.daily_returns_volatility
-        self.time_column = DailyReturnsVolatility.date_time
+    def __init__(self, repository: Repository[DailyReturnsVolModel]):
+        self.price_column = DailyReturnsVolModel.daily_returns_volatility
+        self.time_column = DailyReturnsVolModel.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = DailyReturnsVolEstimator()
@@ -28,6 +28,8 @@ class DailyReturnsVolService:
         Calculates and insert daily returns volatility of a given prices.
         """
         try:
+            print(daily_returns_vols)
+            print(symbol)
             framed = convert_series_to_frame(daily_returns_vols)
             populated = add_column_and_populate_it_by_value(framed, DailyReturnsVolatilitySchema.symbol, symbol)
             renamed = rename_columns(
@@ -39,6 +41,7 @@ class DailyReturnsVolService:
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
+            print(validated.head())
             # await self.risk_repository.insert_data_async(validated)
 
         except Exception as error:

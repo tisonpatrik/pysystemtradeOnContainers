@@ -7,11 +7,11 @@ from common.src.logging.logger import AppLogger
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from raw_data.src.services.instrument_config_service import InstrumentConfigService
-from risk.src.models.risk_models import DailyReturnsVolatility
+from risk.src.models.risk_models import DailyReturnsVolModel
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 
-class DailyReturnsVolSeedService:
+class SeedDailyReturnsVolService:
     """Service for seeding daily returns volatility of financial instruments."""
 
     def __init__(
@@ -32,7 +32,7 @@ class DailyReturnsVolSeedService:
         try:
             self.logger.info(
                 "Starting the process for %s table.",
-                DailyReturnsVolatility.__tablename__,
+                DailyReturnsVolModel.__tablename__,
             )
             instrument_configs = await self.instrument_config_service.get_list_of_instruments_async()
 
@@ -47,7 +47,7 @@ class DailyReturnsVolSeedService:
                     daily_returns_vol, str(config.symbol)
                 )
             self.logger.info(
-                f"Successfully inserted {DailyReturnsVolatility.__name__} calculations for {len(instrument_configs)} instruments."
+                f"Successfully inserted {DailyReturnsVolModel.__name__} calculations for {len(instrument_configs)} instruments."
             )
 
         except SchemaError as schema_exc:

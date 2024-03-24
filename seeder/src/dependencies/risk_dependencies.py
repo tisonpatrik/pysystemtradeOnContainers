@@ -1,5 +1,5 @@
 from fastapi import Depends
-from src.services.risk.seed_daily_returns_vol_service import DailyReturnsVolSeedService
+from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
 
 from common.src.database.statement_factory import StatementFactory
 from raw_data.src.dependencies.config_dependencies import get_instrument_config_service
@@ -16,11 +16,11 @@ def get_daily_returns_vol_seed_service(
     daily_returns_vol_service: DailyReturnsVolService = Depends(get_daily_returns_vol_service),
     instrument_config_service: InstrumentConfigService = Depends(get_instrument_config_service),
     statement_factory: StatementFactory = Depends(get_daily_prices_statement_factory),
-) -> DailyReturnsVolSeedService:
+) -> SeedDailyReturnsVolService:
     """
     Dependency injection method for DailyReturnsVolSeedService.
     """
-    return DailyReturnsVolSeedService(
+    return SeedDailyReturnsVolService(
         prices_service=prices_service,
         daily_returns_vol_service=daily_returns_vol_service,
         instrument_config_service=instrument_config_service,

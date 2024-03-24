@@ -1,27 +1,22 @@
-from src.services.risk.daily_vol_normalized_returns_seed_services import \
-    DailyVolNormalisedReturnsSeedService
-from src.services.risk.instrument_vol_seed_service import \
-    InstrumentVolSeedService
-from src.services.risk.normalised_price_for_asset_class_service import \
-    NormalisedPriceForAssetClassService
+from src.services.risk.daily_vol_normalized_returns_seed_services import DailyVolNormalisedReturnsSeedService
+from src.services.risk.instrument_vol_seed_service import InstrumentVolSeedService
+from src.services.risk.normalised_price_for_asset_class_service import NormalisedPriceForAssetClassService
 
 from common.src.logging.logger import AppLogger
-from risk.src.models.risk_models import (DailyReturnsVolatility,
-                                         DailyVolNormalisedPriceForAssetClass,
-                                         DailyVolNormalizedReturns,
-                                         InstrumentVolatility)
+from risk.src.models.risk_models import (
+    DailyReturnsVolModel,
+    DailyVolNormalisedPriceForAssetClass,
+    DailyVolNormalizedReturns,
+    InstrumentVolatility,
+)
 
 
 class SeedRiskHandler:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
-        self.normalised_price_for_asset_seed_service = (
-            NormalisedPriceForAssetClassService(db_session)
-        )
-        self.daily_returns_normalised_vol_seed_service = (
-            DailyVolNormalisedReturnsSeedService(db_session)
-        )
+        self.normalised_price_for_asset_seed_service = NormalisedPriceForAssetClassService(db_session)
+        self.daily_returns_normalised_vol_seed_service = DailyVolNormalisedReturnsSeedService(db_session)
 
     async def seed_calculate_risk_data_async(self):
         """
@@ -29,7 +24,7 @@ class SeedRiskHandler:
         """
         self.logger.info("Data processing for risk calculations has started")
         models = [
-            DailyReturnsVolatility,
+            DailyReturnsVolModel,
             InstrumentVolatility,
             DailyVolNormalizedReturns,
             DailyVolNormalisedPriceForAssetClass,

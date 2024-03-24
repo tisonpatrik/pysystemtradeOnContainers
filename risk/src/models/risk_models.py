@@ -5,7 +5,7 @@ from sqlmodel import Field
 from common.src.database.base_model import BaseModel
 
 
-class DailyReturnsVolatility(BaseModel, table=True):
+class DailyReturnsVolModel(BaseModel, table=True):
     __tablename__ = "daily_returns_volatility"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")

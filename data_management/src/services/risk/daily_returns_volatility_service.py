@@ -3,15 +3,14 @@
 from src.app.schemas.risk_schemas import DailyReturnsVolatilitySchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
 from src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
-from src.services.raw_data.instrument_config_services import \
-    InstrumentConfigService
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
-from risk.src.models.risk_models import DailyReturnsVolatility
+from risk.src.models.risk_models import DailyReturnsVolModel
 
-table_name = DailyReturnsVolatility.__tablename__
+table_name = DailyReturnsVolModel.__tablename__
 
 
 class DailyReturnsVolService:
@@ -20,8 +19,8 @@ class DailyReturnsVolService:
     """
 
     def __init__(self, db_session):
-        self.price_column = DailyReturnsVolatility.daily_returns_volatility
-        self.time_column = DailyReturnsVolatility.date_time
+        self.price_column = DailyReturnsVolModel.daily_returns_volatility
+        self.time_column = DailyReturnsVolModel.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.daily_returns_vol_estimator = DailyReturnsVolEstimator()
@@ -35,12 +34,8 @@ class DailyReturnsVolService:
                 "Starting the daily returns volatility calculation for %s symbol.",
                 symbol,
             )
-            daily_returns_vols = (
-                self.daily_returns_vol_estimator.process_daily_returns_vol(prices)
-            )
-            prepared_data = prepara_data_to_db(
-                daily_returns_vols, DailyReturnsVolatility, symbol
-            )
+            daily_returns_vols = self.daily_returns_vol_estimator.process_daily_returns_vol(prices)
+            prepared_data = prepara_data_to_db(daily_returns_vols, DailyReturnsVolModel, symbol)
 
             # await self.repository.insert_data_async(
             #     prepared_data, DailyReturnsVolatilitySchema
