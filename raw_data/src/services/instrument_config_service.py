@@ -12,11 +12,11 @@ class InstrumentConfigService:
     Service for dealing with operations related to instrument config.
     """
 
-    def __init__(self, repository: Repository[InstrumentConfigModel]):
+    def __init__(self, repository: Repository[InstrumentConfigModel], statement_factory: StatementFactory):
         self.db_session = repository
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = Repository(self.db_session, InstrumentConfigModel)
-        self.statement_factory = StatementFactory(self.db_session, InstrumentConfigModel)
+        self.statement_factory = statement_factory
 
     async def get_list_of_instruments_async(self) -> list[Instrument]:
         """

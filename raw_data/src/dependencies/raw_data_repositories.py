@@ -17,8 +17,8 @@ def get_adjusted_prices_repository(db_session: Connection = Depends(get_db)) -> 
     return Repository(db_session, AdjustedPricesModel)
 
 
-def get_daily_prices_statement_factory(db_session: Connection = Depends(get_db)) -> StatementFactory:
-    return StatementFactory(db_session, BaseModel)
+def get_daily_prices_statement_factory(db_session: Connection = Depends(get_db)) -> StatementFactory[BaseModel]:
+    return StatementFactory(db_session, AdjustedPricesModel)
 
 
 def get_fx_prices_repository(db_session: Connection = Depends(get_db)) -> Repository[BaseModel]:
