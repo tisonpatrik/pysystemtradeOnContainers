@@ -2,9 +2,9 @@ from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar
 
 import pandas as pd
 from asyncpg import Connection, Record
-from asyncpg.prepared_stmt import PreparedStatement
 
 from common.src.database.base_model import BaseModel
+from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 
 T = TypeVar("T", bound=BaseModel)
@@ -16,10 +16,10 @@ class Repository(Generic[T]):
         self.table = model.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def fetch_many_async(self, prepared_statement: PreparedStatement) -> list[Record]:
+    async def fetch_many_async(self, statemant: Statement) -> list[Record]:
         async with self.conn.transaction():
             try:
-                results = await prepared_statement.fetch(timeout=20)
+                results = await statemant.get_statement().fetch(timeout=20)
                 return results
             except Exception as e:
                 self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
