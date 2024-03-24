@@ -28,8 +28,7 @@ class DailyReturnsVolService:
         Calculates and insert daily returns volatility of a given prices.
         """
         try:
-            print(daily_returns_vols)
-            print(symbol)
+
             framed = convert_series_to_frame(daily_returns_vols)
             populated = add_column_and_populate_it_by_value(framed, DailyReturnsVolatilitySchema.symbol, symbol)
             renamed = rename_columns(
@@ -41,7 +40,6 @@ class DailyReturnsVolService:
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-            print(validated.head())
             # await self.risk_repository.insert_data_async(validated)
 
         except Exception as error:
