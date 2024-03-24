@@ -30,7 +30,7 @@ class StatementFactory(Generic[T]):
             self.logger.error(f"Unexpected error: {e}")
             raise e
 
-    async def create_fetch_statement_with_where(self, columns: list[str], where_clause: str) -> Statement:
+    async def create_fetch_where_statement(self, columns: list[str], where_clause: str) -> Statement:
         """
         Creates a prepared statement for fetching records with a WHERE clause.
 

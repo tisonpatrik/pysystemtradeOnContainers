@@ -38,7 +38,7 @@ class DailyReturnsVolSeedService:
 
             for config in instrument_configs:
                 columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-                statement = await self.statement_factory.create_fetch_statement_with_where(
+                statement = await self.statement_factory.create_fetch_where_statement(
                     columns, f"symbol = '{config.symbol}'"
                 )
                 prices = await self.prices_service.get_daily_prices_async(statement)
