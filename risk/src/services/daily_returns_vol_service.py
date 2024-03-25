@@ -40,7 +40,7 @@ class DailyReturnsVolService:
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-            # await self.risk_repository.insert_data_async(validated)
+            await self.repository.insert_dataframe_async(validated)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"
