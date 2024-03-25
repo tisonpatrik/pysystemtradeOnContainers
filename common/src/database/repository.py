@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generic, Optional, Tuple, Type, TypeVar
+from typing import Generic, Type, TypeVar
 
 import pandas as pd
 from asyncpg import Connection, Record

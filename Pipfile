@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+psycopg = "*"
+sqlalchemy = "*"
 alembic = "*"
 fastapi = "*"
 pandas = "*"
@@ -17,7 +19,8 @@ rich = "*"
 uvicorn = "*"
 sqlmodel = "*"
 asyncpg = "*"
-httpx = "*"
+
+[dev-packages]
 
 [requires]
-python_version = "3.10.12"
+python_version = "3.10"
