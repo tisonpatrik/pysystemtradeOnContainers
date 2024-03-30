@@ -1,37 +1,28 @@
 from src.app.schemas.risk_schemas import DailyVolNormalizedReturnsSchema
 from src.core.pandas.prapare_db_calculations import prepara_data_to_db
-from src.estimators.daily_vol_normalised_returns import \
-    DailyVolNormalisedReturns
+from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
-from risk.src.models.risk_models import DailyVolNormalizedReturns
+from risk.src.models.risk_models import DailyVolNormalizedReturnsModel
 
-table_name = DailyVolNormalizedReturns.__tablename__
+table_name = DailyVolNormalizedReturnsModel.__tablename__
 
 
 class DailyVolatilityNormalisedReturnsService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalised_returns = DailyVolNormalisedReturns()
-        self.price_column = DailyVolNormalizedReturns.normalized_volatility
-        self.time_column = DailyVolNormalizedReturns.date_time
+        self.price_column = DailyVolNormalizedReturnsModel.normalized_volatility
+        self.time_column = DailyVolNormalizedReturnsModel.date_time
 
-    async def insert_daily_vol_normalised_returns_for_prices_async(
-        self, daily_prices, symbol
-    ):
+    async def insert_daily_vol_normalised_returns_for_prices_async(self, daily_prices, symbol):
         """Calculates and insert daily volatility of a given prices."""
         try:
             self.logger.info("Starting the daily vol for %s symbol.", symbol)
-            daily_returns = (
-                self.daily_vol_normalised_returns.get_daily_vol_normalised_returns(
-                    daily_prices
-                )
-            )
-            prepared_data = prepara_data_to_db(
-                daily_returns, DailyVolNormalizedReturns, symbol
-            )
+            daily_returns = self.daily_vol_normalised_returns.get_daily_vol_normalised_returns(daily_prices)
+            prepared_data = prepara_data_to_db(daily_returns, DailyVolNormalizedReturnsModel, symbol)
             # await self.repository.insert_data_async(
             #     prepared_data, DailyVolNormalizedReturnsSchema
             # )

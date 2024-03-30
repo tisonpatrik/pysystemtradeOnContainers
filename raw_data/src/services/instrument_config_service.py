@@ -1,7 +1,6 @@
 from pydantic import TypeAdapter
 
 from common.src.database.repository import Repository
-from common.src.database.statement_factory import StatementFactory
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.instrument_config_models import Instrument, InstrumentConfigModel
 from raw_data.src.schemas.config_files_schemas import InstrumentConfigSchema
@@ -12,12 +11,9 @@ class InstrumentConfigService:
     Service for dealing with operations related to instrument config.
     """
 
-    def __init__(
-        self, repository: Repository[InstrumentConfigModel], statement_factory: StatementFactory[InstrumentConfigModel]
-    ):
+    def __init__(self, repository: Repository[InstrumentConfigModel]):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
-        self.statement_factory = statement_factory
 
     async def get_list_of_instruments_async(self) -> list[Instrument]:
         """
@@ -25,8 +21,8 @@ class InstrumentConfigService:
         """
         try:
             columns = [InstrumentConfigSchema.symbol]
-            statement = await self.statement_factory.create_fetch_all_statement(columns)
-            records = await self.repository.fetch_many_async(statement)
+            query = "SELECT NECO"
+            records = await self.repository.fetch_many_async(query)
             record_dicts = [dict(record) for record in records]
             instruments = TypeAdapter(list[Instrument]).validate_python(record_dicts)
             return instruments

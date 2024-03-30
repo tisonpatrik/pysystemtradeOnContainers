@@ -1,11 +1,9 @@
 from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
-from src.services.raw_data.instrument_config_services import \
-    InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import \
-    DailyVolatilityNormalisedReturnsService
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
+from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 
 from common.src.logging.logger import AppLogger
-from risk.src.models.risk_models import DailyVolNormalizedReturns
+from risk.src.models.risk_models import DailyVolNormalizedReturnsModel
 
 
 class DailyVolNormalisedReturnsSeedService:
@@ -13,9 +11,7 @@ class DailyVolNormalisedReturnsSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_vol_normalised_returns_service = (
-            DailyVolatilityNormalisedReturnsService(db_session)
-        )
+        self.daily_vol_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         self.adjusted_prices_service = AdjustedPricesService(db_session)
 
@@ -24,11 +20,9 @@ class DailyVolNormalisedReturnsSeedService:
         try:
             self.logger.info(
                 "Starting the process for %s table.",
-                DailyVolNormalizedReturns.__tablename__,
+                DailyVolNormalizedReturnsModel.__tablename__,
             )
-            instrument_configs = (
-                await self.instrument_config_service.get_instrument_configs_async()
-            )
+            instrument_configs = await self.instrument_config_service.get_instrument_configs_async()
             print("neco")
             # for config in instrument_configs:
             #     symbol = config[DailyVolNormalizedReturns.symbol.key]

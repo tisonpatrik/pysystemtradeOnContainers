@@ -1,13 +1,10 @@
-from src.services.raw_data.instrument_config_services import \
-    InstrumentConfigService
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
-from src.services.risk.daily_returns_volatility_service import \
-    DailyReturnsVolService
-from src.services.risk.instrument_volatility_service import \
-    InstrumentVolatilityService
+from src.services.risk.daily_returns_volatility_service import DailyReturnsVolService
+from src.services.risk.instrument_volatility_service import InstrumentVolatilityService
 
 from common.src.logging.logger import AppLogger
-from risk.src.models.risk_models import InstrumentVolatility
+from risk.src.models.risk_models import InstrumentVolatilityModel
 
 
 class InstrumentVolSeedService:
@@ -25,11 +22,9 @@ class InstrumentVolSeedService:
         try:
             self.logger.info(
                 "Starting the process for %s table.",
-                InstrumentVolatility.__tablename__,
+                InstrumentVolatilityModel.__tablename__,
             )
-            instrument_configs = (
-                await self.instrument_config_service.get_instrument_configs_async()
-            )
+            instrument_configs = await self.instrument_config_service.get_instrument_configs_async()
             print("neco")
 
             # for config in instrument_configs:

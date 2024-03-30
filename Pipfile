@@ -4,12 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-psycopg = "*"
-sqlalchemy = "*"
-alembic = "*"
 fastapi = "*"
 pandas = "*"
-pandera = "*"
 pydantic-settings = "*"
 pytest = "*"
 pytest-asyncio = "*"
@@ -18,6 +14,8 @@ pytest-xdist = "*"
 rich = "*"
 uvicorn = "*"
 sqlmodel = "*"
+alembic = "*"
+pandera = "*"
 asyncpg = "*"
 
 [dev-packages]

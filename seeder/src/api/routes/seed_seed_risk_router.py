@@ -1,14 +1,9 @@
-from typing import AsyncGenerator
-
 from fastapi import APIRouter, Depends, HTTPException, status
-
-# from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.handlers.seed_risk_data_handler import SeedRiskDataHandler
 from src.dependencies.risk_dependencies import get_daily_returns_vol_seed_service
 from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
+from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
-# from common.src.database.dependencies import get_db
-from common.src.dependencies.db_dependencies import get_db
 from common.src.logging.logger import AppLogger
 
 router = APIRouter()

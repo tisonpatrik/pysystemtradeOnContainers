@@ -5,7 +5,7 @@ from src.services.config.roll_config_seed_service import RollConfigSeedService
 from src.services.config.spread_cost_seed_service import SpreadCostSeedService
 
 from common.src.database.repository import Repository
-from raw_data.src.dependencies.config_repositories import (
+from raw_data.src.dependencies.config_dependencies import (
     get_instrument_config_repository,
     get_instrument_metadata_repository,
     get_roll_config_repository,

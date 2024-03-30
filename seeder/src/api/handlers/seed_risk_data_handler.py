@@ -1,26 +1,30 @@
 # from src.services.risk.daily_vol_normalized_returns_seed_services import (
 #     DailyVolNormalisedReturnsSeedService,
 # )
-# from src.services.risk.instrument_vol_seed_service import InstrumentVolSeedService
 # from src.services.risk.normalised_price_for_asset_class_service import (
 #     NormalisedPriceForAssetClassService,
 # )
 from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
+from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
 from common.src.logging.logger import AppLogger
 from risk.src.models.risk_models import (
     DailyReturnsVolModel,
-    DailyVolNormalisedPriceForAssetClass,
-    DailyVolNormalizedReturns,
-    InstrumentVolatility,
+    DailyVolNormalisedPriceForAssetClassModel,
+    DailyVolNormalizedReturnsModel,
+    InstrumentVolatilityModel,
 )
 
 
 class SeedRiskDataHandler:
-    def __init__(self, seed_daily_returns_vol_service: SeedDailyReturnsVolService):
+    def __init__(
+        self,
+        seed_daily_returns_vol_service: SeedDailyReturnsVolService,
+        # instrument_vol_seed_service: SeedInstrumentVolService,
+    ):
         self.logger = AppLogger.get_instance().get_logger()
         self.seed_daily_returns_vol_service = seed_daily_returns_vol_service
-        # self.instrument_vol_seed_service = InstrumentVolSeedService(db_session)
+        # self.instrument_vol_seed_service = instrument_vol_seed_service
         # self.normalised_price_for_asset_seed_service = (
         #     NormalisedPriceForAssetClassService(db_session)
         # )
@@ -35,7 +39,7 @@ class SeedRiskDataHandler:
         self.logger.info("Data processing for risk calculations has started")
         models = [
             DailyReturnsVolModel,
-            # InstrumentVolatility,
+            InstrumentVolatilityModel,
             # DailyVolNormalizedReturns,
             # DailyVolNormalisedPriceForAssetClass,
         ]
@@ -54,5 +58,5 @@ class SeedRiskDataHandler:
         #     await self.daily_returns_normalised_vol_seed_service.seed_daily_normalised_returns_vol_async()
         # elif model.__tablename__ == "daily_vol_normalised_price_for_asset_class":
         #     await self.normalised_price_for_asset_seed_service.seed_normalised_price_for_asset_class_async()
-        # else:
-        #     raise ValueError(f"Unrecognized table name: {model.__tablename__}")
+        else:
+            raise ValueError(f"Unrecognized table name: {model.__tablename__}")

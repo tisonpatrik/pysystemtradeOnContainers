@@ -8,6 +8,7 @@ class InstrumentMetadataSchema(pa.DataFrameModel):
     sub_class: Series[str]
     description: Series[str]
 
+
 class RollConfigSchema(pa.DataFrameModel):
     symbol: Series[str]
     hold_roll_cycle: Series[str]
@@ -16,9 +17,11 @@ class RollConfigSchema(pa.DataFrameModel):
     priced_roll_cycle: Series[str]
     expiry_offset: Series[int]
 
+
 class SpreadCostsSchema(pa.DataFrameModel):
     symbol: Series[str]
     spread_costs: Series[float]
+
 
 class InstrumentConfigSchema(pa.DataFrameModel):
     symbol: Series[str]

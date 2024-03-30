@@ -2,7 +2,6 @@
 
 from pandera.errors import SchemaError
 
-from common.src.database.statement_factory import StatementFactory
 from common.src.logging.logger import AppLogger
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
@@ -19,13 +18,11 @@ class SeedDailyReturnsVolService:
         prices_service: AdjustedPricesService,
         daily_returns_vol_service: DailyReturnsVolService,
         instrument_config_service: InstrumentConfigService,
-        statement_factory: StatementFactory,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_service = prices_service
         self.daily_returns_vol_service = daily_returns_vol_service
         self.instrument_config_service = instrument_config_service
-        self.statement_factory = statement_factory
 
     async def seed_daily_returns_vol_async(self):
         """Seed daily returns volatility."""
@@ -38,10 +35,8 @@ class SeedDailyReturnsVolService:
 
             for config in instrument_configs:
                 columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-                statement = await self.statement_factory.create_fetch_where_statement(
-                    columns, f"symbol = '{config.symbol}'"
-                )
-                prices = await self.prices_service.get_daily_prices_async(statement)
+                query = "SELECT NECO"
+                prices = await self.prices_service.get_daily_prices_async(query)
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(
                     daily_returns_vol, str(config.symbol)

@@ -12,21 +12,21 @@ class DailyReturnsVolModel(BaseModel, table=True):
     daily_returns_volatility: float
 
 
-class InstrumentVolatility(BaseModel, table=True):
+class InstrumentVolatilityModel(BaseModel, table=True):
     __tablename__ = "instrument_volatility"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     instrument_volatility: float
 
 
-class DailyVolNormalizedReturns(BaseModel, table=True):
+class DailyVolNormalizedReturnsModel(BaseModel, table=True):
     __tablename__ = "daily_vol_normalized_returns"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
     normalized_volatility: float
 
 
-class DailyVolNormalisedPriceForAssetClass(BaseModel, table=True):
+class DailyVolNormalisedPriceForAssetClassModel(BaseModel, table=True):
     __tablename__ = "daily_vol_normalised_price_for_asset_class"
     date_time: datetime = Field(primary_key=True)
     asset_clas: str

@@ -5,9 +5,9 @@ from src.services.risk.normalised_price_for_asset_class_service import Normalise
 from common.src.logging.logger import AppLogger
 from risk.src.models.risk_models import (
     DailyReturnsVolModel,
-    DailyVolNormalisedPriceForAssetClass,
-    DailyVolNormalizedReturns,
-    InstrumentVolatility,
+    DailyVolNormalisedPriceForAssetClassModel,
+    DailyVolNormalizedReturnsModel,
+    InstrumentVolatilityModel,
 )
 
 
@@ -25,9 +25,9 @@ class SeedRiskHandler:
         self.logger.info("Data processing for risk calculations has started")
         models = [
             DailyReturnsVolModel,
-            InstrumentVolatility,
-            DailyVolNormalizedReturns,
-            DailyVolNormalisedPriceForAssetClass,
+            InstrumentVolatilityModel,
+            DailyVolNormalizedReturnsModel,
+            DailyVolNormalisedPriceForAssetClassModel,
         ]
         for model in models:
             await self._get_risk_data_from_raw_file(model)

@@ -5,7 +5,7 @@ from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePrice
 from src.services.raw_data.seed_roll_calendars_service import SeedRollCalendarsService
 
 from common.src.database.repository import Repository
-from raw_data.src.dependencies.raw_data_repositories import (
+from raw_data.src.dependencies.raw_data_dependencies import (
     get_adjusted_prices_repository,
     get_fx_prices_repository,
     get_multiple_prices_repository,

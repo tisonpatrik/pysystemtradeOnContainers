@@ -1,4 +1,4 @@
-from typing import Optional
+from functools import lru_cache
 
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
@@ -10,11 +10,15 @@ class Settings(BaseSettings):
     Utilizes environment variables for secure credential management.
     """
 
-    database_url: Optional[PostgresDsn] = None
-    test_database_url: Optional[PostgresDsn] = None
+    database_url: PostgresDsn
+    test_database_url: PostgresDsn
+    max_connections: int = 10
+    connection_timeout: int = 30
 
     class Config:
         env_file = ".env"
 
 
-settings = Settings()
+@lru_cache()
+def get_settings() -> Settings:
+    return Settings()  # type: ignore

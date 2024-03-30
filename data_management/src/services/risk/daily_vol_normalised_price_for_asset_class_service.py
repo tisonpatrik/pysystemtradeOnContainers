@@ -1,45 +1,33 @@
 import pandas as pd
-from src.app.schemas.risk_schemas import \
-    DailyVolNormalisedPriceForAssetClassSchema
+from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
-from src.estimators.daily_vol_normalised_returns_for_asset_class import \
-    DailyVolNormalisedPriceForAssetClassEstimator
-from src.services.raw_data.instrument_config_services import \
-    InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import \
-    DailyVolatilityNormalisedReturnsService
+from src.estimators.daily_vol_normalised_returns_for_asset_class import DailyVolNormalisedPriceForAssetClassEstimator
+from src.services.raw_data.instrument_config_services import InstrumentConfigService
+from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
-from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClass
+from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
 
-table_name = DailyVolNormalisedPriceForAssetClass.__tablename__
+table_name = DailyVolNormalisedPriceForAssetClassModel.__tablename__
 
 
 class DailyVolNormalisedPriceForAssetClassService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = InstrumentConfigService(db_session)
-        self.daily_volatility_normalised_returns_service = (
-            DailyVolatilityNormalisedReturnsService(db_session)
-        )
-        self.daily_vol_normalised_returns_for_asset_class_estimator = (
-            DailyVolNormalisedPriceForAssetClassEstimator()
-        )
-        self.time_column = DailyVolNormalisedPriceForAssetClass.date_time
-        self.price_column = DailyVolNormalisedPriceForAssetClass.normalized_volatility
+        self.daily_volatility_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
+        self.daily_vol_normalised_returns_for_asset_class_estimator = DailyVolNormalisedPriceForAssetClassEstimator()
+        self.time_column = DailyVolNormalisedPriceForAssetClassModel.date_time
+        self.price_column = DailyVolNormalisedPriceForAssetClassModel.normalized_volatility
 
-    async def insert_daily_vol_normalised_price_for_asset_class_async(
-        self, asset_class
-    ):
+    async def insert_daily_vol_normalised_price_for_asset_class_async(self, asset_class):
         """
         Calculates and insert daily normalised price for asset class.
         """
         try:
-            list_of_instruments = await self.instrument_config_service.get_instruments_by_asset_class_async(
-                asset_class
-            )
+            list_of_instruments = await self.instrument_config_service.get_instruments_by_asset_class_async(asset_class)
             aggregate_returns_across_instruments_list = []
             # for instrument_code in list_of_instruments:
             #     normalised_returns = await self.daily_volatility_normalised_returns_service.get_daily_vol_normalised_returns_async(
@@ -64,9 +52,7 @@ class DailyVolNormalisedPriceForAssetClassService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def get_daily_vol_normalised_price_for_asset_class_async(
-        self, asset_class: str
-    ):
+    async def get_daily_vol_normalised_price_for_asset_class_async(self, asset_class: str):
         """
         Asynchronously fetches daily normalised price for asset class by symbol and returns them as Pandas Series.
         """
