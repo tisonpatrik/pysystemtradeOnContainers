@@ -6,6 +6,7 @@ import pandas as pd
 from pandera.typing import Series
 
 from common.src.database.repository import Repository
+from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.models.raw_data_models import AdjustedPricesModel
@@ -23,17 +24,22 @@ class AdjustedPricesService:
         self.price_column = AdjustedPricesSchema.price
         self.repository = repository
 
-    async def get_daily_prices_async(self, query: str) -> Series[DailyPricesSchema]:
+    async def get_daily_prices_async(self, symbol: str) -> Series[DailyPricesSchema]:
         """
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-            query = "SELECT NECO"
+
+            symbol = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
+            statement = Statement(query=symbol, parameters=symbol)
+
+            data = await self.repository.fetch_many_async(statement)
             columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-            data = await self.repository.fetch_many_async(query)
+
             data_frame = pd.DataFrame(data, columns=columns)
             series = convert_frame_to_series(data_frame, self.time_column, self.price_column)
             validated = Series[DailyPricesSchema](series)
+            print(validated.head())
             return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously: {exc}"

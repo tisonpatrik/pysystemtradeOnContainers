@@ -4,8 +4,8 @@ from common.src.database.base_model import BaseModel
 
 
 class InstrumentMetadataModel(BaseModel, table=True):
-    __tablename__ = "insturment_metadata"
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    __tablename__ = "instrument_metadata"
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     asset_class: str
     sub_class: str
     description: str
@@ -13,7 +13,7 @@ class InstrumentMetadataModel(BaseModel, table=True):
 
 class RollConfigModel(BaseModel, table=True):
     __tablename__ = "roll_config"
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     hold_roll_cycle: str
     roll_offset_days: int
     carry_offset: int
@@ -23,5 +23,5 @@ class RollConfigModel(BaseModel, table=True):
 
 class SpreadCostsModel(BaseModel, table=True):
     __tablename__ = "spred_costs"
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     spread_costs: float

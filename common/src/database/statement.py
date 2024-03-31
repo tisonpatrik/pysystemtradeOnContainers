@@ -1,12 +1,17 @@
-from asyncpg.prepared_stmt import PreparedStatement
+from typing import Any, Sequence, Tuple
 
 
 class Statement:
-    def __init__(self, prepared_statement: PreparedStatement):
-        self.prepared_statement = prepared_statement
+    def __init__(self, query: str, parameters: Sequence[Any]):
+        self._query = query
+        self._parameters = tuple(parameters)  # Ensure parameters are stored as a tuple
 
-    def get_statement(self):
-        return self.prepared_statement
+    @property
+    def query(self) -> str:
+        """Returns the SQL query string."""
+        return self._query
 
-    def get_parameters(self):
-        return self.prepared_statement.get_parameters()
+    @property
+    def parameters(self) -> Tuple[Any, ...]:
+        """Returns the parameters as a tuple."""
+        return self._parameters

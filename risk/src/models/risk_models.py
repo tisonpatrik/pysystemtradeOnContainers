@@ -8,21 +8,21 @@ from common.src.database.base_model import BaseModel
 class DailyReturnsVolModel(BaseModel, table=True):
     __tablename__ = "daily_returns_volatility"
     date_time: datetime = Field(primary_key=True)
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     daily_returns_volatility: float
 
 
 class InstrumentVolatilityModel(BaseModel, table=True):
     __tablename__ = "instrument_volatility"
     date_time: datetime = Field(primary_key=True)
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     instrument_volatility: float
 
 
 class DailyVolNormalizedReturnsModel(BaseModel, table=True):
     __tablename__ = "daily_vol_normalized_returns"
     date_time: datetime = Field(primary_key=True)
-    symbol: str = Field(primary_key=True, foreign_key="insturment_config.symbol")
+    symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     normalized_volatility: float
 
 

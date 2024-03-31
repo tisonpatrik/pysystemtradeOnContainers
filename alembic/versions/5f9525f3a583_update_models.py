@@ -1,8 +1,8 @@
 """Update models
 
-Revision ID: 9e5d93a27ff3
+Revision ID: 5f9525f3a583
 Revises: 
-Create Date: 2024-03-16 09:55:00.920347
+Create Date: 2024-03-31 22:01:11.020869
 
 """
 from typing import Sequence, Union
@@ -14,7 +14,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9e5d93a27ff3'
+revision: str = '5f9525f3a583'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -32,9 +32,9 @@ def upgrade() -> None:
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
-    sa.PrimaryKeyConstraint('date_time')
+    sa.PrimaryKeyConstraint('date_time', 'symbol')
     )
-    op.create_table('insturment_config',
+    op.create_table('instrument_config',
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('pointsize', sa.Float(), nullable=False),
@@ -50,50 +50,57 @@ def upgrade() -> None:
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
     )
     op.create_table('daily_returns_volatility',
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('daily_returns_volatility', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
     )
     op.create_table('daily_vol_normalized_returns',
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('normalized_volatility', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
+    )
+    op.create_table('instrument_metadata',
+    sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('asset_class', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('sub_class', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
+    sa.PrimaryKeyConstraint('symbol')
     )
     op.create_table('instrument_volatility',
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('instrument_volatility', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
-    )
-    op.create_table('insturment_metadata',
-    sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('asset_class', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('sub_class', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
-    sa.PrimaryKeyConstraint('symbol')
     )
     op.create_table('multiple_prices',
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('carry', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.Column('carry', sa.Float(), nullable=True),
+    sa.Column('carry_contract', sa.Integer(), nullable=False),
+    sa.Column('price', sa.Float(), nullable=False),
+    sa.Column('price_contract', sa.Integer(), nullable=False),
+    sa.Column('forward', sa.Float(), nullable=True),
+    sa.Column('forward_contract', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
     )
     op.create_table('roll_calendars',
     sa.Column('date_time', sa.DateTime(), nullable=False),
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('current_contract', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.Column('next_contract', sa.Integer(), nullable=False),
+    sa.Column('carry_contract', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('date_time', 'symbol')
     )
     op.create_table('roll_config',
@@ -103,13 +110,13 @@ def upgrade() -> None:
     sa.Column('carry_offset', sa.Integer(), nullable=False),
     sa.Column('priced_roll_cycle', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('expiry_offset', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('symbol')
     )
     op.create_table('spred_costs',
     sa.Column('symbol', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('spread_costs', sa.Float(), nullable=False),
-    sa.ForeignKeyConstraint(['symbol'], ['insturment_config.symbol'], ),
+    sa.ForeignKeyConstraint(['symbol'], ['instrument_config.symbol'], ),
     sa.PrimaryKeyConstraint('symbol')
     )
     # ### end Alembic commands ###
@@ -121,12 +128,12 @@ def downgrade() -> None:
     op.drop_table('roll_config')
     op.drop_table('roll_calendars')
     op.drop_table('multiple_prices')
-    op.drop_table('insturment_metadata')
     op.drop_table('instrument_volatility')
+    op.drop_table('instrument_metadata')
     op.drop_table('daily_vol_normalized_returns')
     op.drop_table('daily_returns_volatility')
     op.drop_table('adjusted_prices')
-    op.drop_table('insturment_config')
+    op.drop_table('instrument_config')
     op.drop_table('fx_prices')
     op.drop_table('daily_vol_normalised_price_for_asset_class')
     # ### end Alembic commands ###

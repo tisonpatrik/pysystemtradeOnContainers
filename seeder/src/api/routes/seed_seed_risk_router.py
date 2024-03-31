@@ -11,7 +11,7 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.post(
-    "/seed_raw_data_route/",
+    "/seed_risk_route/",
     status_code=status.HTTP_201_CREATED,
     name="Seed Database with raw data files",
 )

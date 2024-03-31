@@ -1,6 +1,7 @@
 from pydantic import TypeAdapter
 
 from common.src.database.repository import Repository
+from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.instrument_config_models import Instrument, InstrumentConfigModel
 from raw_data.src.schemas.config_files_schemas import InstrumentConfigSchema
@@ -20,9 +21,9 @@ class InstrumentConfigService:
         Asynchronously fetch instrument consfig data.
         """
         try:
-            columns = [InstrumentConfigSchema.symbol]
-            query = "SELECT NECO"
-            records = await self.repository.fetch_many_async(query)
+            query = "SELECT symbol FROM instrument_config"
+            statement = Statement(query, ())
+            records = await self.repository.fetch_many_async(statement)
             record_dicts = [dict(record) for record in records]
             instruments = TypeAdapter(list[Instrument]).validate_python(record_dicts)
             return instruments
