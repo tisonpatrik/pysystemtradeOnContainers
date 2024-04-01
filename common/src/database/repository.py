@@ -1,7 +1,7 @@
-from typing import Generic, Type, TypeVar
+from typing import Any, Generic, Type, TypeVar
 
 import pandas as pd
-from asyncpg import Pool, Record
+from asyncpg import Pool
 
 from common.src.database.base_model import BaseModel
 from common.src.database.statement import Statement
@@ -16,13 +16,14 @@ class Repository(Generic[T]):
         self.table = model.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def fetch_many_async(self, statement: Statement) -> list[Record]:
+    async def fetch_many_async(self, statement: Statement) -> list[dict[Any, Any]]:
         try:
-            async with self.pool.acquire() as conn:
-                async with conn.transaction():
-                    stmt = await conn.prepare(statement.query)
-                    results = await stmt.fetch(*statement.parameters)
-                    return results
+            async with self.pool.acquire() as connectrion:
+                async with connectrion.transaction():
+                    stmt = await connectrion.prepare(statement.query)
+                    records = await stmt.fetch(*statement.parameters)
+                    record_dicts = [dict(record) for record in records]
+                    return record_dicts
         except Exception as e:
             self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
             raise e
@@ -35,9 +36,10 @@ class Repository(Generic[T]):
         records = data.to_numpy()
 
         try:
-            async with self.pool.transaction():
-                await self.pool.copy_records_to_table(
-                    table_name=self.table, records=records, columns=list(data.columns)
-                )
+            async with self.pool.acquire() as connectrion:
+                async with connectrion.transaction():
+                    await connectrion.copy_records_to_table(
+                        table_name=self.table, records=records, columns=list(data.columns)
+                    )
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")

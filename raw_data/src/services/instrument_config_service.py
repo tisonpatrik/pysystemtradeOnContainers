@@ -23,8 +23,7 @@ class InstrumentConfigService:
         try:
             query = "SELECT symbol FROM instrument_config"
             statement = Statement(query, ())
-            records = await self.repository.fetch_many_async(statement)
-            record_dicts = [dict(record) for record in records]
+            record_dicts = await self.repository.fetch_many_async(statement)
             instruments = TypeAdapter(list[Instrument]).validate_python(record_dicts)
             return instruments
         except Exception as error:

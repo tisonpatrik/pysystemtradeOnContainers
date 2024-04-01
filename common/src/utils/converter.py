@@ -20,9 +20,7 @@ def convert_series_to_frame(series: pd.Series) -> pd.DataFrame:
         raise ValueError(error_message)
 
 
-def convert_frame_to_series(
-    data_frame: pd.DataFrame, index_column: str, price_column: str
-) -> pd.Series:
+def convert_frame_to_series(data_frame: pd.DataFrame, index_column: str, price_column: str) -> pd.Series:
     """
     Converts a specified column of a Polars DataFrame to a Pandas Series with another column as its index.
     """

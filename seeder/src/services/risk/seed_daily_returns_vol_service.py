@@ -31,18 +31,17 @@ class SeedDailyReturnsVolService:
                 "Starting the process for %s table.",
                 DailyReturnsVolModel.__tablename__,
             )
-            instrument_configs = await self.instrument_config_service.get_list_of_instruments_async()
+            instruments = await self.instrument_config_service.get_list_of_instruments_async()
 
-            for config in instrument_configs:
-                columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-                query = "SELECT NECO"
-                prices = await self.prices_service.get_daily_prices_async(query)
+            for symbol in instruments:
+                prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
+
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
-                await self.daily_returns_vol_service.insert_daily_returns_vol_async(
-                    daily_returns_vol, str(config.symbol)
-                )
+                # await self.daily_returns_vol_service.insert_daily_returns_vol_async(
+                #     daily_returns_vol, str(symbol.symbol)
+                # )
             self.logger.info(
-                f"Successfully inserted {DailyReturnsVolModel.__name__} calculations for {len(instrument_configs)} instruments."
+                f"Successfully inserted {DailyReturnsVolModel.__name__} calculations for {len(instruments)} instruments."
             )
 
         except SchemaError as schema_exc:

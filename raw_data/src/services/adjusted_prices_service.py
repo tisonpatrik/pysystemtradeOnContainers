@@ -30,16 +30,12 @@ class AdjustedPricesService:
         """
         try:
 
-            symbol = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
-            statement = Statement(query=symbol, parameters=symbol)
-
-            data = await self.repository.fetch_many_async(statement)
-            columns = [AdjustedPricesSchema.date_time, AdjustedPricesSchema.price]
-
-            data_frame = pd.DataFrame(data, columns=columns)
+            query = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
+            statement = Statement(query=query, parameters=symbol)
+            records = await self.repository.fetch_many_async(statement)
+            data_frame = pd.DataFrame(records)
             series = convert_frame_to_series(data_frame, self.time_column, self.price_column)
             validated = Series[DailyPricesSchema](series)
-            print(validated.head())
             return validated
         except Exception as exc:
             error_message = f"Failed to get adjusted prices asynchronously: {exc}"
