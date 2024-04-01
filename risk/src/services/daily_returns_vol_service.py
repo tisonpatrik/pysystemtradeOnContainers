@@ -23,7 +23,7 @@ class DailyReturnsVolService:
         self.repository = repository
         self.estimator = DailyReturnsVolEstimator()
 
-    async def insert_daily_returns_vol_async(self, daily_returns_vols, symbol):
+    async def insert_daily_returns_vol_async(self, daily_returns_vols: Series[DailyReturnsVol], symbol: str):
         """
         Calculates and insert daily returns volatility of a given prices.
         """

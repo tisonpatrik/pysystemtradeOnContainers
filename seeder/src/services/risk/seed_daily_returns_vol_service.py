@@ -3,7 +3,6 @@
 from pandera.errors import SchemaError
 
 from common.src.logging.logger import AppLogger
-from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from raw_data.src.services.instrument_config_service import InstrumentConfigService
 from risk.src.models.risk_models import DailyReturnsVolModel
@@ -35,11 +34,8 @@ class SeedDailyReturnsVolService:
 
             for symbol in instruments:
                 prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
-
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
-                # await self.daily_returns_vol_service.insert_daily_returns_vol_async(
-                #     daily_returns_vol, str(symbol.symbol)
-                # )
+                # await self.daily_returns_vol_service.insert_daily_returns_vol_async(daily_returns_vol, symbol.symbol)
             self.logger.info(
                 f"Successfully inserted {DailyReturnsVolModel.__name__} calculations for {len(instruments)} instruments."
             )
