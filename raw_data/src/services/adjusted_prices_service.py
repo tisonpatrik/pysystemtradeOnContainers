@@ -41,16 +41,3 @@ class AdjustedPricesService:
             error_message = f"Failed to get adjusted prices asynchronously: {exc}"
             self.logger.error(error_message, exc_info=True)
             raise ValueError(error_message)
-
-    async def insert_adjuted_prices_async(self, raw_data: pd.DataFrame):
-        """
-        Insert adjusted prices data into db.
-        """
-        try:
-            # await self.repository.insert_records_async(raw_data, self.table_name)
-            print("neco")
-
-        except Exception as exc:
-            error_message = f"Error inserting data for {AdjustedPricesModel.__name__}: {str(exc)}"
-            self.logger.error(error_message)
-            raise ValueError(error_message)

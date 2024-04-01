@@ -5,9 +5,9 @@ from sqlmodel import Field
 from common.src.database.base_model import BaseModel
 
 
-class DailyReturnsVolModel(BaseModel, table=True):
+class DailyReturnsVolModel(BaseModel, table=True, index=True):
     __tablename__ = "daily_returns_volatility"
-    date_time: datetime = Field(primary_key=True)
+    date_time: datetime = Field(primary_key=True, index=True)
     symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     daily_returns_volatility: float
 

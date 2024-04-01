@@ -31,11 +31,11 @@ class SeedDailyReturnsVolService:
                 DailyReturnsVolModel.__tablename__,
             )
             instruments = await self.instrument_config_service.get_list_of_instruments_async()
-
             for symbol in instruments:
                 prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
-                # await self.daily_returns_vol_service.insert_daily_returns_vol_async(daily_returns_vol, symbol.symbol)
+                await self.daily_returns_vol_service.insert_daily_returns_vol_async(daily_returns_vol, symbol.symbol)
+
             self.logger.info(
                 f"Successfully inserted {DailyReturnsVolModel.__name__} calculations for {len(instruments)} instruments."
             )
