@@ -12,7 +12,7 @@ from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 class SeedDailyReturnsVolService:
     """Service for seeding daily returns volatility of financial instruments."""
 
-    def __init__(
+    def __init__( 
         self,
         prices_service: AdjustedPricesService,
         daily_returns_vol_service: DailyReturnsVolService,

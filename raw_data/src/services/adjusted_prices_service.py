@@ -29,7 +29,6 @@ class AdjustedPricesService:
         Asynchronously fetches daily prices by symbol and returns them as Pandas Series.
         """
         try:
-
             query = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
             statement = Statement(query=query, parameters=symbol)
             records = await self.repository.fetch_many_async(statement)
