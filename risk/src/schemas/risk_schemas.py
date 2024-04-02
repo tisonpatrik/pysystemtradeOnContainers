@@ -14,6 +14,9 @@ class Volatility(pa.DataFrameModel):
     date_time: Series[datetime]
     volatility: Series[float]
 
+    class Config:
+        drop_invalid_rows = True
+
 
 class InstrumentVolatilitySchema(pa.DataFrameModel):
     date_time: Series[datetime]

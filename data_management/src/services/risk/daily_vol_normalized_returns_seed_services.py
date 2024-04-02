@@ -1,9 +1,10 @@
 # from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 
 from common.src.logging.logger import AppLogger
 from risk.src.models.risk_models import DailyVolNormalizedReturnsModel
+
+# from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 
 
 class DailyVolNormalisedReturnsSeedService:
@@ -11,7 +12,7 @@ class DailyVolNormalisedReturnsSeedService:
 
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_vol_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
+        # self.daily_vol_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
         # self.adjusted_prices_service = AdjustedPricesService(db_session)
 

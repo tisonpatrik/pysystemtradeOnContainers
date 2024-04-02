@@ -3,7 +3,7 @@ from src.app.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSch
 from src.core.pandas.prapare_db_calculations import prepare_asset_data_to_db
 from src.estimators.daily_vol_normalised_returns_for_asset_class import DailyVolNormalisedPriceForAssetClassEstimator
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
-from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
+# from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 from src.utils.table_operations import sort_by_time
 
 from common.src.logging.logger import AppLogger
@@ -17,7 +17,7 @@ class DailyVolNormalisedPriceForAssetClassService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = InstrumentConfigService(db_session)
-        self.daily_volatility_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
+        # self.daily_volatility_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
         self.daily_vol_normalised_returns_for_asset_class_estimator = DailyVolNormalisedPriceForAssetClassEstimator()
         self.time_column = DailyVolNormalisedPriceForAssetClassModel.date_time
         self.price_column = DailyVolNormalisedPriceForAssetClassModel.normalized_volatility
