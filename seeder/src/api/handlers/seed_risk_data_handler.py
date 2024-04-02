@@ -12,7 +12,7 @@ from risk.src.models.risk_models import (
     DailyReturnsVolModel,
     DailyVolNormalisedPriceForAssetClassModel,
     DailyVolNormalizedReturnsModel,
-    InstrumentVolatilityModel,
+    InstrumentVolModel,
 )
 
 
@@ -20,11 +20,11 @@ class SeedRiskDataHandler:
     def __init__(
         self,
         seed_daily_returns_vol_service: SeedDailyReturnsVolService,
-        # instrument_vol_seed_service: SeedInstrumentVolService,
+        instrument_vol_seed_service: SeedInstrumentVolService,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.seed_daily_returns_vol_service = seed_daily_returns_vol_service
-        # self.instrument_vol_seed_service = instrument_vol_seed_service
+        self.instrument_vol_seed_service = instrument_vol_seed_service
         # self.normalised_price_for_asset_seed_service = (
         #     NormalisedPriceForAssetClassService(db_session)
         # )
@@ -39,7 +39,7 @@ class SeedRiskDataHandler:
         self.logger.info("Data processing for risk calculations has started")
         models = [
             DailyReturnsVolModel,
-            # InstrumentVolatilityModel,
+            InstrumentVolModel,
             # DailyVolNormalizedReturns,
             # DailyVolNormalisedPriceForAssetClass,
         ]
@@ -52,8 +52,8 @@ class SeedRiskDataHandler:
         """
         if model.__tablename__ == "daily_returns_volatility":
             await self.seed_daily_returns_vol_service.seed_daily_returns_vol_async()
-        # elif model.__tablename__ == "instrument_volatility":
-        #     await self.instrument_vol_seed_service.seed_instrument_volatility_async()
+        elif model.__tablename__ == "instrument_volatility":
+            await self.instrument_vol_seed_service.seed_instrument_volatility_async()
         # elif model.__tablename__ == "daily_vol_normalized_returns":
         #     await self.daily_returns_normalised_vol_seed_service.seed_daily_normalised_returns_vol_async()
         # elif model.__tablename__ == "daily_vol_normalised_price_for_asset_class":

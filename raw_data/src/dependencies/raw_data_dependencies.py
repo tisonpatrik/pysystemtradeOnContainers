@@ -8,6 +8,7 @@ from raw_data.src.models.raw_data_models import (
     RollCalendarsModel,
 )
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
+from raw_data.src.services.multiple_prices_service import MultiplePricesService
 
 
 def get_adjusted_prices_repository(request: Request) -> Repository[AdjustedPricesModel]:
@@ -33,3 +34,12 @@ def get_adjusted_prices_service(
     Dependency injection method for AdjustedPricesService.
     """
     return AdjustedPricesService(repository=repository)
+
+
+def get_multiple_prices_service(
+    repository: Repository[MultiplePricesModel] = Depends(get_multiple_prices_repository),
+) -> MultiplePricesService:
+    """
+    Dependency injection method for MultiplePricesService.
+    """
+    return MultiplePricesService(repository=repository)

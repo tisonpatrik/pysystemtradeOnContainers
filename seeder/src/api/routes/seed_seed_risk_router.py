@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from src.api.handlers.seed_risk_data_handler import SeedRiskDataHandler
 from src.dependencies.risk_dependencies import get_daily_returns_vol_seed_service
+from src.dependencies.risk_dependencies import get_instrument_vol_seed_service
 from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
@@ -17,12 +18,13 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def seed_risk_data_async(
     seed_daily_returns_vol_service: SeedDailyReturnsVolService = Depends(get_daily_returns_vol_seed_service),
+    seed_instrument_vol_service: SeedInstrumentVolService = Depends(get_instrument_vol_seed_service),
 ):
     """
     Fills the database tables with data.
     """
     try:
-        seed_db_handler = SeedRiskDataHandler(seed_daily_returns_vol_service)
+        seed_db_handler = SeedRiskDataHandler(seed_daily_returns_vol_service, seed_instrument_vol_service)
         await seed_db_handler.seed_calculate_risk_data_async()
 
         logger.info("Successfully seeded database with risk data.")

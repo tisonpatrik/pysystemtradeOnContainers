@@ -7,7 +7,7 @@ from risk.src.models.risk_models import (
     DailyReturnsVolModel,
     DailyVolNormalisedPriceForAssetClassModel,
     DailyVolNormalizedReturnsModel,
-    InstrumentVolatilityModel,
+    InstrumentVolModel,
 )
 
 
@@ -25,7 +25,7 @@ class SeedRiskHandler:
         self.logger.info("Data processing for risk calculations has started")
         models = [
             DailyReturnsVolModel,
-            InstrumentVolatilityModel,
+            InstrumentVolModel,
             DailyVolNormalizedReturnsModel,
             DailyVolNormalisedPriceForAssetClassModel,
         ]

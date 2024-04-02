@@ -28,6 +28,18 @@ class Repository(Generic[T]):
             self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
             raise e
 
+    async def fetch_item_async(self, statement: Statement) -> dict[Any, Any]:
+        try:
+            async with self.pool.acquire() as connectrion:
+                async with connectrion.transaction():
+                    stmt = await connectrion.prepare(statement.query)
+                    record = await stmt.fetchrow(*statement.parameters)
+                    record_dict = dict(record)
+                    return record_dict
+        except Exception as e:
+            self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
+            raise e
+
     async def insert_dataframe_async(self, data: pd.DataFrame) -> None:
         if data.empty:
             self.logger.warning("Attempted to insert empty data list.")

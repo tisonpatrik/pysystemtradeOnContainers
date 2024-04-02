@@ -6,6 +6,7 @@ from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
+from raw_data.src.schemas.adjusted_prices_schemas import DailyPricesSchema
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolModel
 from risk.src.schemas.risk_schemas import DailyReturnsVol, DailyReturnsVolatilitySchema
@@ -40,7 +41,7 @@ class DailyReturnsVolService:
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-            await self.repository.insert_dataframe_async(validated)
+            # await self.repository.insert_dataframe_async(validated)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"

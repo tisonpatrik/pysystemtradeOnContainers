@@ -12,7 +12,7 @@ class DailyReturnsVolModel(BaseModel, table=True, index=True):
     daily_returns_volatility: float
 
 
-class InstrumentVolatilityModel(BaseModel, table=True):
+class InstrumentVolModel(BaseModel, table=True):
     __tablename__ = "instrument_volatility"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")

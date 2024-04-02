@@ -5,9 +5,9 @@ from src.services.raw_data.instrument_config_services import InstrumentConfigSer
 from src.services.raw_data.multiple_prices_service import MultiplePricesService
 
 from common.src.logging.logger import AppLogger
-from risk.src.models.risk_models import InstrumentVolatilityModel
+from risk.src.models.risk_models import InstrumentVolModel
 
-table_name = InstrumentVolatilityModel.__tablename__
+table_name = InstrumentVolModel.__tablename__
 
 
 class InstrumentVolatilityService:
@@ -30,7 +30,7 @@ class InstrumentVolatilityService:
                 daily_returns_vol=daily_returns_vol,
                 point_size=point_size,
             )
-            prepared_data = prepara_data_to_db(instrument_vols, InstrumentVolatilityModel, symbol)
+            prepared_data = prepara_data_to_db(instrument_vols, InstrumentVolModel, symbol)
             # await self.repository.insert_data_async(
             #     prepared_data, InstrumentVolatilitySchema
             # )

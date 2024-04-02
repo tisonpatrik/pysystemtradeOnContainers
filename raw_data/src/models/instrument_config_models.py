@@ -1,3 +1,5 @@
+import decimal
+
 from pydantic import BaseModel as Model
 from sqlmodel import Field
 
@@ -19,3 +21,7 @@ class InstrumentConfigModel(BaseModel, table=True):
 
 class Instrument(Model):
     symbol: str
+
+
+class PointSize(Model):
+    pointsize: float

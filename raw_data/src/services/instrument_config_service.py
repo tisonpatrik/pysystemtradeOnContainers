@@ -3,8 +3,7 @@ from pydantic import TypeAdapter
 from common.src.database.repository import Repository
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.instrument_config_models import Instrument, InstrumentConfigModel
-from raw_data.src.schemas.config_files_schemas import InstrumentConfigSchema
+from raw_data.src.models.instrument_config_models import Instrument, InstrumentConfigModel, PointSize
 
 
 class InstrumentConfigService:
@@ -28,5 +27,18 @@ class InstrumentConfigService:
             return instruments
         except Exception as error:
             error_message = f"Failed to get instrument config asynchronously for table '{Instrument.__name__}': {error}"
+            self.logger.error(error_message, exc_info=True)
+            raise ValueError(error_message)
+
+    async def get_point_size_of_instrument_async(self, symbol: str) -> PointSize:
+        """Asynchronously fetch point size for given instrument."""
+        try:
+            query = "SELECT pointsize FROM instrument_config WHERE symbol = $1"
+            statement = Statement(query=query, parameters=symbol)
+            record = await self.repository.fetch_item_async(statement)
+            point_size = PointSize.model_validate(record)
+            return point_size
+        except Exception as error:
+            error_message = f"Failed to get point size for instrument '{symbol}' asynchronously: {error}"
             self.logger.error(error_message, exc_info=True)
             raise ValueError(error_message)

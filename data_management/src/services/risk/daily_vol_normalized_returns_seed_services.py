@@ -1,4 +1,4 @@
-from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
+# from src.services.raw_data.adjusted_prices_service import AdjustedPricesService
 from src.services.raw_data.instrument_config_services import InstrumentConfigService
 from src.services.risk.daily_volatility_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 
@@ -13,7 +13,7 @@ class DailyVolNormalisedReturnsSeedService:
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalised_returns_service = DailyVolatilityNormalisedReturnsService(db_session)
         self.instrument_config_service = InstrumentConfigService(db_session)
-        self.adjusted_prices_service = AdjustedPricesService(db_session)
+        # self.adjusted_prices_service = AdjustedPricesService(db_session)
 
     async def seed_daily_normalised_returns_vol_async(self):
         """Seed daily volatility normalised returns."""
