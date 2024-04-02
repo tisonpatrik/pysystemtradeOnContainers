@@ -13,7 +13,7 @@ table_name = DailyVolNormalizedReturnsModel.__tablename__
 class DailyVolatilityNormalisedReturnsService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_vol_normalised_returns = DailyVolNormalisedReturns()
+        self.estimator = DailyVolNormalisedReturns()
         self.price_column = DailyVolNormalizedReturnsModel.normalized_volatility
         self.time_column = DailyVolNormalizedReturnsModel.date_time
 
@@ -21,7 +21,7 @@ class DailyVolatilityNormalisedReturnsService:
         """Calculates and insert daily volatility of a given prices."""
         try:
             self.logger.info("Starting the daily vol for %s symbol.", symbol)
-            daily_returns = self.daily_vol_normalised_returns.get_daily_vol_normalised_returns(daily_prices)
+            daily_returns = self.estimator.get_daily_vol_normalised_returns(daily_prices)
             prepared_data = prepara_data_to_db(daily_returns, DailyVolNormalizedReturnsModel, symbol)
             # await self.repository.insert_data_async(
             #     prepared_data, DailyVolNormalizedReturnsSchema
