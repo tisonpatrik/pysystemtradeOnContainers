@@ -6,10 +6,9 @@ from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
-from raw_data.src.schemas.adjusted_prices_schemas import DailyPricesSchema
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.models.risk_models import DailyReturnsVolModel
-from risk.src.schemas.risk_schemas import DailyReturnsVol, DailyReturnsVolatilitySchema
+from risk.src.schemas.risk_schemas import DailyReturnsVolatilitySchema, Volatility
 
 
 class DailyReturnsVolService:
@@ -24,7 +23,7 @@ class DailyReturnsVolService:
         self.repository = repository
         self.estimator = DailyReturnsVolEstimator()
 
-    async def insert_daily_returns_vol_async(self, daily_returns_vols: Series[DailyReturnsVol], symbol: str):
+    async def insert_daily_returns_vol_async(self, daily_returns_vols: Series[Volatility], symbol: str):
         """
         Calculates and insert daily returns volatility of a given prices.
         """
@@ -48,13 +47,13 @@ class DailyReturnsVolService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def calculate_daily_returns_vol_async(self, prices) -> Series[DailyReturnsVol]:
+    async def calculate_daily_returns_vol_async(self, prices) -> Series[Volatility]:
         """
         Calculates and inserts daily returns volatility for given prices.
         """
         try:
             daily_returns_vols = self.estimator.process_daily_returns_vol(prices)
-            return Series[DailyReturnsVol](daily_returns_vols)
+            return Series[Volatility](daily_returns_vols)
 
         except Exception as error:
             error_message = f"An error occurred during the processing: {error}"

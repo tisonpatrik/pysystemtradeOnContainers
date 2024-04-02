@@ -5,6 +5,7 @@ from raw_data.src.services.instrument_config_service import InstrumentConfigServ
 from raw_data.src.services.multiple_prices_service import MultiplePricesService
 from risk.src.models.risk_models import InstrumentVolModel
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
+from risk.src.services.instrument_volatility_service import InstrumentVolService
 
 
 class SeedInstrumentVolService:
@@ -13,11 +14,13 @@ class SeedInstrumentVolService:
         instrument_config_service: InstrumentConfigService,
         daily_returns_vol_service: DailyReturnsVolService,
         multiple_prices_service: MultiplePricesService,
+        instrument_vol_service: InstrumentVolService,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = instrument_config_service
         self.daily_returns_vol_service = daily_returns_vol_service
         self.multiple_prices_service = multiple_prices_service
+        self.instrument_vol_service = instrument_vol_service
 
     async def seed_instrument_volatility_async(self):
         """
@@ -35,6 +38,10 @@ class SeedInstrumentVolService:
                 daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(
                     multiple_prices
                 )
+                instument_vols = await self.instrument_vol_service.calculate_instrument_vol_async(
+                    multiple_prices, daily_returns_vol, point_size.pointsize
+                )
+                # await self.instrument_vol_service.insert_instrument_vol_async(instument_vols, symbol.symbol)
             self.logger.info(
                 f"Successfully inserted {InstrumentVolModel.__name__} calculations for {len(instruments)} instruments."
             )
