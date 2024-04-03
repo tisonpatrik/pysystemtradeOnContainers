@@ -29,8 +29,6 @@ services:
     volumes:
       - ./raw_data/src:/home/app/src
       - ./common:/home/app/common
-
-
   risk:
     build:
       context: .
@@ -44,19 +42,6 @@ services:
     volumes:
       - ./risk/src:/home/app/src
       - ./common:/home/app/common
-
-  data_management:
-    build:
-      context: .
-      dockerfile: data_management/Dockerfile
-    hostname: data_management
-    container_name: data_management
-    depends_on:
-      - db_postgres
-    ports:
-      - "8002:8000"
-    volumes:
-      - ./data_management/src:/home/app/src
 
   db_postgres:
     image: postgres:latest

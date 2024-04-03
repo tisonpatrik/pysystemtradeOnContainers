@@ -1,5 +1,8 @@
 from fastapi import Depends
 from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
+from src.services.risk.seed_daily_vol_normalised_price_for_asset_class_service import (
+    SeedDailyVolNormalisedPriceForAssetClassService,
+)
 from src.services.risk.seed_daily_vol_normalised_returns_service import SeedDailyVolNormalisedReturnsService
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
@@ -10,10 +13,14 @@ from raw_data.src.services.instrument_config_service import InstrumentConfigServ
 from raw_data.src.services.multiple_prices_service import MultiplePricesService
 from risk.src.dependencies.risk_dependencies import (
     get_daily_returns_vol_service,
+    get_daily_vol_normalised_price_for_asset_class_service,
     get_daily_vol_normalised_returns_service,
     get_instrument_vol_service,
 )
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
+from risk.src.services.daily_vol_normalised_price_for_asset_class_service import (
+    DailyVolNormalisedPriceForAssetClassService,
+)
 from risk.src.services.daily_vol_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 from risk.src.services.instrument_volatility_service import InstrumentVolService
 
@@ -64,4 +71,25 @@ def get_seed_daily_vol_normalised_returns_service(
         prices_service=prices_service,
         daily_vol_normalised_returns_service=daily_vol_normalised_returns_service,
         instrument_config_service=instrument_config_service,
+    )
+
+
+def get_seed_daily_vol_normalised_price_for_asset_class_service(
+    instrument_config_service: InstrumentConfigService = Depends(get_instrument_config_service),
+    daily_vol_normalised_price_for_asset_class_service: DailyVolNormalisedPriceForAssetClassService = Depends(
+        get_daily_vol_normalised_price_for_asset_class_service
+    ),
+    daily_vol_normalised_returns_service: DailyVolatilityNormalisedReturnsService = Depends(
+        get_daily_vol_normalised_returns_service
+    ),
+    prices_service: AdjustedPricesService = Depends(get_adjusted_prices_service),
+) -> SeedDailyVolNormalisedPriceForAssetClassService:
+    """
+    Dependency injection method for SeedDailyVolNormalisedPriceForAssetClassService.
+    """
+    return SeedDailyVolNormalisedPriceForAssetClassService(
+        instrument_config_service=instrument_config_service,
+        daily_vol_normalised_price_for_asset_class_service=daily_vol_normalised_price_for_asset_class_service,
+        daily_vol_normalised_returns_service=daily_vol_normalised_returns_service,
+        prices_service=prices_service,
     )

@@ -17,15 +17,13 @@ class DailyReturnsVolService:
     """
 
     def __init__(self, repository: Repository[DailyReturnsVolModel]):
-        self.price_column = DailyReturnsVolModel.daily_returns_volatility
-        self.time_column = DailyReturnsVolModel.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = DailyReturnsVolEstimator()
 
     async def insert_daily_returns_vol_async(self, daily_returns_vols: Series[Volatility], symbol: str):
         """
-        Calculates and insert daily returns volatility of a given prices.
+        Insert daily returns volatility of a given prices.
         """
         try:
 
@@ -47,7 +45,7 @@ class DailyReturnsVolService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def calculate_daily_returns_vol_async(self, prices) -> Series[Volatility]:
+    def calculate_daily_returns_vol_async(self, prices) -> Series[Volatility]:
         """
         Calculates and inserts daily returns volatility for given prices.
         """

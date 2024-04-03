@@ -11,15 +11,13 @@ from risk.src.schemas.risk_schemas import InstrumentVolatilitySchema, Volatility
 
 class InstrumentVolService:
     def __init__(self, repository: Repository[InstrumentVolModel]):
-        self.price_column = InstrumentVolModel.instrument_volatility
-        self.time_column = InstrumentVolModel.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = InstrumentVolEstimator()
 
     async def insert_instrument_vol_async(self, volatility: Series[Volatility], symbol: str):
         """
-        Calculates and insert daily returns volatility of a given prices.
+        Insert instrument volatility of a given prices.
         """
         try:
 
@@ -41,9 +39,7 @@ class InstrumentVolService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def calculate_instrument_vol_async(
-        self, multiple_prices, daily_returns_vol, point_size
-    ) -> Series[Volatility]:
+    def calculate_instrument_vol_async(self, multiple_prices, daily_returns_vol, point_size) -> Series[Volatility]:
         """ """
         try:
             daily_returns_vols = self.estimator.get_instrument_currency_vol(

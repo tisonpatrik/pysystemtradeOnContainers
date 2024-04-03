@@ -3,11 +3,20 @@ from fastapi import Depends
 from common.src.database.repository import Repository
 from risk.src.dependencies.risk_repositories import (
     get_daily_returns_vol_repository,
+    get_daily_vol_normalised_price_for_asset_class_repository,
     get_daily_vol_normalised_returns_repository,
     get_instrument_vol_repository,
 )
-from risk.src.models.risk_models import DailyReturnsVolModel, DailyVolNormalizedReturnsModel, InstrumentVolModel
+from risk.src.models.risk_models import (
+    DailyReturnsVolModel,
+    DailyVolNormalisedPriceForAssetClassModel,
+    DailyVolNormalizedReturnsModel,
+    InstrumentVolModel,
+)
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
+from risk.src.services.daily_vol_normalised_price_for_asset_class_service import (
+    DailyVolNormalisedPriceForAssetClassService,
+)
 from risk.src.services.daily_vol_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 from risk.src.services.instrument_volatility_service import InstrumentVolService
 
@@ -37,3 +46,14 @@ def get_daily_vol_normalised_returns_service(
     Dependency injection method for DailyVolatilityNormalisedReturnsService.
     """
     return DailyVolatilityNormalisedReturnsService(repository=repository)
+
+
+def get_daily_vol_normalised_price_for_asset_class_service(
+    repository: Repository[DailyVolNormalisedPriceForAssetClassModel] = Depends(
+        get_daily_vol_normalised_price_for_asset_class_repository
+    ),
+) -> DailyVolNormalisedPriceForAssetClassService:
+    """
+    Dependency injection method for DailyVolNormalisedPriceForAssetClassService.
+    """
+    return DailyVolNormalisedPriceForAssetClassService(repository=repository)

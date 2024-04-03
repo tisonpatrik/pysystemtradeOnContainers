@@ -1,5 +1,3 @@
-from calendar import c
-
 from pandera.typing import DataFrame, Series
 
 from common.src.database.repository import Repository
@@ -13,14 +11,12 @@ from risk.src.schemas.risk_schemas import DailyVolNormalizedReturnsSchema, Volat
 
 class DailyVolatilityNormalisedReturnsService:
     def __init__(self, repository: Repository[DailyVolNormalizedReturnsModel]):
-        self.price_column = DailyVolNormalizedReturnsModel.normalized_volatility
-        self.time_column = DailyVolNormalizedReturnsModel.date_time
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = DailyVolNormalisedReturns()
 
     async def insert_daily_vol_normalised_returns_for_prices_async(self, volatility: Series[Volatility], symbol):
-        """Calculates and insert daily volatility of a given prices."""
+        """Insert daily volatility normalized returns of a given prices."""
         try:
 
             framed = convert_series_to_frame(volatility)
@@ -41,7 +37,7 @@ class DailyVolatilityNormalisedReturnsService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    async def calculate_daily_vol_normalised_returns_async(self, daily_prices) -> Series[Volatility]:
+    def calculate_daily_vol_normalised_returns_async(self, daily_prices) -> Series[Volatility]:
         """ """
         try:
             daily_returns_vols = self.estimator.get_daily_vol_normalised_returns(daily_prices)

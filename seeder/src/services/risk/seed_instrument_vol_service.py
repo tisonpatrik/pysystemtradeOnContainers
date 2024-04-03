@@ -35,10 +35,8 @@ class SeedInstrumentVolService:
             for symbol in instruments:
                 multiple_prices = await self.multiple_prices_service.get_denominator_prices_async(symbol.symbol)
                 point_size = await self.instrument_config_service.get_point_size_of_instrument_async(symbol.symbol)
-                daily_returns_vol = await self.daily_returns_vol_service.calculate_daily_returns_vol_async(
-                    multiple_prices
-                )
-                instument_vols = await self.instrument_vol_service.calculate_instrument_vol_async(
+                daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol_async(multiple_prices)
+                instument_vols = self.instrument_vol_service.calculate_instrument_vol_async(
                     multiple_prices, daily_returns_vol, point_size.pointsize
                 )
                 # await self.instrument_vol_service.insert_instrument_vol_async(instument_vols, symbol.symbol)

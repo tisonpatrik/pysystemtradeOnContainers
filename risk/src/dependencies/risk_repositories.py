@@ -14,3 +14,9 @@ def get_instrument_vol_repository(request: Request) -> Repository[InstrumentVolM
 
 def get_daily_vol_normalised_returns_repository(request: Request) -> Repository[DailyVolNormalizedReturnsModel]:
     return Repository(request.app.async_pool, DailyVolNormalizedReturnsModel)
+
+
+def get_daily_vol_normalised_price_for_asset_class_repository(
+    request: Request,
+) -> Repository[DailyVolNormalizedReturnsModel]:
+    return Repository(request.app.async_pool, DailyVolNormalizedReturnsModel)

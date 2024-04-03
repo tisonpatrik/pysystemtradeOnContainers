@@ -2,10 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.api.handlers.seed_risk_data_handler import SeedRiskDataHandler
 from src.dependencies.risk_dependencies import (
     get_seed_daily_returns_vol_service,
+    get_seed_daily_vol_normalised_price_for_asset_class_service,
     get_seed_daily_vol_normalised_returns_service,
     get_seed_instrument_vol_service,
 )
 from src.services.risk.seed_daily_returns_vol_service import SeedDailyReturnsVolService
+from src.services.risk.seed_daily_vol_normalised_price_for_asset_class_service import (
+    SeedDailyVolNormalisedPriceForAssetClassService,
+)
 from src.services.risk.seed_daily_vol_normalised_returns_service import SeedDailyVolNormalisedReturnsService
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
@@ -26,13 +30,19 @@ async def seed_risk_data_async(
     seed_daily_vol_normalised_returns_service: SeedDailyVolNormalisedReturnsService = Depends(
         get_seed_daily_vol_normalised_returns_service
     ),
+    seed_daily_vol_normalised_price_for_asset_class_service: SeedDailyVolNormalisedPriceForAssetClassService = Depends(
+        get_seed_daily_vol_normalised_price_for_asset_class_service
+    ),
 ):
     """
     Fills the database tables with data.
     """
     try:
         seed_db_handler = SeedRiskDataHandler(
-            seed_daily_returns_vol_service, seed_instrument_vol_service, seed_daily_vol_normalised_returns_service
+            seed_daily_returns_vol_service,
+            seed_instrument_vol_service,
+            seed_daily_vol_normalised_returns_service,
+            seed_daily_vol_normalised_price_for_asset_class_service,
         )
         await seed_db_handler.seed_calculate_risk_data_async()
 
