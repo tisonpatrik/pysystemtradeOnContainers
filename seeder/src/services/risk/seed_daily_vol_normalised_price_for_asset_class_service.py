@@ -50,7 +50,7 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
                     vol_normalised_price, asset.asset_class
                 )
             self.logger.info(
-                f"Successfully inserted {DailyVolNormalisedPriceForAssetClassModel.__name__} calculations for {len(assets)} instruments."
+                f"Successfully inserted {DailyVolNormalisedPriceForAssetClassModel.__name__} calculations for {len(assets)} assets."
             )
         except SchemaError as schema_exc:
             self.logger.error(f"Schema validation error: {schema_exc.failure_cases}")
