@@ -3,9 +3,9 @@ from src.services.raw_data.instrument_config_services import InstrumentConfigSer
 from src.services.risk.cumulative_daily_vol_normalised_returns_service import (
     CumulativeDailyVolatilityNormalisedReturnsService,
 )
-from src.services.risk.daily_vol_normalised_price_for_asset_class_service import (
-    DailyVolNormalisedPriceForAssetClassService,
-)
+# from src.services.risk.daily_vol_normalised_price_for_asset_class_service import (
+#     DailyVolNormalisedPriceForAssetClassService,
+# )
 
 from common.src.logging.logger import AppLogger
 from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
@@ -14,15 +14,14 @@ from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassMode
 class NormalisedPriceForAssetClassService:
     def __init__(self, db_session):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_vol_normalised_price_for_asset_class_service = DailyVolNormalisedPriceForAssetClassService(
-            db_session
-        )
+        # self.daily_vol_normalised_price_for_asset_class_service = DailyVolNormalisedPriceForAssetClassService(
+        #     db_session
+        # )
         self.cumulative_daily_volatility_normalised_returns_service = CumulativeDailyVolatilityNormalisedReturnsService(
             db_session
         )
         self.normalised_price_for_asset_class = NormalisedPriceForAssetClass()
         self.instrument_config_service = InstrumentConfigService(db_session)
-        self.daily_vol_normalised_price_for_asset_service = DailyVolNormalisedPriceForAssetClassService(db_session)
 
     async def get_normalised_price_for_asset_class_async(self, asset_class: str, symbol: str):
         """Get normalised price for asset class."""

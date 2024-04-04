@@ -26,6 +26,10 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
         self.daily_vol_normalised_returns_service = daily_vol_normalised_returns_service
         self.prices_service = prices_service
 
+    # query = """SELECT date_time, symbol, normalized_volatility FROM daily_vol_normalized_returns"""
+    # df = pd.read_sql(query, engine)
+    # pivot_df = df.pivot_table(index='date_time', columns='symbol', values='normalized_volatility').reset_index()
+
     async def seed_daily_vol_normalised_price_for_asset_class_async(self):
         """Seed daily volatility normalised price for asset class."""
         try:

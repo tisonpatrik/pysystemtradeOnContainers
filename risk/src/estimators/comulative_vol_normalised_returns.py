@@ -3,8 +3,10 @@ import pandas as pd
 
 class CumulativeVolNormalisedReturns:
 
+    # SELECT id, hodnota, SUM(hodnota) OVER (ORDER BY id) AS cumsum FROM   tabulka;
+
     def get_cumulative_daily_vol_normalised_returns(
-        self,
+        self,   
         daily_vol_normalised_returns: pd.Series,
     ) -> pd.Series:
         """
