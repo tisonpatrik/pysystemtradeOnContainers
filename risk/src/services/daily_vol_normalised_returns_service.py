@@ -27,7 +27,7 @@ class DailyVolatilityNormalisedReturnsService:
                 populated,
                 [
                     DailyVolNormalizedReturnsSchema.date_time,
-                    DailyVolNormalizedReturnsSchema.normalized_volatility,
+                    DailyVolNormalizedReturnsSchema.vol_normalized_returns,
                     DailyVolNormalizedReturnsSchema.symbol,
                 ],
             )
@@ -56,7 +56,7 @@ class DailyVolatilityNormalisedReturnsService:
     ) -> Series[DailyVolNormalizedReturnsSchema]:
         """ """
         try:
-            query = "SELECT drvm.date_time, drvm.symbol, drvm.daily_vol_normalized_returns FROM daily_vol_normalized_returns AS drvm JOIN instrument_config AS icm ON drvm.symbol = icm.symbol WHERE icm.asset_class = $1;"
+            query = "SELECT drvm.date_time, drvm.symbol, drvm.vol_normalized_returns FROM daily_vol_normalized_returns AS drvm JOIN instrument_config AS icm ON drvm.symbol = icm.symbol WHERE icm.asset_class = $1;"
             statement = Statement(query=query, parameters=asset)
             record_dicts = await self.repository.fetch_many_async(statement)
             df = pd.DataFrame(record_dicts)

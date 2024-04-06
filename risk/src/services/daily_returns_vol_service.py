@@ -33,11 +33,12 @@ class DailyReturnsVolService:
                 populated,
                 [
                     DailyReturnsVolatilitySchema.date_time,
-                    DailyReturnsVolatilitySchema.daily_returns_volatility,
+                    DailyReturnsVolatilitySchema.vol_returns,
                     DailyReturnsVolatilitySchema.symbol,
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
+            print(validated)
             await self.repository.insert_dataframe_async(validated)
 
         except Exception as error:

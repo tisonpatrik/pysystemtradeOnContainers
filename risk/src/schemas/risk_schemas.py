@@ -7,7 +7,7 @@ from pandera.typing import Series
 class DailyReturnsVolatilitySchema(pa.DataFrameModel):
     date_time: Series[datetime]
     symbol: Series[str] = pa.Field(nullable=False)
-    daily_returns_volatility: Series[float]
+    vol_returns: Series[float]
 
 
 class Volatility(pa.DataFrameModel):
@@ -27,10 +27,10 @@ class InstrumentVolatilitySchema(pa.DataFrameModel):
 class DailyVolNormalizedReturnsSchema(pa.DataFrameModel):
     date_time: Series[datetime]
     symbol: Series[str] = pa.Field(nullable=False)
-    normalized_volatility: Series[float]
+    vol_normalized_returns: Series[float]
 
 
 class DailyVolNormalisedPriceForAssetClassSchema(pa.DataFrameModel):
     date_time: Series[datetime]
     asset_class: Series[str] = pa.Field(nullable=False)
-    normalized_volatility: Series[float]
+    vol_normalized_price_for_asset: Series[float]

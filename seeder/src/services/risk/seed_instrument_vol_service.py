@@ -39,7 +39,7 @@ class SeedInstrumentVolService:
                 instument_vols = self.instrument_vol_service.calculate_instrument_vol_async(
                     multiple_prices, daily_returns_vol, point_size.pointsize
                 )
-                # await self.instrument_vol_service.insert_instrument_vol_async(instument_vols, symbol.symbol)
+                await self.instrument_vol_service.insert_instrument_vol_async(instument_vols, symbol.symbol)
             self.logger.info(
                 f"Successfully inserted {InstrumentVolModel.__name__} calculations for {len(instruments)} instruments."
             )

@@ -41,6 +41,7 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
                 aggregate_returns_across_instruments_list = await self.daily_vol_normalised_returns_service.get_daily_vol_normalised_returns_for_instruments_async(
                     asset.asset_class
                 )
+
                 # pivot_df = df.pivot_table(index='date_time', columns='symbol', values='normalized_volatility').reset_index()
                 # vol_normalised_price = self.daily_vol_normalised_price_for_asset_class_service.calculate_daily_vol_normalised_price_for_asset_class_async(
                 #     aggregate_returns_across_instruments_list

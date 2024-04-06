@@ -38,7 +38,7 @@ class DailyVolNormalisedPriceForAssetClassService:
                 populated,
                 [
                     DailyVolNormalisedPriceForAssetClassSchema.date_time,
-                    DailyVolNormalisedPriceForAssetClassSchema.normalized_volatility,
+                    DailyVolNormalisedPriceForAssetClassSchema.vol_normalized_price_for_asset,
                     DailyVolNormalisedPriceForAssetClassSchema.asset_class,
                 ],
             )
@@ -66,5 +66,3 @@ class DailyVolNormalisedPriceForAssetClassService:
             error_message = f"An error occurred during the processing: {error}"
             self.logger.error(error_message)
             raise ValueError(error_message)
-
-
