@@ -16,5 +16,4 @@ down:
 tests: run
 	@echo "IMPLEMENT IT"
 
-seed:
-	@pipenv run  uvicorn seeder.src.main:app --reload --port 7000
+

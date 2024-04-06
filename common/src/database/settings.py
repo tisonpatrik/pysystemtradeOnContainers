@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     """
 
     database_url: PostgresDsn
-    test_database_url: PostgresDsn
     max_connections: int = 10
     min_connections: int = 1
     connection_timeout: int = 30
