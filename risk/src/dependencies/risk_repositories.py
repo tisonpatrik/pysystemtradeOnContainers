@@ -1,7 +1,12 @@
 from fastapi import Request
 
 from common.src.database.repository import Repository
-from risk.src.models.risk_models import DailyReturnsVolModel, DailyVolNormalizedReturnsModel, InstrumentVolModel
+from risk.src.models.risk_models import (
+    DailyReturnsVolModel,
+    DailyVolNormalisedPriceForAssetClassModel,
+    DailyVolNormalizedReturnsModel,
+    InstrumentVolModel,
+)
 
 
 def get_daily_returns_vol_repository(request: Request) -> Repository[DailyReturnsVolModel]:
@@ -18,5 +23,5 @@ def get_daily_vol_normalised_returns_repository(request: Request) -> Repository[
 
 def get_daily_vol_normalised_price_for_asset_class_repository(
     request: Request,
-) -> Repository[DailyVolNormalizedReturnsModel]:
-    return Repository(request.app.async_pool, DailyVolNormalizedReturnsModel)
+) -> Repository[DailyVolNormalisedPriceForAssetClassModel]:
+    return Repository(request.app.async_pool, DailyVolNormalisedPriceForAssetClassModel)

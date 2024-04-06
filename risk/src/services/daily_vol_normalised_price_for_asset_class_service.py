@@ -51,14 +51,17 @@ class DailyVolNormalisedPriceForAssetClassService:
             raise ValueError(error_message)
 
     def calculate_daily_vol_normalised_price_for_asset_class_async(
-        self, returns_across_instruments_list: list[Series[Volatility]]
+        self, returns_across_instruments_list: DataFrame[DailyVolNormalizedReturnsSchema]
     ) -> Series[Volatility]:
         """ """
         try:
-            aggregated_returns_across_instruments_list = pd.concat(returns_across_instruments_list, axis=1, sort=True)
-            daily_returns_vols = self.estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(
-                aggregated_returns_across_instruments_list
+            pivot_df = returns_across_instruments_list.pivot(
+                index=DailyVolNormalizedReturnsSchema.date_time,
+                columns=DailyVolNormalizedReturnsSchema.symbol,
+                values=DailyVolNormalizedReturnsSchema.vol_normalized_returns,
             )
+
+            daily_returns_vols = self.estimator.aggregate_daily_vol_normalised_returns_for_list_of_instruments(pivot_df)
             cleaned = daily_returns_vols.dropna()
             return Series[Volatility](cleaned)
 

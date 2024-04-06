@@ -29,5 +29,5 @@ class DailyVolNormalizedReturnsModel(BaseModel, table=True):
 class DailyVolNormalisedPriceForAssetClassModel(BaseModel, table=True):
     __tablename__ = "daily_vol_normalised_price_for_asset_class"
     date_time: datetime = Field(primary_key=True)
-    asset_clas: str
+    asset_class: str = Field(primary_key=True)
     vol_normalized_price_for_asset: float
