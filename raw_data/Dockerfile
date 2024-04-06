@@ -13,7 +13,7 @@ COPY common/ ./common
 COPY raw_data/src/ ./src
 COPY raw_data/tests/ ./tests
 
-COPY raw_data/.env ./
+COPY .env ./
 COPY raw_data/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt

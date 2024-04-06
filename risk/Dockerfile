@@ -13,7 +13,7 @@ COPY common/ ./common
 COPY risk/src/ ./src
 COPY risk/tests/ ./tests
 
-COPY risk/.env ./
+COPY .env ./
 COPY risk/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
