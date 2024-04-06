@@ -9,7 +9,11 @@ from risk.src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
 from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
-from risk.src.schemas.risk_schemas import DailyVolNormalisedPriceForAssetClassSchema, Volatility
+from risk.src.schemas.risk_schemas import (
+    DailyVolNormalisedPriceForAssetClassSchema,
+    DailyVolNormalizedReturnsSchema,
+    Volatility,
+)
 
 
 class DailyVolNormalisedPriceForAssetClassService:
@@ -39,14 +43,14 @@ class DailyVolNormalisedPriceForAssetClassService:
                 ],
             )
             validated = DataFrame[DailyVolNormalisedPriceForAssetClassSchema](renamed)
-            # await self.repository.insert_dataframe_async(validated)
+            await self.repository.insert_dataframe_async(validated)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for asset '{asset}': {error}"
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    def daily_vol_normalised_price_for_asset_class_async(
+    def calculate_daily_vol_normalised_price_for_asset_class_async(
         self, returns_across_instruments_list: list[Series[Volatility]]
     ) -> Series[Volatility]:
         """ """
@@ -62,3 +66,5 @@ class DailyVolNormalisedPriceForAssetClassService:
             error_message = f"An error occurred during the processing: {error}"
             self.logger.error(error_message)
             raise ValueError(error_message)
+
+

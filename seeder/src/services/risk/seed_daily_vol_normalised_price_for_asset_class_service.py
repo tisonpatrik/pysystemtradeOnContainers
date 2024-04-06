@@ -1,3 +1,5 @@
+import time
+
 from pandera.errors import SchemaError
 
 from common.src.logging.logger import AppLogger
@@ -26,10 +28,6 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
         self.daily_vol_normalised_returns_service = daily_vol_normalised_returns_service
         self.prices_service = prices_service
 
-    # query = """SELECT date_time, symbol, normalized_volatility FROM daily_vol_normalized_returns"""
-    # df = pd.read_sql(query, engine)
-    # pivot_df = df.pivot_table(index='date_time', columns='symbol', values='normalized_volatility').reset_index()
-
     async def seed_daily_vol_normalised_price_for_asset_class_async(self):
         """Seed daily volatility normalised price for asset class."""
         try:
@@ -37,22 +35,23 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
                 "Starting the process for %s table.",
                 DailyVolNormalisedPriceForAssetClassModel.__tablename__,
             )
+            start_time = time.time()
             assets = await self.instrument_config_service.get_asset_classes_async()
             for asset in assets:
-                symbols = await self.instrument_config_service.get_instruments_by_asset_class_async(asset)
-                aggregate_returns_across_instruments_list = []
-                for symbol in symbols:
-                    prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
-                    normalised_returns = (
-                        self.daily_vol_normalised_returns_service.calculate_daily_vol_normalised_returns_async(prices)
-                    )
-                    aggregate_returns_across_instruments_list.append(normalised_returns)
-                vol_normalised_price = self.daily_vol_normalised_price_for_asset_class_service.daily_vol_normalised_price_for_asset_class_async(
-                    aggregate_returns_across_instruments_list
+                aggregate_returns_across_instruments_list = await self.daily_vol_normalised_returns_service.get_daily_vol_normalised_returns_for_instruments_async(
+                    asset.asset_class
                 )
-                await self.daily_vol_normalised_price_for_asset_class_service.insert_daily_vol_normalised_price_for_asset_class_async(
-                    vol_normalised_price, asset.asset_class
-                )
+                # pivot_df = df.pivot_table(index='date_time', columns='symbol', values='normalized_volatility').reset_index()
+                # vol_normalised_price = self.daily_vol_normalised_price_for_asset_class_service.calculate_daily_vol_normalised_price_for_asset_class_async(
+                #     aggregate_returns_across_instruments_list
+                # )
+                # await self.daily_vol_normalised_price_for_asset_class_service.insert_daily_vol_normalised_price_for_asset_class_async(
+                #     vol_normalised_price, asset.asset_class
+
+            end_time = time.time()
+            print(
+                f"Time taken to seed {DailyVolNormalisedPriceForAssetClassModel.__tablename__}: {end_time - start_time}"
+            )
             self.logger.info(
                 f"Successfully inserted {DailyVolNormalisedPriceForAssetClassModel.__name__} calculations for {len(assets)} assets."
             )

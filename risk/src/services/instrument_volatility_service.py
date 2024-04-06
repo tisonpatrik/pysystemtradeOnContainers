@@ -32,7 +32,7 @@ class InstrumentVolService:
                 ],
             )
             validated = DataFrame[InstrumentVolatilitySchema](renamed)
-            # await self.repository.insert_dataframe_async(validated)
+            await self.repository.insert_dataframe_async(validated)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"
