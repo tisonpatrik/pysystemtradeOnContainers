@@ -50,7 +50,7 @@ class DailyVolNormalisedPriceForAssetClassService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    def calculate_daily_vol_normalised_price_for_asset_class_async(
+    def calculate_daily_vol_normalised_price_for_asset_class(
         self, returns_across_instruments_list: DataFrame[DailyVolNormalizedReturnsSchema]
     ) -> Series[Volatility]:
         """ """

@@ -46,7 +46,7 @@ class DailyReturnsVolService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    def calculate_daily_returns_vol_async(self, prices) -> Series[Volatility]:
+    def calculate_daily_returns_vol(self, prices) -> Series[Volatility]:
         """
         Calculates and inserts daily returns volatility for given prices.
         """

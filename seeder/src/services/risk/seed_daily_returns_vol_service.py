@@ -33,7 +33,7 @@ class SeedDailyReturnsVolService:
             instruments = await self.instrument_config_service.get_list_of_instruments_async()
             for symbol in instruments:
                 prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
-                daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol_async(prices)
+                daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(prices)
                 await self.daily_returns_vol_service.insert_daily_returns_vol_async(daily_returns_vol, symbol.symbol)
 
             self.logger.info(

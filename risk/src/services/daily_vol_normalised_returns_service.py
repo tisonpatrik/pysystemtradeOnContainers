@@ -39,7 +39,7 @@ class DailyVolatilityNormalisedReturnsService:
             self.logger.error(error_message)
             raise ValueError(error_message)
 
-    def calculate_daily_vol_normalised_returns_async(self, daily_prices) -> Series[Volatility]:
+    def calculate_daily_vol_normalised_returns(self, daily_prices) -> Series[Volatility]:
         """ """
         try:
             daily_returns_vols = self.estimator.get_daily_vol_normalised_returns(daily_prices)

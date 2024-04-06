@@ -38,7 +38,7 @@ class SeedDailyVolNormalisedPriceForAssetClassService:
                 aggregate_returns_across_instruments_list = await self.daily_vol_normalised_returns_service.get_daily_vol_normalised_returns_for_instruments_async(
                     asset.asset_class
                 )
-                vol_normalised_price = self.daily_vol_normalised_price_for_asset_class_service.calculate_daily_vol_normalised_price_for_asset_class_async(
+                vol_normalised_price = self.daily_vol_normalised_price_for_asset_class_service.calculate_daily_vol_normalised_price_for_asset_class(
                     aggregate_returns_across_instruments_list
                 )
                 await self.daily_vol_normalised_price_for_asset_class_service.insert_daily_vol_normalised_price_for_asset_class_async(

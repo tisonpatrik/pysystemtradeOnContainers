@@ -32,7 +32,7 @@ class SeedDailyVolNormalisedReturnsService:
             for symbol in instruments:
                 prices = await self.prices_service.get_daily_prices_async(symbol.symbol)
                 daily_vol_normalised_returns = (
-                    self.daily_vol_normalised_returns_service.calculate_daily_vol_normalised_returns_async(prices)
+                    self.daily_vol_normalised_returns_service.calculate_daily_vol_normalised_returns(prices)
                 )
                 await self.daily_vol_normalised_returns_service.insert_daily_vol_normalised_returns_for_prices_async(
                     daily_vol_normalised_returns, symbol.symbol
