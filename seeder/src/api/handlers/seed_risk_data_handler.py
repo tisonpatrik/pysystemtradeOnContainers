@@ -36,9 +36,9 @@ class SeedRiskDataHandler:
         """
         self.logger.info("Data processing for risk calculations has started")
         models = [
-            # DailyReturnsVolModel,
-            # InstrumentVolModel,
-            # DailyVolNormalizedReturnsModel,
+            DailyReturnsVolModel,
+            InstrumentVolModel,
+            DailyVolNormalizedReturnsModel,
             DailyVolNormalisedPriceForAssetClassModel,
         ]
         for model in models:
