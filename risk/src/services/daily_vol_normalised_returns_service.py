@@ -53,14 +53,14 @@ class DailyVolatilityNormalisedReturnsService:
 
     async def get_daily_vol_normalised_returns_for_instruments_async(
         self, asset: str
-    ) -> Series[DailyVolNormalizedReturnsSchema]:
+    ) -> DataFrame[DailyVolNormalizedReturnsSchema]:
         """ """
         try:
             query = "SELECT drvm.date_time, drvm.symbol, drvm.vol_normalized_returns FROM daily_vol_normalized_returns AS drvm JOIN instrument_config AS icm ON drvm.symbol = icm.symbol WHERE icm.asset_class = $1;"
             statement = Statement(query=query, parameters=asset)
             record_dicts = await self.repository.fetch_many_async(statement)
             df = pd.DataFrame(record_dicts)
-            return Series[DailyVolNormalizedReturnsSchema](df)
+            return DataFrame[DailyVolNormalizedReturnsSchema](df)
 
         except Exception as error:
             error_message = f"An error occurred during the processing: {error}"
