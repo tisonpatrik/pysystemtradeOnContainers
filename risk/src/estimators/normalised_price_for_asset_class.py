@@ -12,10 +12,8 @@ class NormalisedPriceForAssetClass:
         Aligns and forward-fills the normalised price series with the cumulative
         normalised price index to calculate daily volatility-normalised returns for an asset class.
         """
-        normalised_price_for_asset_class_aligned = (
-            normalised_price_for_asset_class.reindex(
-                index=instrument_cumulative_normalised_price.index
-            ).ffill()
-        )
+        normalised_price_for_asset_class_aligned = normalised_price_for_asset_class.reindex(
+            index=instrument_cumulative_normalised_price.index
+        ).ffill()
 
         return normalised_price_for_asset_class_aligned

@@ -10,12 +10,9 @@ WORKDIR /home/app
 
 COPY common/ ./common
 
-COPY raw_data/src/ ./src
-COPY raw_data/tests/ ./tests
-
+COPY raw_data ./raw_data
 COPY .env ./
-COPY raw_data/requirements.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r raw_data/requirements.txt
 
-CMD ["uvicorn", "src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "raw_data.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

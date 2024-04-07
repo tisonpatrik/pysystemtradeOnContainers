@@ -1,20 +1,20 @@
 services:
-  # seeder:
-  #   build:
-  #     context: .
-  #     dockerfile: seeder/Dockerfile
-  #   hostname: seeder
-  #   container_name: seeder
-  #   depends_on:
-  #     - db_postgres
-  #   ports:
-  #     - "7999:8000"
-  #   volumes:
-  #     - ./seeder/src:/home/app/src
-  #     - ./common:/home/app/common
-  #     - ./risk:/home/app/risk
-  #     - ./raw_data:/home/app/raw_data
-  #     - /home/patrik/repos/pysystemtrade_preprocessing/data:/path/in/container:rw
+  seeder:
+    build:
+      context: .
+      dockerfile: seeder/Dockerfile
+    hostname: seeder
+    container_name: seeder
+    depends_on:
+      - db_postgres
+    ports:
+      - "7999:8000"
+    volumes:
+      - ./seeder/src:/home/app/src
+      - ./common:/home/app/common
+      - ./risk:/home/app/risk
+      - ./raw_data:/home/app/raw_data
+      - /home/patrik/repos/pysystemtrade_preprocessing/data:/path/in/container:rw
 
   raw_data:
     build:
@@ -27,7 +27,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./raw_data/src:/home/app/src
+      - ./raw_data:/home/app/raw_data
       - ./common:/home/app/common
   risk:
     build:
@@ -37,6 +37,7 @@ services:
     container_name: risk
     depends_on:
       - db_postgres
+      - raw_data
     ports:
       - "8001:8000"
     volumes:

@@ -1,11 +1,3 @@
-from pathlib import Path
-
-# project_root = Path(__file__).resolve().parent.parent.parent.parent
-# repos_dir = project_root.parent
-
-# path = repos_dir / "pysystemtrade_preprocessing" / "data" / "csvconfig"
-# path = str(path)
-
 
 class InstrumentConfigConfig:
     tablename: str = "instrument_config"
