@@ -14,7 +14,7 @@ async def test_route(symbol: str, request: Request):
 
     try:
         # Replace "risk:8000" with the appropriate service name and port as defined in your docker-compose.yml
-        response = await requests_client.get(f"http://risk:8000/fx_prices_route/{symbol}/")
+        response = await requests_client.get(f"http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol/{symbol}/")
 
         # Check if the response status is OKsymbol
         if response.status_code == 200:

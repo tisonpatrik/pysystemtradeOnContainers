@@ -18,7 +18,7 @@ class FxRateResponse(BaseModel):
 
 
 @router.get(
-    "/fx_prices_route/{symbol}/",
+    "/get_fx_rate_by_symbol/{symbol}/",
     status_code=status.HTTP_200_OK,
     name="Get Config Data",
 )
