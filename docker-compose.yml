@@ -41,7 +41,7 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - ./risk/src:/home/app/src
+      - ./risk:/home/app/risk
       - ./common:/home/app/common
 
   db_postgres:

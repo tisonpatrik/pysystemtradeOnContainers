@@ -10,12 +10,9 @@ WORKDIR /home/app
 
 COPY common/ ./common
 
-COPY risk/src/ ./src
-COPY risk/tests/ ./tests
-
+COPY risk/ ./risk
 COPY .env ./
-COPY risk/requirements.txt ./
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r risk/requirements.txt
 
-CMD ["uvicorn", "src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "risk.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

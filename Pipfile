@@ -17,6 +17,7 @@ sqlmodel = "*"
 alembic = "*"
 pandera = "*"
 asyncpg = "*"
+httpx = "*"
 
 [dev-packages]
 

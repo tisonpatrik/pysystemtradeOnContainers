@@ -1,19 +1,10 @@
-"""
-Main entry point for the FastAPI application.
-"""
-
 from fastapi import FastAPI
 
+from common.src.dependencies.app_dependencies import app_lifespan
 from common.src.logging.logger import AppLogger
+from risk.src.api.routers.instrument_volatility_route import router as instrument_vol_route
 
+app = FastAPI(lifespan=app_lifespan)
+
+app.include_router(instrument_vol_route, prefix="/instrument_volatility_route")
 logger = AppLogger.get_instance().get_logger()
-
-app = FastAPI()
-
-
-@app.get("/")
-async def root():
-    """
-    Root endpoint returning a ping response.
-    """
-    return {"Ping": "Pong!"}
