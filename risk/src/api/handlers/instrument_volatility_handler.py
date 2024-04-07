@@ -1,17 +1,22 @@
+import httpx
+from fastapi import HTTPException
+
 from common.src.logging.logger import AppLogger
 
 
-class InstrumenmtVolatilityHandler:
-    def __init__(self):
+class InstrumentVolHandler:
+    def __init__(self, requests_client: httpx.AsyncClient) -> None:
         self.logger = AppLogger.get_instance().get_logger()
+        self.requests_client = requests_client
 
-    async def get_instrument_vol_for_symbol_async(self, instrument_code: str):
-        return "hello"
-        # instr_ccy_vol = self.get_instrument_currency_vol(instrument_code)
-        # fx_rate = self.get_fx_rate(instrument_code)
-
-        # fx_rate = fx_rate.reindex(instr_ccy_vol.index, method="ffill")
-
-        # instr_value_vol = instr_ccy_vol.ffill() * fx_rate
-
-        # return instr_value_vol
+    async def get_instrument_vol_for_symbol_async(self, symbol: str) -> dict:
+        try:
+            response = await self.requests_client.get(
+                f"http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol/{symbol}/"
+            )
+            response.raise_for_status()
+            return response.json()
+        except httpx.RequestError as e:
+            raise HTTPException(status_code=400, detail=f"Unable to reach the service, details: {str(e)}")
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(status_code=e.response.status_code, detail="Failed to fetch data")
