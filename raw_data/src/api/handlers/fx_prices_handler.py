@@ -17,7 +17,4 @@ class FxPricesHandler:
         query = "SELECT currency FROM instrument_config WHERE symbol = $1"
         statement = Statement(query=query, parameters=symbol.symbol)
         instrument_currency = await self.instrument_config_repository.fetch_item_async(statement)
-        print(instrument_currency)
-        return symbol
-
-        # fx_prices = await self.fx_prices_repository.fetch_many_async(statement)
+        return instrument_currency

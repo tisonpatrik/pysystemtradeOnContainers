@@ -14,9 +14,9 @@ class SymbolQuery(BaseModel):
     symbol: Annotated[str, StringConstraints(max_length=10)]
 
 
-@router.get("/get_instrument_vol_by_symbol/", status_code=status.HTTP_200_OK, name="test_route")
+@router.get("/get_instrument_vol_by_symbol/", status_code=status.HTTP_200_OK, name="get_instrument_vol_by_symbol")
 async def get_instrument_vol_by_symbol(
-    query: SymbolQuery = Depends(),  # Use Depends to inject the query parameters validated by Pydantic
+    query: SymbolQuery = Depends(),
     instrument_vol_handler: InstrumentVolHandler = Depends(get_instrument_vol_handler),
 ):
     try:
