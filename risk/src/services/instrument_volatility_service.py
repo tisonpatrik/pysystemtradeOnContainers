@@ -5,12 +5,11 @@ from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
 from risk.src.estimators.instrument_volatility import InstrumentVolEstimator
-from risk.src.models.risk_models import InstrumentVolModel
 from risk.src.schemas.risk_schemas import InstrumentVolatilitySchema, Volatility
 
 
 class InstrumentVolService:
-    def __init__(self, repository: Repository[InstrumentVolModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = InstrumentVolEstimator()

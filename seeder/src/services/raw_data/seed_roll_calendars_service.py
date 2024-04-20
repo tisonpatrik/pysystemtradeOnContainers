@@ -10,7 +10,7 @@ from raw_data.src.schemas.raw_data_schemas import RollCalendarsSchema
 
 class SeedRollCalendarsService:
 
-    def __init__(self, repository: Repository[RollCalendarsModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 

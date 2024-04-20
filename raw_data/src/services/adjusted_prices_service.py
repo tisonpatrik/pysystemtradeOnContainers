@@ -9,7 +9,6 @@ from common.src.database.repository import Repository
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
-from raw_data.src.models.raw_data_models import AdjustedPricesModel
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema, DailyPricesSchema
 
 
@@ -18,7 +17,7 @@ class AdjustedPricesService:
     Service for dealing with operations related to adjusted prices.
     """
 
-    def __init__(self, repository: Repository[AdjustedPricesModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.time_column = AdjustedPricesSchema.date_time
         self.price_column = AdjustedPricesSchema.price
@@ -30,7 +29,7 @@ class AdjustedPricesService:
         """
         try:
             query = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
-            statement = Statement(query=query, parameters=symbol)
+            statement = Statement("adjusted_prices", query=query, parameters=symbol)
             records = await self.repository.fetch_many_async(statement)
             data_frame = pd.DataFrame(records)
             series = convert_frame_to_series(data_frame, self.time_column, self.price_column)

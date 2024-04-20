@@ -1,4 +1,4 @@
-from typing import Any, Generic, Type, TypeVar
+from typing import Any
 
 import pandas as pd
 from asyncpg import Pool
@@ -7,13 +7,10 @@ from common.src.database.base_model import BaseModel
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 
-T = TypeVar("T", bound=BaseModel)
 
-
-class Repository(Generic[T]):
-    def __init__(self, pool: Pool, model: Type[T]):
+class Repository:
+    def __init__(self, pool: Pool):
         self.pool = pool
-        self.table = model.__tablename__
         self.logger = AppLogger.get_instance().get_logger()
 
     async def fetch_many_async(self, statement: Statement) -> list[dict[Any, Any]]:
@@ -25,7 +22,7 @@ class Repository(Generic[T]):
                     record_dicts = [dict(record) for record in records]
                     return record_dicts
         except Exception as e:
-            self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
+            self.logger.error(f"Failed to fetch data frrom '{statement.table_name}': {e}")
             raise e
 
     async def fetch_item_async(self, statement: Statement) -> dict[Any, Any]:
@@ -37,7 +34,7 @@ class Repository(Generic[T]):
                     record_dict = dict(record)
                     return record_dict
         except Exception as e:
-            self.logger.error(f"Failed to fetch data frrom '{self.table}': {e}")
+            self.logger.error(f"Failed to fetch data frrom '{statement.table_name}': {e}")
             raise e
 
     async def insert_dataframe_async(self, data: pd.DataFrame) -> None:
@@ -51,7 +48,7 @@ class Repository(Generic[T]):
             async with self.pool.acquire() as connectrion:
                 async with connectrion.transaction():
                     await connectrion.copy_records_to_table(
-                        table_name=self.table, records=records, columns=list(data.columns)
+                        # table_name=self.table, records=records, columns=list(data.columns)
                     )
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")

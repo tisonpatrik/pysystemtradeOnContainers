@@ -8,7 +8,6 @@ from common.src.utils.table_operations import add_column_and_populate_it_by_valu
 from risk.src.estimators.daily_vol_normalised_returns_for_asset_class import (
     DailyVolNormalisedPriceForAssetClassEstimator,
 )
-from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
 from risk.src.schemas.risk_schemas import (
     DailyVolNormalisedPriceForAssetClassSchema,
     DailyVolNormalizedReturnsSchema,
@@ -17,7 +16,7 @@ from risk.src.schemas.risk_schemas import (
 
 
 class DailyVolNormalisedPriceForAssetClassService:
-    def __init__(self, repository: Repository[DailyVolNormalisedPriceForAssetClassModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = DailyVolNormalisedPriceForAssetClassEstimator()

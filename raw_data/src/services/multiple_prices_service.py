@@ -5,7 +5,6 @@ from common.src.database.repository import Repository
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
-from raw_data.src.models.raw_data_models import MultiplePricesModel
 from raw_data.src.schemas.raw_data_schemas import DenominatorPricesSchema
 
 
@@ -14,7 +13,7 @@ class MultiplePricesService:
     Service for dealing with operations related to multiple prices.
     """
 
-    def __init__(self, repository: Repository[MultiplePricesModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 
@@ -24,7 +23,7 @@ class MultiplePricesService:
         """
         try:
             query = "SELECT price, date_time FROM multiple_prices WHERE symbol = $1 ORDER BY date_time"
-            statement = Statement(query=query, parameters=symbol)
+            statement = Statement("instrument_config", query=query, parameters=symbol)
             records = await self.repository.fetch_many_async(statement)
             data_frame = pd.DataFrame(records)
             series = convert_frame_to_series(

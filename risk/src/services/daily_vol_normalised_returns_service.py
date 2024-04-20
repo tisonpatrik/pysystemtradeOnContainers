@@ -7,12 +7,11 @@ from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
 from risk.src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
-from risk.src.models.risk_models import DailyVolNormalizedReturnsModel
 from risk.src.schemas.risk_schemas import DailyVolNormalizedReturnsSchema, Volatility
 
 
 class DailyVolatilityNormalisedReturnsService:
-    def __init__(self, repository: Repository[DailyVolNormalizedReturnsModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
         self.estimator = DailyVolNormalisedReturns()
@@ -57,7 +56,7 @@ class DailyVolatilityNormalisedReturnsService:
         """ """
         try:
             query = "SELECT drvm.date_time, drvm.symbol, drvm.vol_normalized_returns FROM daily_vol_normalized_returns AS drvm JOIN instrument_config AS icm ON drvm.symbol = icm.symbol WHERE icm.asset_class = $1;"
-            statement = Statement(query=query, parameters=asset)
+            statement = Statement("daily_vol_normalized_returns", query=query, parameters=asset)
             record_dicts = await self.repository.fetch_many_async(statement)
             df = pd.DataFrame(record_dicts)
             return DataFrame[DailyVolNormalizedReturnsSchema](df)

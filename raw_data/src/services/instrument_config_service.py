@@ -3,7 +3,7 @@ from pydantic import TypeAdapter
 from common.src.database.repository import Repository
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.instrument_config_models import AssetClass, Instrument, InstrumentConfigModel, PointSize
+from raw_data.src.models.instrument_config_models import AssetClass, Instrument, PointSize
 
 
 class InstrumentConfigService:
@@ -11,7 +11,7 @@ class InstrumentConfigService:
     Service for dealing with operations related to instrument config.
     """
 
-    def __init__(self, repository: Repository[InstrumentConfigModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 
@@ -19,7 +19,7 @@ class InstrumentConfigService:
         """Asynchronously fetch instrument consfig data."""
         try:
             query = "SELECT symbol FROM instrument_config"
-            statement = Statement(query, ())
+            statement = Statement("instrument_config", query, ())
             record_dicts = await self.repository.fetch_many_async(statement)
             instruments = TypeAdapter(list[Instrument]).validate_python(record_dicts)
             return instruments
@@ -32,7 +32,7 @@ class InstrumentConfigService:
         """Asynchronously fetch point size for given instrument."""
         try:
             query = "SELECT pointsize FROM instrument_config WHERE symbol = $1"
-            statement = Statement(query=query, parameters=symbol)
+            statement = Statement("instrument_config", query=query, parameters=symbol)
             record = await self.repository.fetch_item_async(statement)
             point_size = PointSize.model_validate(record)
             return point_size
@@ -45,7 +45,7 @@ class InstrumentConfigService:
         """Asynchronously fetch instruments by asset class."""
         try:
             query = "SELECT symbol FROM instrument_config WHERE asset_class = $1"
-            statement = Statement(query=query, parameters=asset_class.asset_class)
+            statement = Statement("instrument_config", query=query, parameters=asset_class.asset_class)
             record_dicts = await self.repository.fetch_many_async(statement)
             instruments = TypeAdapter(list[Instrument]).validate_python(record_dicts)
             return instruments
@@ -60,7 +60,7 @@ class InstrumentConfigService:
         """Asynchronously fetch asset classes."""
         try:
             query = "SELECT DISTINCT asset_class FROM instrument_config"
-            statement = Statement(query, ())
+            statement = Statement("instrument_config", query, ())
             record_dicts = await self.repository.fetch_many_async(statement)
             asset_classes = TypeAdapter(list[AssetClass]).validate_python(record_dicts)
             return asset_classes

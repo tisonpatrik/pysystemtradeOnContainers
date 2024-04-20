@@ -10,7 +10,7 @@ from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 
 class SeedAdjustedPricesService:
 
-    def __init__(self, repository: Repository[AdjustedPricesModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 

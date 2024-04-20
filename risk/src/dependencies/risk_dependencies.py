@@ -2,18 +2,6 @@ from fastapi import Depends, Request
 
 from common.src.database.repository import Repository
 from risk.src.api.handlers.instrument_volatility_handler import InstrumentVolHandler
-from risk.src.dependencies.risk_repositories import (
-    get_daily_returns_vol_repository,
-    get_daily_vol_normalised_price_for_asset_class_repository,
-    get_daily_vol_normalised_returns_repository,
-    get_instrument_vol_repository,
-)
-from risk.src.models.risk_models import (
-    DailyReturnsVolModel,
-    DailyVolNormalisedPriceForAssetClassModel,
-    DailyVolNormalizedReturnsModel,
-    InstrumentVolModel,
-)
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.daily_vol_normalised_price_for_asset_class_service import (
     DailyVolNormalisedPriceForAssetClassService,
@@ -22,8 +10,12 @@ from risk.src.services.daily_vol_normalised_returns_service import DailyVolatili
 from risk.src.services.instrument_volatility_service import InstrumentVolService
 
 
+def get_repository(request: Request) -> Repository:
+    return Repository(request.app.async_pool)
+
+
 def get_daily_returns_vol_service(
-    repository: Repository[DailyReturnsVolModel] = Depends(get_daily_returns_vol_repository),
+    repository: Repository = Depends(get_repository),
 ) -> DailyReturnsVolService:
     """
     Dependency injection method for DailyReturnsVolService.
@@ -32,7 +24,7 @@ def get_daily_returns_vol_service(
 
 
 def get_instrument_vol_service(
-    repository: Repository[InstrumentVolModel] = Depends(get_instrument_vol_repository),
+    repository: Repository = Depends(get_repository),
 ) -> InstrumentVolService:
     """
     Dependency injection method for AdjustedPricesService.
@@ -41,7 +33,7 @@ def get_instrument_vol_service(
 
 
 def get_daily_vol_normalised_returns_service(
-    repository: Repository[DailyVolNormalizedReturnsModel] = Depends(get_daily_vol_normalised_returns_repository),
+    repository: Repository = Depends(get_repository),
 ) -> DailyVolatilityNormalisedReturnsService:
     """
     Dependency injection method for DailyVolatilityNormalisedReturnsService.
@@ -50,9 +42,7 @@ def get_daily_vol_normalised_returns_service(
 
 
 def get_daily_vol_normalised_price_for_asset_class_service(
-    repository: Repository[DailyVolNormalisedPriceForAssetClassModel] = Depends(
-        get_daily_vol_normalised_price_for_asset_class_repository
-    ),
+    repository: Repository = Depends(get_repository),
 ) -> DailyVolNormalisedPriceForAssetClassService:
     """
     Dependency injection method for DailyVolNormalisedPriceForAssetClassService.
@@ -60,5 +50,5 @@ def get_daily_vol_normalised_price_for_asset_class_service(
     return DailyVolNormalisedPriceForAssetClassService(repository=repository)
 
 
-async def get_instrument_vol_handler(request: Request) -> InstrumentVolHandler:
-    return InstrumentVolHandler(requests_client=request.app.state.requests_client)
+async def get_instrument_vol_handler(repository: Repository = Depends(get_repository)) -> InstrumentVolHandler:
+    return InstrumentVolHandler(repository=repository)

@@ -10,7 +10,7 @@ class RollConfigSeedService:
     Service for seeding instrument config data.
     """
 
-    def __init__(self, repository: Repository[RollConfigModel]):
+    def __init__(self, repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 
