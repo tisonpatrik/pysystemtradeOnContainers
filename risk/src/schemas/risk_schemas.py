@@ -1,16 +1,27 @@
 from datetime import datetime
 
-import pandera as pa
-from pandera.typing import Series
+from pandera import Check, DataFrameModel, Field
+from pandera.dtypes import Timestamp
+from pandera.typing import Index, Series
 
 
-class DailyReturnsVolatilitySchema(pa.DataFrameModel):
+class DailyReturnsVolatilitySchema(DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = pa.Field(nullable=False)
+    symbol: Series[str] = Field(nullable=False)
     vol_returns: Series[float]
 
 
-class Volatility(pa.DataFrameModel):
+class CumulativeVolNormalizedReturnsSchema(DataFrameModel):
+    date_time: Index[Timestamp] = Field(coerce=True)
+    cum_vol_norm_returns: Series[float] = Field(nullable=True)
+
+    class Config:
+        strict = True
+        drop_invalid_rows = True
+        checks = [Check(lambda x: x >= 0)]
+
+
+class Volatility(DataFrameModel):
     date_time: Series[datetime]
     volatility: Series[float]
 
@@ -18,19 +29,18 @@ class Volatility(pa.DataFrameModel):
         drop_invalid_rows = True
 
 
-class InstrumentVolatilitySchema(pa.DataFrameModel):
+class InstrumentVolatilitySchema(DataFrameModel):
     date_time: Series[datetime]
-    symbol: Series[str] = pa.Field(nullable=False)
+    symbol: Series[str] = Field(nullable=False)
     instrument_volatility: Series[float]
 
 
-class DailyVolNormalizedReturnsSchema(pa.DataFrameModel):
-    date_time: Series[datetime]
-    symbol: Series[str] = pa.Field(nullable=False)
-    vol_normalized_returns: Series[float]
+class DailyVolNormalizedReturnsSchema(DataFrameModel):
+    date_time: Index[Timestamp] = Field(coerce=True)
+    vol_normalized_returns: Series[float] = Field(nullable=True)
 
 
-class DailyVolNormalisedPriceForAssetClassSchema(pa.DataFrameModel):
+class DailyVolNormalisedPriceForAssetClassSchema(DataFrameModel):
     date_time: Series[datetime]
-    asset_class: Series[str] = pa.Field(nullable=False)
+    asset_class: Series[str] = Field(nullable=False)
     vol_normalized_price_for_asset: Series[float]

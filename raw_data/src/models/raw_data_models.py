@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlmodel import Field
 
-from common.src.database.base_model import BaseModel
+from common.src.models.base_model import BaseModel
 
 
 class AdjustedPricesModel(BaseModel, table=True):

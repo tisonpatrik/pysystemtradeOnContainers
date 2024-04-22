@@ -1,4 +1,3 @@
-import pandas as pd
 from pandera.typing import DataFrame, Series
 
 from common.src.database.repository import Repository
@@ -56,7 +55,7 @@ class DailyVolNormalisedPriceForAssetClassService:
         try:
             pivot_df = returns_across_instruments_list.pivot(
                 index=DailyVolNormalizedReturnsSchema.date_time,
-                columns=DailyVolNormalizedReturnsSchema.symbol,
+                columns="symbol",
                 values=DailyVolNormalizedReturnsSchema.vol_normalized_returns,
             )
 

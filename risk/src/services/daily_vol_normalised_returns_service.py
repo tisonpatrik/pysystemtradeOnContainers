@@ -21,13 +21,13 @@ class DailyVolatilityNormalisedReturnsService:
         try:
 
             framed = convert_series_to_frame(volatility)
-            populated = add_column_and_populate_it_by_value(framed, DailyVolNormalizedReturnsSchema.symbol, symbol)
+            populated = add_column_and_populate_it_by_value(framed, "symbol", symbol)
             renamed = rename_columns(
                 populated,
                 [
                     DailyVolNormalizedReturnsSchema.date_time,
                     DailyVolNormalizedReturnsSchema.vol_normalized_returns,
-                    DailyVolNormalizedReturnsSchema.symbol,
+                    "symbol",
                 ],
             )
             validated = DataFrame[DailyVolNormalizedReturnsSchema](renamed)

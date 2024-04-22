@@ -3,6 +3,7 @@ import pandas as pd
 from common.src.database.repository import Repository
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
+from risk.src.api.models.queries import AvaragePositionQuery
 
 
 class InstrumentVolHandler:
@@ -10,14 +11,15 @@ class InstrumentVolHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 
-    async def get_instrument_vol_for_symbol_async(self, symbol: str, base_curency: str) -> pd.Series:
+    async def get_instrument_vol_for_symbol_async(self, postition_query: AvaragePositionQuery) -> pd.Series:
         query = "SELECT date_time, instrument_volatility FROM instrument_volatility WHERE symbol = $1"
-        statement = Statement(table_name="instrument_volatility", query=query, parameters=symbol)
+        statement = Statement(table_name="instrument_volatility", query=query, parameters=postition_query.symbol)
         instrument_volatility = await self.repository.fetch_many_async(statement)
         df = pd.DataFrame(instrument_volatility)
-        series = pd.Series(data=df["instrument_volatility"].values, index=pd.to_datetime(df["date_time"]))
-
-        return series
+        instr_value_vol = pd.Series(data=df["instrument_volatility"].values, index=pd.to_datetime(df["date_time"]))
+        vol_scalar = postition_query.annual_cash_vol_target / instr_value_vol
+        print(instr_value_vol.tail())
+        return vol_scalar
 
         # instr_ccy_vol = self.get_instrument_currency_vol(symbol)
         # fx_rate = self.get_fx_rate(symbol)

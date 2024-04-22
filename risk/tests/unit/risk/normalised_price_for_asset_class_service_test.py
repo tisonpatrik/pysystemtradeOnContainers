@@ -1,21 +1,18 @@
 import pandas as pd
-from src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
+
+from risk.src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
 
 
 def load_csv_data(filename):
-    filepath = f"data_management/tests/test_data/{filename}.csv"
+    filepath = f"risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath, index_col="index")
     return pd.Series(data["price"], name="price")
 
 
 def test_normalised_price_for_asset_class():
     # Load input and expected data
-    instrument_cumulative_normalised_prices = load_csv_data(
-        "exptected_cum_norm_returns"
-    )
-    normalised_price_for_asset_class = load_csv_data(
-        "expected_daily_vol_normalised_returns_for_list_of_instruments"
-    )
+    instrument_cumulative_normalised_prices = load_csv_data("exptected_cum_norm_returns")
+    normalised_price_for_asset_class = load_csv_data("expected_daily_vol_normalised_returns_for_list_of_instruments")
     expected = load_csv_data("expected_normalised_price_for_asset_class_aligned")
 
     estimator = NormalisedPriceForAssetClass()

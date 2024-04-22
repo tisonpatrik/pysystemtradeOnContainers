@@ -1,24 +1,27 @@
-from pandera.typing import Series
+import pandas as pd
+from pandera.typing import DataFrame
 
 from common.src.logging.logger import AppLogger
-from risk.src.estimators.comulative_vol_normalised_returns import CumulativeVolNormalisedReturns
-from risk.src.schemas.risk_schemas import DailyVolNormalizedReturnsSchema, Volatility
+from risk.src.schemas.risk_schemas import CumulativeVolNormalizedReturnsSchema, DailyVolNormalizedReturnsSchema
 
 
 class CumulativeDailyVolatilityNormalisedReturnsService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
-        self.estimator = CumulativeVolNormalisedReturns()
+        self.validator = CumulativeVolNormalizedReturnsSchema
 
-    def calculate_cumulative_vol_for_prices(self, normalised_returns: Series[DailyVolNormalizedReturnsSchema]):
+    def calculate_cumulative_vol_for_prices(
+        self, daily_vol_normalised_returns: DataFrame[DailyVolNormalizedReturnsSchema]
+    ) -> DataFrame[CumulativeVolNormalizedReturnsSchema]:
         """
         Calculate cumulative returns volatility by symbol and returns them as Pandas Series.
         """
         try:
-            cumulative_normalised_returns = self.estimator.get_cumulative_daily_vol_normalised_returns(
-                normalised_returns
-            )
-            return Series[Volatility](cumulative_normalised_returns)
+            # SELECT id, hodnota, SUM(hodnota) OVER (ORDER BY id) AS cumsum FROM   tabulka;
+            cum_norm_returns = daily_vol_normalised_returns.cumsum()
+            df = pd.DataFrame(cum_norm_returns)
+            returns = CumulativeVolNormalizedReturnsSchema.validate(df)
+            return returns  # type: ignore
 
         except Exception as error:
             error_message = f"An error occurred during the processing: {error}"

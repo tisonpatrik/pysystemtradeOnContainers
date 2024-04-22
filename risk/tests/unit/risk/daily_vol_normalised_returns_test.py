@@ -1,9 +1,10 @@
 import pandas as pd
-from src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
+
+from risk.src.estimators.daily_vol_normalised_returns import DailyVolNormalisedReturns
 
 
 def load_csv_data(filename):
-    filepath = f"data_management/tests/test_data/{filename}.csv"
+    filepath = f"risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return pd.Series(data["price"])
 

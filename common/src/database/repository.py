@@ -3,7 +3,7 @@ from typing import Any
 import pandas as pd
 from asyncpg import Pool
 
-from common.src.database.base_model import BaseModel
+from common.src.models.base_model import BaseModel
 from common.src.database.statement import Statement
 from common.src.logging.logger import AppLogger
 

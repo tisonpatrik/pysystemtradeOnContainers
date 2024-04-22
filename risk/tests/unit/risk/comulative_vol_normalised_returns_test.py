@@ -1,25 +1,41 @@
 import pandas as pd
-from src.estimators.comulative_vol_normalised_returns import (
-    CumulativeVolNormalisedReturns,
+
+from risk.src.schemas.risk_schemas import CumulativeVolNormalizedReturnsSchema, DailyVolNormalizedReturnsSchema
+from risk.src.services.cumulative_daily_vol_normalised_returns_service import (
+    CumulativeDailyVolatilityNormalisedReturnsService,
 )
 
 
-def load_csv_data(filename):
-    filepath = f"data_management/tests/test_data/{filename}.csv"
+def load_input_data():
+    filepath = f"risk/tests/test_data/expected_norm_return.csv"
     data = pd.read_csv(filepath)
-    return pd.Series(data["price"])
+    data.columns = ["date_time", "vol_normalized_returns"]
+    data.set_index("date_time", inplace=True)
+    print(data.head())
+    return data
 
 
-def test_daily_returns():
+def load_expected_data():
+    filepath = f"risk/tests/test_data/exptected_cum_norm_returns.csv"
+    data = pd.read_csv(filepath)
+    data.columns = ["date_time", "cum_vol_norm_returns"]
+    data.set_index("date_time", inplace=True)
+    print(data.head())
+    return data
+
+
+def test_cumulative_vol_normalized_returns():
     # Load input and expected data
-    input = load_csv_data("expected_norm_return")
-    expected = load_csv_data("exptected_cum_norm_returns")
+    input = load_input_data()
+    input_schema = DailyVolNormalizedReturnsSchema.validate(input)
+    expected = load_expected_data()
+    expected_schema = CumulativeVolNormalizedReturnsSchema.validate(expected)
 
-    estimator = CumulativeVolNormalisedReturns()
-    calculated_vol = estimator.get_cumulative_daily_vol_normalised_returns(input)
-    pd.testing.assert_series_equal(
+    service = CumulativeDailyVolatilityNormalisedReturnsService()
+    calculated_vol = service.calculate_cumulative_vol_for_prices(input_schema)  # type: ignore
+    pd.testing.assert_frame_equal(
         calculated_vol,
-        expected,
+        expected_schema,  # type: ignore
         check_dtype=True,
         rtol=1e-5,
         atol=1e-5,
