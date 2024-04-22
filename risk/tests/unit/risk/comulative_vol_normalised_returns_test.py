@@ -10,8 +10,8 @@ def load_input_data():
     filepath = f"risk/tests/test_data/expected_norm_return.csv"
     data = pd.read_csv(filepath)
     data.columns = ["date_time", "vol_normalized_returns"]
+    data["date_time"] = pd.to_datetime(data["date_time"])
     data.set_index("date_time", inplace=True)
-    print(data.head())
     return data
 
 
@@ -19,8 +19,8 @@ def load_expected_data():
     filepath = f"risk/tests/test_data/exptected_cum_norm_returns.csv"
     data = pd.read_csv(filepath)
     data.columns = ["date_time", "cum_vol_norm_returns"]
+    data["date_time"] = pd.to_datetime(data["date_time"])
     data.set_index("date_time", inplace=True)
-    print(data.head())
     return data
 
 

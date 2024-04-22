@@ -19,8 +19,9 @@ class CumulativeDailyVolatilityNormalisedReturnsService:
         try:
             # SELECT id, hodnota, SUM(hodnota) OVER (ORDER BY id) AS cumsum FROM   tabulka;
             cum_norm_returns = daily_vol_normalised_returns.cumsum()
-            df = pd.DataFrame(cum_norm_returns)
-            returns = CumulativeVolNormalizedReturnsSchema.validate(df)
+            cum_vol_norm_returns = pd.DataFrame(cum_norm_returns)
+            cum_vol_norm_returns.columns = [CumulativeVolNormalizedReturnsSchema.cum_vol_norm_returns]
+            returns = CumulativeVolNormalizedReturnsSchema.validate(cum_vol_norm_returns)
             return returns  # type: ignore
 
         except Exception as error:
