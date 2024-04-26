@@ -12,8 +12,8 @@ class DailyReturnsVolModel(BaseModel, table=True, index=True):
     vol_returns: float
 
 
-class InstrumentVolModel(BaseModel, table=True):
-    __tablename__ = "instrument_volatility"
+class InstrumentCurrencyVolModel(BaseModel, table=True):
+    __tablename__ = "instrument_currency_volatility"
     date_time: datetime = Field(primary_key=True)
     symbol: str = Field(primary_key=True, foreign_key="instrument_config.symbol")
     instrument_volatility: float

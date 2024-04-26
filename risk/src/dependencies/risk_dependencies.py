@@ -7,7 +7,7 @@ from risk.src.services.daily_vol_normalised_price_for_asset_class_service import
     DailyVolNormalisedPriceForAssetClassService,
 )
 from risk.src.services.daily_vol_normalised_returns_service import DailyVolatilityNormalisedReturnsService
-from risk.src.services.instrument_volatility_service import InstrumentVolService
+from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
 
 def get_repository(request: Request) -> Repository:
@@ -25,11 +25,11 @@ def get_daily_returns_vol_service(
 
 def get_instrument_vol_service(
     repository: Repository = Depends(get_repository),
-) -> InstrumentVolService:
+) -> InstrumentCurrencyVolService:
     """
     Dependency injection method for AdjustedPricesService.
     """
-    return InstrumentVolService(repository=repository)
+    return InstrumentCurrencyVolService(repository=repository)
 
 
 def get_daily_vol_normalised_returns_service(

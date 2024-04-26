@@ -25,7 +25,7 @@ from risk.src.services.daily_vol_normalised_price_for_asset_class_service import
     DailyVolNormalisedPriceForAssetClassService,
 )
 from risk.src.services.daily_vol_normalised_returns_service import DailyVolatilityNormalisedReturnsService
-from risk.src.services.instrument_volatility_service import InstrumentVolService
+from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
 
 def get_seed_daily_returns_vol_service(
@@ -47,7 +47,7 @@ def get_seed_instrument_vol_service(
     daily_returns_vol_service: DailyReturnsVolService = Depends(get_daily_returns_vol_service),
     instrument_config_service: InstrumentConfigService = Depends(get_instrument_config_service),
     multiple_prices_service: MultiplePricesService = Depends(get_multiple_prices_service),
-    instrument_vol_service: InstrumentVolService = Depends(get_instrument_vol_service),
+    instrument_vol_service: InstrumentCurrencyVolService = Depends(get_instrument_vol_service),
 ) -> SeedInstrumentVolService:
     """
     Dependency injection method for InstrumentVolSeedService.

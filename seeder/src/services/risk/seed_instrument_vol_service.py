@@ -3,9 +3,9 @@ from pandera.errors import SchemaError
 from common.src.logging.logger import AppLogger
 from raw_data.src.services.instrument_config_service import InstrumentConfigService
 from raw_data.src.services.multiple_prices_service import MultiplePricesService
-from risk.src.models.risk_models import InstrumentVolModel
+from risk.src.models.risk_models import InstrumentCurrencyVolModel
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
-from risk.src.services.instrument_volatility_service import InstrumentVolService
+from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
 
 class SeedInstrumentVolService:
@@ -14,7 +14,7 @@ class SeedInstrumentVolService:
         instrument_config_service: InstrumentConfigService,
         daily_returns_vol_service: DailyReturnsVolService,
         multiple_prices_service: MultiplePricesService,
-        instrument_vol_service: InstrumentVolService,
+        instrument_vol_service: InstrumentCurrencyVolService,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_config_service = instrument_config_service
@@ -29,7 +29,7 @@ class SeedInstrumentVolService:
         try:
             self.logger.info(
                 "Starting the process for %s table.",
-                InstrumentVolModel.__tablename__,
+                InstrumentCurrencyVolModel.__tablename__,
             )
             instruments = await self.instrument_config_service.get_list_of_instruments_async()
             for symbol in instruments:
@@ -41,7 +41,7 @@ class SeedInstrumentVolService:
                 )
                 await self.instrument_vol_service.insert_instrument_vol_async(instument_vols, symbol.symbol)
             self.logger.info(
-                f"Successfully inserted {InstrumentVolModel.__name__} calculations for {len(instruments)} instruments."
+                f"Successfully inserted {InstrumentCurrencyVolModel.__name__} calculations for {len(instruments)} instruments."
             )
 
         except SchemaError as schema_exc:

@@ -21,7 +21,7 @@ async def get_average_position_at_subsystem_level(
 ):
     try:
         instr_value_vol = await instrument_vol_handler.get_instrument_vol_for_symbol_async(query)
-        return instr_value_vol.tail()
+        return instr_value_vol
     except HTTPException as e:
         logger.error(
             f"An error occurred while trying to fetch instrument volatility for symbol {query.symbol}. Error: {e.detail}"
