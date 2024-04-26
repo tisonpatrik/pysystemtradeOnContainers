@@ -24,8 +24,16 @@ class InstrumentVolHandler:
             raise e
 
     async def _fetch_instrument_volatility(self, position_query: AvaragePositionQuery) -> list:
-        query = "SELECT date_time, instrument_volatility FROM instrument_volatility WHERE symbol = $1"
-        statement = FetchStatement(query=query, parameters=(position_query.symbol))
+        # Using Pandera schema to get column names dynamically and safely
+        date_time = InstrumentVol.date_time
+        instrument_volatility = InstrumentVol.instrument_volatility
+
+        query = f"""
+            SELECT {date_time}, {instrument_volatility}
+            FROM instrument_volatility
+            WHERE symbol = $1
+        """
+        statement = FetchStatement(query=query, parameters=(position_query.symbol,))
         return await self.repository.fetch_many_async(statement)
 
     def _create_volatility_series(self, instrument_volatility: list) -> pd.Series:
