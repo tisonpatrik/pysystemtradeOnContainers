@@ -1,4 +1,4 @@
-from pandera import Check, DataFrameModel, Field
+from pandera import DataFrameModel, Field
 from pandera.dtypes import Timestamp
 from pandera.typing import Index, Series
 
