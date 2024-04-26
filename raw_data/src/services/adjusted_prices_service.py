@@ -6,7 +6,7 @@ import pandas as pd
 from pandera.typing import Series
 
 from common.src.database.repository import Repository
-from common.src.database.statement import Statement
+from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema, DailyPricesSchema
@@ -29,7 +29,7 @@ class AdjustedPricesService:
         """
         try:
             query = "SELECT price, date_time FROM adjusted_prices WHERE symbol = $1 ORDER BY date_time"
-            statement = Statement("adjusted_prices", query=query, parameters=symbol)
+            statement = FetchStatement(query=query, parameters=symbol)
             records = await self.repository.fetch_many_async(statement)
             data_frame = pd.DataFrame(records)
             series = convert_frame_to_series(data_frame, self.time_column, self.price_column)

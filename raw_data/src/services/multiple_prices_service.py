@@ -2,7 +2,7 @@ import pandas as pd
 from pandera.typing import Series
 
 from common.src.database.repository import Repository
-from common.src.database.statement import Statement
+from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_frame_to_series
 from raw_data.src.schemas.raw_data_schemas import DenominatorPricesSchema
@@ -23,7 +23,7 @@ class MultiplePricesService:
         """
         try:
             query = "SELECT price, date_time FROM multiple_prices WHERE symbol = $1 ORDER BY date_time"
-            statement = Statement("instrument_config", query=query, parameters=symbol)
+            statement = FetchStatement(query=query, parameters=symbol)
             records = await self.repository.fetch_many_async(statement)
             data_frame = pd.DataFrame(records)
             series = convert_frame_to_series(

@@ -3,6 +3,7 @@
 from pandera.typing import DataFrame, Series
 
 from common.src.database.repository import Repository
+from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
@@ -37,8 +38,8 @@ class DailyReturnsVolService:
                 ],
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
-            print(validated)
-            await self.repository.insert_dataframe_async(validated)
+            statement = InsertStatement(table_name="daily_returns_volatility", data=validated)
+            await self.repository.insert_dataframe_async(statement)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"

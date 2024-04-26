@@ -1,6 +1,7 @@
 import pandas as pd
 
 from common.src.database.repository import Repository
+from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.instrument_config_models import InstrumentConfigModel
 
@@ -19,4 +20,5 @@ class InstrumentConfigSeedService:
         Seed instrument config data.
         """
         self.logger.info(f"Seeding {InstrumentConfigModel.__tablename__} data: ")
-        await self.repository.insert_dataframe_async(raw_data)
+        statement = InsertStatement(table_name=InstrumentConfigModel.__tablename__, data=raw_data)
+        await self.repository.insert_dataframe_async(statement)

@@ -2,7 +2,8 @@ import pandas as pd
 from pandera.typing import DataFrame, Series
 
 from common.src.database.repository import Repository
-from common.src.database.statement import Statement
+from common.src.database.statements.fetch_statement import FetchStatement
+from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
 from common.src.utils.table_operations import add_column_and_populate_it_by_value, rename_columns
@@ -31,7 +32,8 @@ class DailyVolatilityNormalisedReturnsService:
                 ],
             )
             validated = DataFrame[DailyVolNormalizedReturnsSchema](renamed)
-            await self.repository.insert_dataframe_async(validated)
+            statement = InsertStatement(table_name="daily_vol_normalized_returns", data=validated)
+            await self.repository.insert_dataframe_async(statement)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"
@@ -56,7 +58,7 @@ class DailyVolatilityNormalisedReturnsService:
         """ """
         try:
             query = "SELECT drvm.date_time, drvm.symbol, drvm.vol_normalized_returns FROM daily_vol_normalized_returns AS drvm JOIN instrument_config AS icm ON drvm.symbol = icm.symbol WHERE icm.asset_class = $1;"
-            statement = Statement("daily_vol_normalized_returns", query=query, parameters=asset)
+            statement = FetchStatement(query=query, parameters=asset)
             record_dicts = await self.repository.fetch_many_async(statement)
             df = pd.DataFrame(record_dicts)
             return DataFrame[DailyVolNormalizedReturnsSchema](df)

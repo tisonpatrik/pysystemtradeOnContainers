@@ -3,6 +3,7 @@ from pandera.errors import SchemaError
 from pandera.typing import DataFrame
 
 from common.src.database.repository import Repository
+from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 from raw_data.src.models.raw_data_models import MultiplePricesModel
 from raw_data.src.schemas.raw_data_schemas import MultiplePricesSchema
@@ -19,7 +20,8 @@ class SeedMultiplePricesService:
             date_time = MultiplePricesSchema.date_time
             raw_data[date_time] = pd.to_datetime(raw_data[date_time])
             validated = DataFrame[MultiplePricesSchema](raw_data)
-            await self.repository.insert_dataframe_async(validated)
+            statement = InsertStatement(table_name=MultiplePricesModel.__tablename__, data=validated)
+            await self.repository.insert_dataframe_async(statement)
             self.logger.info(f"Successfully inserted {len(raw_data)} records into {MultiplePricesModel.__name__}.")
 
         except SchemaError as schema_exc:

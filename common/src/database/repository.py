@@ -1,10 +1,9 @@
 from typing import Any
 
-import pandas as pd
 from asyncpg import Pool
 
-from common.src.models.base_model import BaseModel
-from common.src.database.statement import Statement
+from common.src.database.statements.fetch_statement import FetchStatement
+from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 
 
@@ -13,42 +12,36 @@ class Repository:
         self.pool = pool
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def fetch_many_async(self, statement: Statement) -> list[dict[Any, Any]]:
+    async def fetch_many_async(self, statement: FetchStatement) -> list[dict[Any, Any]]:
         try:
-            async with self.pool.acquire() as connectrion:
-                async with connectrion.transaction():
-                    stmt = await connectrion.prepare(statement.query)
-                    records = await stmt.fetch(*statement.parameters)
-                    record_dicts = [dict(record) for record in records]
-                    return record_dicts
+            async with self.pool.acquire() as connection:
+                async with connection.transaction():
+                    prepared_stmt = await connection.prepare(statement.query)
+                    records = await prepared_stmt.fetch(*statement.parameters)
+                    return [dict(record) for record in records]
         except Exception as e:
-            self.logger.error(f"Failed to fetch data frrom '{statement.table_name}': {e}")
-            raise e
+            self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
+            raise
 
-    async def fetch_item_async(self, statement: Statement) -> dict[Any, Any]:
+    async def fetch_item_async(self, statement: FetchStatement) -> dict[Any, Any]:
         try:
-            async with self.pool.acquire() as connectrion:
-                async with connectrion.transaction():
-                    stmt = await connectrion.prepare(statement.query)
-                    record = await stmt.fetchrow(*statement.parameters)
-                    record_dict = dict(record)
-                    return record_dict
+            async with self.pool.acquire() as connection:
+                async with connection.transaction():
+                    prepared_stmt = await connection.prepare(statement.query)
+                    record = await prepared_stmt.fetchrow(*statement.parameters)
+                    return dict(record)
         except Exception as e:
-            self.logger.error(f"Failed to fetch data frrom '{statement.table_name}': {e}")
-            raise e
+            self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
+            raise
 
-    async def insert_dataframe_async(self, data: pd.DataFrame) -> None:
-        if data.empty:
-            self.logger.warning("Attempted to insert empty data list.")
-            return
-
-        records = data.to_numpy()
+    async def insert_dataframe_async(self, statement: InsertStatement) -> None:
+        records = statement.get_records()
+        columns = statement.get_columns()
+        table_name = statement.get_table_name()
 
         try:
             async with self.pool.acquire() as connectrion:
                 async with connectrion.transaction():
-                    await connectrion.copy_records_to_table(
-                        # table_name=self.table, records=records, columns=list(data.columns)
-                    )
+                    await connectrion.copy_records_to_table(table_name=table_name, records=records, columns=columns)
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")

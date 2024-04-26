@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.database.repository import Repository
-from common.src.database.statement import Statement
+from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 from risk.src.api.models.queries import AvaragePositionQuery
 
@@ -13,7 +13,7 @@ class InstrumentVolHandler:
 
     async def get_instrument_vol_for_symbol_async(self, postition_query: AvaragePositionQuery) -> pd.Series:
         query = "SELECT date_time, instrument_volatility FROM instrument_volatility WHERE symbol = $1"
-        statement = Statement(table_name="instrument_volatility", query=query, parameters=postition_query.symbol)
+        statement = FetchStatement(query=query, parameters=postition_query.symbol)
         instrument_volatility = await self.repository.fetch_many_async(statement)
         df = pd.DataFrame(instrument_volatility)
         instr_value_vol = pd.Series(data=df["instrument_volatility"].values, index=pd.to_datetime(df["date_time"]))
