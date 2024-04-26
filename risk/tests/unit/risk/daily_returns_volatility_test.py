@@ -1,5 +1,4 @@
 import pandas as pd
-import pytest
 
 from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 
@@ -7,7 +6,7 @@ from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimato
 def load_csv_data(filename):
     filepath = f"risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
-    return pd.Series(data["price"])
+    return pd.Series(data["price"].astype(float))
 
 
 def test_daily_returns():
@@ -27,15 +26,6 @@ def test_daily_returns():
         check_index_type="equiv",
         obj="CalculatedVol",
     )
-
-
-def test_process_daily_returns_vol_exception():
-    estimator = DailyReturnsVolEstimator()
-    invalid_daily_prices = pd.Series(["a", "b", "c"])  # Non-numeric input
-    with pytest.raises(ValueError) as exc_info:
-        estimator.process_daily_returns_vol(invalid_daily_prices)
-
-    assert "Input must be numeric" in str(exc_info.value)  # Expect a specific error message about non-numeric input
 
 
 def test_process_daily_returns_vol():

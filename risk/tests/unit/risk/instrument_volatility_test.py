@@ -5,6 +5,7 @@ from risk.src.estimators.instrument_volatility import InstrumentVolEstimator
 def load_csv_data(filename):
     filepath = f"risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
+    
     return pd.Series(data["price"])
 
 
