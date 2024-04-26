@@ -1,3 +1,5 @@
+import pandas as pd
+
 from common.src.database.repository import Repository
 from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
@@ -12,7 +14,7 @@ class InstrumentVolHandler:
         self.instrument_vol_service = InstrumentVolService()
         self.repository = repository
 
-    async def get_instrument_vol_for_symbol_async(self, position_query: AvaragePositionQuery) -> InstrumentVol:
+    async def get_instrument_vol_for_symbol_async(self, position_query: AvaragePositionQuery) -> pd.DataFrame:
         try:
             instrument_volatility = await self._fetch_instrument_volatility(position_query)
             vol_scalar = self.instrument_vol_service.get_instrument_volatility(
@@ -33,5 +35,7 @@ class InstrumentVolHandler:
             FROM instrument_currency_volatility
             WHERE symbol = $1
         """
-        statement = FetchStatement(query=query, parameters=(position_query.symbol,))
+        print(query)
+
+        statement = FetchStatement(query=query, parameters=(position_query.symbol))
         return await self.repository.fetch_many_async(statement)
