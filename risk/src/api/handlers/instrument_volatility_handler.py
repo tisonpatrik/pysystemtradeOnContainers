@@ -4,6 +4,7 @@ from common.src.database.repository import Repository
 from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 from risk.src.api.models.queries import AvaragePositionQuery
+from risk.src.schemas.risk_schemas import InstrumentVol
 
 
 class InstrumentVolHandler:
@@ -24,12 +25,15 @@ class InstrumentVolHandler:
 
     async def _fetch_instrument_volatility(self, position_query: AvaragePositionQuery) -> list:
         query = "SELECT date_time, instrument_volatility FROM instrument_volatility WHERE symbol = $1"
-        statement = FetchStatement(query=query, parameters=(position_query.symbol,))
+        statement = FetchStatement(query=query, parameters=(position_query.symbol))
         return await self.repository.fetch_many_async(statement)
 
     def _create_volatility_series(self, instrument_volatility: list) -> pd.Series:
         df = pd.DataFrame(instrument_volatility)
-        return pd.Series(data=df["instrument_volatility"].values, index=pd.to_datetime(df["date_time"]))
+        print(df.head())
+        return pd.Series(
+            data=df[InstrumentVol.instrument_volatility].values, index=pd.to_datetime(df[InstrumentVol.date_time])
+        )
 
     def _calculate_volatility_scalar(self, instr_value_vol: pd.Series, annual_cash_vol_target: float) -> pd.Series:
         return annual_cash_vol_target / instr_value_vol

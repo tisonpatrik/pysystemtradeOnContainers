@@ -33,6 +33,14 @@ class Volatility(DataFrameModel):
         strict = True
 
 
+class InstrumentVol(DataFrameModel):
+    date_time: Index[Timestamp] = Field(coerce=True)
+    instrument_volatility: Series[float]
+
+    class Config:
+        strict = True
+
+
 class InstrumentVolatilitySchema(DataFrameModel):
     date_time: Index[Timestamp] = Field(coerce=True)
     symbol: Series[str] = Field(nullable=True, regex=True)
