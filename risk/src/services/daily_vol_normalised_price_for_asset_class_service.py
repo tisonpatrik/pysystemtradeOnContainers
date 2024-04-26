@@ -42,7 +42,7 @@ class DailyVolNormalisedPriceForAssetClassService:
                 ],
             )
             validated = DataFrame[DailyVolNormalisedPriceForAssetClassSchema](renamed)
-            statement = InsertStatement(table_name="daily_returns_volatility", data=validated)
+            statement = InsertStatement(table_name="daily_vol_normalised_price_for_asset_class", data=validated)
 
             await self.repository.insert_dataframe_async(statement)
 
