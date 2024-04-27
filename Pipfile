@@ -13,11 +13,11 @@ pytest-cov = "*"
 pytest-xdist = "*"
 rich = "*"
 uvicorn = "*"
-sqlmodel = "*"
 alembic = "*"
 pandera = "*"
 asyncpg = "*"
 httpx = "*"
+pydantic = "*"
 
 [dev-packages]
 

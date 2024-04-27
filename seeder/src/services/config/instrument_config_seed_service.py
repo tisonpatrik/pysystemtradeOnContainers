@@ -3,7 +3,6 @@ import pandas as pd
 from common.src.database.repository import Repository
 from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
-from common.src.models.instrument_config_models import InstrumentConfigModel
 
 
 class InstrumentConfigSeedService:
@@ -19,6 +18,6 @@ class InstrumentConfigSeedService:
         """
         Seed instrument config data.
         """
-        self.logger.info(f"Seeding {InstrumentConfigModel.__tablename__} data: ")
-        statement = InsertStatement(table_name=InstrumentConfigModel.__tablename__, data=raw_data)
+        self.logger.info(f"Seeding instrument_config data: ")
+        statement = InsertStatement(table_name="instrument_config", data=raw_data)
         await self.repository.insert_dataframe_async(statement)

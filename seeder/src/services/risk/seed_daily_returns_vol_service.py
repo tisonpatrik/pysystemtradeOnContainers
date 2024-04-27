@@ -5,7 +5,7 @@ from pandera.errors import SchemaError
 from common.src.logging.logger import AppLogger
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from raw_data.src.services.instrument_config_service import InstrumentConfigService
-from common.src.models.risk_models import DailyReturnsVolModel
+from common.src.models.db_models import DailyReturnsVolModel
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 

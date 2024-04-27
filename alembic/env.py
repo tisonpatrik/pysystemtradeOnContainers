@@ -21,25 +21,9 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from common.src.models.config_models import BaseModel as ConfigJModels
-from common.src.models.instrument_config_models import BaseModel as InstrumentConfigModel
-from common.src.models.raw_data_models import BaseModel as RawDataBaseRecord
-from common.src.models.risk_models import BaseModel as RiskBaseRecord
+from common.src.models.db_models import BaseModel
 
-combined_metadata = MetaData()
-
-
-for metadata in (
-    ConfigJModels.metadata,
-    RawDataBaseRecord.metadata,
-    RiskBaseRecord.metadata,
-    InstrumentConfigModel.metadata,
-):
-    for table in metadata.tables.values():
-        combined_metadata._add_table(table.name, table.schema, table)
-
-target_metadata = combined_metadata
-
+target_metadata = BaseModel.metadata
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

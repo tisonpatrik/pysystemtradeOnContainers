@@ -5,7 +5,7 @@ from pandera.typing import DataFrame
 from common.src.database.repository import Repository
 from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
-from common.src.models.raw_data_models import AdjustedPricesModel
+from common.src.models.db_models import AdjustedPricesModel
 from raw_data.src.schemas.adjusted_prices_schemas import AdjustedPricesSchema
 
 

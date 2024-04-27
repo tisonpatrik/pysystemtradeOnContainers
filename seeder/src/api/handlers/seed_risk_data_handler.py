@@ -6,7 +6,7 @@ from src.services.risk.seed_daily_vol_normalised_returns_service import SeedDail
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
 from common.src.logging.logger import AppLogger
-from common.src.models.risk_models import (
+from common.src.models.db_models import (
     DailyReturnsVolModel,
     DailyVolNormalisedPriceForAssetClassModel,
     DailyVolNormalizedReturnsModel,
@@ -50,7 +50,7 @@ class SeedRiskDataHandler:
         """
         if model.__tablename__ == "daily_returns_volatility":
             await self.seed_daily_returns_vol_service.seed_daily_returns_vol_async()
-        elif model.__tablename__ == "instrument_volatility":
+        elif model.__tablename__ == "instrument_currency_volatility":
             await self.seed_instrument_vol_service.seed_instrument_volatility_async()
         elif model.__tablename__ == "daily_vol_normalized_returns":
             await self.seed_daily_vol_normalised_returns_service.seed_daily_normalised_returns_vol_async()
