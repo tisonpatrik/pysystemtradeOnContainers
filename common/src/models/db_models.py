@@ -1,7 +1,6 @@
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String
+from sqlalchemy import (Column, DateTime, Float, ForeignKey, Index, Integer,
+                        String)
 from sqlalchemy.orm import DeclarativeBase
-
-from common.src.models.db_models import BaseModel
 
 
 class BaseModel(DeclarativeBase):
