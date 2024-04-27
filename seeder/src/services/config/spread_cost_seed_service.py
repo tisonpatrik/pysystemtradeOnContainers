@@ -3,7 +3,7 @@ import pandas as pd
 from common.src.database.repository import Repository
 from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.config_models import SpreadCostsModel
+from common.src.models.config_models import SpreadCostsModel
 
 
 class SpreadCostSeedService:

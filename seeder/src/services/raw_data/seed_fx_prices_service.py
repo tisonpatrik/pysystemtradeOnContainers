@@ -5,7 +5,7 @@ from pandera.typing import DataFrame
 from common.src.database.repository import Repository
 from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.raw_data_models import FxPricesModel
+from common.src.models.raw_data_models import FxPricesModel
 from raw_data.src.schemas.raw_data_schemas import FxPricesSchema
 
 

@@ -3,7 +3,7 @@ from pandera.errors import SchemaError
 from common.src.logging.logger import AppLogger
 from raw_data.src.services.adjusted_prices_service import AdjustedPricesService
 from raw_data.src.services.instrument_config_service import InstrumentConfigService
-from risk.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
+from common.src.models.risk_models import DailyVolNormalisedPriceForAssetClassModel
 from risk.src.services.daily_vol_normalised_price_for_asset_class_service import (
     DailyVolNormalisedPriceForAssetClassService,
 )

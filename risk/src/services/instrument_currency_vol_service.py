@@ -32,7 +32,7 @@ class InstrumentCurrencyVolService:
                 ],
             )
             validated = DataFrame[InstrumentVolatilitySchema](renamed)
-            statement = InsertStatement(table_name="instrument_volatility", data=validated)
+            statement = InsertStatement(table_name="instrument_currency_volatility", data=validated)
             await self.repository.insert_dataframe_async(statement)
 
         except Exception as error:

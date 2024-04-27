@@ -35,7 +35,6 @@ class InstrumentVolHandler:
             FROM instrument_currency_volatility
             WHERE symbol = $1
         """
-        print(query)
 
         statement = FetchStatement(query=query, parameters=(position_query.symbol))
         return await self.repository.fetch_many_async(statement)

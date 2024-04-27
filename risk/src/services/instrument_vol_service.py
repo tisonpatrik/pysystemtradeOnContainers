@@ -1,7 +1,6 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from risk.src.schemas.risk_schemas import InstrumentVol
 
 
 class InstrumentVolService:

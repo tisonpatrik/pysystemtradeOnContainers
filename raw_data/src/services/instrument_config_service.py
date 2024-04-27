@@ -3,7 +3,7 @@ from pydantic import TypeAdapter
 from common.src.database.repository import Repository
 from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
-from raw_data.src.models.instrument_config_models import AssetClass, Instrument, PointSize
+from common.src.models.instrument_config_models import AssetClass, Instrument, PointSize
 
 
 class InstrumentConfigService:

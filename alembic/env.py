@@ -21,10 +21,10 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from raw_data.src.models.config_models import BaseModel as ConfigJModels
-from raw_data.src.models.instrument_config_models import BaseModel as InstrumentConfigModel
-from raw_data.src.models.raw_data_models import BaseModel as RawDataBaseRecord
-from risk.src.models.risk_models import BaseModel as RiskBaseRecord
+from common.src.models.config_models import BaseModel as ConfigJModels
+from common.src.models.instrument_config_models import BaseModel as InstrumentConfigModel
+from common.src.models.raw_data_models import BaseModel as RawDataBaseRecord
+from common.src.models.risk_models import BaseModel as RiskBaseRecord
 
 combined_metadata = MetaData()
 

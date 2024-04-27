@@ -6,7 +6,7 @@ from src.services.risk.seed_daily_vol_normalised_returns_service import SeedDail
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
 from common.src.logging.logger import AppLogger
-from risk.src.models.risk_models import (
+from common.src.models.risk_models import (
     DailyReturnsVolModel,
     DailyVolNormalisedPriceForAssetClassModel,
     DailyVolNormalizedReturnsModel,
