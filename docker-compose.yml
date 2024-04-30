@@ -1,4 +1,18 @@
 services:
+  simulator:
+    build:
+      context: .
+      dockerfile: simulator/Dockerfile
+    hostname: simulator
+    container_name: simulator
+    depends_on:
+      - db_postgres
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./simulator:/home/app/simulator
+      - ./common:/home/app/common    
+
   seeder:
     build:
       context: .
@@ -8,7 +22,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "7999:8000"
+      - "8100:8000"
     volumes:
       - ./seeder/src:/home/app/src
       - ./common:/home/app/common
@@ -25,7 +39,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8000:8000"
+      - "8200:8000"
     volumes:
       - ./raw_data:/home/app/raw_data
       - ./common:/home/app/common
@@ -39,7 +53,7 @@ services:
       - db_postgres
       - raw_data
     ports:
-      - "8001:8000"
+      - "8300:8000"
     volumes:
       - ./risk:/home/app/risk
       - ./common:/home/app/common
