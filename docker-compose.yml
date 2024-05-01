@@ -48,7 +48,7 @@ services:
   positions:
     build:
       context: .
-      dockerfile: posipositionstion_sizing/Dockerfile
+      dockerfile: positions/Dockerfile
     hostname: positions
     container_name: positions
     depends_on:

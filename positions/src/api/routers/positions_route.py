@@ -2,18 +2,18 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
-from positions.src.api.models.portfolio_request_model import SubsystemPositionRequest
+from positions.src.api.models.positions_request_model import SubsystemPositionRequest
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
 @router.post(
-    "/run_simulation/",
+    "/calculate_subsystem_position/",
     status_code=status.HTTP_200_OK,
-    name="run_simulation",
+    name="calculate_subsystem_position",
 )
-async def post_subsystem_position(request: SubsystemPositionRequest = Depends()):
+async def calculate_subsystem_position(request: SubsystemPositionRequest = Depends()):
     try:
         return request
     except HTTPException as e:
