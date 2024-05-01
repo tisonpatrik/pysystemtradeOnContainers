@@ -10,9 +10,9 @@ WORKDIR /home/app
 
 COPY common/ ./common
 
-COPY simulator/ ./simulator
+COPY positions/ ./positions
 COPY .env ./
 
-RUN pip install --no-cache-dir -r simulator/requirements.txt
+RUN pip install --no-cache-dir -r positions/requirements.txt
 
-CMD ["uvicorn", "simulator.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "positions.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

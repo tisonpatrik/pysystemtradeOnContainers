@@ -1,17 +1,4 @@
 services:
-  simulator:
-    build:
-      context: .
-      dockerfile: simulator/Dockerfile
-    hostname: simulator
-    container_name: simulator
-    depends_on:
-      - db_postgres
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./simulator:/home/app/simulator
-      - ./common:/home/app/common    
 
   seeder:
     build:
@@ -56,6 +43,22 @@ services:
       - "8300:8000"
     volumes:
       - ./risk:/home/app/risk
+      - ./common:/home/app/common
+
+  positions:
+    build:
+      context: .
+      dockerfile: posipositionstion_sizing/Dockerfile
+    hostname: positions
+    container_name: positions
+    depends_on:
+      - db_postgres
+      - risk
+      - raw_data
+    ports:
+      - "8400:8000"
+    volumes:
+      - ./positions:/home/app/positions
       - ./common:/home/app/common
 
   db_postgres:
