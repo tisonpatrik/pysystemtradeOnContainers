@@ -14,7 +14,6 @@ logger = AppLogger.get_instance().get_logger()
     name="Get Config Data",
 )
 async def get_fx_rate_by_symbol(symbol: str, fx_prices_handler: FxPricesHandler = Depends(get_fx_prices_handler)):
-
     try:
         logger.info(f"Fetching FX rate for symbol: {symbol}")
         fx_rate = await fx_prices_handler.get_fx_prices_for_symbol_async(symbol)
