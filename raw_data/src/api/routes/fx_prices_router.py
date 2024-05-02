@@ -22,7 +22,7 @@ async def get_fx_rate_for_instrument(
 ):
     try:
         logger.info(f"Fetching FX rate for symbol: {query.symbol}")
-        fx_rate = await fx_prices_handler.get_fx_prices_for_symbol_async(query.symbol)
+        fx_rate = await fx_prices_handler.get_fx_prices_for_symbol_async(query)
         if fx_rate is None:
             logger.error(f"FX rate not found for symbol: {query.symbol}")
             raise HTTPException(status_code=404, detail="FX rate not found")
