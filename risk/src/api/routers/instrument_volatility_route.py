@@ -11,11 +11,11 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_average_position_at_subsystem_level/",
+    "/get_instrument_currency_volatility/",
     status_code=status.HTTP_200_OK,
-    name="get_average_position_at_subsystem_level",
+    name="get_instrument_currency_volatility",
 )
-async def get_average_position_at_subsystem_level(
+async def get_instrument_currency_volalitlty_async(
     query: AvaragePositionQuery = Depends(),
     instrument_vol_handler: InstrumentVolHandler = Depends(get_instrument_vol_handler),
 ):
