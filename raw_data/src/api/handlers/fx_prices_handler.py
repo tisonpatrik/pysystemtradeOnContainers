@@ -1,3 +1,5 @@
+import pandas as pd
+
 from common.src.database.repository import Repository
 from common.src.database.statements.fetch_statement import FetchStatement
 
@@ -7,7 +9,8 @@ class FxPricesHandler:
         self.repository = repository
 
     async def get_fx_prices_for_symbol_async(self, symbol):
-        query = "SELECT currency FROM instrument_config WHERE symbol = $1"
+        query = "SELECT price FROM fx_prices WHERE symbol = $1"
         statement = FetchStatement(query=query, parameters=symbol)
-        instrument_currency = await self.repository.fetch_item_async(statement)
-        return instrument_currency
+        instrument_currency = await self.repository.fetch_many_async(statement)
+        data = pd.DataFrame(instrument_currency)
+        return data.head()

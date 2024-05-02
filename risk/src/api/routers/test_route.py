@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ValidationError
 
 from common.src.logging.logger import AppLogger
+from common.src.models.api_query_models import GetFxRateQuery
 from risk.src.api.handlers.test_handler import TestHandler
 from risk.src.dependencies.risk_dependencies import get_test_handler
 
@@ -9,22 +10,17 @@ router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
-class Symbol(BaseModel):
-    symbol: str
-
-
 @router.get(
     "/get_test_fx",
     status_code=status.HTTP_200_OK,
-    response_model=None,
     name="get_test_fx",
 )
 async def get_test_fx(
     test_handler: TestHandler = Depends(get_test_handler),
-    query: Symbol = Depends(),
+    query: GetFxRateQuery = Depends(),
 ):
     try:
-        instr_value_vol = await test_handler.get_test_fx(query.symbol)
+        instr_value_vol = await test_handler.get_test_fx(query)
         return instr_value_vol
     except HTTPException as e:
         logger.error(
