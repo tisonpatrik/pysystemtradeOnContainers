@@ -11,9 +11,10 @@ class InstrumentValueVolService:
         self.logger = AppLogger.get_instance().get_logger()
         self.repository = repository
 
-    async def get_instrument_value_vol(self, instrument_code: str) -> pd.Series:
+    async def get_instrument_value_vol(self, instrument_code: str, base_currency: str) -> pd.Series:
         try:
             self.logger.info(f"Fetching FX rate and currency volatility for {instrument_code}")
+
             fx_rate = await self._get_fx_rate_async(instrument_code)
             instr_ccy_vol = await self._fetch_instrument_currency_vol(instrument_code)
             indexed = fx_rate.reindex(instr_ccy_vol.index, method="ffill")
@@ -27,18 +28,35 @@ class InstrumentValueVolService:
     async def _get_fx_rate_async(self, symbol: str) -> pd.Series:
         try:
             self.logger.info(f"Fetching FX rates for {symbol}")
+
             query = """
                 SELECT date_time, price
                 FROM fx_prices
                 WHERE symbol = $1
             """
-            statement = FetchStatement(query=query, parameters=(symbol,))
+            statement = FetchStatement(query=query, parameters=("EURUSD"))
             records = await self.repository.fetch_many_async(statement)
             df = pd.DataFrame(records)
             return pd.Series(data=df["price"].values, index=pd.to_datetime(df["date_time"]))
         except Exception as e:
             self.logger.error(f"Failed to fetch FX rates for {symbol}: {str(e)}")
             raise HTTPException(status_code=400, detail=f"Failed to fetch FX rates for {symbol}")
+
+    async def _get_instrument_currency(self, symbol: str) -> str:
+        try:
+            self.logger.info(f"Fetching instrument currency for {symbol}")
+            query = """
+                SELECT currency
+                FROM instrument_config
+                WHERE symbol = $1 
+            """
+            statement = FetchStatement(query=query, parameters=(symbol,))
+            record = await self.repository.fetch_item_async(statement)
+            record = str(record)
+            return record
+        except Exception as e:
+            self.logger.error(f"Failed to fetch instrument currency for {symbol}: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Failed to fetch instrument currency for {symbol}")
 
     async def _fetch_instrument_currency_vol(self, symbol: str) -> pd.Series:
         try:

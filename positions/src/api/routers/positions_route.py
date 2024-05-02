@@ -19,9 +19,7 @@ async def calculate_subsystem_position(
     positions_handler: PositionsHandlers = Depends(),
 ):
     try:
-        positions = await positions_handler.get_average_position_at_subsystem_level_async(
-            request.instrument_code, request.notional_trading_capital, request.percentage_volatility_target
-        )
+        positions = await positions_handler.get_average_position_at_subsystem_level_async(request)
         return positions
     except HTTPException as e:
         logger.error(f"An error occurred while trying to run simulation. Error: {e.detail}")

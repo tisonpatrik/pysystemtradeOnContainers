@@ -3,6 +3,7 @@ from fastapi import Depends, HTTPException
 
 from common.src.logging.logger import AppLogger
 from positions.src.api.dependencies.positions_dependencies import get_instrument_value_vol_service
+from positions.src.api.models.positions_request_model import SubsystemPositionRequest
 from positions.src.services.cash_volatility_target_service import CashVolTargetService
 from positions.src.services.instrument_value_vol_service import InstrumentValueVolService
 from positions.src.services.volatility_scalar_service import VolatilityScalarService
@@ -18,14 +19,14 @@ class PositionsHandlers:
         self.instrument_value_vol_service = instrument_value_vol_service
         self.volatility_scalar_service = VolatilityScalarService()
 
-    async def get_average_position_at_subsystem_level_async(
-        self, instrument_code: str, notional_trading_capital: float, percentage_vol_target: float
-    ) -> pd.Series:
+    async def get_average_position_at_subsystem_level_async(self, request: SubsystemPositionRequest) -> pd.Series:
         try:
             self.logger.info("Starting to get average position at subsystem level.")
-            instr_value_vol = await self.instrument_value_vol_service.get_instrument_value_vol(instrument_code)
+            instr_value_vol = await self.instrument_value_vol_service.get_instrument_value_vol(
+                request.instrument_code, request.base_currency
+            )
             cash_vol_target = self.cash_vol_target_service.get_daily_cash_vol_target(
-                notional_trading_capital, percentage_vol_target
+                request.notional_trading_capital, request.percentage_volatility_target
             )
             vol_scalar = self.volatility_scalar_service.get_volatility_scalar(cash_vol_target, instr_value_vol)
             self.logger.info("Successfully computed average position.")
