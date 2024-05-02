@@ -13,7 +13,7 @@ class TestHandler:
     async def get_test_fx(self, symbol: str) -> pd.DataFrame:
         try:
             response = await self.requests_client.get(
-                f"http://raw_data:8200/fx_prices_route/get_fx_rate_by_symbol/{symbol}/"
+                f"http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol/{symbol}/"
             )
             response.raise_for_status()
             return response.json()
