@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pandas as pd
 
 from common.src.database.repository import Repository
@@ -19,10 +17,6 @@ class FxPricesHandler:
     async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
         try:
             instrument_details = await self._get_instrument_currency(get_fx_rate_query.symbol)
-            if not instrument_details or "currency" not in instrument_details:
-                error_msg = f"Invalid or missing currency data for symbol: {get_fx_rate_query.symbol}"
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
 
             instrument_currency = instrument_details["currency"]
             base_currency = get_fx_rate_query.base_currency
@@ -35,13 +29,6 @@ class FxPricesHandler:
                 fx_data = await self.get_fx_prices_for_inversion(instrument_currency)
             else:
                 fx_data = await self.get_fx_cross(instrument_currency, base_currency)
-
-            if fx_data.empty:
-                error_msg = (
-                    f"No FX data available for symbol: {get_fx_rate_query.symbol} with base currency: {base_currency}"
-                )
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
 
             return fx_data.head()
 
@@ -95,10 +82,6 @@ class FxPricesHandler:
     async def get_fx_prices_for_inversion(self, instrument_currency: str) -> pd.Series:
         try:
             raw_fx_data = await self.get_standard_fx_prices_async(instrument_currency)
-            if raw_fx_data.empty:
-                error_msg = f"No FX data available for inversion for {instrument_currency}"
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
             inverted_fx_data = self.fx_prices_service.calculate_inversion(raw_fx_data)
             return inverted_fx_data
         except Exception as e:
@@ -109,12 +92,6 @@ class FxPricesHandler:
         try:
             currency1_vs_default = await self.get_standard_fx_prices_async(instrument_currency)
             currency2_vs_default = await self.get_standard_fx_prices_async(base_currency)
-
-            if currency1_vs_default.empty or currency2_vs_default.empty:
-                error_msg = f"Incomplete FX data for cross rates between {instrument_currency} and {base_currency}"
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
-
             fx_rate_series = self.fx_prices_service.calculate_fx_cross(currency1_vs_default, currency2_vs_default)
             return fx_rate_series
         except Exception as e:
