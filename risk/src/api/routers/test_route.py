@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
 from common.src.models.api_query_models import GetFxRateQuery
