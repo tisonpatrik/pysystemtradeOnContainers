@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
 
 from common.src.logging.logger import AppLogger
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
@@ -7,10 +6,6 @@ from raw_data.src.dependencies.dependencies import get_fx_prices_handler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
-
-
-class FxRateResponse(BaseModel):
-    symbol: str
 
 
 @router.get(
@@ -27,7 +22,6 @@ async def get_fx_rate_by_symbol(symbol: str, fx_prices_handler: FxPricesHandler 
             logger.error(f"FX rate not found for symbol: {symbol}")
             raise HTTPException(status_code=404, detail="FX rate not found")
 
-        response = FxRateResponse(symbol=symbol)
         logger.info(f"Successfully fetched FX rate for symbol: {symbol}")
         return fx_rate
     except Exception as e:
