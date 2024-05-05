@@ -15,10 +15,9 @@ class Repository:
     async def fetch_many_async(self, statement: FetchStatement) -> list[dict[Any, Any]]:
         try:
             async with self.pool.acquire() as connection:
-                async with connection.transaction():
-                    prepared_stmt = await connection.prepare(statement.query)
-                    records = await prepared_stmt.fetch(*statement.parameters)
-                    return [dict(record) for record in records]
+                prepared_stmt = await connection.prepare(statement.query)
+                records = await prepared_stmt.fetch(*statement.parameters)
+                return [dict(record) for record in records]
         except Exception as e:
             self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
             raise
@@ -26,10 +25,9 @@ class Repository:
     async def fetch_item_async(self, statement: FetchStatement) -> dict[Any, Any]:
         try:
             async with self.pool.acquire() as connection:
-                async with connection.transaction():
-                    prepared_stmt = await connection.prepare(statement.query)
-                    record = await prepared_stmt.fetchrow(*statement.parameters)
-                    return dict(record)
+                prepared_stmt = await connection.prepare(statement.query)
+                record = await prepared_stmt.fetchrow(*statement.parameters)
+                return dict(record)
         except Exception as e:
             self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
             raise
@@ -40,8 +38,8 @@ class Repository:
         table_name = statement.get_table_name()
 
         try:
-            async with self.pool.acquire() as connectrion:
-                async with connectrion.transaction():
-                    await connectrion.copy_records_to_table(table_name=table_name, records=records, columns=columns)
+            async with self.pool.acquire() as connection:
+                async with connection.transaction():
+                    await connection.copy_records_to_table(table_name=table_name, records=records, columns=columns)
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")
