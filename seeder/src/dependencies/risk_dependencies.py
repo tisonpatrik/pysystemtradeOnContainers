@@ -6,7 +6,7 @@ from src.services.risk.seed_daily_vol_normalised_price_for_asset_class_service i
 from src.services.risk.seed_daily_vol_normalised_returns_service import SeedDailyVolNormalisedReturnsService
 from src.services.risk.seed_instrument_vol_service import SeedInstrumentVolService
 
-from raw_data.src.dependencies.dependencies import (
+from raw_data.src.api.dependencies.dependencies import (
     get_adjusted_prices_service,
     get_instrument_config_service,
     get_multiple_prices_service,

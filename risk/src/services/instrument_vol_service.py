@@ -2,7 +2,6 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 
-
 class InstrumentVolService:
     def __init__(self) -> None:
         self.logger = AppLogger.get_instance().get_logger()
