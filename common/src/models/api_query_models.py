@@ -10,7 +10,7 @@ class GetFxRateQuery(FetchRequest):
 
     @property
     def url_string(self) -> str:
-        return "http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol"
+        return "http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol/"
 
 
 class GetInstrumentCurrencyVolQuery(FetchRequest):
@@ -18,4 +18,4 @@ class GetInstrumentCurrencyVolQuery(FetchRequest):
 
     @property
     def url_string(self) -> str:
-        return "http://risk:8000/instrument_currency_vol_route/get_instrument_currency_volatility"
+        return "http://risk:8000/instrument_currency_vol_route/get_instrument_currency_volatility/"

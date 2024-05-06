@@ -30,3 +30,6 @@ async def get_instrument_currency_volalitlty_async(
     except ValidationError as e:
         logger.error(f"Validation error for symbol. Error: {e.json()}")
         return {"error": "Validation error", "details": e.errors(), "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY}
+    except Exception as e:
+        logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
