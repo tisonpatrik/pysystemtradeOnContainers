@@ -1,5 +1,4 @@
-from sqlalchemy import (Column, DateTime, Float, ForeignKey, Index, Integer,
-                        String)
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -93,31 +92,3 @@ class RollCalendarsModel(BaseModel):
         Index("ix_roll_calendars_date_time", "date_time"),
         Index("ix_roll_calendars_symbol", "symbol"),
     )
-
-
-class DailyReturnsVolModel(BaseModel):
-    __tablename__ = "daily_returns_volatility"
-    date_time = Column(DateTime, primary_key=True, index=True)
-    symbol = Column(String, ForeignKey("instrument_config.symbol"), primary_key=True)
-    vol_returns = Column(Float)
-
-
-class InstrumentCurrencyVolModel(BaseModel):
-    __tablename__ = "instrument_currency_volatility"
-    date_time = Column(DateTime, primary_key=True)
-    symbol = Column(String, ForeignKey("instrument_config.symbol"), primary_key=True)
-    instrument_volatility = Column(Float)
-
-
-class DailyVolNormalizedReturnsModel(BaseModel):
-    __tablename__ = "daily_vol_normalized_returns"
-    date_time = Column(DateTime, primary_key=True)
-    symbol = Column(String, ForeignKey("instrument_config.symbol"), primary_key=True)
-    vol_normalized_returns = Column(Float)
-
-
-class DailyVolNormalisedPriceForAssetClassModel(BaseModel):
-    __tablename__ = "daily_vol_normalised_price_for_asset_class"
-    date_time = Column(DateTime, primary_key=True)
-    asset_class = Column(String, primary_key=True)
-    vol_normalized_price_for_asset = Column(Float)

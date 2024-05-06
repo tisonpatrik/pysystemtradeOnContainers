@@ -20,6 +20,7 @@ httpx = "*"
 pydantic = "*"
 
 [dev-packages]
+vulture = "*"
 
 [requires]
 python_version = "3.12"

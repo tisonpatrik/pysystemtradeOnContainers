@@ -19,35 +19,9 @@ class DailyVolNormalizedReturnsSchema(DataFrameModel):
         strict = True
 
 
-class DailyReturnsVolatilitySchema(DataFrameModel):
-    date_time: Index[Timestamp] = Field(coerce=True)
-    symbol: Series[str] = Field(nullable=False)
-    vol_returns: Series[float]
-
-
 class Volatility(DataFrameModel):
     date_time: Index[Timestamp] = Field(coerce=True)
     volatility: Series[float]
 
     class Config:
         strict = True
-
-
-class InstrumentVol(DataFrameModel):
-    date_time: Index[Timestamp] = Field(coerce=True)
-    instrument_volatility: Series[float]
-
-    class Config:
-        strict = True
-
-
-class InstrumentVolatilitySchema(DataFrameModel):
-    date_time: Index[Timestamp] = Field(coerce=True)
-    symbol: Series[str] = Field(nullable=True, regex=True)
-    instrument_volatility: Series[float]
-
-
-class DailyVolNormalisedPriceForAssetClassSchema(DataFrameModel):
-    date_time: Index[Timestamp] = Field(coerce=True)
-    asset_class: Series[str] = Field(nullable=False)
-    vol_normalized_price_for_asset: Series[float]

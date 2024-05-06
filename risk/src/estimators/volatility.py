@@ -93,9 +93,7 @@ def apply_vol_floor(
     floor_days: int = 500,
 ) -> pd.Series:
     # Find the rolling 5% quantile point to set as a minimum
-    vol_min = vol.rolling(min_periods=floor_min_periods, window=floor_days).quantile(
-        q=floor_min_quant
-    )
+    vol_min = vol.rolling(min_periods=floor_min_periods, window=floor_days).quantile(q=floor_min_quant)
 
     # set this to zero for the first value then propagate forward, ensures
     # we always have a value
@@ -126,7 +124,6 @@ def mixed_vol_calc(
     proportion_of_slow_vol: float = 0.35,
     vol_abs_min: float = 0.0000000001,
     backfill: bool = True,
-    **ignored_kwargs,
 ) -> pd.Series:
     """
     Robust exponential volatility calculation, assuming daily series of prices
@@ -178,17 +175,13 @@ def mixed_vol_calc(
     return vol
 
 
-def simple_ewvol_calc(
-    daily_returns: pd.Series, days: int = 35, min_periods: int = 10, **ignored_kwargs
-) -> pd.Series:
+def simple_ewvol_calc(daily_returns: pd.Series, days: int = 35, min_periods: int = 10) -> pd.Series:
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
     return vol
 
 
-def simple_vol_calc(
-    daily_returns: pd.Series, days: int = 25, min_periods: int = 10, **ignored_kwargs
-) -> pd.Series:
+def simple_vol_calc(daily_returns: pd.Series, days: int = 25, min_periods: int = 10) -> pd.Series:
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.rolling(days, min_periods=min_periods).std()
 
