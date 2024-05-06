@@ -27,3 +27,8 @@ class RollCalendarsSchema(pa.DataFrameModel):
     current_contract: Series[int]
     next_contract: Series[int]
     carry_contract: Series[int]
+
+class AdjustedPricesSchema(pa.DataFrameModel):
+    date_time: Series[datetime]
+    symbol: Series[str]
+    price: Series[float]

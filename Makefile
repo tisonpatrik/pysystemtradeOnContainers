@@ -16,4 +16,5 @@ down:
 tests: run
 	@echo "IMPLEMENT IT"
 
-
+cleaner:
+	@vulture . --exclude .venv
