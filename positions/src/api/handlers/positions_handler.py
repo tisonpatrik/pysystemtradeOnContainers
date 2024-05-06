@@ -48,7 +48,7 @@ class PositionsHandlers:
             raise HTTPException(status_code=500, detail=str(e))
 
     def get_combined_forecast(self, instrument_code: str):
-        return pd.Series(1)
+        return pd.Series()
 
     def _apply_long_only_constraint_to_position(self, positions: pd.Series, instrument_code: str) -> pd.Series:
         return positions

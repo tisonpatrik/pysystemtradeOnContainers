@@ -5,10 +5,7 @@ from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePrice
 from src.services.raw_data.seed_roll_calendars_service import SeedRollCalendarsService
 
 from common.src.database.repository import Repository
-
-
-def get_repository(request: Request) -> Repository:
-    return Repository(request.app.async_pool)
+from common.src.dependencies.core_dependencies import get_repository
 
 
 def get_seed_adjusted_prices_service(

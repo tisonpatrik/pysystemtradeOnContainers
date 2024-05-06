@@ -1,29 +1,14 @@
-from fastapi import Depends, Request
-from httpx import AsyncClient
+from fastapi import Depends
 
 from common.src.database.repository import Repository
+from common.src.dependencies.core_dependencies import get_repository
 from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
-from risk.src.api.handlers.test_handler import TestHandler
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.daily_vol_normalised_price_for_asset_class_service import (
     DailyVolNormalisedPriceForAssetClassService,
 )
 from risk.src.services.daily_vol_normalised_returns_service import DailyVolatilityNormalisedReturnsService
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
-
-
-def get_async_client(request: Request) -> AsyncClient:
-    return request.app.state.requests_client
-
-
-def get_test_handler(
-    requests_client: AsyncClient = Depends(get_async_client),
-) -> TestHandler:
-    return TestHandler(requests_client=requests_client)
-
-
-def get_repository(request: Request) -> Repository:
-    return Repository(request.app.async_pool)
 
 
 def get_daily_returns_vol_service() -> DailyReturnsVolService:
