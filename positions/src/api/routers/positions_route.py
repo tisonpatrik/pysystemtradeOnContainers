@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
 from positions.src.api.handlers.positions_handler import PositionsHandlers
-from positions.src.api.models.positions_request_model import SubsystemPositionRequest
+from positions.src.api.models.positions_request_model import SubsystemPositionForInstrument
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -14,12 +14,12 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="calculate_subsystem_position",
 )
-async def calculate_subsystem_position(
-    request: SubsystemPositionRequest = Depends(),
+async def get_subsystem_position_for_instrument(
+    request: SubsystemPositionForInstrument = Depends(),
     positions_handler: PositionsHandlers = Depends(),
 ):
     try:
-        positions = await positions_handler.get_average_position_at_subsystem_level_async(request)
+        positions = await positions_handler.get_subsystem_position_async(request)
         return positions
     except HTTPException as e:
         logger.error(f"An error occurred while trying to run simulation. Error: {e.detail}")
