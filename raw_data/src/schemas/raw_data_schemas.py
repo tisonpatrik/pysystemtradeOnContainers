@@ -21,11 +21,6 @@ class MultiplePricesSchema(pa.DataFrameModel):
     forward_contract: Series[int]
 
 
-class DenominatorPricesSchema(pa.DataFrameModel):
-    date_time: Series[datetime]
-    price: Series[float]
-
-
 class RollCalendarsSchema(pa.DataFrameModel):
     date_time: Series[datetime]
     symbol: Series[str]

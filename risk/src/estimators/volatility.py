@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from risk.src.core.dateutils import BUSINESS_DAYS_IN_YEAR
-from risk.src.core.pandas.frequency import resample_prices_to_business_day_index
+from common.src.utils.constants import get_bdays_inyear
+from common.src.utils.convertors import resample_prices_to_business_day_index
 
 
 def robust_daily_vol_given_price(price: pd.Series, **kwargs):
@@ -161,8 +161,9 @@ def mixed_vol_calc(
     :returns: pd.DataFrame -- volatility measure
     """
     # Standard deviation will be nan for first 10 non nan values
+    business_days_in_year = get_bdays_inyear()
     vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
-    slow_vol_days = slow_vol_years * BUSINESS_DAYS_IN_YEAR
+    slow_vol_days = slow_vol_years * business_days_in_year
     long_vol = vol.ewm(slow_vol_days).mean()
 
     vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)

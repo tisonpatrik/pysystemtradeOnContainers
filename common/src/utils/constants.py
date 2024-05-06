@@ -1,5 +1,5 @@
 def get_bdays_inyear():
-    root_bdays_inyear = 252
+    root_bdays_inyear = 256
     return root_bdays_inyear
 
 
