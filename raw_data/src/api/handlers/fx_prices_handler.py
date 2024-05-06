@@ -16,9 +16,8 @@ class FxPricesHandler:
 
     async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
         try:
-            instrument_details = await self._get_instrument_currency(get_fx_rate_query.symbol)
+            instrument_currency = await self._get_instrument_currency(get_fx_rate_query.symbol)
 
-            instrument_currency = instrument_details["currency"]
             base_currency = get_fx_rate_query.base_currency
 
             if base_currency == instrument_currency:
@@ -38,7 +37,7 @@ class FxPricesHandler:
             self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")
 
-    async def _get_instrument_currency(self, symbol: str):
+    async def _get_instrument_currency(self, symbol: str) -> str:
         query = """
         SELECT currency 
         FROM instrument_config 
@@ -51,7 +50,7 @@ class FxPricesHandler:
                 error_msg = f"No currency found for symbol: {symbol}"
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
-            return currency
+            return currency["currency"]
         except Exception as e:
             self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
             raise

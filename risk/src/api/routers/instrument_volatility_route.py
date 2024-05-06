@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
-from risk.src.api.handlers.instrument_volatility_handler import InstrumentVolHandler
-from risk.src.api.models.queries import AvaragePositionQuery
+from common.src.models.api_query_models import GetInstrumentCurrencyVolQuery
+from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from risk.src.dependencies.risk_dependencies import get_instrument_vol_handler
 
 router = APIRouter()
@@ -16,8 +16,8 @@ logger = AppLogger.get_instance().get_logger()
     name="get_instrument_currency_volatility",
 )
 async def get_instrument_currency_volalitlty_async(
-    query: AvaragePositionQuery = Depends(),
-    instrument_vol_handler: InstrumentVolHandler = Depends(get_instrument_vol_handler),
+    query: GetInstrumentCurrencyVolQuery = Depends(),
+    instrument_vol_handler: InstrumentCurrencyVolHandler = Depends(get_instrument_vol_handler),
 ):
     try:
         instr_value_vol = await instrument_vol_handler.get_instrument_vol_for_symbol_async(query)

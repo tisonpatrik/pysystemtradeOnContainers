@@ -1,10 +1,12 @@
 import pandas as pd
 from fastapi import Depends, HTTPException
+from httpx import get
 
 from common.src.database.repository import Repository
-from common.src.database.statements.fetch_statement import FetchStatement
+from common.src.dependencies.core_dependencies import get_client, get_repository
+from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
-from positions.src.api.dependencies.positions_dependencies import get_repository
+from common.src.models.api_query_models import GetFxRateQuery, GetInstrumentCurrencyVolQuery
 from positions.src.api.models.positions_request_model import SubsystemPositionForInstrument
 from positions.src.services.cash_volatility_target_service import CashVolTargetService
 from positions.src.services.volatility_scalar_service import VolatilityScalarService
@@ -14,11 +16,13 @@ class PositionsHandlers:
     def __init__(
         self,
         repository: Repository = Depends(get_repository),
+        client: RestClient = Depends(get_client),
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.cash_vol_target_service = CashVolTargetService()
         self.volatility_scalar_service = VolatilityScalarService()
         self.repository = repository
+        self.client = client
 
     async def get_subsystem_position_async(self, request: SubsystemPositionForInstrument) -> pd.Series:
         try:
@@ -43,10 +47,8 @@ class PositionsHandlers:
 
     async def get_instrument_value_vol(self, instrument_code: str, base_currency: str) -> pd.Series:
         try:
-            self.logger.info(f"Fetching FX rate and currency volatility for {instrument_code}")
-
-            fx_rate = await self._get_fx_rate_async(instrument_code)
-            instr_ccy_vol = await self._fetch_instrument_currency_vol(instrument_code)
+            fx_rate = await self.get_fx_rates_async(instrument_code, base_currency)
+            instr_ccy_vol = await self.get_instrument_volatility_async(instrument_code)
             indexed = fx_rate.reindex(instr_ccy_vol.index, method="ffill")
             instr_value_vol = instr_ccy_vol.ffill() * indexed
             self.logger.info("Successfully computed instrument value volatility.")
@@ -55,51 +57,24 @@ class PositionsHandlers:
             self.logger.error(f"Error computing value volatility for {instrument_code}: {str(e)}")
             raise HTTPException(status_code=500, detail="Error in processing instrument value volatility")
 
-    async def _get_fx_rate_async(self, symbol: str) -> pd.Series:
+    async def get_fx_rates_async(self, instrument_code: str, base_currency: str) -> pd.Series:
         try:
-            self.logger.info(f"Fetching FX rates for {symbol}")
-
-            query = """
-                SELECT date_time, price
-                FROM fx_prices
-                WHERE symbol = $1
-            """
-            statement = FetchStatement(query=query, parameters=("EURUSD"))
-            records = await self.repository.fetch_many_async(statement)
-            df = pd.DataFrame(records)
-            return pd.Series(data=df["price"].values, index=pd.to_datetime(df["date_time"]))
+            self.logger.info(f"Fetching FX rate for {instrument_code}")
+            get_fx_rate_query = GetFxRateQuery(symbol=instrument_code, base_currency=base_currency)
+            fx_rate = await self.client.get_data_async(get_fx_rate_query)
+            self.logger.info("Successfully fetched FX rate.")
+            return pd.Series(fx_rate)
         except Exception as e:
-            self.logger.error(f"Failed to fetch FX rates for {symbol}: {str(e)}")
-            raise HTTPException(status_code=400, detail=f"Failed to fetch FX rates for {symbol}")
+            self.logger.error(f"Error fetching FX rate for {instrument_code}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error in fetching FX rate")
 
-    async def _get_instrument_currency(self, symbol: str) -> str:
+    async def get_instrument_volatility_async(self, instrument_code: str) -> pd.Series:
         try:
-            self.logger.info(f"Fetching instrument currency for {symbol}")
-            query = """
-                SELECT currency
-                FROM instrument_config
-                WHERE symbol = $1 
-            """
-            statement = FetchStatement(query=query, parameters=(symbol,))
-            record = await self.repository.fetch_item_async(statement)
-            record = str(record)
-            return record
+            self.logger.info(f"Fetching instrument volatility for {instrument_code}")
+            get_instrument_vol_query = GetInstrumentCurrencyVolQuery(symbol=instrument_code)
+            instr_vol = await self.client.get_data_async(get_instrument_vol_query)
+            self.logger.info("Successfully fetched instrument volatility.")
+            return pd.Series(instr_vol)
         except Exception as e:
-            self.logger.error(f"Failed to fetch instrument currency for {symbol}: {str(e)}")
-            raise HTTPException(status_code=400, detail=f"Failed to fetch instrument currency for {symbol}")
-
-    async def _fetch_instrument_currency_vol(self, symbol: str) -> pd.Series:
-        try:
-            self.logger.info(f"Fetching instrument currency volatility for {symbol}")
-            query = """
-                SELECT date_time, instrument_volatility
-                FROM instrument_currency_volatility
-                WHERE symbol = $1
-            """
-            statement = FetchStatement(query=query, parameters=(symbol,))
-            records = await self.repository.fetch_many_async(statement)
-            df = pd.DataFrame(records)
-            return pd.Series(data=df["instrument_volatility"].values, index=pd.to_datetime(df["date_time"]))
-        except Exception as e:
-            self.logger.error(f"Failed to fetch currency volatility for {symbol}: {str(e)}")
-            raise HTTPException(status_code=400, detail=f"Failed to fetch currency volatility for {symbol}")
+            self.logger.error(f"Error fetching instrument volatility for {instrument_code}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error in fetching instrument volatility")

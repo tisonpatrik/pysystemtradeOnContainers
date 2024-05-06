@@ -7,6 +7,6 @@ from risk.src.api.routers.test_route import router as test_route
 
 app = FastAPI(lifespan=app_lifespan)
 
-app.include_router(instrument_vol_route, prefix="/instrument_volatility_route")
+app.include_router(instrument_vol_route, prefix="/instrument_currency_vol_route")
 app.include_router(test_route, prefix="/test_route")
 logger = AppLogger.get_instance().get_logger()

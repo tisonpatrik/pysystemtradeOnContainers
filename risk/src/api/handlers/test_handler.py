@@ -15,7 +15,7 @@ class TestHandler:
     async def get_test_fx(self, query: GetFxRateQuery) -> pd.Series:
         try:
             query_params = query.model_dump()
-            url = "http://raw_data:8000/fx_prices_route/get_fx_rate_by_symbol/"
+            url = query.url_string
             response = await self.requests_client.get(url, params=query_params)
             response.raise_for_status()
             json_response = response.json()

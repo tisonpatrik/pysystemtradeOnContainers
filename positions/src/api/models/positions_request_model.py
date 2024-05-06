@@ -14,5 +14,5 @@ class SubsystemPositionForListOfInstruments(BaseModel):
     notional_trading_capital: PositiveFloat
     percentage_volatility_target: PositiveFloat
     avarage_absolute_forecas: PositiveFloat
-    instrument_codes: Annotated[list[str], conlist(str, min_length=1, max_length=500, unique_items=True)]
+    instrument_codes: Annotated[list[str], conlist(str, min_length=1, max_length=500)]
     base_currency: Annotated[str, StringConstraints(max_length=3)]

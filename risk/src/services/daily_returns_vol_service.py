@@ -2,7 +2,6 @@
 
 from pandera.typing import DataFrame, Series
 
-from common.src.database.repository import Repository
 from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
 from common.src.utils.converter import convert_series_to_frame
@@ -16,9 +15,8 @@ class DailyReturnsVolService:
     Service for calculating daily returns volatility of financial instruments.
     """
 
-    def __init__(self, repository: Repository):
+    def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
-        self.repository = repository
         self.estimator = DailyReturnsVolEstimator()
 
     async def insert_daily_returns_vol_async(self, daily_returns_vols: Series[Volatility], symbol: str):
@@ -39,7 +37,7 @@ class DailyReturnsVolService:
             )
             validated = DataFrame[DailyReturnsVolatilitySchema](renamed)
             statement = InsertStatement(table_name="daily_returns_volatility", data=validated)
-            await self.repository.insert_dataframe_async(statement)
+            # await self.repository.insert_dataframe_async(statement)
 
         except Exception as error:
             error_message = f"An error occurred during the processing for symbol '{symbol}': {error}"
