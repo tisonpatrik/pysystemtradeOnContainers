@@ -10,6 +10,7 @@ pythonpath = [
     "risk",
     "common"
 ]
+
 [tool.ruff]
 select = [
     "I",

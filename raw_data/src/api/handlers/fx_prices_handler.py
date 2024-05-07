@@ -55,14 +55,9 @@ class FxPricesHandler:
 		statement = GetFxPrices(fx_code=fx_code)
 		try:
 			fx_data = await self.repository.fetch_many_async(statement)
-			if not fx_data:
-				error_msg = f'No FX prices found for currency: {fx_code}'
-				self.logger.error(error_msg)
-				raise ValueError(error_msg)
 			fx_dataframe = pd.DataFrame(fx_data)
-			if fx_dataframe.empty:
-				raise ValueError(f'No data available to create Series for FX prices: {fx_code}')
-			return pd.Series(data=fx_dataframe['price'].values, index=pd.to_datetime(fx_dataframe['date_time']))
+			fx_prices = FxPrices(fx_dataframe)
+			return pd.Series(data=fx_prices['price'].values, index=pd.to_datetime(fx_prices['date_time']))
 		except Exception as e:
 			self.logger.error(f'Failed to fetch FX prices for {fx_code}: {e}')
 			raise
