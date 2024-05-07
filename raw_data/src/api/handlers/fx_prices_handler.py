@@ -6,6 +6,7 @@ from common.src.models.api_models.get_fx_rate import GetFxRateQuery
 from common.src.queries.get_fx_prices import GetFxPrices
 from common.src.queries.get_instrument_currency import GetInstrumentCurrency
 from raw_data.src.services.fx_price_service import FxService
+from raw_data.src.validation.instrument_currency import InstrumentCurrency
 
 
 class FxPricesHandler:
@@ -21,14 +22,14 @@ class FxPricesHandler:
 
             base_currency = get_fx_rate_query.base_currency
 
-            if base_currency == instrument_currency:
+            if base_currency == instrument_currency.currency:
                 fx_data = self.fx_prices_service.get_default_rate_series()
-            elif instrument_currency == "USD":
-                fx_data = await self.get_standard_fx_prices_async(instrument_currency)
+            elif instrument_currency.currency == "USD":
+                fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency)
             elif base_currency == "USD":
-                fx_data = await self.get_fx_prices_for_inversion(instrument_currency)
+                fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency)
             else:
-                fx_data = await self.get_fx_cross(instrument_currency, base_currency)
+                fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
 
             return fx_data.head()
 
@@ -38,15 +39,12 @@ class FxPricesHandler:
             self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")
 
-    async def _get_instrument_currency(self, symbol: str) -> str:
+    async def _get_instrument_currency(self, symbol: str) -> InstrumentCurrency:
         statement = GetInstrumentCurrency(symbol=symbol)
         try:
             currency = await self.repository.fetch_item_async(statement)
-            if not currency:
-                error_msg = f"No currency found for symbol: {symbol}"
-                self.logger.error(error_msg)
-                raise ValueError(error_msg)
-            return currency["currency"]
+            currency = InstrumentCurrency(**currency)
+            return currency
         except Exception as e:
             self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
             raise

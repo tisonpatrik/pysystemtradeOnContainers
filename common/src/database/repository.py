@@ -27,7 +27,7 @@ class Repository:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
                 record = await prepared_stmt.fetchrow(*statement.parameters)
-                return dict(record)
+                return record
         except Exception as e:
             self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
             raise
