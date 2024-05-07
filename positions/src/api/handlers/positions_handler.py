@@ -5,7 +5,8 @@ from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import get_client, get_repository
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
-from common.src.models.api_query_models import GetFxRateQuery, GetInstrumentCurrencyVolQuery
+from common.src.models.api_models.get_fx_rate import GetFxRateQuery
+from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from positions.src.api.models.positions_request_model import SubsystemPositionForInstrument
 from positions.src.services.cash_volatility_target_service import CashVolTargetService
 

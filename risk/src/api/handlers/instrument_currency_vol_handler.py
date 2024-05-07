@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.models.api_query_models import GetInstrumentCurrencyVolQuery
+from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.queries.get_denom_prices import GetDenomPriceQuery
 from common.src.queries.get_point_size import GetPointSize
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService

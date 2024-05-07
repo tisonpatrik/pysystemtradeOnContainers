@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
-from common.src.models.api_query_models import GetInstrumentCurrencyVolQuery
+from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from risk.src.dependencies.risk_dependencies import get_instrument_vol_handler
 

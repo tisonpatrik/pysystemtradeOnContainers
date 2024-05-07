@@ -4,7 +4,7 @@ from pandera.typing import DataFrame
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.models.db_models import MultiplePricesModel
+from common.src.models.db_models.db_models import MultiplePricesModel
 from common.src.queries.base_statements.insert_statement import InsertStatement
 from common.src.schemas.raw_data_schemas import MultiplePricesSchema
 
