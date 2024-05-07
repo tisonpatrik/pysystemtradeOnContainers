@@ -1,4 +1,4 @@
-from fastapi import Depends, Request
+from fastapi import Depends
 from src.services.raw_data.seed_adjusted_prices_service import SeedAdjustedPricesService
 from src.services.raw_data.seed_fx_prices_service import SeedFxPricesService
 from src.services.raw_data.seed_multiple_prices_service import SeedMultiplePricesService
