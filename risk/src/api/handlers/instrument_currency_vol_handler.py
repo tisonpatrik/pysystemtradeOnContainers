@@ -1,9 +1,9 @@
 import pandas as pd
 
 from common.src.database.repository import Repository
-from common.src.database.statements.fetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 from common.src.models.api_query_models import GetInstrumentCurrencyVolQuery
+from common.src.queries.fetch_statement import FetchStatement
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 

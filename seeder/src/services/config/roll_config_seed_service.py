@@ -1,8 +1,8 @@
 import pandas as pd
 
 from common.src.database.repository import Repository
-from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
+from common.src.queries.insert_statement import InsertStatement
 
 
 class RollConfigSeedService:

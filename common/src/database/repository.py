@@ -2,9 +2,9 @@ from typing import Any
 
 from asyncpg import Pool
 
-from common.src.database.statements.fetch_statement import FetchStatement
-from common.src.database.statements.insert_statement import InsertStatement
 from common.src.logging.logger import AppLogger
+from common.src.queries.fetch_statement import FetchStatement
+from common.src.queries.insert_statement import InsertStatement
 
 
 class Repository:
