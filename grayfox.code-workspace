@@ -4,15 +4,4 @@
             "path": "."
         }
     ],
-    "settings": {
-        "python.analysis.autoImportCompletions": true,
-        "python.analysis.diagnosticMode": "workspace",
-        "python.languageServer": "Pylance",
-        "python.analysis.logLevel": "Information",
-        "python.analysis.typeCheckingMode": "basic",
-        "python.analysis.exclude": [ "**/.venv"],
-        "files.exclude": {
-            "**/env": true
-        }
-    }
 }

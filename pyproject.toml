@@ -10,3 +10,38 @@ pythonpath = [
     "risk",
     "common"
 ]
+[tool.ruff]
+select = [
+    "I",
+    "N",
+    "ASYNC",
+    "ICN",
+    "NPY",
+    "PT",
+    "SLF",
+    "PD",
+    "PL",
+    "LOG",
+    "C4",
+    "SIM",
+    "TCH",
+]
+ignore = ["E402", "B905", "N818", "S101"]
+show-fixes = true
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pyenv",
+    ".pytest_cache",
+    ".venv",
+    ".vscode",
+    "venv",
+]
+line-length = 120
+indent-width = 4
+
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true

@@ -14,13 +14,16 @@ pytest-xdist = "*"
 rich = "*"
 uvicorn = "*"
 alembic = "*"
-pandera = "*"
 asyncpg = "*"
 httpx = "*"
 pydantic = "*"
+pandera = {extras = ["mypy"], version = "*"}
 
 [dev-packages]
 vulture = "*"
+mypy = "*"
+ruff = "*"
+
 
 [requires]
 python_version = "3.12"
