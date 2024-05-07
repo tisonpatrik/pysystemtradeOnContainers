@@ -3,7 +3,8 @@ import pandas as pd
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.models.api_query_models import GetFxRateQuery
-from common.src.queries.fetch_statement import FetchStatement
+from common.src.queries.get_fx_prices import GetFxPrices
+from common.src.queries.get_instrument_currency import GetInstrumentCurrency
 from raw_data.src.services.fx_price_service import FxService
 
 
@@ -38,12 +39,7 @@ class FxPricesHandler:
             raise RuntimeError(f"An unexpected error occurred: {e}")
 
     async def _get_instrument_currency(self, symbol: str) -> str:
-        query = """
-        SELECT currency 
-        FROM instrument_config 
-        WHERE symbol = $1
-        """
-        statement = FetchStatement(query=query, parameters=symbol)
+        statement = GetInstrumentCurrency(symbol=symbol)
         try:
             currency = await self.repository.fetch_item_async(statement)
             if not currency:
@@ -57,13 +53,7 @@ class FxPricesHandler:
 
     async def get_standard_fx_prices_async(self, instrument_currency: str) -> pd.Series:
         fx_code = f"{instrument_currency}{self.default_currency}"
-        query = """
-        SELECT date_time, price
-        FROM fx_prices
-        WHERE symbol = $1
-        ORDER BY date_time
-        """
-        statement = FetchStatement(query=query, parameters=fx_code)
+        statement = GetFxPrices(fx_code=fx_code)
         try:
             fx_data = await self.repository.fetch_many_async(statement)
             if not fx_data:

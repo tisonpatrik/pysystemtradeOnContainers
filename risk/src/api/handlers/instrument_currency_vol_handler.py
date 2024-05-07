@@ -3,7 +3,8 @@ import pandas as pd
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.models.api_query_models import GetInstrumentCurrencyVolQuery
-from common.src.queries.fetch_statement import FetchStatement
+from common.src.queries.get_denom_prices import GetDenomPriceQuery
+from common.src.queries.get_point_size import GetPointSize
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
@@ -29,13 +30,7 @@ class InstrumentCurrencyVolHandler:
             raise e
 
     async def _get_denom_prices(self, symbol: str) -> pd.Series:
-        query = """
-        SELECT date_time, price 
-        FROM multiple_prices 
-        WHERE symbol = $1
-        ORDER BY date_time
-        """
-        statement = FetchStatement(query=query, parameters=symbol)
+        statement = GetDenomPriceQuery(symbol=symbol)
         try:
             prices = await self.repository.fetch_many_async(statement)
             if not prices:
@@ -49,12 +44,7 @@ class InstrumentCurrencyVolHandler:
             raise
 
     async def _get_point_size(self, symbol: str) -> float:
-        query = """
-        SELECT pointsize 
-        FROM instrument_config 
-        WHERE symbol = $1
-        """
-        statement = FetchStatement(query=query, parameters=symbol)
+        statement = GetPointSize(symbol=symbol)
         try:
             point_size = await self.repository.fetch_item_async(statement)
             if not point_size:
