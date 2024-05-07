@@ -6,6 +6,7 @@ from common.src.models.api_models.get_fx_rate import GetFxRateQuery
 from common.src.queries.get_fx_prices import GetFxPrices
 from common.src.queries.get_instrument_currency import GetInstrumentCurrency
 from raw_data.src.services.fx_price_service import FxService
+from raw_data.src.validation.fx_prices import FxPrices
 from raw_data.src.validation.instrument_currency import InstrumentCurrency
 
 
