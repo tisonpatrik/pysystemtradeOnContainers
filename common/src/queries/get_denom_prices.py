@@ -9,12 +9,12 @@ class GetDenomPriceQuery(FetchStatement):
         WHERE symbol = $1
         ORDER BY date_time
         """
-        self._parameters = symbol
+        self._parameters = (symbol,)
 
     @property
     def query(self) -> str:
         return self._query
 
     @property
-    def parameters(self) -> str:
+    def parameters(self) -> tuple:
         return self._parameters

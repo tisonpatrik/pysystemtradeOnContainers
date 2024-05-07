@@ -9,12 +9,12 @@ class GetFxPrices(FetchStatement):
         WHERE symbol = $1
         ORDER BY date_time
         """
-        self._parameters = fx_code
+        self._parameters = (fx_code,)
 
     @property
     def query(self) -> str:
         return self._query
 
     @property
-    def parameters(self) -> str:
+    def parameters(self) -> tuple:
         return self._parameters

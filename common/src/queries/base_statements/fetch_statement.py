@@ -7,7 +7,7 @@ class FetchStatement(ABC):
 
     def __init__(self):
         self._query = str
-        self._parameters = tuple()
+        self._parameters = tuple
 
     @property
     @abstractmethod
