@@ -23,8 +23,6 @@ class Repository:
             raise
 
     async def fetch_item_async(self, statement: FetchStatement) -> dict[Any, Any]:
-        print(statement.query)
-        print(statement.parameters)
         try:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
