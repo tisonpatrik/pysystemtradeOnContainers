@@ -5,6 +5,7 @@ from common.src.logging.logger import AppLogger
 from common.src.models.api_models.get_fx_rate import GetFxRateQuery
 from common.src.queries.get_fx_prices import GetFxPrices
 from common.src.queries.get_instrument_currency import GetInstrumentCurrency
+from common.src.utils.convertors import to_pydantic, to_series
 from common.src.validation.fx_prices import FxPrices
 from common.src.validation.instrument_currency import InstrumentCurrency
 from raw_data.src.services.fx_price_service import FxService
@@ -35,7 +36,7 @@ class FxPricesHandler:
 			return fx_data.head()
 
 		except ValueError:
-			raise  # Re-raise handled errors for external handling
+			raise
 		except Exception as e:
 			self.logger.error(f'Unexpected error occurred while fetching FX prices: {e}')
 			raise RuntimeError(f'An unexpected error occurred: {e}')
@@ -44,7 +45,7 @@ class FxPricesHandler:
 		statement = GetInstrumentCurrency(symbol=symbol)
 		try:
 			currency = await self.repository.fetch_item_async(statement)
-			currency = InstrumentCurrency(**currency)
+			currency = to_pydantic(currency, InstrumentCurrency)
 			return currency
 		except Exception as e:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
@@ -54,9 +55,8 @@ class FxPricesHandler:
 		fx_code = f'{instrument_currency}{self.default_currency}'
 		statement = GetFxPrices(fx_code=fx_code)
 		try:
-			fx_data = await self.repository.fetch_many_async(statement)
-			fx_dataframe = pd.DataFrame(fx_data)
-			fx_prices = FxPrices.validate(fx_dataframe)
+			fx_prices_data = await self.repository.fetch_many_async(statement)
+			fx_prices = to_series(fx_prices_data, FxPrices)
 			return fx_prices
 		except Exception as e:
 			self.logger.error(f'Failed to fetch FX prices for {fx_code}: {e}')

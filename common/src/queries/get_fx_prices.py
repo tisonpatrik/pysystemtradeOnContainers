@@ -1,5 +1,4 @@
 from common.src.queries.base_statements.fetch_statement import FetchStatement
-from common.src.validation.instrument_currency import InstrumentCurrency
 
 
 class GetFxPrices(FetchStatement):
@@ -11,7 +10,6 @@ class GetFxPrices(FetchStatement):
         ORDER BY date_time
         """
 		self._parameters = (fx_code,)
-		self._output_type = InstrumentCurrency
 
 	@property
 	def parameters(self) -> tuple:

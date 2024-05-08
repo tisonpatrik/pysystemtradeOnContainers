@@ -1,5 +1,4 @@
 from common.src.queries.base_statements.fetch_statement import FetchStatement
-from common.src.validation.point_size import PointSize
 
 
 class GetPointSize(FetchStatement):
@@ -10,7 +9,6 @@ class GetPointSize(FetchStatement):
         WHERE symbol = $1
         """
 		self._parameters = (symbol,)
-		self._output_type = PointSize
 
 	@property
 	def parameters(self) -> tuple:
