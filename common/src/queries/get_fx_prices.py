@@ -1,5 +1,5 @@
 from common.src.queries.base_statements.fetch_statement import FetchStatement
-from raw_data.src.validation.instrument_currency import InstrumentCurrency
+from common.src.validation.instrument_currency import InstrumentCurrency
 
 
 class GetFxPrices(FetchStatement):
@@ -12,3 +12,7 @@ class GetFxPrices(FetchStatement):
         """
 		self._parameters = (fx_code,)
 		self._output_type = InstrumentCurrency
+
+	@property
+	def parameters(self) -> tuple:
+		return self._parameters

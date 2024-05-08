@@ -5,6 +5,7 @@ from common.src.logging.logger import AppLogger
 from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.queries.get_denom_prices import GetDenomPriceQuery
 from common.src.queries.get_point_size import GetPointSize
+from common.src.validation.point_size import PointSize
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
@@ -43,15 +44,11 @@ class InstrumentCurrencyVolHandler:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
 			raise
 
-	async def _get_point_size(self, symbol: str) -> float:
+	async def _get_point_size(self, symbol: str) -> PointSize:
 		statement = GetPointSize(symbol=symbol)
 		try:
 			point_size = await self.repository.fetch_item_async(statement)
-			if not point_size:
-				error_msg = f'No currency found for symbol: {symbol}'
-				self.logger.error(error_msg)
-				raise ValueError(error_msg)
-			return point_size['pointsize']
+			return point_size
 		except Exception as e:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
 			raise

@@ -1,23 +1,24 @@
 from abc import ABC, abstractmethod
-from typing import Type
+from typing import Generic, Type, TypeVar
 
 from pydantic import BaseModel
 
+T = TypeVar('T', bound=BaseModel)
 
-class FetchStatement(ABC):
+
+class FetchStatement(Generic[T]):
 	"""Abstract class for encapsulating data fetching parameters.
 	This class must be extended with specific implementations that format or validate queries."""
 
 	def __init__(self):
 		self._query = str
 		self._parameters = tuple
-		self._output_type = BaseModel
+		self._output_type: Type[T] = BaseModel
 
 	@property
-	@abstractmethod
 	def query(self) -> str:
 		"""Abstract property to return the SQL query string."""
-		pass
+		return self._query
 
 	@property
 	@abstractmethod
