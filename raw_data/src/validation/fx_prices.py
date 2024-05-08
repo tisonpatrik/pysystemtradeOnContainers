@@ -1,11 +1,11 @@
 from datetime import datetime
 
-import pandera as pa
-from pandera.typing import Index, Series
+from pandera import DataFrameModel
+from pandera.typing import Series
 
 
-class FxPrices(pa.DataFrameModel):
-	date_time: Index[datetime]
+class FxPrices(DataFrameModel):
+	date_time: Series[datetime]
 	price: Series[float]
 
 	class Config:

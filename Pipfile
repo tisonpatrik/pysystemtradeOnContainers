@@ -23,7 +23,7 @@ pandera = {extras = ["mypy"], version = "*"}
 vulture = "*"
 mypy = "*"
 ruff = "*"
-
+asyncpg-stubs = "*"
 
 [requires]
 python_version = "3.12"

@@ -56,8 +56,8 @@ class FxPricesHandler:
 		try:
 			fx_data = await self.repository.fetch_many_async(statement)
 			fx_dataframe = pd.DataFrame(fx_data)
-			fx_prices = FxPrices(fx_dataframe)
-			return pd.Series(data=fx_prices['price'].values, index=pd.to_datetime(fx_prices['date_time']))
+			fx_prices = FxPrices.validate(fx_dataframe)
+			return fx_prices
 		except Exception as e:
 			self.logger.error(f'Failed to fetch FX prices for {fx_code}: {e}')
 			raise
