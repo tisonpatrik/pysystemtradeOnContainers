@@ -1,7 +1,9 @@
 from typing import Any
 
 from asyncpg import Pool
+from pydantic import BaseModel
 
+from common.src.database.to_pydantic import convert_to_pydantic
 from common.src.logging.logger import AppLogger
 from common.src.queries.base_statements.fetch_statement import FetchStatement
 from common.src.queries.base_statements.insert_statement import InsertStatement
@@ -22,12 +24,13 @@ class Repository:
 			self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
 			raise
 
-	async def fetch_item_async(self, statement: FetchStatement) -> dict[Any, Any]:
+	async def fetch_item_async(self, statement: FetchStatement) -> BaseModel:
 		try:
 			async with self.pool.acquire() as connection:
 				prepared_stmt = await connection.prepare(statement.query)
 				record = await prepared_stmt.fetchrow(*statement.parameters)
-				return record
+				typed = convert_to_pydantic(record, statement.output_type)
+				return typed
 		except Exception as e:
 			self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
 			raise
