@@ -3,7 +3,6 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from risk.src.estimators.daily_returns_volatility import DailyReturnsVolEstimator
 from risk.src.estimators.volatility import mixed_vol_calc
 
 
@@ -14,7 +13,6 @@ class DailyReturnsVolService:
 
 	def __init__(self):
 		self.logger = AppLogger.get_instance().get_logger()
-		self.estimator = DailyReturnsVolEstimator()
 
 	def calculate_daily_returns_vol(self, prices) -> pd.Series:
 		"""

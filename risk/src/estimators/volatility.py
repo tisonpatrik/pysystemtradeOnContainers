@@ -98,7 +98,7 @@ def apply_vol_floor(
 	# set this to zero for the first value then propagate forward, ensures
 	# we always have a value
 	vol_min.iloc[0] = 0.0
-	vol_min.bfill(inplace=True)
+	vol_min = vol_min.bfill()
 
 	# apply the vol floor
 	vol_floored = np.maximum(vol, vol_min)
@@ -118,7 +118,7 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
 
 def mixed_vol_calc(
 	daily_returns: pd.Series,
-	days: int = 35,
+	days: int = 35, 
 	min_periods: int = 10,
 	slow_vol_years: int = 20,
 	proportion_of_slow_vol: float = 0.35,
@@ -168,7 +168,6 @@ def mixed_vol_calc(
 
 	vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
 	vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
-
 	if backfill:
 		# use the first vol in the past, sort of cheating
 		vol = backfill_vol(vol)
