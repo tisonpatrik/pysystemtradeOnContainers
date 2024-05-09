@@ -46,7 +46,6 @@ class InstrumentCurrencyVolHandler:
 		statement = GetPointSize(symbol=symbol)
 		try:
 			point_size_data = await self.repository.fetch_item_async(statement)
-			print(point_size_data)
 			point_size = to_pydantic(point_size_data, PointSize)
 			if point_size is None:
 				raise ValueError(f'No data found for symbol {symbol}')

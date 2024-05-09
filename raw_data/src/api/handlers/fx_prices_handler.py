@@ -7,8 +7,8 @@ from common.src.queries.get_fx_prices import GetFxPrices
 from common.src.queries.get_instrument_currency import GetInstrumentCurrency
 from common.src.utils.convertors import to_pydantic, to_series
 from common.src.validation.fx_prices import FxPrices
-from common.src.validation.instrument_currency import InstrumentCurrency
 from raw_data.src.services.fx_price_service import FxService
+from raw_data.src.validation.instrument_currency import InstrumentCurrency
 
 
 class FxPricesHandler:
