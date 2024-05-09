@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Type
-
-from pydantic import BaseModel
+from typing import Any
 
 
 class FetchStatement(ABC):
@@ -18,6 +16,6 @@ class FetchStatement(ABC):
 
 	@property
 	@abstractmethod
-	def parameters(self) -> tuple:
+	def parameters(self) -> Any:
 		"""Abstract property to ensure parameters are returned in an expected sequence type, specifically a tuple."""
 		pass

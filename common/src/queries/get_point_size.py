@@ -12,5 +12,9 @@ class GetPointSize(FetchStatement):
 
 	@property
 	def parameters(self) -> tuple:
-		"""Implement the abstract property to return parameters as a tuple."""
-		return (self._parameters,)
+		"""
+		Returns the parameters to be used in the SQL query.
+
+		:return: A tuple containing the parameters.
+		"""
+		return self._parameters

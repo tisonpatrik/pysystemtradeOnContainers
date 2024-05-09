@@ -33,7 +33,7 @@ class FxPricesHandler:
 			else:
 				fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
 
-			return fx_data.head()
+			return fx_data
 
 		except ValueError:
 			raise

@@ -5,6 +5,8 @@ from common.src.logging.logger import AppLogger
 from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.queries.get_denom_prices import GetDenomPriceQuery
 from common.src.queries.get_point_size import GetPointSize
+from common.src.utils.convertors import to_pydantic, to_series
+from common.src.validation.denom_prices import DenomPrices
 from common.src.validation.point_size import PointSize
 from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
@@ -23,7 +25,7 @@ class InstrumentCurrencyVolHandler:
 			daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(denom_prices)
 			point_size = await self._get_point_size(position_query.symbol)
 			instrument_volatility = self.instrument_vol_service.calculate_instrument_vol_async(
-				denom_prices, daily_returns_vol, point_size
+				denom_prices, daily_returns_vol, point_size.pointsize
 			)
 			return instrument_volatility
 		except Exception as e:
@@ -33,13 +35,9 @@ class InstrumentCurrencyVolHandler:
 	async def _get_denom_prices(self, symbol: str) -> pd.Series:
 		statement = GetDenomPriceQuery(symbol=symbol)
 		try:
-			prices = await self.repository.fetch_many_async(statement)
-			if not prices:
-				error_msg = f'No currency found for symbol: {symbol}'
-				self.logger.error(error_msg)
-				raise ValueError(error_msg)
-			price_df = pd.DataFrame(prices)
-			return pd.Series(data=price_df['price'].values, index=pd.to_datetime(price_df['date_time']))
+			prices_data = await self.repository.fetch_many_async(statement)
+			prices = to_series(prices_data, DenomPrices, DenomPrices.date_time, DenomPrices.price)
+			return prices
 		except Exception as e:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
 			raise
@@ -47,7 +45,11 @@ class InstrumentCurrencyVolHandler:
 	async def _get_point_size(self, symbol: str) -> PointSize:
 		statement = GetPointSize(symbol=symbol)
 		try:
-			point_size = await self.repository.fetch_item_async(statement)
+			point_size_data = await self.repository.fetch_item_async(statement)
+			print(point_size_data)
+			point_size = to_pydantic(point_size_data, PointSize)
+			if point_size is None:
+				raise ValueError(f'No data found for symbol {symbol}')
 			return point_size
 		except Exception as e:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
