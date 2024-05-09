@@ -14,8 +14,8 @@ class CumulativeDailyVolatilityNormalisedReturnsService:
 		try:
 			# SELECT id, hodnota, SUM(hodnota) OVER (ORDER BY id) AS cumsum FROM   tabulka;
 			cum_norm_returns = daily_vol_normalised_returns.cumsum()
-			cum_vol_norm_returns = pd.DataFrame(cum_norm_returns)
-			return cum_vol_norm_returns
+			cum_norm_returns = cum_norm_returns.rename(columns={'vol_normalized_returns': 'cum_vol_norm_returns'})
+			return cum_norm_returns
 
 		except Exception as error:
 			error_message = f'An error occurred during the processing: {error}'
