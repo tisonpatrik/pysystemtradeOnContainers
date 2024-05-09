@@ -44,8 +44,10 @@ class FxPricesHandler:
 	async def _get_instrument_currency(self, symbol: str) -> InstrumentCurrency:
 		statement = GetInstrumentCurrency(symbol=symbol)
 		try:
-			currency = await self.repository.fetch_item_async(statement)
-			currency = to_pydantic(currency, InstrumentCurrency)
+			currency_data = await self.repository.fetch_item_async(statement)
+			currency = to_pydantic(currency_data, InstrumentCurrency)
+			if currency is None:
+				raise ValueError(f'No data found for symbol {symbol}')
 			return currency
 		except Exception as e:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
@@ -56,7 +58,7 @@ class FxPricesHandler:
 		statement = GetFxPrices(fx_code=fx_code)
 		try:
 			fx_prices_data = await self.repository.fetch_many_async(statement)
-			fx_prices = to_series(fx_prices_data, FxPrices)
+			fx_prices = to_series(fx_prices_data, FxPrices, FxPrices.date_time, FxPrices.price)
 			return fx_prices
 		except Exception as e:
 			self.logger.error(f'Failed to fetch FX prices for {fx_code}: {e}')
