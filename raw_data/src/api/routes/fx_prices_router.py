@@ -27,6 +27,6 @@ async def get_fx_rate_for_instrument(
 
 		logger.info(f'Successfully fetched FX rate for symbol: {query.symbol}')
 		return fx_rate
-	except Exception as e:
+	except HTTPException as e:
 		logger.error(f'Error fetching FX rate for symbol: {query.symbol}, Error: {str(e)}')
 		return {'message': 'Internal server error', 'error': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
