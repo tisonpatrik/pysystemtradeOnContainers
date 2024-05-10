@@ -2,9 +2,9 @@ import pandas as pd
 
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.models.api_models.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
-from common.src.queries.get_denom_prices import GetDenomPriceQuery
-from common.src.queries.get_point_size import GetPointSize
+from common.src.queries.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
+from common.src.queries.db_queries.get_denom_prices import GetDenomPriceQuery
+from common.src.queries.db_queries.get_point_size import GetPointSize
 from common.src.utils.convertors import to_pydantic, to_series
 from common.src.validation.denom_prices import DenomPrices
 from common.src.validation.point_size import PointSize

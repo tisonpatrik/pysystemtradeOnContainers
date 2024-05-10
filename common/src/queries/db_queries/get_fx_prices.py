@@ -1,4 +1,4 @@
-from common.src.queries.base_statements.fetch_statement import FetchStatement
+from common.src.queries.db_queries.base_statements.fetch_statement import FetchStatement
 
 
 class GetFxPrices(FetchStatement):

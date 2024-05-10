@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from common.src.logging.logger import AppLogger
+from common.src.queries.api_queries.get_rules import GetRuleQuery
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -22,17 +23,17 @@ async def get_all_rules():
 
 
 @router.get(
-	'/get_rule_by_id/{rule_id}',
+	'/get_rule/',
 	status_code=status.HTTP_200_OK,
-	name='Get Rule By Id',
+	name='Get Rule',
 )
-async def get_rule_by_id(rule_id: str):
+async def get_rule(query: GetRuleQuery = Depends()):
 	try:
-		logger.info(f'Fetching rule by id: {rule_id}')
+		logger.info(f'Fetching rule by id: {query.name}')
 
-		logger.info(f'Successfully fetched rule by id: {rule_id}')
+		logger.info(f'Successfully fetched rule by id: {query.name}')
 	except HTTPException as e:
-		logger.error(f'Error fetching rule by id: {rule_id}, Error: {str(e)}')
+		logger.error(f'Error fetching rule by id: {query.name}, Error: {str(e)}')
 		return {'message': 'Internal server error', 'error': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 

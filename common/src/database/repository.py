@@ -3,8 +3,8 @@ from typing import Any
 from asyncpg import Pool
 
 from common.src.logging.logger import AppLogger
-from common.src.queries.base_statements.fetch_statement import FetchStatement
-from common.src.queries.base_statements.insert_statement import InsertStatement
+from common.src.queries.db_queries.base_statements.fetch_statement import FetchStatement
+from common.src.queries.db_queries.base_statements.insert_statement import InsertStatement
 
 
 class Repository:
