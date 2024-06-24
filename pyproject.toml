@@ -46,3 +46,6 @@ indent-width = 4
 quote-style = "single"
 indent-style = "tab"
 docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["NPY201"]
