@@ -1,5 +1,4 @@
 services:
-
   seeder:
     build:
       context: .
@@ -77,9 +76,9 @@ services:
     hostname: db_postgres
     restart: on-failure
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=grayfox_db
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
