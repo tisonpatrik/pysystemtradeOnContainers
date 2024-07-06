@@ -31,13 +31,15 @@ class PositionsHandlers:
 			instr_ccy_vol = await self.get_instrument_volatility_async(request.instrument_code)
 			indexed = fx_rate.reindex(instr_ccy_vol.index, method='ffill')
 			instr_value_vol = instr_ccy_vol.ffill() * indexed
+			print(instr_value_vol)
+			print(instr_value_vol.describe())
 			cash_vol_target = self.cash_vol_target_service.get_daily_cash_vol_target(
 				request.notional_trading_capital, request.percentage_volatility_target
 			)
 			vol_scalar = cash_vol_target / instr_value_vol
 
 			# forecast = self.get_combined_forecast(request.instrument_code)
-			# vol_scalar_reindexed = vol_scalar.reindex(forecast.index, method="ffill")
+			# vol_scalar_r33eindexed = vol_scalar.reindex(forecast.index, method="ffill")
 			# subsystem_position_raw = vol_scalar_reindexed * forecast / avg_abs_forecast
 			# subsystem_position = self._apply_long_only_constraint_to_position(
 			#     positions=subsystem_position_raw, instrument_code=request.instrument_code

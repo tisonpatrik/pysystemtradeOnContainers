@@ -164,14 +164,13 @@ def mixed_vol_calc(
 	business_days_in_year = get_bdays_inyear()
 	vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
 	slow_vol_days = slow_vol_years * business_days_in_year
-	long_vol = vol.ewm(slow_vol_days).mean()
+	long_vol = vol.ewm(span=slow_vol_days).mean()
 
 	vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
 	vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
 	if backfill:
 		# use the first vol in the past, sort of cheating
 		vol = backfill_vol(vol)
-
 	return vol
 
 

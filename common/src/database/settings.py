@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     max_connections: int = 10
     min_connections: int = 1
-    connection_timeout: int = 30
+    connection_timeout: int = 50
 
     class Config:
         env_file = ".env"

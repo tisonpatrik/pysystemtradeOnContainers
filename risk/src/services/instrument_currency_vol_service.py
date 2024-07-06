@@ -33,5 +33,4 @@ class InstrumentCurrencyVolService:
 		# Calculate the volatility of daily returns
 		(denom_price, return_vol) = denom_price.align(daily_returns_vol, join='right')
 		perc_vol = 100.0 * (return_vol / denom_price.ffill().abs())
-
 		return perc_vol
