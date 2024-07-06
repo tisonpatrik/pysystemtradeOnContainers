@@ -118,7 +118,7 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
 
 def mixed_vol_calc(
 	daily_returns: pd.Series,
-	days: int = 35, 
+	days: int = 35,
 	min_periods: int = 10,
 	slow_vol_years: int = 20,
 	proportion_of_slow_vol: float = 0.35,
