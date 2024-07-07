@@ -24,11 +24,11 @@ class FxPricesHandler:
 
 			base_currency = get_fx_rate_query.base_currency
 
-			if base_currency == instrument_currency.currency:
+			if instrument_currency.currency == base_currency:
 				fx_data = self.fx_prices_service.get_default_rate_series()
-			elif instrument_currency.currency == 'USD':
+			elif base_currency == self.default_currency:
 				fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency)
-			elif base_currency == 'USD':
+			elif instrument_currency.currency == self.default_currency:
 				fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency)
 			else:
 				fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
