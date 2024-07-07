@@ -21,15 +21,14 @@ class FxPricesHandler:
 	async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
 		try:
 			instrument_currency = await self._get_instrument_currency(get_fx_rate_query.symbol)
-
 			base_currency = get_fx_rate_query.base_currency
 
 			if instrument_currency.currency == base_currency:
 				fx_data = self.fx_prices_service.get_default_rate_series()
 			elif base_currency == self.default_currency:
-				fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency)
+				fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency, self.default_currency)
 			elif instrument_currency.currency == self.default_currency:
-				fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency)
+				fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency, base_currency)
 			else:
 				fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
 
@@ -53,8 +52,8 @@ class FxPricesHandler:
 			self.logger.error(f'Database error when fetching currency for symbol {symbol}: {e}')
 			raise
 
-	async def get_standard_fx_prices_async(self, instrument_currency: str) -> pd.Series:
-		fx_code = f'{instrument_currency}{self.default_currency}'
+	async def get_standard_fx_prices_async(self, instrument_currency: str, conversion_currency: str) -> pd.Series:
+		fx_code = f'{instrument_currency}{conversion_currency}'
 		statement = GetFxPrices(fx_code=fx_code)
 		try:
 			fx_prices_data = await self.repository.fetch_many_async(statement)
@@ -64,9 +63,9 @@ class FxPricesHandler:
 			self.logger.error(f'Failed to fetch FX prices for {fx_code}: {e}')
 			raise
 
-	async def get_fx_prices_for_inversion(self, instrument_currency: str) -> pd.Series:
+	async def get_fx_prices_for_inversion(self, instrument_currency: str, base_currency: str) -> pd.Series:
 		try:
-			raw_fx_data = await self.get_standard_fx_prices_async(instrument_currency)
+			raw_fx_data = await self.get_standard_fx_prices_async(base_currency, instrument_currency)
 			inverted_fx_data = self.fx_prices_service.calculate_inversion(raw_fx_data)
 			return inverted_fx_data
 		except Exception as e:
@@ -75,8 +74,8 @@ class FxPricesHandler:
 
 	async def get_fx_cross(self, instrument_currency: str, base_currency: str) -> pd.Series:
 		try:
-			currency1_vs_default = await self.get_standard_fx_prices_async(instrument_currency)
-			currency2_vs_default = await self.get_standard_fx_prices_async(base_currency)
+			currency1_vs_default = await self.get_standard_fx_prices_async(instrument_currency, self.default_currency)
+			currency2_vs_default = await self.get_standard_fx_prices_async(base_currency, self.default_currency)
 			fx_rate_series = self.fx_prices_service.calculate_fx_cross(currency1_vs_default, currency2_vs_default)
 			return fx_rate_series
 		except Exception as e:
