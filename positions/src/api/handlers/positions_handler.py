@@ -31,8 +31,6 @@ class PositionsHandlers:
 			instr_ccy_vol = await self.get_instrument_volatility_async(request.instrument_code)
 			indexed = fx_rate.reindex(instr_ccy_vol.index, method='ffill')
 			instr_value_vol = instr_ccy_vol.ffill() * indexed
-			print(instr_value_vol)
-			print(instr_value_vol.describe())
 			cash_vol_target = self.cash_vol_target_service.get_daily_cash_vol_target(
 				request.notional_trading_capital, request.percentage_volatility_target
 			)
@@ -51,6 +49,8 @@ class PositionsHandlers:
 			raise HTTPException(status_code=500, detail=str(e))
 
 	def get_combined_forecast(self, instrument_code: str):
+		self.logger.info(f'Fetching combined forecast for {instrument_code}')
+		
 		return pd.Series()
 
 	def _apply_long_only_constraint_to_position(self, positions: pd.Series, instrument_code: str) -> pd.Series:

@@ -1,8 +1,8 @@
 import pandas as pd
 
+from common.src.commands.db_commands.base_statements.insert_statement import InsertManyStatement
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.queries.db_queries.base_statements.insert_statement import InsertStatement
 
 
 class InstrumentConfigSeedService:
@@ -19,5 +19,5 @@ class InstrumentConfigSeedService:
 		Seed instrument config data.
 		"""
 		self.logger.info(f'Seeding instrument_config data: ')
-		statement = InsertStatement(table_name='instrument_config', data=raw_data)
+		statement = InsertManyStatement(table_name='instrument_config', data=raw_data)
 		await self.repository.insert_dataframe_async(statement)
