@@ -1,4 +1,5 @@
 from common.src.commands.db_commands.create_rule import CreateRule
+from common.src.commands.db_commands.delete_rule import DeleteRule
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.queries.api_queries.get_rule import GetRuleQuery
@@ -28,7 +29,7 @@ class RulesHandler:
 	async def create_rule_async(self, rule: Rule):
 		try:
 			statement = CreateRule(rule)
-			await self.repository.insert_object_async(statement)
+			await self.repository.insert_item_async(statement)
 		except Exception as e:
 			self.logger.error(f'Error creating rule, Error: {str(e)}')
 			raise e
@@ -41,4 +42,12 @@ class RulesHandler:
 			return rules
 		except Exception as e:
 			self.logger.error(f'Error fetching all rules, Error: {str(e)}')
+			raise e
+
+	async def delete_rule_async(self, rule: Rule):
+		try:
+			statement = DeleteRule(rule)
+			await self.repository.delete_item_async(statement)
+		except Exception as e:
+			self.logger.error(f'Error deleting rule, Error: {str(e)}')
 			raise e

@@ -57,10 +57,10 @@ async def create_rule(command: Rule, rules_handler: RulesHandler = Depends(get_r
 	try:
 		logger.info(f'Creating rule with details: {command.model_dump()}')
 		await rules_handler.create_rule_async(command)
-		logger.info(f'Successfully created rule: {command.name}')
+		logger.info(f'Successfully created rule: {command.model_dump()}')
 		return {'message': 'Rule created successfully'}
 	except HTTPException as e:
-		logger.error(f'Error creating rule {command.name}, Error: {str(e)}')
+		logger.error(f'Error creating rule {command.model_dump()}, Error: {str(e)}')
 		return {'message': 'Internal server error', 'error': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
@@ -69,11 +69,11 @@ async def create_rule(command: Rule, rules_handler: RulesHandler = Depends(get_r
 	status_code=status.HTTP_204_NO_CONTENT,
 	name='Delete Rule',
 )
-async def delete_rule(rule_id: str):
+async def delete_rule(command: Rule, rules_handler: RulesHandler = Depends(get_rules_handler)):
 	try:
-		logger.info(f'Deleting rule by id: {rule_id}')
-
-		logger.info(f'Successfully deleted rule by id: {rule_id}')
+		logger.info(f'Deleting rule with details: {command.model_dump()}')
+		await rules_handler.delete_rule_async(command)
+		logger.info(f'Successfully deleted rule: {command.model_dump()}')
 	except HTTPException as e:
-		logger.error(f'Error deleting rule by id: {rule_id}, Error: {str(e)}')
+		logger.error(f'Error deleting rule {command.model_dump()}, Error: {str(e)}')
 		return {'message': 'Internal server error', 'error': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
