@@ -50,18 +50,18 @@ services:
     volumes:
       - ./risk:/home/app/risk
       - ./common:/home/app/common
-  rules:
+  rules_manager:
     build:
       context: .
-      dockerfile: rules/Dockerfile
-    hostname: rules
-    container_name: rules
+      dockerfile: rules/rules_manager/Dockerfile
+    hostname: rules_manager
+    container_name: rules_manager
     depends_on:
       - db_postgres
     ports:
       - "8300:8000"
     volumes:
-      - ./rules:/home/app/rules
+      - ./rules/rules_manager:/home/app/rules_manager
       - ./common:/home/app/common
   positions:
     build:
