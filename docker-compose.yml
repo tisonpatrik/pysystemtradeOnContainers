@@ -1,12 +1,5 @@
 services:
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: 'rabbitmq'
-    ports:
-    - 5672:5672
-    - 15672:15672
-    volumes:
-    - rabbitmq_data:/var/lib/rabbitmq
+
   seeder:
     build:
       context: .
@@ -37,6 +30,7 @@ services:
     volumes:
       - ./raw_data:/home/app/raw_data
       - ./common:/home/app/common
+
   risk:
     build:
       context: .
@@ -50,6 +44,7 @@ services:
     volumes:
       - ./risk:/home/app/risk
       - ./common:/home/app/common
+
   rules_manager:
     build:
       context: .
@@ -63,6 +58,21 @@ services:
     volumes:
       - ./rules/rules_manager:/home/app/rules_manager
       - ./common:/home/app/common
+
+  breakout:
+    build:
+      context: .
+      dockerfile: rules/workers/breakout/Dockerfile
+    hostname: breakout
+    container_name: breakout
+    depends_on:
+      - rabbitmq
+    ports:
+      - "8301:8000"
+    volumes:
+      - ./rules/workers/breakout:/home/app/breakout
+      - ./common:/home/app/common
+  
   positions:
     build:
       context: .
@@ -100,6 +110,15 @@ services:
       - PGADMIN_LISTEN_PORT=5050
     ports:
       - "5050:5050"
+      
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    container_name: 'rabbitmq'
+    ports:
+    - 5672:5672
+    - 15672:15672
+    volumes:
+    - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   db-postgres:

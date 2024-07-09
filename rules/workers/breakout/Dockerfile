@@ -9,9 +9,9 @@ WORKDIR /home/app
 
 COPY common/ ./common
 
-COPY rules/workers/breakout_rule ./breakout
-COPY .env ./
+COPY rules/workers/breakout/ ./breakout
 
+USER root
 RUN pip install --no-cache-dir -r breakout/requirements.txt
 
 CMD ["uvicorn", "breakout.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

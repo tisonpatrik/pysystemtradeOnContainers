@@ -8,7 +8,7 @@ class BreakoutService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
 
-    def get_breakout(self, price: pd.Series, lookback: int) -> pd.Series[float]:
+    def get_breakout(self, price: pd.Series, lookback: int) -> pd.Series:
         try:
             smooth = max(int(lookback / 4.0), 1)
             roll_max = price.rolling(lookback, min_periods=int(min(len(price), np.ceil(lookback / 2.0)))).max()
