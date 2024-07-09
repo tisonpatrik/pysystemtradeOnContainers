@@ -11,7 +11,7 @@ from positions.src.api.models.positions_request_model import SubsystemPositionFo
 from positions.src.services.cash_volatility_target_service import CashVolTargetService
 
 
-class PositionsHandlers:
+class PositionsHandler:
 	def __init__(
 		self,
 		repository: Repository = Depends(get_repository),
@@ -50,7 +50,7 @@ class PositionsHandlers:
 
 	def get_combined_forecast(self, instrument_code: str):
 		self.logger.info(f'Fetching combined forecast for {instrument_code}')
-		
+
 		return pd.Series()
 
 	def _apply_long_only_constraint_to_position(self, positions: pd.Series, instrument_code: str) -> pd.Series:

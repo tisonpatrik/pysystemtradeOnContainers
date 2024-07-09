@@ -17,6 +17,8 @@ alembic = "*"
 asyncpg = "*"
 httpx = "*"
 pydantic = "*"
+pika = "*"
+mypy = "*"
 pandera = {extras = ["mypy"], version = "*"}
 
 [dev-packages]
