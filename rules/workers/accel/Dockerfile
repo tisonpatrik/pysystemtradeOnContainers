@@ -10,11 +10,12 @@ RUN apk update \
 WORKDIR /home/app
 
 # Copy the application files
-COPY rules/workers/breakout/ ./breakout
+COPY rules/workers/accel/ ./accel
 COPY common/ ./common
+COPY rules/workers/shared/ ./shared
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r breakout/requirements.txt
+RUN pip install --no-cache-dir -r accel/requirements.txt
 
 # Set the entry point to run Celery
-CMD ["celery", "-A", "breakout.breakout", "worker", "--loglevel=info", "-Q", "breakout"]
+CMD ["celery", "-A", "accel.accel", "worker", "--loglevel=info", "-Q", "accel"]

@@ -2,4 +2,4 @@ celery==5.4.0
 pandas==2.2.2
 rich==13.7.1
 numpy<2.0
-redis
+redis==5.0.7
