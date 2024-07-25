@@ -111,14 +111,13 @@ services:
     ports:
       - "5050:5050"
       
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    container_name: 'rabbitmq'
+  redis:
+    image: redis:latest
+    container_name: 'redis'
+    hostname: 'redis'
+    restart: always
     ports:
-    - 5672:5672
-    - 15672:15672
-    volumes:
-    - rabbitmq_data:/var/lib/rabbitmq
+    - 6379:6379
 
 volumes:
   db-postgres:
