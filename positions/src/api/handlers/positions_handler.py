@@ -1,11 +1,11 @@
 import pandas as pd
 from fastapi import HTTPException
 
+from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
+from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
-from common.src.queries.api_queries.get_fx_rate import GetFxRateQuery
-from common.src.queries.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from positions.src.api.models.positions_request_model import SubsystemPositionForInstrument
 from positions.src.services.cash_volatility_target_service import CashVolTargetService
 

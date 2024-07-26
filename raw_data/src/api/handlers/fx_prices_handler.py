@@ -1,8 +1,8 @@
 import pandas as pd
 
+from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.queries.api_queries.get_fx_rate import GetFxRateQuery
 from common.src.queries.db_queries.get_fx_prices import GetFxPrices
 from common.src.queries.db_queries.get_instrument_currency import GetInstrumentCurrency
 from common.src.utils.convertors import to_pydantic, to_series

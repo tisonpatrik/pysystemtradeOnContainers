@@ -1,8 +1,8 @@
 import pandas as pd
 
+from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.queries.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.queries.db_queries.get_daily_prices import GetDailyPriceQuery
 from common.src.queries.db_queries.get_denom_prices import GetDenomPriceQuery
 from common.src.queries.db_queries.get_point_size import GetPointSize
