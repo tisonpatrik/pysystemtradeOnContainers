@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from common.src.dependencies.app_dependencies import app_lifespan
+from risk.src.api.dependencies.risk_dependencies import app_lifespan
 from common.src.logging.logger import AppLogger
 from risk.src.api.routers.instrument_volatility_route import router as instrument_vol_route
 

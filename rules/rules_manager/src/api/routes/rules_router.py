@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from rules_manager.src.api.dependencies.dependencies import get_rules_handler
 from rules_manager.src.api.handlers.rules_handler import RulesHandler
 
 from common.src.logging.logger import AppLogger
 from common.src.validation.rule import Rule
+from rules.rules_manager.src.api.dependencies.rules_manager_dependencies import get_rules_handler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

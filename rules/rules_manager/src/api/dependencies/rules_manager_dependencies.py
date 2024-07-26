@@ -1,11 +1,11 @@
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
+from rules_manager.src.api.handlers.rules_handler import RulesHandler
 
 from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import get_repository
 from common.src.dependencies.db_setup import setup_async_database
-from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 
 
 @asynccontextmanager
@@ -14,5 +14,5 @@ async def app_lifespan(app: FastAPI):
         yield
 
 
-async def get_instrument_vol_handler(repository: Repository = Depends(get_repository)) -> InstrumentCurrencyVolHandler:
-    return InstrumentCurrencyVolHandler(repository=repository)
+def get_rules_handler(repository: Repository = Depends(get_repository)) -> RulesHandler:
+    return RulesHandler(repository=repository)

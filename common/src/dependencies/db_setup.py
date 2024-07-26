@@ -3,26 +3,11 @@ from functools import lru_cache
 
 import asyncpg
 from fastapi import FastAPI
-from httpx import AsyncClient
 
 from common.src.database.settings import get_settings
 from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
-
-
-@asynccontextmanager
-async def app_lifespan(app: FastAPI):
-    async with setup_async_client(app), setup_async_database(app):
-        yield
-
-
-@lru_cache()
-@asynccontextmanager
-async def setup_async_client(app: FastAPI):
-    app.state.requests_client = AsyncClient()
-    yield
-    await app.state.requests_client.aclose()
 
 
 @lru_cache()
