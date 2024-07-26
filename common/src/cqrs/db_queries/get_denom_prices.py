@@ -1,4 +1,4 @@
-from common.src.queries.db_queries.base_statements.fetch_statement import FetchStatement
+from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
 class GetDenomPriceQuery(FetchStatement):

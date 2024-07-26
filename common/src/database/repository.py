@@ -9,8 +9,8 @@ from common.src.commands.db_commands.base_statements.insert_statement import (
     InsertManyStatement,
     InsertStatement,
 )
+from common.src.database.base_statements.fetch_statementfetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
-from common.src.queries.db_queries.base_statements.fetch_statement import FetchStatement
 
 
 class Repository:
@@ -65,9 +65,7 @@ class Repository:
         try:
             async with self.pool.acquire() as connection, connection.transaction():
                 await connection.execute(query, *values)
-                self.logger.info(
-                    f"Successfully deleted record from {statement._table_name} with condition: {statement._condition.json()}"
-                )
+                self.logger.info(f"Successfully deleted record from {statement._table_name} with condition: {statement._condition.json()}")
         except Exception as e:
             self.logger.error(f"Failed to delete data from the database: {str(e)}")
             raise

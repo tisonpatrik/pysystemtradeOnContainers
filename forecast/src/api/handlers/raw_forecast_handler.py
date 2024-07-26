@@ -2,6 +2,7 @@ import asyncio
 
 from celery import Celery
 
+from common.src.cqrs.api_queries.get_forecast_for_symbol_query import GetForecastForSymbolQuery
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 
@@ -20,7 +21,7 @@ class RawForecastHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.db_repository = db_repository
 
-    async def get_raw_forecast_async(self):
+    async def get_raw_forecast_async(self, forecast_query: GetForecastForSymbolQuery):
         self.logger.info("Fetching raw forecast")
 
         # Send all messages and gather results
