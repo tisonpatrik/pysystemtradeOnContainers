@@ -1,8 +1,9 @@
-from rules.rules_manager.src.validation.create_rule import CreateRule
-from rules.rules_manager.src.validation.delete_rule import DeleteRule
+from rules_manager.src.validation.create_rule import CreateRule
+from rules_manager.src.validation.delete_rule import DeleteRule
+
+from common.src.cqrs.db_queries.get_all_rules import GetAllRules
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.queries.db_queries.get_rule import GetAllRules
 from common.src.utils.convertors import to_pydantic
 from common.src.validation.rule import Rule
 

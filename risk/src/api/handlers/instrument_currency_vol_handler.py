@@ -1,11 +1,11 @@
 import pandas as pd
 
 from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
+from common.src.cqrs.db_queries.get_daily_prices import GetDailyPriceQuery
+from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
+from common.src.cqrs.db_queries.get_point_size import GetPointSize
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.queries.db_queries.get_daily_prices import GetDailyPriceQuery
-from common.src.queries.db_queries.get_denom_prices import GetDenomPriceQuery
-from common.src.queries.db_queries.get_point_size import GetPointSize
 from common.src.utils.convertors import to_pydantic, to_series
 from common.src.validation.daily_prices import DailyPrices
 from common.src.validation.denom_prices import DenomPrices
@@ -23,10 +23,10 @@ class InstrumentCurrencyVolHandler:
 
     async def get_instrument_vol_for_symbol_async(self, position_query: GetInstrumentCurrencyVolQuery) -> pd.Series:
         try:
-            denom_prices = await self._get_denom_prices(position_query.symbol)
-            daily_prices = await self._get_daily_prices(position_query.symbol)
+            denom_prices = await self._get_denom_prices_async(position_query.symbol)
+            daily_prices = await self._get_daily_prices_async(position_query.symbol)
             daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
-            point_size = await self._get_point_size(position_query.symbol)
+            point_size = await self._get_point_size_async(position_query.symbol)
             instrument_volatility = self.instrument_vol_service.calculate_instrument_vol_async(
                 denom_prices, daily_returns_vol, point_size.pointsize
             )
@@ -35,7 +35,7 @@ class InstrumentCurrencyVolHandler:
             self.logger.error(f"Error in processing instrument volatility: {str(e)}")
             raise e
 
-    async def _get_daily_prices(self, symbol: str) -> pd.Series:
+    async def _get_daily_prices_async(self, symbol: str) -> pd.Series:
         statement = GetDailyPriceQuery(symbol=symbol)
         try:
             prices_data = await self.repository.fetch_many_async(statement)
@@ -45,7 +45,7 @@ class InstrumentCurrencyVolHandler:
             self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
             raise
 
-    async def _get_denom_prices(self, symbol: str) -> pd.Series:
+    async def _get_denom_prices_async(self, symbol: str) -> pd.Series:
         statement = GetDenomPriceQuery(symbol=symbol)
         try:
             prices_data = await self.repository.fetch_many_async(statement)
@@ -55,7 +55,7 @@ class InstrumentCurrencyVolHandler:
             self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
             raise
 
-    async def _get_point_size(self, symbol: str) -> PointSize:
+    async def _get_point_size_async(self, symbol: str) -> PointSize:
         statement = GetPointSize(symbol=symbol)
         try:
             point_size_data = await self.repository.fetch_item_async(statement)

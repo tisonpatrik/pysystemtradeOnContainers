@@ -2,14 +2,14 @@ from typing import Any
 
 from asyncpg.pool import Pool
 
-from common.src.commands.db_commands.base_statements.delete_statement import (
+from common.src.database.base_statements.delete_statement import (
     DeleteStatement,
 )
-from common.src.commands.db_commands.base_statements.insert_statement import (
+from common.src.database.base_statements.fetch_statement import FetchStatement
+from common.src.database.base_statements.insert_statement import (
     InsertManyStatement,
     InsertStatement,
 )
-from common.src.database.base_statements.fetch_statementfetch_statement import FetchStatement
 from common.src.logging.logger import AppLogger
 
 
