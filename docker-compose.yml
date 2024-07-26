@@ -102,6 +102,20 @@ services:
       - ./positions:/home/app/positions
       - ./common:/home/app/common
 
+  forecast:
+    build:
+      context: .
+      dockerfile: forecast/Dockerfile
+    hostname: forecast
+    container_name: forecast
+    depends_on:
+      - db_postgres
+    ports:
+      - "8500:8000"
+    volumes:
+      - ./forecast:/home/app/forecast
+      - ./common:/home/app/common
+
   db_postgres:
     image: postgres:latest
     container_name: postgres

@@ -5,17 +5,17 @@ from kombu import Queue
 
 from common.src.logging.logger import AppLogger
 
-app = Celery("tasks", broker="redis://redis:6379/0", backend="redis://redis:6379/0")
+app = Celery("rules", broker="redis://redis:6379/0", backend="redis://redis:6379/0")
 
 app.conf.task_queues = (Queue("breakout"),)
 
 app.conf.task_routes = {
-    "tasks.breakout": {"queue": "breakout"},
+    "rules.breakout": {"queue": "breakout"},
 }
 logger = AppLogger.get_instance().get_logger()
 
 
-@app.task(name="tasks.breakout")
+@app.task(name="rules.breakout")
 def get_breakout(price: pd.Series, lookback: int) -> pd.Series:
     try:
         smooth = max(int(lookback / 4.0), 1)
