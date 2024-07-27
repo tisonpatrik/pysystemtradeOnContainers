@@ -11,9 +11,9 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_accel_route/",
+    "/get_breakout_route/",
     status_code=status.HTTP_200_OK,
-    name="Get Accel",
+    name="Get Breakout",
 )
 async def get_breakout_for_instrument_async(
     query: GetRuleForInstrumentQuery = Depends(),
@@ -21,7 +21,8 @@ async def get_breakout_for_instrument_async(
 ):
     try:
         breakout = await breakout_handler.get_breakout_async(query)
-        return breakout
+        print(breakout)
+        return breakout.to_json(orient="records")
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate breakout for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}
@@ -31,5 +32,6 @@ async def get_breakout_for_instrument_async(
     except Exception as e:
         logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
 
 # ['rawdata.get_daily_prices', 'rawdata.daily_returns_volatility']
