@@ -3,11 +3,15 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 
-logger = AppLogger.get_instance().get_logger()
+
+class BreakoutService:
+    def __init__(self):
+        self.logger = AppLogger.get_instance().get_logger()
 
 
-def get_breakout(price: pd.Series, lookback: int) -> pd.Series:
+def calculate_breakout(self, price: pd.Series, lookback: int) -> pd.Series:
     try:
+        self.logger.info(f"Calculating Breakout signal with lookback={lookback}")
         smooth = max(int(lookback / 4.0), 1)
         roll_max = price.rolling(lookback, min_periods=int(min(len(price), np.ceil(lookback / 2.0)))).max()
         roll_min = price.rolling(lookback, min_periods=int(min(len(price), np.ceil(lookback / 2.0)))).min()
@@ -18,5 +22,5 @@ def get_breakout(price: pd.Series, lookback: int) -> pd.Series:
         smoothed_output = output.ewm(span=smooth, min_periods=np.ceil(smooth / 2.0)).mean()
         return smoothed_output
     except Exception as e:
-        logger.error("Error occurred in breakout calculation: %s", str(e))
+        self.logger.error("Error occurred in breakout calculation: %s", str(e))
         raise

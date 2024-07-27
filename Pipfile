@@ -17,10 +17,9 @@ alembic = "*"
 asyncpg = "*"
 httpx = "*"
 pydantic = "*"
-pika = "*"
 mypy = "*"
 pandera = {extras = ["mypy"], version = "*"}
-celery = "*"
+redis = "*"
 
 [dev-packages]
 vulture = "*"

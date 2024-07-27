@@ -56,7 +56,7 @@ services:
     ports:
       - "8300:8000"
     volumes:
-      - ./rules/rules:/home/app/rules
+      - ./rules:/home/app/rules
       - ./common:/home/app/common
 
   positions:
