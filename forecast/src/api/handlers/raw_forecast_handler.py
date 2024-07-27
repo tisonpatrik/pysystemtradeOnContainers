@@ -22,11 +22,12 @@ messages = [
 class RawForecastHandler:
     def __init__(self, db_repository: Repository):
         self.logger = AppLogger.get_instance().get_logger()
-        self.db_repository = db_repository
+        self.repository = db_repository
 
     async def get_raw_forecast_async(self, forecast_query: GetForecastForSymbolQuery):
         self.logger.info("Fetching raw forecast")
         rules = await self._get_all_rules_async()
+        self.logger.info(f"Fetched rules: {rules}")
         # Send all messages and gather results
         tasks = [self.send_celery_task_async(task_name=rule.task, speed=rule.speed, queue=rule.name) for rule in rules]
         results = await asyncio.gather(*tasks)

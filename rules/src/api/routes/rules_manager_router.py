@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from rules_manager.src.api.handlers.rules_handler import RulesHandler
 
 from common.src.logging.logger import AppLogger
 from common.src.validation.rule import Rule
-from rules.rules_manager.src.api.dependencies.rules_manager_dependencies import get_rules_handler
+from rules.src.api.dependencies.rules_manager_dependencies import get_rules_handler
+from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -14,7 +14,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get All Rules",
 )
-async def get_all_rules(rules_handler: RulesHandler = Depends(get_rules_handler)):
+async def get_all_rules(rules_handler: RulesManagerHandler = Depends(get_rules_handler)):
     try:
         logger.info("Fetching all rules")
         rules = await rules_handler.get_all_rules_async()
@@ -33,7 +33,7 @@ async def get_all_rules(rules_handler: RulesHandler = Depends(get_rules_handler)
     status_code=status.HTTP_201_CREATED,
     name="Create Rule",
 )
-async def create_rule(command: Rule, rules_handler: RulesHandler = Depends(get_rules_handler)):
+async def create_rule(command: Rule, rules_handler: RulesManagerHandler = Depends(get_rules_handler)):
     try:
         logger.info(f"Creating rule with details: {command.model_dump()}")
         await rules_handler.create_rule_async(command)
@@ -49,7 +49,7 @@ async def create_rule(command: Rule, rules_handler: RulesHandler = Depends(get_r
     status_code=status.HTTP_204_NO_CONTENT,
     name="Delete Rule",
 )
-async def delete_rule(command: Rule, rules_handler: RulesHandler = Depends(get_rules_handler)):
+async def delete_rule(command: Rule, rules_handler: RulesManagerHandler = Depends(get_rules_handler)):
     try:
         logger.info(f"Deleting rule with details: {command.model_dump()}")
         await rules_handler.delete_rule_async(command)

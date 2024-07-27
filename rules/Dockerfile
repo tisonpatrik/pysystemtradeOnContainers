@@ -9,10 +9,10 @@ WORKDIR /home/app
 
 COPY common/ ./common
 
-COPY rules/rules_manager/ ./rules_manager
+COPY rules/ ./rules
 COPY .env ./
 
 USER root
-RUN pip install --no-cache-dir -r rules_manager/requirements.txt
+RUN pip install --no-cache-dir -r rules/requirements.txt
 
-CMD ["uvicorn", "rules_manager.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "rules.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
