@@ -19,5 +19,7 @@ async def get_instrument_vol_handler(repository: Repository = Depends(get_reposi
     return InstrumentCurrencyVolHandler(repository=repository)
 
 
-async def get_daily_returns_vol_handler(repository: Repository = Depends(get_repository)) -> DailyReturnsVolHandler:
+async def get_daily_returns_vol_handler(
+    repository: Repository = Depends(get_repository),
+) -> DailyReturnsVolHandler:
     return DailyReturnsVolHandler(repository=repository)

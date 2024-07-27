@@ -21,7 +21,7 @@ async def get_accel_for_instrument_async(
 ):
     try:
         accel = await accel_handler.get_accel_async(query)
-        return accel
+        return accel.to_json(orient="records")
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate accel for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

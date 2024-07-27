@@ -1,3 +1,5 @@
+from typing import Any
+
 from httpx import AsyncClient
 
 from common.src.http_client.requests.fetch_request import FetchRequest
@@ -10,7 +12,7 @@ class RestClient:
         self.client = client
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_data_async(self, request: FetchRequest) -> dict:
+    async def get_data_async(self, request: FetchRequest) -> list[dict[Any, Any]]:
         try:
             self.logger.debug(f"Sending GET request to {request.url_string} with params {request.params}")
             response = await self.client.get(request.url_string, params=request.params)

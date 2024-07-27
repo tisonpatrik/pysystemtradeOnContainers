@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get daily returns volatility",
 )
-async def get_daily_returns_vol_async(
+async def get_daily_returns_vol(
     query: GetDailyReturnsVolQuery = Depends(),
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ):
