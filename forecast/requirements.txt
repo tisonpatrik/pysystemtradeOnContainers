@@ -11,5 +11,3 @@ pytest-xdist==3.6.1
 rich==13.7.1
 sqlalchemy==2.0.3
 numpy<2.0
-celery==5.4.0
-redis==5.0.7
