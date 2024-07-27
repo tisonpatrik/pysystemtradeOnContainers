@@ -1,29 +1,29 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.logging.logger import AppLogger
-from rules.src.api.dependencies.dependencies import get_breakout_handler
-from rules.src.api.handlers.breakout_handler import BreakoutHandler
+from risk.src.api.dependencies.risk_dependencies import get_daily_returns_vol_handler
+from risk.src.api.handlers.daily_returns_volatility_handler import DailyReturnsVolHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_accel_route/",
+    "/get_daily_returns_vol/",
     status_code=status.HTTP_200_OK,
-    name="Get Accel",
+    name="Get daily returns volatility",
 )
-async def get_breakout_for_instrument_async(
-    query: GetRuleForInstrumentQuery = Depends(),
-    breakout_handler: BreakoutHandler = Depends(get_breakout_handler),
+async def get_daily_returns_vol_async(
+    query: GetDailyReturnsVolQuery = Depends(),
+    daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ):
     try:
-        breakout = await breakout_handler.get_breakout_async(query)
-        return breakout
+        daily_returns_vol = await daily_returns_vol_handler.get_daily_returns_vol_async(query)
+        return daily_returns_vol
     except HTTPException as e:
-        logger.error(f"An error occurred while trying to calculate breakout for symbol {query.symbol}. Error: {e.detail}")
+        logger.error(f"An error occurred while trying to fetch daily returns vol for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}
     except ValidationError as e:
         logger.error(f"Validation error for symbol. Error: {e.json()}")
@@ -31,5 +31,3 @@ async def get_breakout_for_instrument_async(
     except Exception as e:
         logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
-
-# ['rawdata.get_daily_prices', 'rawdata.daily_returns_volatility']
