@@ -19,14 +19,9 @@ async def get_normalized_price_for_asset_class(
     normalizedPriceHandler: NormalizedPriceForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
 ):
     try:
-        logger.info("")
-        fx_rate = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
-        if fx_rate is None:
-            logger.warning(f"FX rate not found for symbol: {query.symbol}")
-            return {"message": "FX rate not found", "symbol": query.symbol}, status.HTTP_204_NO_CONTENT
-
-        logger.info(f"Successfully fetched normalized prices for asset class for symbol: {query.symbol}")
-        return fx_rate
+        logger.info(f"Fetching normalized prices for asset class for symbol: {query.symbol}")
+        normalized_price = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
+        return normalized_price
     except HTTPException as e:
         logger.error(f"Error fetching normalized prices for asset class for symbol: {query.symbol}, Error: {str(e)}")
         return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
