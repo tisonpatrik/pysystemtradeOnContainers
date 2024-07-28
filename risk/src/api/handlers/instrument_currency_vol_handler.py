@@ -28,7 +28,7 @@ class InstrumentCurrencyVolHandler:
             daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
             point_size = await self._get_point_size_async(position_query.symbol)
             instrument_volatility = self.instrument_vol_service.calculate_instrument_vol_async(
-                denom_prices, daily_returns_vol, point_size.point_size
+                denom_prices, daily_returns_vol, point_size.pointsize
             )
             return instrument_volatility
         except Exception as e:
