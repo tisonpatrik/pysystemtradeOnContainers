@@ -23,20 +23,16 @@ class NormalizedPriceForAssetClassHandler:
             self.logger.info(f"Fetching normalized prices for asset class {query}")
             asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)
             instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class.asset_class)
-            aggregate_returns_across_instruments = await self.get_aggregated_returns_across_instruments(instruments)
+            aggregated_returns = await self.get_aggregated_returns_across_instruments(instruments)
             norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(query.symbol)
-            normalised_price_this_instrument = (
+            normalised_price_for_instrument = (
                 self.cumulatve_daily_vol_normalized_returns_service.get_cumulative_daily_vol_normalised_returns(norm_returns)
             )
-            normalised_price_for_asset_class_aligned = (
-                self.normalised_price_for_asset_class_service.get_cumulative_daily_vol_normalised_returns(
-                    aggregate_returns_across_instruments, normalised_price_this_instrument
-                )
+            normalised_price_for_asset = self.normalised_price_for_asset_class_service.get_cumulative_daily_vol_normalised_returns(
+                aggregated_returns, normalised_price_for_instrument
             )
-            return normalised_price_for_asset_class_aligned
+            return normalised_price_for_asset
 
-        except ValueError:
-            raise
         except Exception as e:
             self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")
