@@ -15,7 +15,7 @@ def test_process_daily_returns_vol():
     expected_vol = load_csv_data("expected_daily_returns_volatility")
 
     estimator = DailyVolNormalisedReturns()
-    calculated_vol = estimator.process_daily_returns_vol(daily_prices)
+    calculated_vol = estimator.daily_returns_volatility(daily_prices)
 
     pd.testing.assert_series_equal(
         calculated_vol,

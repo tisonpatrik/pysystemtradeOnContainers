@@ -102,3 +102,7 @@ def simple_ewvol_calc(daily_returns: pd.Series, days: int = 35, min_periods: int
     # Standard deviation will be nan for first 10 non nan values
     vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
     return vol
+
+def daily_returns(daily_prices: pd.Series) -> pd.Series:
+  dailyreturns = daily_prices.diff()
+  return dailyreturns
