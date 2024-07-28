@@ -8,7 +8,7 @@ from raw_data.src.services.cumulatve_daily_vol_normalized_returns_service import
 from raw_data.src.services.normalised_price_for_asset_class_service import NormalisedPriceForAssetClassService
 
 
-class NormalizedPriceForAssetClassHandler:
+class NormalizedPricesForAssetClassHandler:
     def __init__(
         self, instrument_repository: InstrumentsRepository, daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler
     ):
@@ -34,13 +34,13 @@ class NormalizedPriceForAssetClassHandler:
             return normalised_price_for_asset
 
         except Exception as e:
-            self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")
+            self.logger.error(f"Unexpected error occurred while fetching normalied prices for asset class: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")
 
     async def get_aggregated_returns_across_instruments(self, instruments: list) -> pd.DataFrame:
         aggregate_returns_across_instruments_list = []
         for instrument_code in instruments:
-            returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(instrument_code)
+            returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(instrument_code.symbol)
             aggregate_returns_across_instruments_list.append(returns)
 
         aggregate_returns_across_instruments = pd.concat(aggregate_returns_across_instruments_list, axis=1)

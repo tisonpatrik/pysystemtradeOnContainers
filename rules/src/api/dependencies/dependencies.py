@@ -8,7 +8,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.http_client.rest_client import RestClient
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_repository import RiskClient
+from common.src.repositories.risk_client import RiskClient
 from rules.src.api.handlers.accel_handler import AccelHandler
 from rules.src.api.handlers.assettrend_handler import AssettrendHandler
 from rules.src.api.handlers.breakout_handler import BreakoutHandler

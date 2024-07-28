@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_repository import RiskClient
+from common.src.repositories.risk_client import RiskClient
 from raw_data.src.services.daily_vol_normalised_returns_service import DailyVolNormalisedReturnsService
 
 

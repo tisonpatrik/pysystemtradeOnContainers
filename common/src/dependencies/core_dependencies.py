@@ -4,7 +4,7 @@ from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_repository import RiskClient
+from common.src.repositories.risk_client import RiskClient
 
 
 def get_repository(request: Request) -> Repository:

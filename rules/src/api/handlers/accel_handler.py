@@ -3,7 +3,7 @@ import pandas as pd
 from common.src.cqrs.api_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_repository import RiskClient
+from common.src.repositories.risk_client import RiskClient
 from common.src.utils.convertors import to_dataframe
 from common.src.validation.trading_signal import TradingSignal
 from rules.src.services.accel import AccelService
