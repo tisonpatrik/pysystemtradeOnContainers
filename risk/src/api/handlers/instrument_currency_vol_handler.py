@@ -28,7 +28,7 @@ class InstrumentCurrencyVolHandler:
             daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
             point_size = await self._get_point_size_async(position_query.symbol)
             instrument_volatility = self.instrument_vol_service.calculate_instrument_vol_async(
-                denom_prices, daily_returns_vol, point_size.pointsize
+                denom_prices, daily_returns_vol, point_size.point_size
             )
             return instrument_volatility
         except Exception as e:
@@ -52,7 +52,7 @@ class InstrumentCurrencyVolHandler:
             prices = to_series(prices_data, DenomPrices, DenomPrices.date_time, DenomPrices.price)  # type: ignore[arg-type]
             return prices
         except Exception as e:
-            self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
+            self.logger.error(f"Database error when fetching denom price for symbol {symbol}: {e}")
             raise
 
     async def _get_point_size_async(self, symbol: str) -> PointSize:
@@ -64,5 +64,5 @@ class InstrumentCurrencyVolHandler:
                 raise ValueError(f"No data found for symbol {symbol}")
             return point_size
         except Exception as e:
-            self.logger.error(f"Database error when fetching currency for symbol {symbol}: {e}")
+            self.logger.error(f"Database error when fetching point size for symbol {symbol}: {e}")
             raise

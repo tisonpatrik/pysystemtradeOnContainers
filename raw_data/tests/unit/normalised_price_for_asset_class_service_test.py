@@ -1,6 +1,6 @@
 import pandas as pd
 
-from raw_data.src.services.normalised_price_for_asset_class import NormalisedPriceForAssetClass
+from raw_data.src.services.normalised_price_for_asset_class_service import NormalisedPriceForAssetClassService
 
 
 def load_csv_data(filename):
@@ -15,7 +15,7 @@ def test_normalised_price_for_asset_class():
     normalised_price_for_asset_class = load_csv_data("expected_daily_vol_normalised_returns_for_list_of_instruments")
     expected = load_csv_data("expected_normalised_price_for_asset_class_aligned")
 
-    estimator = NormalisedPriceForAssetClass()
+    estimator = NormalisedPriceForAssetClassService()
     calculated_vol = estimator.get_normalised_price_for_asset_class(
         instrument_cumulative_normalised_price=instrument_cumulative_normalised_prices,
         normalised_price_for_asset_class=normalised_price_for_asset_class,

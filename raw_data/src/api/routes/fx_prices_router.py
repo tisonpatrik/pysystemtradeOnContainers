@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
 from common.src.logging.logger import AppLogger
-from raw_data.src.api.dependencies.raw_data_dependencies import get_fx_prices_handler
+from raw_data.src.api.dependencies.dependencies import get_fx_prices_handler
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
 
 router = APIRouter()

@@ -20,6 +20,7 @@ class FxPricesHandler:
 
     async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
         try:
+            self.logger.info(f"Fetching FX prices for symbol {get_fx_rate_query.symbol}")
             instrument_currency = await self._get_instrument_currency(get_fx_rate_query.symbol)
             base_currency = get_fx_rate_query.base_currency
 

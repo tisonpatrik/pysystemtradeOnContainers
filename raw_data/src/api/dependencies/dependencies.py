@@ -6,6 +6,7 @@ from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import get_repository
 from common.src.dependencies.db_setup import setup_async_database
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
+from raw_data.src.api.handlers.normalize_price_for_asset_class_handler import NormalizedPriceForAssetClassHandler
 
 
 @asynccontextmanager
@@ -16,3 +17,7 @@ async def app_lifespan(app: FastAPI):
 
 def get_fx_prices_handler(repository: Repository = Depends(get_repository)) -> FxPricesHandler:
     return FxPricesHandler(repository=repository)
+
+
+def get_normalized_price_for_asset_class_handler(repository: Repository = Depends(get_repository)) -> NormalizedPriceForAssetClassHandler:
+    return NormalizedPriceForAssetClassHandler(repository=repository)

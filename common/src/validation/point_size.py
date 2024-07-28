@@ -2,4 +2,4 @@ from pydantic import BaseModel
 
 
 class PointSize(BaseModel):
-	pointsize: float
+    point_size: float
