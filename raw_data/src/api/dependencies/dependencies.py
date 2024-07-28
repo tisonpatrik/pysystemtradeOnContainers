@@ -3,16 +3,18 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from common.src.database.repository import Repository
-from common.src.dependencies.core_dependencies import get_instruments_repository, get_repository
+from common.src.dependencies.core_dependencies import get_instruments_repository, get_repository, get_risk_client
 from common.src.dependencies.db_setup import setup_async_database
+from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.risk_repository import RiskClient
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.src.api.handlers.normalize_price_for_asset_class_handler import NormalizedPriceForAssetClassHandler
 
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
-    async with setup_async_database(app):
+    async with setup_async_client(app), setup_async_database(app):
         yield
 
 
@@ -22,5 +24,6 @@ def get_fx_prices_handler(repository: Repository = Depends(get_repository)) -> F
 
 def get_normalized_price_for_asset_class_handler(
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    risk_client: RiskClient = Depends(get_risk_client),
 ) -> NormalizedPriceForAssetClassHandler:
-    return NormalizedPriceForAssetClassHandler(instrument_repository=instrument_repository)
+    return NormalizedPriceForAssetClassHandler(instrument_repository=instrument_repository, risk_client=risk_client)
