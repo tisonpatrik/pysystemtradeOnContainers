@@ -1,7 +1,9 @@
+from common.src.cqrs.db_queries.get_asset_class import GetAssetClass
 from common.src.cqrs.db_queries.get_point_size import GetPointSize
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.convertors import to_pydantic
+from common.src.validation.asset_class import AssetClass
 from common.src.validation.point_size import PointSize
 
 
@@ -20,4 +22,16 @@ class InstrumentsRepository:
             return point_size
         except Exception as e:
             self.logger.error(f"Database error when fetching point size for symbol {symbol}: {e}")
+            raise
+
+    async def get_asset_class_async(self, symbol: str) -> AssetClass:
+        statement = GetAssetClass(symbol=symbol)
+        try:
+            asset_class_data = await self.repository.fetch_item_async(statement)
+            asset_class = to_pydantic(asset_class_data, AssetClass)
+            if asset_class is None:
+                raise ValueError(f"No data found for symbol {symbol}")
+            return asset_class
+        except Exception as e:
+            self.logger.error(f"Database error when fetching asset class for symbol {symbol}: {e}")
             raise
