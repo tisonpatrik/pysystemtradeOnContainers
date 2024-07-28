@@ -1,10 +1,10 @@
 import pandas as pd
 
-from risk.src.estimators.normalised_price_for_asset_class import NormalisedPriceForAssetClass
+from raw_data.src.services.normalised_price_for_asset_class import NormalisedPriceForAssetClass
 
 
 def load_csv_data(filename):
-    filepath = f"risk/tests/test_data/{filename}.csv"
+    filepath = f"raw_data/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath, index_col="index")
     return pd.Series(data["price"], name="price")
 
