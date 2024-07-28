@@ -4,7 +4,7 @@ from risk.src.services.instrument_currency_vol_service import InstrumentCurrency
 
 
 def load_csv_data(filename):
-    filepath = f"risk/tests/test_data/{filename}.csv"
+    filepath = "risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
 
     return pd.Series(data["price"])

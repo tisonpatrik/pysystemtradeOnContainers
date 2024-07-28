@@ -6,7 +6,7 @@ from risk.src.estimators.daily_vol_normalised_returns_for_asset_class import (
 
 
 def load_csv_series(filename):
-    filepath = f"risk/tests/test_data/{filename}.csv"
+    filepath = "risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return pd.Series(data["price"])
 

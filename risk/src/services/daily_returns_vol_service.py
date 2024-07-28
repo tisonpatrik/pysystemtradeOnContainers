@@ -3,7 +3,7 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from risk.src.estimators.volatility import mixed_vol_calc
+from common.src.utils.volatility import mixed_vol_calc
 
 
 class DailyReturnsVolService:
