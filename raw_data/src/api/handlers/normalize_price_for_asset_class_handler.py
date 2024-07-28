@@ -4,6 +4,8 @@ from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query impo
 from common.src.logging.logger import AppLogger
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.src.services.cumulatve_daily_vol_normalized_returns_service import CumulativeDailyVolNormalizedReturnsService
+from raw_data.src.services.normalised_price_for_asset_class_service import NormalisedPriceForAssetClassService
 
 
 class NormalizedPriceForAssetClassHandler:
@@ -13,36 +15,37 @@ class NormalizedPriceForAssetClassHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_repository = instrument_repository
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
+        self.cumulatve_daily_vol_normalized_returns_service = CumulativeDailyVolNormalizedReturnsService()
+        self.normalised_price_for_asset_class_service = NormalisedPriceForAssetClassService()
 
-    async def get_normalized_price_for_asset_class_async(self, get_normalized_price_query: NormalizedPriceForAssetClassQuery) -> pd.Series:
+    async def get_normalized_price_for_asset_class_async(self, query: NormalizedPriceForAssetClassQuery) -> pd.Series:
         try:
-            self.logger.info(f"Fetching normalized prices for asset class {get_normalized_price_query}")
-            asset_class = await self.instrument_repository.get_asset_class_async(get_normalized_price_query.symbol)
+            self.logger.info(f"Fetching normalized prices for asset class {query}")
+            asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)
             instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class.asset_class)
-            normalised_price_for_asset_class = await self.daily_vol_normalised_price_for_list_of_instruments(instruments)
-            normalised_price_this_instrument = await self.get_cumulative_daily_vol_normalised_returns(get_normalized_price_query.symbol)
-            normalised_price_for_asset_class_aligned = normalised_price_for_asset_class.reindex(
-                normalised_price_this_instrument.index
-            ).ffill()
+            aggregate_returns_across_instruments = await self.get_aggregated_returns_across_instruments(instruments)
+            norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(query.symbol)
+            normalised_price_this_instrument = (
+                self.cumulatve_daily_vol_normalized_returns_service.get_cumulative_daily_vol_normalised_returns(norm_returns)
+            )
+            normalised_price_for_asset_class_aligned = (
+                self.normalised_price_for_asset_class_service.get_cumulative_daily_vol_normalised_returns(
+                    aggregate_returns_across_instruments, normalised_price_this_instrument
+                )
+            )
             return normalised_price_for_asset_class_aligned
+
         except ValueError:
             raise
         except Exception as e:
             self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")
 
-    async def daily_vol_normalised_price_for_list_of_instruments(self, list_of_instruments: list) -> pd.Series:
+    async def get_aggregated_returns_across_instruments(self, instruments: list) -> pd.DataFrame:
         aggregate_returns_across_instruments_list = []
-        for instrument_code in list_of_instruments:
+        for instrument_code in instruments:
             returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(instrument_code)
             aggregate_returns_across_instruments_list.append(returns)
 
         aggregate_returns_across_instruments = pd.concat(aggregate_returns_across_instruments_list, axis=1)
-        norm_returns = aggregate_returns_across_instruments.median(axis=1)
-        norm_price = norm_returns.cumsum()
-        return norm_price
-
-    async def get_cumulative_daily_vol_normalised_returns(self, instrument_code: str) -> pd.Series:
-        norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(instrument_code)
-        cum_norm_returns = norm_returns.cumsum()
-        return cum_norm_returns
+        return aggregate_returns_across_instruments
