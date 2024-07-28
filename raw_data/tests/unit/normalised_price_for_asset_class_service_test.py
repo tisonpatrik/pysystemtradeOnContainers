@@ -10,9 +10,9 @@ def load_csv_data(filename):
 
 
 def test_normalised_price_for_asset_class():
-    instrument_cumulative_normalised_prices = load_csv_data("exptected_cum_norm_returns")
-    normalised_price_for_asset_class = load_csv_data("expected_daily_vol_normalised_returns_for_list_of_instruments")
-    expected = load_csv_data("expected_normalised_price_for_asset_class_aligned")
+    instrument_cumulative_normalised_prices = load_csv_data("cum_norm_returns")
+    normalised_price_for_asset_class = load_csv_data("daily_vol_normalised_returns_for_list_of_instruments")
+    expected = load_csv_data("normalised_price_for_asset_class_aligned")
 
     estimator = NormalisedPriceForAssetClassService()
     calculated_vol = estimator.get_normalised_price_for_asset_class(
