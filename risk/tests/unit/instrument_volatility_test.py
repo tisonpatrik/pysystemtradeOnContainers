@@ -14,7 +14,7 @@ def test_instrument_volatility():
     # Load input and expected data
     multiple_prices = load_csv_data("multiple_price")
     daily_returns_vol = load_csv_data("daily_returns_volatility")
-    exptected = load_csv_data("expected_instrument_vol")
+    exptected = load_csv_data("instrument_vol")
     estimator = InstrumentCurrencyVolService()
     calculated_vol = estimator.calculate_instrument_vol_async(multiple_prices, daily_returns_vol, point_size=200)
     pd.testing.assert_series_equal(

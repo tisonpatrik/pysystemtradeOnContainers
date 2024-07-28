@@ -17,12 +17,10 @@ alembic = "*"
 asyncpg = "*"
 httpx = "*"
 pydantic = "*"
-mypy = "*"
 pandera = {extras = ["mypy"], version = "*"}
 redis = "*"
 
 [dev-packages]
-vulture = "*"
 mypy = "*"
 ruff = "*"
 asyncpg-stubs = "*"
