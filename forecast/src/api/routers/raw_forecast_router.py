@@ -22,7 +22,7 @@ async def get_forecast_for_instrument_async(
     try:
         forecast = await instrument_vol_handler.get_raw_forecast_async(query)
         logger.info(f"Successfully fetched forecast: {forecast}")
-        return forecast.json(orient="records")
+        return forecast.json(orient="records", date_format="iso")
     except HTTPException as e:
         logger.error(f"An error occurred while trying to fetch forecast. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

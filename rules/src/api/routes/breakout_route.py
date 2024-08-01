@@ -21,7 +21,7 @@ async def get_breakout_for_instrument_async(
 ):
     try:
         breakout = await breakout_handler.get_breakout_async(query)
-        return breakout.to_json(orient="records")
+        return breakout.to_json(orient="records", date_format="iso")
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate breakout for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

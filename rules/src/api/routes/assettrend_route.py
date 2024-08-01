@@ -22,7 +22,7 @@ async def get_breakout_for_instrument_async(
     try:
         assettrend = await handler.get_assettrend_async(query)
         print(assettrend)
-        return assettrend.to_json(orient="records")
+        return assettrend.to_json(orient="records", date_format="iso")
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate assettrend for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}
