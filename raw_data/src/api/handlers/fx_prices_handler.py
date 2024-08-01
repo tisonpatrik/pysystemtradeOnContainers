@@ -32,8 +32,8 @@ class FxPricesHandler:
                 fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency, base_currency)
             else:
                 fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
-
             return fx_data
+            # return series_to_dataframe(fx_data, FxPrices, FxPrices.date_time, FxPrices.price)  # type: ignore[arg-type]
 
         except ValueError:
             raise

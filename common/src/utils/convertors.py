@@ -19,6 +19,10 @@ def list_to_series(items: list[dict], model: Type[T], index_column: str, values_
     try:
         raw_frame = pd.DataFrame(items)
         data = raw_frame.rename(columns={raw_frame.columns[0]: index_column, raw_frame.columns[1]: values_column})
+
+        # Ensure the index_column is in the desired date format
+        data[index_column] = pd.to_datetime(data[index_column]).dt.strftime("%Y-%m-%d")
+
         validated_data = model.validate(data)
         data_frame = cast(pd.DataFrame, validated_data)
         series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
@@ -37,10 +41,15 @@ def series_to_dataframe(series: pd.Series, model: Type[T], index_column: str, va
         raise ValueError(f"Error converting Series to DataFrame: {str(e)}")
 
 
-def dict_to_series(raw_data: dict) -> pd.Series:
+def dict_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
     try:
-        series = pd.Series(raw_data)
-        print(series)
+        data = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
+        # Ensure the index_column is in the desired date format
+        data[index_column] = pd.to_datetime(data[index_column]).dt.strftime("%Y-%m-%d")
+
+        validated_data = model.validate(data)
+        data_frame = cast(pd.DataFrame, validated_data)
+        series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
         return series
     except Exception as e:
         raise ValueError(f"Error converting JSON to Series: {str(e)}")
