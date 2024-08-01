@@ -10,7 +10,7 @@ class RestClient:
         self.client = client
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_data_async(self, request: FetchRequest) -> str:
+    async def get_data_async(self, request: FetchRequest) -> dict:
         try:
             response = await self.client.get(request.url_string, params=request.params)
             response.raise_for_status()

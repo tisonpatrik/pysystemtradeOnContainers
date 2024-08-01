@@ -1,4 +1,3 @@
-import json
 from typing import Optional, Type, TypeVar, cast
 
 import pandas as pd
@@ -31,10 +30,9 @@ def to_dataframe(series: pd.Series, model: Type[T], index_column: str, values_co
     return data_frame
 
 
-def to_series_from_json(json_str: str, model: Type[DataFrameModel], index_column: str, values_column: str) -> pd.Series:
+def to_series_from_json(raw_data: dict, model: Type[DataFrameModel], index_column: str, values_column: str) -> pd.Series:
     try:
-        items = json.loads(json_str)
-        data = pd.DataFrame(items)
+        data = pd.DataFrame(raw_data)
         validated_data = model.validate(data)
         data_frame = cast(pd.DataFrame, validated_data)
         series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
