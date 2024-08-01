@@ -5,7 +5,7 @@ from common.src.http_client.requests.fetch_request import FetchRequest
 
 
 class NormalizedPriceForAssetClassQuery(FetchRequest):
-    symbol: Annotated[str, StringConstraints(max_length=10)]
+    symbol: Annotated[str, StringConstraints(max_length=15)]
 
     @property
     def url_string(self) -> str:
