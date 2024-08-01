@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.logging.logger import AppLogger
@@ -21,7 +22,7 @@ async def get_subsystem_position_for_instrument(
 ):
     try:
         positions = await positions_handler.get_subsystem_position_async(request)
-        return positions.to_json(orient="records", date_format="iso")
+        return jsonable_encoder(positions)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to run simulation. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

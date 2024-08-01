@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_forecast_for_symbol_query import GetForecastForSymbolQuery
@@ -22,7 +23,7 @@ async def get_forecast_for_instrument_async(
     try:
         forecast = await instrument_vol_handler.get_raw_forecast_async(query)
         logger.info(f"Successfully fetched forecast: {forecast}")
-        return forecast.json(orient="records", date_format="iso")
+        return jsonable_encoder(forecast)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to fetch forecast. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

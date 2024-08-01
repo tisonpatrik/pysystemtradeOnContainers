@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
@@ -21,7 +22,7 @@ async def get_daily_returns_vol(
 ):
     try:
         daily_returns_vol = await daily_returns_vol_handler.get_daily_returns_vol_async(query)
-        return daily_returns_vol.to_json(orient="records", date_format="iso")
+        return jsonable_encoder(daily_returns_vol)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to fetch daily returns vol for symbol {query.symbol}. Error: {e.detail}")
         return {"error": e.detail, "status_code": e.status_code}

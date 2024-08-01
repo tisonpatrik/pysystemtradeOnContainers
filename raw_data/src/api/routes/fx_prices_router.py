@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 
 from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
 from common.src.logging.logger import AppLogger
@@ -26,7 +27,7 @@ async def get_fx_rate_for_instrument(
             return {"message": "FX rate not found", "symbol": query.symbol}, status.HTTP_204_NO_CONTENT
 
         logger.info(f"Successfully fetched FX rate for symbol: {query.symbol}")
-        return fx_rate.to_json(orient="records", date_format="iso")
+        return jsonable_encoder(fx_rate)
     except HTTPException as e:
         logger.error(f"Error fetching FX rate for symbol: {query.symbol}, Error: {str(e)}")
         return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
