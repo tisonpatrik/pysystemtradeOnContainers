@@ -16,6 +16,7 @@ def to_pydantic(item: Optional[dict], model: Type[S]) -> Optional[S]:
 
 
 def to_series(items: list[dict], model: Type[T], index_column: str, values_column: str) -> pd.Series:
+    print(items)
     data = pd.DataFrame(items)
     validated_data = model.validate(data)
     data_frame = cast(pd.DataFrame, validated_data)
