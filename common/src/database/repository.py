@@ -28,12 +28,12 @@ class Repository:
             self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
             raise
 
-    async def fetch_many_async(self, statement: FetchStatement) -> list[dict[Any, Any]]:
+    async def fetch_many_async(self, statement: FetchStatement) -> list:
         try:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
                 records = await prepared_stmt.fetch(*statement.parameters)
-                return [dict(record) for record in records]
+                return records
         except Exception as e:
             self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
             raise
