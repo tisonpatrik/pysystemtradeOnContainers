@@ -2,6 +2,7 @@ from fastapi import Depends, Request
 
 from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
+from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
 from common.src.repositories.raw_data_client import RawDataClient
@@ -14,6 +15,10 @@ def get_repository(request: Request) -> Repository:
 
 def get_client(request: Request) -> RestClient:
     return RestClient(request.app.state.requests_client)
+
+
+def get_redis(request: Request) -> RedisRepository:
+    return RedisRepository(request.app.state.redis_pool)
 
 
 def get_daily_prices_repository(
