@@ -32,6 +32,3 @@ async def get_breakout_for_instrument_async(
     except Exception as e:
         logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
-
-
-# ['rawdata.get_daily_prices', 'rawdata.daily_returns_volatility']

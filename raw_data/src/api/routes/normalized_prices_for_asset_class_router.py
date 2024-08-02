@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import NormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
 from raw_data.src.api.dependencies.dependencies import get_normalized_price_for_asset_class_handler
 from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_normalized_price_for_asset_class/",
+    "/get_normalized_prices_for_asset_class/",
     status_code=status.HTTP_200_OK,
     name="Get Normalized Price For Asset Class",
 )
-async def get_normalized_price_for_asset_class(
-    query: NormalizedPriceForAssetClassQuery = Depends(),
+async def get_normalized_prices_for_asset_class(
+    query: GetNormalizedPriceForAssetClassQuery = Depends(),
     normalizedPriceHandler: NormalizedPricesForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
 ):
     try:

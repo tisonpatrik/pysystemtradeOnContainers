@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import NormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
@@ -18,7 +18,7 @@ class NormalizedPricesForAssetClassHandler:
         self.cumulatve_daily_vol_normalized_returns_service = CumulativeDailyVolNormalizedReturnsService()
         self.normalised_price_for_asset_class_service = NormalisedPriceForAssetClassService()
 
-    async def get_normalized_price_for_asset_class_async(self, query: NormalizedPriceForAssetClassQuery) -> pd.Series:
+    async def get_normalized_price_for_asset_class_async(self, query: GetNormalizedPriceForAssetClassQuery) -> pd.Series:
         try:
             self.logger.info(f"Fetching normalized prices for asset class {query}")
             asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)

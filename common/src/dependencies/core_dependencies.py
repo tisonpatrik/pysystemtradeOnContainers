@@ -4,6 +4,7 @@ from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
 
 
@@ -31,3 +32,7 @@ def get_risk_client(
     client: RestClient = Depends(get_client),
 ) -> RiskClient:
     return RiskClient(client=client)
+
+
+def get_raw_data_client(client: RestClient = Depends(get_client)) -> RawDataClient:
+    return RawDataClient(client=client)
