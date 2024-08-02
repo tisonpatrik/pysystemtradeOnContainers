@@ -18,7 +18,6 @@ class RawDataClient:
         query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code)
         try:
             vol_data = await self.client.get_data_async(query)
-            self.logger.info(f"Received data for {instrument_code}: {vol_data}")  # Log received data
             vol = dict_to_series(
                 vol_data,
                 NormalizedPricesForAssetClass,
