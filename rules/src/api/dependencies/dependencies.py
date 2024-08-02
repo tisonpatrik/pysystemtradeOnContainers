@@ -46,8 +46,5 @@ def get_breakout_handler(
     return BreakoutHandler(prices_repository=prices_repository, client=client)
 
 
-def get_asserttrend_handler(
-    raw_data_client: RawDataClient = Depends(get_raw_data_client),
-    client: RestClient = Depends(get_client),
-) -> AssettrendHandler:
-    return AssettrendHandler(raw_data_client=raw_data_client, client=client)
+def get_asserttrend_handler(raw_data_client: RawDataClient = Depends(get_raw_data_client)) -> AssettrendHandler:
+    return AssettrendHandler(raw_data_client=raw_data_client)
