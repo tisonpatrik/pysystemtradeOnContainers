@@ -1,5 +1,5 @@
 class SetCacheStatement:
-    def __inti__(self, cache_key, cache_value, time_to_live):
+    def __init__(self, cache_key, cache_value, time_to_live):
         self.cache_key = cache_key
         self.cache_value = cache_value
         self.time_to_live = time_to_live
