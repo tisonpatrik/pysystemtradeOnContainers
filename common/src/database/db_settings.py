@@ -1,6 +1,5 @@
 from functools import lru_cache
 
-from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
 
 
@@ -12,9 +11,8 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-    DB_HOST: str
-    DB_PORT: str
-    database_url: PostgresDsn
+    POSTGRES_HOST: str
+    POSTGRES_PORT: str
 
     max_connections: int = 10
     min_connections: int = 1

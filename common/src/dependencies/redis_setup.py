@@ -14,7 +14,7 @@ logger = AppLogger.get_instance().get_logger()
 async def setup_async_redis(app: FastAPI):
     try:
         # Create a Redis connection pool
-        pool = redis.ConnectionPool.from_url("redis://redis:6379")
+        pool = redis.ConnectionPool.from_url("redis://redis:6380")
         app.state.redis_pool = redis.Redis(connection_pool=pool)
         logger.info("Redis connection pool initialized successfully.")
         yield

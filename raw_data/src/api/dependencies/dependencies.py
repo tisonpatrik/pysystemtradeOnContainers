@@ -11,6 +11,7 @@ from common.src.dependencies.core_dependencies import (
 )
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.rest_client_setup import setup_async_client
+from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
 from common.src.repositories.risk_client import RiskClient
@@ -21,7 +22,7 @@ from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import N
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
-    async with setup_async_client(app), setup_async_database(app):
+    async with setup_async_client(app), setup_async_database(app), setup_async_redis(app):
         yield
 
 
