@@ -14,7 +14,6 @@ logger = AppLogger.get_instance().get_logger()
 @asynccontextmanager
 async def setup_async_database(app: FastAPI):
     settings = get_settings()
-    print(settings)
     try:
         # Create an asyncpg connection pool
         app.state.async_pool = await asyncpg.create_pool(  

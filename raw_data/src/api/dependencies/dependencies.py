@@ -6,7 +6,7 @@ from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
     get_daily_prices_repository,
     get_instruments_repository,
-    get_repository,
+    get_db_repository,
     get_risk_client,
 )
 from common.src.dependencies.db_setup import setup_async_database
@@ -26,7 +26,7 @@ async def app_lifespan(app: FastAPI):
         yield
 
 
-def get_fx_prices_handler(repository: Repository = Depends(get_repository)) -> FxPricesHandler:
+def get_fx_prices_handler(repository: Repository = Depends(get_db_repository)) -> FxPricesHandler:
     return FxPricesHandler(repository=repository)
 
 

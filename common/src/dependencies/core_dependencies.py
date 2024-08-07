@@ -9,7 +9,7 @@ from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
 
 
-def get_repository(request: Request) -> Repository:
+def get_db_repository(request: Request) -> Repository:
     return Repository(request.app.state.async_pool)
 
 
@@ -22,13 +22,13 @@ def get_redis(request: Request) -> RedisRepository:
 
 
 def get_daily_prices_repository(
-    repository: Repository = Depends(get_repository),
+    repository: Repository = Depends(get_db_repository),
 ) -> PricesRepository:
     return PricesRepository(repository=repository)
 
 
 def get_instruments_repository(
-    repository: Repository = Depends(get_repository),
+    repository: Repository = Depends(get_db_repository),
 ) -> InstrumentsRepository:
     return InstrumentsRepository(repository=repository)
 

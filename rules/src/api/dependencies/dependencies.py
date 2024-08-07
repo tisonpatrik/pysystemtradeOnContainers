@@ -7,7 +7,7 @@ from common.src.dependencies.core_dependencies import (
     get_client,
     get_daily_prices_repository,
     get_raw_data_client,
-    get_repository,
+    get_db_repository,
     get_risk_client,
 )
 from common.src.dependencies.db_setup import setup_async_database
@@ -29,7 +29,7 @@ async def app_lifespan(app: FastAPI):
         yield
 
 
-def get_rules_handler(repository: Repository = Depends(get_repository)) -> RulesManagerHandler:
+def get_rules_handler(repository: Repository = Depends(get_db_repository)) -> RulesManagerHandler:
     return RulesManagerHandler(repository=repository)
 
 

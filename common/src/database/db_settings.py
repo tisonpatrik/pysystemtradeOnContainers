@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: str
 
-    max_connections: int = 10
+    max_connections: int = 2
     min_connections: int = 1
     connection_timeout: int = 50
 
