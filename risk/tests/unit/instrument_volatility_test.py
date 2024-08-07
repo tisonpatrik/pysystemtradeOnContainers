@@ -1,25 +1,30 @@
 import pandas as pd
-
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
 
-def load_csv_data(filename):
+def load_csv_data(filename: str) -> pd.Series:
     filepath = f"risk/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
-
-    return pd.Series(data["price"])
+    return data["price"]
 
 
 def test_instrument_volatility():
     # Load input and expected data
     multiple_prices = load_csv_data("multiple_price")
     daily_returns_vol = load_csv_data("daily_returns_volatility")
-    exptected = load_csv_data("instrument_vol")
+    expected = load_csv_data("instrument_vol")
+
     estimator = InstrumentCurrencyVolService()
     calculated_vol = estimator.calculate_instrument_vol_async(multiple_prices, daily_returns_vol, point_size=200)
+
+    # Ensure both are pd.Series
+    assert isinstance(calculated_vol, pd.Series), "calculated_vol is not a pd.Series"
+    assert isinstance(expected, pd.Series), "expected is not a pd.Series"
+
+    # Compare the series
     pd.testing.assert_series_equal(
         calculated_vol,
-        exptected,
+        expected,
         check_dtype=True,
         rtol=1e-5,
         atol=1e-5,

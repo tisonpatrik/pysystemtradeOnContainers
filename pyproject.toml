@@ -11,6 +11,10 @@ testpaths = [
 ]
 pythonpath = [".", "common", "positions", "raw_data", "risk", "rules", "seeder"]
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [tool.ruff]
 line-length = 140
 indent-width = 4

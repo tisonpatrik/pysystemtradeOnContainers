@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-
 class FetchStatement(ABC):
 	"""Abstract class for encapsulating data fetching parameters.
 	This class must be extended with specific implementations that format or validate queries."""
 
 	def __init__(self):
-		self._query = str
+		self._query = ""
 		self._parameters = tuple
 
 	@property

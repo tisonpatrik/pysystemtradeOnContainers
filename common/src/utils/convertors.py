@@ -21,7 +21,7 @@ def list_to_series(items: list[dict], model: Type[T], index_column: str, values_
         data = raw_frame.rename(columns={raw_frame.columns[0]: index_column, raw_frame.columns[1]: values_column})
 
         # Ensure the index_column is in the desired date format
-        data[index_column] = pd.to_datetime(data[index_column]).dt.strftime("%Y-%m-%d")
+        data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
 
         validated_data = model.validate(data)
         data_frame = cast(pd.DataFrame, validated_data)

@@ -15,7 +15,7 @@ async def setup_async_redis(app: FastAPI):
     try:
         # Create a Redis connection pool
         pool = redis.ConnectionPool.from_url("redis://redis:6380")
-        app.state.redis_pool = redis.Redis(connection_pool=pool)
+        app.state.redis_pool = pool
         logger.info("Redis connection pool initialized successfully.")
         yield
     except redis.ConnectionError as e:
@@ -23,5 +23,4 @@ async def setup_async_redis(app: FastAPI):
         raise e
     finally:
         await app.state.redis_pool.aclose()  # type: ignore
-        await pool.aclose()
         logger.info("Redis connection pool closed successfully.")
