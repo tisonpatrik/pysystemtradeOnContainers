@@ -22,14 +22,13 @@ class NormalizedPricesForAssetClassHandler:
     async def get_normalized_price_for_asset_class_async(self, query: GetNormalizedPriceForAssetClassQuery) -> pd.Series:
         try:
             self.logger.info(f"Fetching normalized prices for asset class {query}")
-            aggregated_returns = await self.aggregated_returns_for_asset_class_handler.get_aggregated_returns_for_asset_class_async(query.asset_class)
-
-            norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(query.symbol)
-            normalised_price_for_instrument = (
-                self.cumulatve_daily_vol_normalized_returns_service.get_cumulative_daily_vol_normalised_returns(norm_returns)
+            aggregated_returns_for_asset_class = await self.aggregated_returns_for_asset_class_handler.get_aggregated_returns_for_asset_class_async(query.asset_class)
+            normalised_price_for_asset_class = (
+                self.cumulatve_daily_vol_normalized_returns_service.get_cumulative_daily_vol_normalised_returns(aggregated_returns_for_asset_class)
             )
+            normalised_price_this_instrument = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(query.symbol)
             normalised_price_for_asset = self.normalised_price_for_asset_class_service.get_cumulative_daily_vol_normalised_returns(
-                aggregated_returns, normalised_price_for_instrument
+                normalised_price_for_asset_class, normalised_price_this_instrument
             )
             return normalised_price_for_asset
 

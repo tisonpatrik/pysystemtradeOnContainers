@@ -5,7 +5,7 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 
 
 class SetAggregatedReturnsForAssetClassCache(SetCacheStatement):
-    def __init__(self, returns: pd.DataFrame, asset_class: str):
+    def __init__(self, returns: pd.Series, asset_class: str):
         super().__init__(returns)
         self.asset_class = asset_class
         self.name = "aggregated_returns_for_asset_class"

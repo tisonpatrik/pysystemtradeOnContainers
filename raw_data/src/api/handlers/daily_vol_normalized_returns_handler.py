@@ -9,6 +9,7 @@ from common.src.repositories.risk_client import RiskClient
 from common.src.utils.convertors import convert_cache_to_series
 from raw_data.src.services.daily_vol_normalised_returns_service import DailyVolNormalisedReturnsService
 from raw_data.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
+from common.src.utils.volatility import daily_returns
 
 
 class DailyvolNormalizedReturnsHandler:
@@ -32,7 +33,6 @@ class DailyvolNormalizedReturnsHandler:
             returnvol_data = await self.risk_client.get_daily_retuns_vol_async(instrument_code)
             prices = await self.prices_repository.get_daily_prices_async(instrument_code)
             norm_return = self.daily_vol_normalized_returns_service.get_daily_vol_normalised_returns(prices, returnvol_data)
-
             # Store the fetched data in Redis cache
             cache_set_statement = SetDailyvolNormalizedReturnsCache(
                 prices=prices,

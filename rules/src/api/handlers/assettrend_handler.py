@@ -18,8 +18,8 @@ class AssettrendHandler:
         try:
             self.logger.info(f"Calculating AssetTrend rule for {request}")
             asset_class = await self.instrument_repository.get_asset_class_async(request.symbol)
-            daily_prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(request.symbol, asset_class.asset_class)
-            assettrend = self.assettrend_service.calculate_assettrend(daily_prices, request.speed)
+            prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(request.symbol, asset_class.asset_class)
+            assettrend = self.assettrend_service.calculate_assettrend(prices, request.speed)
             assettrend = assettrend.dropna()
             return assettrend
         except Exception as e:

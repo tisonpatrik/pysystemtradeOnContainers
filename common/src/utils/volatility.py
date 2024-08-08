@@ -36,7 +36,6 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
 
     vol_forward_fill = vol.ffill()
     vol_backfilled = vol_forward_fill.bfill()
-
     return vol_backfilled
 
 
@@ -89,7 +88,6 @@ def mixed_vol_calc(
     vol = simple_ewvol_calc(daily_returns, days=days, min_periods=min_periods)
     slow_vol_days = slow_vol_years * business_days_in_year
     long_vol = vol.ewm(span=slow_vol_days).mean()
-
     vol = long_vol * proportion_of_slow_vol + vol * (1 - proportion_of_slow_vol)
     vol = apply_min_vol(vol, vol_abs_min=vol_abs_min)
     if backfill:

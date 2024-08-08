@@ -8,12 +8,9 @@ class NormalisedPriceForAssetClassService:
         self.logger = AppLogger.get_instance().get_logger()
 
     def get_cumulative_daily_vol_normalised_returns(
-        self, aggregate_returns_across_instruments: pd.DataFrame, normalised_price_this_instrument: pd.Series
+        self, normalised_price_for_asset_class: pd.Series, normalised_price_this_instrument: pd.Series
     ) -> pd.Series:
         try:
-            asset_norm_returns = aggregate_returns_across_instruments.median(axis=1)
-            normalised_price_for_asset_class = asset_norm_returns.cumsum()
-
             normalised_price_for_asset_class_aligned = normalised_price_for_asset_class.reindex(
                 normalised_price_this_instrument.index
             ).ffill()
