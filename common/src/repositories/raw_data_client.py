@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
-from common.src.utils.convertors import dict_to_series
+from common.src.utils.convertors import from_api_to_series
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 
 
@@ -18,7 +18,7 @@ class RawDataClient:
         query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
         try:
             vol_data = await self.client.get_data_async(query)
-            vol = dict_to_series(
+            vol = from_api_to_series(
                 vol_data,
                 NormalizedPricesForAssetClass,
                 NormalizedPricesForAssetClass.date_time,  # type: ignore[arg-type]

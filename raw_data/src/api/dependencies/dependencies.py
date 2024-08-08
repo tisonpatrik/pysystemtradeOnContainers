@@ -18,7 +18,7 @@ from common.src.repositories.risk_client import RiskClient
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
-
+from raw_data.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
@@ -37,10 +37,19 @@ def get_daily_vol_normalized_returns_handler(
     return DailyvolNormalizedReturnsHandler(prices_repository=prices_repository, risk_client=risk_client)
 
 
-def get_normalized_price_for_asset_class_handler(
+def get_aggregated_returns_for_asset_class_handler(
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
     daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
+) -> AggregatedReturnsForAssetClassHandler:
+    return AggregatedReturnsForAssetClassHandler(
+        instrument_repository=instrument_repository, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
+    )
+
+def get_normalized_price_for_asset_class_handler(
+    daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
+    aggregated_returns_for_asset_class_handler: AggregatedReturnsForAssetClassHandler = Depends(get_aggregated_returns_for_asset_class_handler),
 ) -> NormalizedPricesForAssetClassHandler:
     return NormalizedPricesForAssetClassHandler(
-        instrument_repository=instrument_repository, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
+        daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
+        aggregated_returns_for_asset_class_handler=aggregated_returns_for_asset_class_handler
     )

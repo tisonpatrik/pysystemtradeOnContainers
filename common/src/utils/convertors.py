@@ -41,7 +41,7 @@ def series_to_dataframe(series: pd.Series, model: Type[T], index_column: str, va
         raise ValueError(f"Error converting Series to DataFrame: {str(e)}")
 
 
-def dict_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
+def from_api_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
     try:
         data = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
         # Ensure the index_column is in the desired date format

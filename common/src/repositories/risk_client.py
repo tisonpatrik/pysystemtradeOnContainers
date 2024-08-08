@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
-from common.src.utils.convertors import dict_to_series
+from common.src.utils.convertors import from_api_to_series
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 
 
@@ -17,7 +17,7 @@ class RiskClient:
         query = GetDailyReturnsVolQuery(symbol=instrument_code)
         try:
             vol_data = await self.client.get_data_async(query)
-            vol = dict_to_series(vol_data, DailyReturnsVol, DailyReturnsVol.date_time, DailyReturnsVol.vol)  # type: ignore[arg-type]
+            vol = from_api_to_series(vol_data, DailyReturnsVol, DailyReturnsVol.date_time, DailyReturnsVol.vol)  # type: ignore[arg-type]
             return vol
         except Exception as e:
             self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {str(e)}")
