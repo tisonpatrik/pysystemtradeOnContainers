@@ -18,13 +18,13 @@ class PricesRepository:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_daily_prices_async(self, symbol: str) -> pd.Series:
+        self.logger.info(f"Fetching daily prices for {symbol}")
         cache_statement = GetDailyPricesCache(symbol)
-
         try:
             # Try to get the data from Redis cache
             cached_data = await self.redis_repository.get_cache(cache_statement)
-            if cached_data:
-                self.logger.info(f"Cache hit for symbol {symbol}")
+            if cached_data is not None:
+                self.logger.info(f"Cache hit DailyPrices for symbol {symbol}")
                 series = convert_cache_to_series(cached_data, DailyPrices, str(DailyPrices.date_time), str(DailyPrices.price))
                 return series
 
