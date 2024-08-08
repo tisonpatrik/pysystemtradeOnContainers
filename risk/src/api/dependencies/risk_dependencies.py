@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI
 
 from common.src.dependencies.core_dependencies import get_daily_prices_repository, get_instruments_repository
 from common.src.dependencies.db_setup import setup_async_database
+from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
 from risk.src.api.handlers.daily_returns_volatility_handler import DailyReturnsVolHandler
@@ -12,7 +13,7 @@ from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurr
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
-    async with setup_async_database(app):
+    async with setup_async_database(app), setup_async_redis(app):
         yield
 
 

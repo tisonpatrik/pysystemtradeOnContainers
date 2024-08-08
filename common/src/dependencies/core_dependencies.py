@@ -22,9 +22,10 @@ def get_redis(request: Request) -> RedisRepository:
 
 
 def get_daily_prices_repository(
-    repository: Repository = Depends(get_db_repository),
+    db_repository: Repository = Depends(get_db_repository),
+    redis_repository: RedisRepository = Depends(get_redis),
 ) -> PricesRepository:
-    return PricesRepository(repository=repository)
+    return PricesRepository(db_repository=db_repository, redis_repository=redis_repository)
 
 
 def get_instruments_repository(

@@ -1,14 +1,26 @@
-class SetCacheStatement:
-    def __init__(self, cache_key, cache_value, time_to_live):
-        self.cache_key = cache_key
-        self.cache_value = cache_value
-        self.time_to_live = time_to_live
+from abc import ABC, abstractmethod
 
-    def get_cache_key(self):
-        return self.cache_key
+class SetCacheStatement(ABC):
+    """Abstract class for setting cache key and value."""
 
-    def get_cache_value(self):
-        return self.cache_value
+    def __init__(self, values):
+        self.values = values
+        self.name = ""
+        self._time_to_live = 60  # default TTL in seconds
 
-    def get_time_to_live(self):
-        return self.time_to_live
+    @property
+    @abstractmethod
+    def cache_key(self) -> str:
+        """Abstract property to return the cache key."""
+        pass
+
+    @property
+    @abstractmethod
+    def cache_value(self) -> dict:
+        """Abstract property to return the cache value."""
+        pass
+
+    @property
+    def time_to_live(self) -> int:
+        """Property to return the time-to-live for the cache."""
+        return self._time_to_live
