@@ -15,7 +15,7 @@ def to_pydantic(item: Optional[dict], model: Type[S]) -> Optional[S]:
         return model(**item)
 
 
-def list_to_series(items: list[dict], model: Type[T], index_column: str, values_column: str) -> pd.Series:
+def from_db_to_series(items: list[dict], model: Type[T], index_column: str, values_column: str) -> pd.Series:
     try:
         raw_frame = pd.DataFrame(items)
         data = raw_frame.rename(columns={raw_frame.columns[0]: index_column, raw_frame.columns[1]: values_column})
@@ -53,3 +53,16 @@ def dict_to_series(raw_data: dict, model: Type[T], index_column: str, values_col
         return series
     except Exception as e:
         raise ValueError(f"Error converting JSON to Series: {str(e)}")
+
+def convert_cache_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
+    try:
+        data_frame = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
+        data_frame[index_column] = pd.to_numeric(data_frame[index_column])  # Explicitly cast to numeric type
+        data_frame[index_column] = pd.to_datetime(data_frame[index_column], unit='s')
+
+        validated_data = model.validate(data_frame)
+        data_frame = cast(pd.DataFrame, validated_data)
+        series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
+        return series
+    except Exception as e:
+        raise ValueError(f"Error converting cache data to Series: {str(e)}")

@@ -1,5 +1,4 @@
 import json
-from typing import Any, Union
 
 import redis.asyncio as redis
 
@@ -13,7 +12,8 @@ class RedisRepository:
         self.redis_client = redis.Redis(connection_pool=pool)
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_cache(self, statement: GetCacheStatement) -> Union[Any, None]:
+    async def get_cache(self, statement: GetCacheStatement) ->  dict | None:
+
         try:
             value = await self.redis_client.get(statement.cache_key)
             if value is None:

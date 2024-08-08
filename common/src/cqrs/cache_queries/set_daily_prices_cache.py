@@ -1,6 +1,7 @@
 import pandas as pd
 from common.src.redis.base_statements.set_cache_statement import SetCacheStatement
 from common.src.utils.cache_utils import get_series_key
+from common.src.utils.cache_utils import convert_datetime_to_unix
 
 class SetDailyPricesCache(SetCacheStatement):
     def __init__(self, prices: pd.Series, instrument_code: str):
@@ -14,4 +15,5 @@ class SetDailyPricesCache(SetCacheStatement):
 
     @property
     def cache_value(self) -> dict:
-        return self.values.to_dict()
+        series = convert_datetime_to_unix(self.values)
+        return series.to_dict()
