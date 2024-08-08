@@ -6,7 +6,7 @@ class SetCacheStatement(ABC):
     def __init__(self, values):
         self.values = values
         self.name = ""
-        self._time_to_live = 60  # default TTL in seconds
+        self._time_to_live = 600000  # default TTL in seconds
 
     @property
     @abstractmethod

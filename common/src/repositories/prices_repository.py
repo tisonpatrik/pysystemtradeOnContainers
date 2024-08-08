@@ -24,7 +24,6 @@ class PricesRepository:
             # Try to get the data from Redis cache
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                self.logger.info(f"Cache hit DailyPrices for symbol {symbol}")
                 series = convert_cache_to_series(cached_data, DailyPrices, str(DailyPrices.date_time), str(DailyPrices.price))
                 return series
 

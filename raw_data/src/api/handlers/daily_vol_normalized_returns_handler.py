@@ -25,10 +25,10 @@ class DailyvolNormalizedReturnsHandler:
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                self.logger.info(f"Cache hit DailyvolNormalizedReturns for symbol {instrument_code}")
                 series = convert_cache_to_series(cached_data,
                     DailyvolNormalizedReturns, str(DailyvolNormalizedReturns.date_time), str(DailyvolNormalizedReturns.price))
                 return series
+
             returnvol_data = await self.risk_client.get_daily_retuns_vol_async(instrument_code)
             prices = await self.prices_repository.get_daily_prices_async(instrument_code)
             norm_return = self.daily_vol_normalized_returns_service.get_daily_vol_normalised_returns(prices, returnvol_data)

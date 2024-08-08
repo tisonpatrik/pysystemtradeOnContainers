@@ -54,7 +54,7 @@ def from_api_to_series(raw_data: dict, model: Type[T], index_column: str, values
     except Exception as e:
         raise ValueError(f"Error converting JSON to Series: {str(e)}")
 
-def convert_cache_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
+def convert_cache_to_dataframe(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.DataFrame:
     try:
         data_frame = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
         data_frame[index_column] = pd.to_numeric(data_frame[index_column])  # Explicitly cast to numeric type
@@ -62,6 +62,13 @@ def convert_cache_to_series(raw_data: dict, model: Type[T], index_column: str, v
 
         validated_data = model.validate(data_frame)
         data_frame = cast(pd.DataFrame, validated_data)
+        return data_frame
+    except Exception as e:
+        raise ValueError(f"Error converting cache data to Series: {str(e)}")
+
+def convert_cache_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
+    try:
+        data_frame = convert_cache_to_dataframe(raw_data, model, index_column, values_column)
         series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
         return series
     except Exception as e:

@@ -36,7 +36,6 @@ def get_daily_vol_normalized_returns_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
     risk_client: RiskClient = Depends(get_risk_client),
     redis_repository: RedisRepository = Depends(get_redis),
-
 ) -> DailyvolNormalizedReturnsHandler:
     return DailyvolNormalizedReturnsHandler(
         prices_repository=prices_repository,
@@ -47,9 +46,12 @@ def get_daily_vol_normalized_returns_handler(
 def get_aggregated_returns_for_asset_class_handler(
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
     daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
+    redis_repository: RedisRepository = Depends(get_redis),
 ) -> AggregatedReturnsForAssetClassHandler:
     return AggregatedReturnsForAssetClassHandler(
-        instrument_repository=instrument_repository, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
+        instrument_repository=instrument_repository,
+        daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
+        redis_repository=redis_repository
     )
 
 def get_normalized_price_for_asset_class_handler(
