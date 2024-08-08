@@ -14,8 +14,8 @@ class RawDataClient:
         self.client = client
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_normalized_prices_for_asset_class_async(self, instrument_code: str) -> pd.Series:
-        query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code)
+    async def get_normalized_prices_for_asset_class_async(self, instrument_code: str, asset_class: str) -> pd.Series:
+        query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
         try:
             vol_data = await self.client.get_data_async(query)
             vol = dict_to_series(
