@@ -1,7 +1,6 @@
 import pandas as pd
 
-from common.src.cqrs.cache_queries.get_daily_prices_cache import GetDailyPricesCache
-from common.src.cqrs.cache_queries.set_daily_prices_cache import SetDailyPricesCache
+from common.src.cqrs.cache_queries.daily_prices_cache import GetDailyPricesCache, SetDailyPricesCache
 from common.src.cqrs.db_queries.get_daily_prices import GetDailyPriceQuery
 from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
 from common.src.database.repository import Repository

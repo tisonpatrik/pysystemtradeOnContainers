@@ -1,7 +1,9 @@
 import pandas as pd
 
-from common.src.cqrs.cache_queries.get_aggregated_returns_for_asset_class_cache import GetAggregatedReturnsForAssetClassCache
-from common.src.cqrs.cache_queries.set_aggregated_returns_for_asset_class_cache import SetAggregatedReturnsForAssetClassCache
+from common.src.cqrs.cache_queries.aggregated_returns_for_asset_class_cache import (
+    GetAggregatedReturnsForAssetClassCache,
+    SetAggregatedReturnsForAssetClassCache,
+)
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository

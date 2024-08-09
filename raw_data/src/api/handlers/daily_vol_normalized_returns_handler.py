@@ -1,7 +1,9 @@
 import pandas as pd
 
-from common.src.cqrs.cache_queries.get_daily_vol_normalised_returns_cache import GetDailyvolNormalizedReturnsCache
-from common.src.cqrs.cache_queries.set_daily_vol_normalised_returns_cache import SetDailyvolNormalizedReturnsCache
+from common.src.cqrs.cache_queries.daily_vol_normalised_returns_cache import (
+    GetDailyvolNormalizedReturnsCache,
+    SetDailyvolNormalizedReturnsCache,
+)
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_repository import PricesRepository
@@ -9,7 +11,6 @@ from common.src.repositories.risk_client import RiskClient
 from common.src.utils.convertors import convert_cache_to_series
 from raw_data.src.services.daily_vol_normalised_returns_service import DailyVolNormalisedReturnsService
 from raw_data.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
-from common.src.utils.volatility import daily_returns
 
 
 class DailyvolNormalizedReturnsHandler:
