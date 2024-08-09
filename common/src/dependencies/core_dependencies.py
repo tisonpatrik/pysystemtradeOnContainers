@@ -35,9 +35,10 @@ def get_instruments_repository(
 
 
 def get_risk_client(
-    client: RestClient = Depends(get_client),
+    rest_client: RestClient = Depends(get_client),
+    redis_repository: RedisRepository = Depends(get_redis),
 ) -> RiskClient:
-    return RiskClient(client=client)
+    return RiskClient(rest_client=rest_client, redis_repository=redis_repository)
 
 
 def get_raw_data_client(client: RestClient = Depends(get_client)) -> RawDataClient:
