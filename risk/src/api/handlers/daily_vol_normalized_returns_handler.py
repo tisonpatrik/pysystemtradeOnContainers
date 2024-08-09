@@ -7,17 +7,23 @@ from common.src.cqrs.cache_queries.daily_vol_normalised_returns_cache import (
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_client import RiskClient
 from common.src.utils.convertors import convert_cache_to_series
-from raw_data.src.services.daily_vol_normalised_returns_service import DailyVolNormalisedReturnsService
-from raw_data.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
+from risk.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from risk.src.services.daily_vol_normalised_returns_service import DailyVolNormalisedReturnsService
+from risk.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
 
 
 class DailyvolNormalizedReturnsHandler:
-    def __init__(self, prices_repository: PricesRepository, risk_client: RiskClient, redis_repository: RedisRepository):
+    def __init__(
+        self,
+        prices_repository: PricesRepository,
+        daily_returns_vol_handler: DailyReturnsVolHandler,
+        redis_repository: RedisRepository
+    ):
+
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
-        self.risk_client = risk_client
+        self.daily_returns_vol_handler = daily_returns_vol_handler
         self.redis_repository = redis_repository
         self.daily_vol_normalized_returns_service = DailyVolNormalisedReturnsService()
 
@@ -31,7 +37,7 @@ class DailyvolNormalizedReturnsHandler:
                     DailyvolNormalizedReturns, str(DailyvolNormalizedReturns.date_time), str(DailyvolNormalizedReturns.price))
                 return series
 
-            returnvol_data = await self.risk_client.get_daily_retuns_vol_async(instrument_code)
+            returnvol_data = await self.daily_returns_vol_handler.get_daily_returns_vol_async(instrument_code)
             prices = await self.prices_repository.get_daily_prices_async(instrument_code)
             norm_return = self.daily_vol_normalized_returns_service.get_daily_vol_normalised_returns(prices, returnvol_data)
             # Store the fetched data in Redis cache

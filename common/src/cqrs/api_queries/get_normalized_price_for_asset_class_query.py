@@ -10,4 +10,4 @@ class GetNormalizedPriceForAssetClassQuery(FetchRequest):
 
     @property
     def url_string(self) -> str:
-        return "http://raw_data:8000/normalized_prices_for_asset_class_router/get_normalized_prices_for_asset_class/"
+        return "http://risk:8000/normalized_prices_for_asset_class_router/get_normalized_prices_for_asset_class/"

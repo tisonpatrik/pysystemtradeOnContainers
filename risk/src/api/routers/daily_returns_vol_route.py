@@ -4,8 +4,8 @@ from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.logging.logger import AppLogger
-from risk.src.api.dependencies.risk_dependencies import get_daily_returns_vol_handler
-from risk.src.api.handlers.daily_returns_volatility_handler import DailyReturnsVolHandler
+from risk.src.api.dependencies.dependencies import get_daily_returns_vol_handler
+from risk.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -21,7 +21,7 @@ async def get_daily_returns_vol(
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ):
     try:
-        daily_returns_vol = await daily_returns_vol_handler.get_daily_returns_vol_async(query)
+        daily_returns_vol = await daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
         return jsonable_encoder(daily_returns_vol)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to fetch daily returns vol for symbol {query.symbol}. Error: {e.detail}")

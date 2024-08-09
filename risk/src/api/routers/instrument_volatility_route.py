@@ -4,7 +4,7 @@ from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.logging.logger import AppLogger
-from risk.src.api.dependencies.risk_dependencies import get_instrument_vol_handler
+from risk.src.api.dependencies.dependencies import get_instrument_vol_handler
 from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 
 router = APIRouter()

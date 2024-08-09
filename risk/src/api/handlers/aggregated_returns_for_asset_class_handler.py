@@ -8,8 +8,8 @@ from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.utils.convertors import convert_cache_to_series
-from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
-from raw_data.src.validation.aggregated_returns_for_asset_class import AggregatedReturnsForAssetClass
+from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from risk.src.validation.aggregated_returns_for_asset_class import AggregatedReturnsForAssetClass
 
 
 class AggregatedReturnsForAssetClassHandler:
