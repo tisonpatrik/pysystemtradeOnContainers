@@ -8,8 +8,8 @@ from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
 class DailyReturnsVolHandler:
     def __init__(self, prices_repository: PricesRepository):
         self.logger = AppLogger.get_instance().get_logger()
-        self.daily_returns_vol_service = DailyReturnsVolService()
         self.prices_repository = prices_repository
+        self.daily_returns_vol_service = DailyReturnsVolService()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         try:

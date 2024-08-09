@@ -1,13 +1,16 @@
+import httpx
 import pandas as pd
 from fastapi import HTTPException
 
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.cache_queries.daily_returns_vol_cache import GetDailyReturnsVolCache, SetDailyReturnsVolCache
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.utils.convertors import convert_cache_to_series, from_api_to_series
 from common.src.validation.daily_returns_vol import DailyReturnsVol
+from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 
 
 class RiskClient:
@@ -42,4 +45,30 @@ class RiskClient:
             return vol
         except Exception as e:
             self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")
+
+
+    async def get_normalized_prices_for_asset_class_async(self, instrument_code: str, asset_class: str) -> pd.Series:
+        query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
+        try:
+            vol_data = await self.client.get_data_async(query)
+            vol = from_api_to_series(
+                vol_data,
+                NormalizedPricesForAssetClass,
+                NormalizedPricesForAssetClass.date_time,  # type: ignore[arg-type]
+                NormalizedPricesForAssetClass.vol,  # type: ignore[arg-type]
+            )
+            return vol
+
+        except httpx.HTTPStatusError as http_exc:
+            self.logger.error(
+                f"HTTP error occurred while fetching data for {instrument_code}: {http_exc.response.status_code} - {http_exc.response.text}"
+            )
+            raise HTTPException(status_code=http_exc.response.status_code, detail=f"HTTP error: {http_exc.response.text}")
+        except httpx.RequestError as req_exc:
+            self.logger.error(f"Request error occurred while fetching data for {instrument_code}: {req_exc}")
+            raise HTTPException(status_code=500, detail=f"Request error: {req_exc}")
+        except Exception as e:
+            self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {str(e)}")
+            self.logger.debug(e, exc_info=True)  # Log the full stack trace for debugging
             raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")

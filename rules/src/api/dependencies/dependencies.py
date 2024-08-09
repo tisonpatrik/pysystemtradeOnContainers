@@ -8,7 +8,6 @@ from common.src.dependencies.core_dependencies import (
     get_daily_prices_repository,
     get_db_repository,
     get_instruments_repository,
-    get_raw_data_client,
     get_risk_client,
 )
 from common.src.dependencies.db_setup import setup_async_database
@@ -17,7 +16,6 @@ from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.http_client.rest_client import RestClient
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
 from rules.src.api.handlers.accel_handler import AccelHandler
 from rules.src.api.handlers.assettrend_handler import AssettrendHandler
@@ -49,7 +47,7 @@ def get_breakout_handler(
     return BreakoutHandler(prices_repository=prices_repository, client=client)
 
 
-def get_asserttrend_handler(raw_data_client: RawDataClient = Depends(get_raw_data_client),
+def get_asserttrend_handler(risk_client: RiskClient = Depends(get_risk_client),
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
 ) -> AssettrendHandler:
-    return AssettrendHandler(raw_data_client=raw_data_client, instrument_repository=instrument_repository)
+    return AssettrendHandler(risk_client=risk_client, instrument_repository=instrument_repository)
