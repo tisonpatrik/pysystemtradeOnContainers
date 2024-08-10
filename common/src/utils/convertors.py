@@ -16,7 +16,7 @@ def convert_list_dicts_to_dataframe(items: list[dict], index_column: str, values
         data = pd.DataFrame(items)
         data.columns = values_columns
 
-        data[index_column] = pd.to_numeric(data[index_column])  # Explicitly cast to numeric type
+        data[index_column] = pd.to_numeric(data[index_column])
         data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
         return data
     except Exception as e:
@@ -25,8 +25,8 @@ def convert_list_dicts_to_dataframe(items: list[dict], index_column: str, values
 def convert_dict_to_dataframe(raw_data: dict, index_column: str, values_column: str) -> pd.DataFrame:
     try:
         data = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
-        data[index_column] = pd.to_numeric(data[index_column])  # Explicitly cast to numeric type
-        data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
+        data[index_column] = pd.to_numeric(data[index_column])
+        data[index_column] = pd.to_datetime(data[index_column], unit='s')
         return data
     except Exception as e:
         raise ValueError(f"Error converting cache data to Series: {str(e)}")
