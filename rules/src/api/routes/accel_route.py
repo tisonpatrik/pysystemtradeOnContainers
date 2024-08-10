@@ -21,7 +21,7 @@ async def get_accel_for_instrument_async(
     accel_handler: AccelHandler = Depends(get_accel_handler),
 ):
     try:
-        accel = await accel_handler.get_accel_async(query)
+        accel = await accel_handler.get_accel_async(query.symbol, query.speed)
         return jsonable_encoder(accel)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate accel for symbol {query.symbol}. Error: {e.detail}")

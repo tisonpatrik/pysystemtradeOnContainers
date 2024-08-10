@@ -1,75 +1,36 @@
-from typing import Optional, Type, TypeVar, cast
+from typing import Optional, Type, TypeVar
 
 import pandas as pd
-from pandera import DataFrameModel
 from pydantic import BaseModel
 
-S = TypeVar("S", bound=BaseModel)
-T = TypeVar("T", bound=DataFrameModel)
+T = TypeVar("T", bound=BaseModel)
 
-
-def to_pydantic(item: Optional[dict], model: Type[S]) -> Optional[S]:
+def to_pydantic(item: Optional[dict], model: Type[T]) -> Optional[T]:
     if item is None:
         return None
     else:
         return model(**item)
 
-
-def from_db_to_series(items: list[dict], model: Type[T], index_column: str, values_column: str) -> pd.Series:
+def convert_list_dicts_to_dataframe(items: list[dict], index_column: str, values_columns: list) -> pd.DataFrame:
     try:
-        raw_frame = pd.DataFrame(items)
-        data = raw_frame.rename(columns={raw_frame.columns[0]: index_column, raw_frame.columns[1]: values_column})
+        data = pd.DataFrame(items)
+        data.columns = values_columns
 
-        # Ensure the index_column is in the desired date format
+        data[index_column] = pd.to_numeric(data[index_column])  # Explicitly cast to numeric type
         data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
-
-        validated_data = model.validate(data)
-        data_frame = cast(pd.DataFrame, validated_data)
-        series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
-        return series
+        return data
     except Exception as e:
-        raise ValueError(f"Error converting list to Series: {str(e)}")
+        raise ValueError(f"Error converting list to DataFrame: {str(e)}")
 
-
-def series_to_dataframe(series: pd.Series, model: Type[T], index_column: str, values_column: str) -> pd.DataFrame:
-    try:
-        data = pd.DataFrame({index_column: series.index, values_column: series.values})
-        validated_data = model.validate(data)
-        data_frame = cast(pd.DataFrame, validated_data)
-        return data_frame
-    except Exception as e:
-        raise ValueError(f"Error converting Series to DataFrame: {str(e)}")
-
-
-def from_api_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
+def convert_dict_to_dataframe(raw_data: dict, index_column: str, values_column: str) -> pd.DataFrame:
     try:
         data = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
-        # Ensure the index_column is in the desired date format
-        data[index_column] = pd.to_datetime(data[index_column]).dt.strftime("%Y-%m-%d")
-
-        validated_data = model.validate(data)
-        data_frame = cast(pd.DataFrame, validated_data)
-        series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
-        return series
-    except Exception as e:
-        raise ValueError(f"Error converting JSON to Series: {str(e)}")
-
-def convert_cache_to_dataframe(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.DataFrame:
-    try:
-        data_frame = pd.DataFrame(list(raw_data.items()), columns=[index_column, values_column])
-        data_frame[index_column] = pd.to_numeric(data_frame[index_column])  # Explicitly cast to numeric type
-        data_frame[index_column] = pd.to_datetime(data_frame[index_column], unit='s')
-
-        validated_data = model.validate(data_frame)
-        data_frame = cast(pd.DataFrame, validated_data)
-        return data_frame
+        data[index_column] = pd.to_numeric(data[index_column])  # Explicitly cast to numeric type
+        data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
+        return data
     except Exception as e:
         raise ValueError(f"Error converting cache data to Series: {str(e)}")
 
-def convert_cache_to_series(raw_data: dict, model: Type[T], index_column: str, values_column: str) -> pd.Series:
-    try:
-        data_frame = convert_cache_to_dataframe(raw_data, model, index_column, values_column)
-        series = pd.Series(data_frame[values_column].values, index=data_frame[index_column])
-        return series
-    except Exception as e:
-        raise ValueError(f"Error converting cache data to Series: {str(e)}")
+def convert_dataframe_to_series(data_frame: pd.DataFrame, index: str, values: str)-> pd.Series:
+    series = pd.Series(data_frame[values].values,index=data_frame[index])
+    return series

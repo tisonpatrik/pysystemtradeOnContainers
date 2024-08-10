@@ -19,6 +19,7 @@ class RedisRepository:
             if value is None:
                 self.logger.info(f"Cache miss for key '{statement.cache_key}'")
                 return None
+            self.logger.info(f"Cache hit for key '{statement.cache_key}'")
             return json.loads(value)
         except Exception as e:
             self.logger.error(f"Failed to get cache for key '{statement.cache_key}': {e}")

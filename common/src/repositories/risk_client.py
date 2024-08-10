@@ -8,7 +8,6 @@ from common.src.cqrs.cache_queries.daily_returns_vol_cache import GetDailyReturn
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
-from common.src.utils.convertors import convert_cache_to_series, from_api_to_series
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 
@@ -27,14 +26,12 @@ class RiskClient:
             # Try to get the data from Redis cache
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                series = convert_cache_to_series(cached_data, DailyReturnsVol,
-                    str(DailyReturnsVol.date_time), str(DailyReturnsVol.vol))
+                series = DailyReturnsVol.from_cache_to_series(cached_data)
                 return series
 
             query = GetDailyReturnsVolQuery(symbol=instrument_code)
             vol_data = await self.client.get_data_async(query)
-            vol = from_api_to_series(vol_data, DailyReturnsVol,
-                DailyReturnsVol.date_time, DailyReturnsVol.vol)
+            vol = DailyReturnsVol.from_api_to_series(vol_data)
 
             # Store the fetched data in Redis cache
             cache_set_statement = SetDailyReturnsVolCache(
@@ -52,12 +49,7 @@ class RiskClient:
         query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
         try:
             vol_data = await self.client.get_data_async(query)
-            vol = from_api_to_series(
-                vol_data,
-                NormalizedPricesForAssetClass,
-                NormalizedPricesForAssetClass.date_time,  # type: ignore[arg-type]
-                NormalizedPricesForAssetClass.vol,  # type: ignore[arg-type]
-            )
+            vol = NormalizedPricesForAssetClass.from_api_to_series(vol_data)
             return vol
 
         except httpx.HTTPStatusError as http_exc:

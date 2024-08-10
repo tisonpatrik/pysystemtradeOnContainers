@@ -8,7 +8,7 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
     def __init__(self, instrument_code: str):
         super().__init__(parameter = instrument_code)
-        self.name = "daily_vol_normalised_returns"
+        self.name = "daily_vol_normalized_returns"
 
     @property
     def cache_key(self) -> str:
@@ -19,7 +19,7 @@ class SetDailyvolNormalizedReturnsCache(SetCacheStatement):
     def __init__(self, prices: pd.Series, instrument_code: str):
         super().__init__(prices)
         self.instrument_code = instrument_code
-        self.name = "daily_vol_normalised_returns"
+        self.name = "daily_vol_normalized_returns"
 
     @property
     def cache_key(self) -> str:

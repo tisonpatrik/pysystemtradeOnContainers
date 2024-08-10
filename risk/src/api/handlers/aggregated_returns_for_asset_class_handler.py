@@ -7,7 +7,6 @@ from common.src.cqrs.cache_queries.aggregated_returns_for_asset_class_cache impo
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository
-from common.src.utils.convertors import convert_cache_to_series
 from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from risk.src.validation.aggregated_returns_for_asset_class import AggregatedReturnsForAssetClass
 
@@ -30,10 +29,7 @@ class AggregatedReturnsForAssetClassHandler:
             try:
                 cached_data = await self.redis_repository.get_cache(cache_statement)
                 if cached_data is not None:
-                    series = convert_cache_to_series(cached_data,
-                        AggregatedReturnsForAssetClass,
-                        str(AggregatedReturnsForAssetClass.date_time),
-                        str(AggregatedReturnsForAssetClass.price))
+                    series = AggregatedReturnsForAssetClass.from_api_to_series(cached_data)
                     return series
 
                 instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class)
@@ -47,7 +43,7 @@ class AggregatedReturnsForAssetClassHandler:
                 for instrument_code in instruments:
                     try:
                         self.logger.info(f"Fetching returns for instrument: {instrument_code.symbol}")
-                        returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(instrument_code.symbol)
+                        returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns(instrument_code.symbol)
                         aggregate_returns_across_instruments_list.append(returns)
                     except Exception as e:
                         self.logger.error(f"Error fetching returns for instrument {instrument_code.symbol}: {e}")

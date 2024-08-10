@@ -4,7 +4,6 @@ from fastapi import Depends, FastAPI
 
 from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
-    get_client,
     get_daily_prices_repository,
     get_db_repository,
     get_instruments_repository,
@@ -13,7 +12,6 @@ from common.src.dependencies.core_dependencies import (
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
-from common.src.http_client.rest_client import RestClient
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
 from common.src.repositories.risk_client import RiskClient
@@ -42,9 +40,8 @@ def get_accel_handler(
 
 def get_breakout_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
-    client: RestClient = Depends(get_client),
 ) -> BreakoutHandler:
-    return BreakoutHandler(prices_repository=prices_repository, client=client)
+    return BreakoutHandler(prices_repository=prices_repository)
 
 
 def get_asserttrend_handler(risk_client: RiskClient = Depends(get_risk_client),

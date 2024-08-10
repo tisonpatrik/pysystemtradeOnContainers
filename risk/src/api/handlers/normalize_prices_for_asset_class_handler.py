@@ -4,7 +4,7 @@ from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query impo
 from common.src.logging.logger import AppLogger
 from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from risk.src.services.cumulatve_daily_vol_normalized_returns_service import CumulativeDailyVolNormalizedReturnsService
-from risk.src.services.normalised_price_for_asset_class_service import NormalisedPriceForAssetClassService
+from risk.src.services.normalized_price_for_asset_class_service import normalizedPriceForAssetClassService
 from risk.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 
 class NormalizedPricesForAssetClassHandler:
@@ -17,20 +17,20 @@ class NormalizedPricesForAssetClassHandler:
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.aggregated_returns_for_asset_class_handler = aggregated_returns_for_asset_class_handler
         self.cum_daily_vol_norm_returns_service = CumulativeDailyVolNormalizedReturnsService()
-        self.normalised_price_for_asset_class_service = NormalisedPriceForAssetClassService()
+        self.normalized_price_for_asset_class_service = normalizedPriceForAssetClassService()
 
     async def get_normalized_price_for_asset_class_async(self, query: GetNormalizedPriceForAssetClassQuery) -> pd.Series:
         try:
             self.logger.info(f"Fetching normalized prices for asset class {query}")
             aggregated_returns_for_asset_class = await self.aggregated_returns_for_asset_class_handler.get_aggregated_returns_for_asset_class_async(query.asset_class)
-            normalised_price_for_asset_class = (
-                self.cum_daily_vol_norm_returns_service.get_cumulative_daily_vol_normalised_returns(aggregated_returns_for_asset_class)
+            normalized_price_for_asset_class = (
+                self.cum_daily_vol_norm_returns_service.get_cumulative_daily_vol_normalized_returns(aggregated_returns_for_asset_class)
             )
-            normalised_price_this_instrument = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalised_returns(query.symbol)
-            normalised_price_for_asset = self.normalised_price_for_asset_class_service.get_cumulative_daily_vol_normalised_returns(
-                normalised_price_for_asset_class, normalised_price_this_instrument
+            normalized_price_this_instrument = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns(query.symbol)
+            normalized_price_for_asset = self.normalized_price_for_asset_class_service.get_cumulative_daily_vol_normalized_returns(
+                normalized_price_for_asset_class, normalized_price_this_instrument
             )
-            return normalised_price_for_asset
+            return normalized_price_for_asset
 
         except Exception as e:
             self.logger.error(f"Unexpected error occurred while fetching normalied prices for asset class: {e}")

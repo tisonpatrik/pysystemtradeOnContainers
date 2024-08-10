@@ -5,7 +5,7 @@ from common.src.cqrs.db_queries.get_fx_prices import GetFxPrices
 from common.src.cqrs.db_queries.get_instrument_currency import GetInstrumentCurrency
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
-from common.src.utils.convertors import from_db_to_series, to_pydantic
+from common.src.utils.convertors import to_pydantic
 from common.src.validation.fx_prices import FxPrices
 from raw_data.src.services.fx_price_service import FxService
 from raw_data.src.validation.instrument_currency import InstrumentCurrency
@@ -58,7 +58,7 @@ class FxPricesHandler:
         statement = GetFxPrices(fx_code=fx_code)
         try:
             fx_prices_data = await self.repository.fetch_many_async(statement)
-            fx_prices = from_db_to_series(fx_prices_data, FxPrices, FxPrices.date_time, FxPrices.price)  # type: ignore[arg-type]
+            fx_prices = FxPrices.from_db_to_series(fx_prices_data)
             return fx_prices
         except Exception as e:
             self.logger.error(f"Failed to fetch FX prices for {fx_code}: {e}")

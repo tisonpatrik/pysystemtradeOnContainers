@@ -21,7 +21,7 @@ async def get_breakout_for_instrument_async(
     breakout_handler: BreakoutHandler = Depends(get_breakout_handler),
 ):
     try:
-        breakout = await breakout_handler.get_breakout_async(query)
+        breakout = await breakout_handler.get_breakout_async(query.symbol, query.speed)
         return jsonable_encoder(breakout)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate breakout for symbol {query.symbol}. Error: {e.detail}")

@@ -21,7 +21,7 @@ async def get_breakout_for_instrument_async(
     handler: AssettrendHandler = Depends(get_asserttrend_handler),
 ):
     try:
-        assettrend = await handler.get_assettrend_async(query)
+        assettrend = await handler.get_assettrend_async(query.symbol, query.speed)
         return jsonable_encoder(assettrend)
     except HTTPException as e:
         logger.error(f"An error occurred while trying to calculate assettrend for symbol {query.symbol}. Error: {e.detail}")
