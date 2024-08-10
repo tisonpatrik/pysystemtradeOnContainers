@@ -27,6 +27,14 @@ class BaseDataFrameModel(DataFrameModel, Generic[T]):
         return series
 
     @classmethod
+    def from_db_to_dataframe(cls: Type[T], items: List[dict]) -> pd.DataFrame:
+        columns_names = list(cls.__annotations__.keys())
+        data = convert_list_dicts_to_dataframe(items, 'date_time', columns_names)
+        validated_data = cls.validate(data)
+        data_frame = cast(pd.DataFrame, validated_data)
+        return data_frame
+
+    @classmethod
     def from_api_to_series(cls: Type[T], items: dict, value_field: str) -> pd.Series:
         data = convert_dict_to_dataframe(items, 'date_time', value_field)
         validated_data = cls.validate(data)

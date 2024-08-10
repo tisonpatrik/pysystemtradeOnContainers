@@ -14,5 +14,5 @@ class RawCarry(BaseDataFrameModel[T]):
     carry_contract: Int = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_db_to_series(cls: Type[T], items: List[dict], value_field: str = 'vol') -> pd.Series:
-        return super().from_db_to_series(items, value_field)
+    def from_db_to_dataframe(cls: Type[T], items: List[dict]) -> pd.DataFrame:
+        return super().from_db_to_dataframe(items)
