@@ -55,7 +55,7 @@ class PricesRepository:
             self.logger.error(f"Database error when fetching denom price for symbol {symbol}: {e}")
             raise
 
-    async def get_raw_carry_data(self, symbol: str) -> pd.DataFrame:
+    async def get_raw_carry_async(self, symbol: str) -> pd.DataFrame:
         statement = GetRawCarryDataQuery(symbol=symbol)
         try:
             carry_data = await self.repository.fetch_many_async(statement)

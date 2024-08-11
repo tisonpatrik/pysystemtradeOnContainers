@@ -1,44 +1,26 @@
-# from common.src.logging.logger import AppLogger
-# import pandas as pd
+import pandas as pd
 
-# class DailyAnnualisedRollHandler:
-#     def __init__(self):
-#         self.logger = AppLogger.get_instance().get_logger()
+from common.src.logging.logger import AppLogger
+from common.src.repositories.prices_repository import PricesRepository
+from raw_data.src.services.raw_carry_service import RawCarryService
 
-#     async def get_daily_annualised_roll_async(self, instrument_code: str)->pd.Series:
-#         annroll = self.annualised_roll(instrument_code)
-#         annroll = annroll.resample("1B").mean()
-#         return annroll
+class DailyAnnualisedRollHandler:
+    def __init__(self, prices_repository: PricesRepository):
+        self.logger = AppLogger.get_instance().get_logger()
+        self.prices_repository = prices_repository
+        self.raw_carry_service = RawCarryService()
 
-#     def annualised_roll(self, instrument_code: str) -> pd.Series:
-#             rolldiffs = self.roll_differentials(instrument_code)
-#             rawrollvalues = self.raw_futures_roll(instrument_code)
-#             annroll = rawrollvalues / rolldiffs
-#             return annroll
+    async def get_daily_annualised_roll_async(self, instrument_code: str)->pd.Series:
+        try:
+            self.logger.info(f"Fetching Daily annualised roll for symbol {instrument_code}")
+            raw_carry = await self.prices_repository.get_raw_carry_async(instrument_code)
 
-#     def roll_differentials(self, instrument_code: str) -> pd.Series:
-#         carrydata = self.get_instrument_raw_carry_data(instrument_code)
-#         roll_diff = carrydata.roll_differentials()
+            rolldiffs = self.raw_carry_service.get_roll_differentials(raw_carry)
+            rawrollvalues = self.raw_carry_service.raw_futures_roll(raw_carry)
 
-#         return roll_diff
-
-#     def roll_differentials(
-#         self, floor_date_diff: float = 1 / CALENDAR_DAYS_IN_YEAR
-#     ) -> pd.Series:
-#         raw_differential = self.raw_differential()
-
-#         ## This prevents the roll differential from being zero in a corner
-#         ##     case when the two contract months match - it has to be at least one day
-
-#         floored_differential = apply_abs_min(raw_differential, floor_date_diff)
-#         unique_differential = uniquets(floored_differential)
-
-#         return unique_differential
-
-
-#     def raw_futures_roll(self, instrument_code: str) -> pd.Series:
-
-#         carrydata = self.get_instrument_raw_carry_data(instrument_code)
-#         raw_roll = carrydata.raw_futures_roll()
-
-#         return raw_roll
+            annroll = rawrollvalues / rolldiffs
+            annroll = annroll.resample("1B").mean()
+            return annroll
+        except Exception as e:
+            self.logger.error(f"Unexpected error occurred while fetching Daily annualised roll: {e}")
+            raise RuntimeError(f"An unexpected error occurred: {e}")
