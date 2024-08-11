@@ -5,20 +5,20 @@ from common.src.redis.base_statements.set_cache_statement import SetCacheStateme
 from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_key
 
 
-class GetAggregatedReturnsForAssetClassCache(GetCacheStatement):
-    def __init__(self, asset_class: str):
-        super().__init__(parameter = asset_class)
-        self.name = "aggregated_returns_for_asset_class"
+class GetDailyAnnualisedRollCache(GetCacheStatement):
+    def __init__(self, symbol: str):
+        super().__init__(parameter = symbol)
+        self.name = "daily_annualised_roll_cache"
 
     @property
     def cache_key(self) -> str:
         return get_series_key(self.name, self.parameter)
 
-class SetAggregatedReturnsForAssetClassCache(SetCacheStatement):
-    def __init__(self, returns: pd.Series, asset_class: str):
-        super().__init__(returns)
-        self.asset_class = asset_class
-        self.name = "aggregated_returns_for_asset_class"
+class SetDailyAnnualisedRollCache(SetCacheStatement):
+    def __init__(self, daily_roll: pd.Series, symbol: str):
+        super().__init__(daily_roll)
+        self.asset_class = symbol
+        self.name = "daily_annualised_roll_cache"
 
     @property
     def cache_key(self) -> str:
