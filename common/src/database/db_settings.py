@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: str
 
-    max_connections: int = 2
+    max_connections: int = 10
     min_connections: int = 1
-    connection_timeout: int = 50
+    connection_timeout: int = 500
 
     class Config:
         env_file = ".env"

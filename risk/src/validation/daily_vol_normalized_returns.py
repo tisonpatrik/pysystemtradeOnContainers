@@ -7,7 +7,7 @@ from common.src.utils.convertors import convert_dataframe_to_series, convert_dic
 
 
 class DailyvolNormalizedReturns(DataFrameModel):
-    date_time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
+    time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     returns: Float = Field(coerce=True, nullable=True)
 
     @classmethod
@@ -15,7 +15,7 @@ class DailyvolNormalizedReturns(DataFrameModel):
         # Convert the dictionary to a DataFrame using convert_dict_to_dataframe
         data = convert_dict_to_dataframe(
             items,
-            str(DailyvolNormalizedReturns.date_time),
+            str(DailyvolNormalizedReturns.time),
             str(DailyvolNormalizedReturns.returns)
         )
 
@@ -28,7 +28,7 @@ class DailyvolNormalizedReturns(DataFrameModel):
         # Convert the DataFrame to a Series using convert_dataframe_to_series
         series = convert_dataframe_to_series(
             data_frame,
-            str(DailyvolNormalizedReturns.date_time),
+            str(DailyvolNormalizedReturns.time),
             str(DailyvolNormalizedReturns.returns)
         )
 

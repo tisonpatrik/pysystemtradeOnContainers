@@ -7,14 +7,14 @@ from common.src.utils.convertors import convert_dataframe_to_series, convert_dic
 
 
 class AggregatedReturnsForAssetClass(DataFrameModel):
-    date_time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
+    time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     returns: Float = Field(coerce=True, nullable=True)
 
     @classmethod
     def from_api_to_series(cls, items: dict) -> pd.Series:
         data = convert_dict_to_dataframe(
             items,
-            str(AggregatedReturnsForAssetClass.date_time),
+            str(AggregatedReturnsForAssetClass.time),
             str(AggregatedReturnsForAssetClass.returns)
         )
 
@@ -23,7 +23,7 @@ class AggregatedReturnsForAssetClass(DataFrameModel):
 
         series = convert_dataframe_to_series(
             data_frame,
-            str(AggregatedReturnsForAssetClass.date_time),
+            str(AggregatedReturnsForAssetClass.time),
             str(AggregatedReturnsForAssetClass.returns)
         )
 

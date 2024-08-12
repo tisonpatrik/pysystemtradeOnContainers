@@ -1,15 +1,14 @@
 import pandera as pa
 from pandera.dtypes import Timestamp
 
-
 class FxPricesSchema(pa.DataFrameModel):
-	date_time: Timestamp # type: ignore[assignment]
+	time: Timestamp # type: ignore[assignment]
 	symbol: str
 	price: float = pa.Field(nullable=True)
 
 
 class MultiplePricesSchema(pa.DataFrameModel):
-	date_time: Timestamp # type: ignore[assignment]
+	time: Timestamp # type: ignore[assignment]
 	symbol: str
 	carry: float = pa.Field(nullable=True)
 	carry_contract: int
@@ -20,7 +19,7 @@ class MultiplePricesSchema(pa.DataFrameModel):
 
 
 class RollCalendarsSchema(pa.DataFrameModel):
-	date_time: Timestamp # type: ignore[assignment]
+	time: Timestamp # type: ignore[assignment]
 	symbol: str
 	current_contract: int
 	next_contract: int
@@ -28,6 +27,6 @@ class RollCalendarsSchema(pa.DataFrameModel):
 
 
 class AdjustedPricesSchema(pa.DataFrameModel):
-	date_time: Timestamp # type: ignore[assignment]
+	time: Timestamp # type: ignore[assignment]
 	symbol: str
 	price: float = pa.Field(nullable=True)

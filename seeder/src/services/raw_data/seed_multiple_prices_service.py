@@ -16,8 +16,8 @@ class SeedMultiplePricesService:
 
     async def seed_multiple_prices_service_async(self, raw_data: pd.DataFrame):
         try:
-            date_time = MultiplePricesSchema.date_time
-            raw_data[date_time] = pd.to_datetime(raw_data[date_time])
+            time = MultiplePricesSchema.time
+            raw_data[time] = pd.to_datetime(raw_data[time])
             validated = DataFrame[MultiplePricesSchema](raw_data)
             statement = InsertManyStatement(table_name=MultiplePricesModel.__tablename__, data=validated)
             await self.repository.insert_dataframe_async(statement)

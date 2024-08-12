@@ -7,7 +7,7 @@ from common.src.validation.base_data_model import BaseDataFrameModel
 T = TypeVar('T', bound='DenomPrices')
 
 class DenomPrices(BaseDataFrameModel[T]):
-    date_time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
+    time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     price: Float = Field(coerce=True, nullable=True)
 
     @classmethod

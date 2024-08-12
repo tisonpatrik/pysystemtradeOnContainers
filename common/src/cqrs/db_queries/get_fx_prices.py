@@ -4,10 +4,10 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 class GetFxPrices(FetchStatement):
     def __init__(self, fx_code: str):
         self._query = """
-        SELECT date_time, price
+        SELECT time, price
         FROM fx_prices
         WHERE symbol = $1
-        ORDER BY date_time
+        ORDER BY time
         """
         self._parameters = (fx_code,)
 

@@ -14,13 +14,11 @@ class DailyAnnualisedRollHandler:
         try:
             self.logger.info(f"Fetching Daily annualised roll for symbol {instrument_code}")
             raw_carry = await self.prices_repository.get_raw_carry_async(instrument_code)
-
             rolldiffs = self.raw_carry_service.get_roll_differentials(raw_carry)
             rawrollvalues = self.raw_carry_service.raw_futures_roll(raw_carry)
-
             annroll = rawrollvalues / rolldiffs
             annroll = annroll.resample("1B").mean()
             return annroll
         except Exception as e:
-            self.logger.error(f"Unexpected error occurred while fetching Daily annualised roll: {e}")
+            self.logger.error(f"Unexpected error occurred while geting Daily annualised roll: {e}")
             raise RuntimeError(f"An unexpected error occurred: {e}")

@@ -33,7 +33,6 @@ class FxPricesHandler:
             else:
                 fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
             return fx_data
-            # return series_to_dataframe(fx_data, FxPrices, FxPrices.date_time, FxPrices.price)  # type: ignore[arg-type]
 
         except Exception as e:
             self.logger.error(f"Unexpected error occurred while fetching FX prices: {e}")

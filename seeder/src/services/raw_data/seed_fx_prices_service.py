@@ -16,8 +16,8 @@ class SeedFxPricesService:
 
     async def seed_fx_prices_async(self, raw_data: pd.DataFrame):
         try:
-            date_time = FxPricesSchema.date_time
-            raw_data[date_time] = pd.to_datetime(raw_data[date_time])
+            time = FxPricesSchema.time
+            raw_data[time] = pd.to_datetime(raw_data[time])
             validated = DataFrame[FxPricesSchema](raw_data)
             statement = InsertManyStatement(table_name=FxPricesModel.__tablename__, data=validated)
             await self.repository.insert_dataframe_async(statement)

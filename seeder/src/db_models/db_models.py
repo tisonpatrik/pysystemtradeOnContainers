@@ -45,29 +45,29 @@ class SpreadCostsModel(BaseModel):
 
 class AdjustedPricesModel(BaseModel):
 	__tablename__ = 'adjusted_prices'
-	date_time = Column(DateTime, primary_key=True, index=True)
+	time = Column(DateTime, primary_key=True, index=True)
 	symbol = Column(String, ForeignKey('instrument_config.symbol'), primary_key=True, index=True)
 	price = Column(Float)
 	__table_args__ = (
-		Index('ix_adjusted_prices_date_time', 'date_time'),
+		Index('ix_adjusted_prices_time', 'time'),
 		Index('ix_adjusted_prices_symbol', 'symbol'),
 	)
 
 
 class FxPricesModel(BaseModel):
 	__tablename__ = 'fx_prices'
-	date_time = Column(DateTime, primary_key=True, index=True)
+	time = Column(DateTime, primary_key=True, index=True)
 	symbol = Column(String, primary_key=True, index=True)
 	price = Column(Float)
 	__table_args__ = (
-		Index('ix_fx_prices_date_time', 'date_time'),
+		Index('ix_fx_prices_time', 'time'),
 		Index('ix_fx_prices_symbol', 'symbol'),
 	)
 
 
 class MultiplePricesModel(BaseModel):
 	__tablename__ = 'multiple_prices'
-	date_time = Column(DateTime, primary_key=True, index=True)
+	time = Column(DateTime, primary_key=True, index=True)
 	symbol = Column(String, ForeignKey('instrument_config.symbol'), primary_key=True, index=True)
 	carry = Column(Float, nullable=True, default=None)
 	carry_contract = Column(Integer)
@@ -76,20 +76,20 @@ class MultiplePricesModel(BaseModel):
 	forward = Column(Float, nullable=True, default=None)
 	forward_contract = Column(Integer)
 	__table_args__ = (
-		Index('ix_multiple_prices_date_time', 'date_time'),
+		Index('ix_multiple_prices_time', 'time'),
 		Index('ix_multiple_prices_symbol', 'symbol'),
 	)
 
 
 class RollCalendarsModel(BaseModel):
 	__tablename__ = 'roll_calendars'
-	date_time = Column(DateTime, primary_key=True, index=True)
+	time = Column(DateTime, primary_key=True, index=True)
 	symbol = Column(String, ForeignKey('instrument_config.symbol'), primary_key=True, index=True)
 	current_contract = Column(Integer)
 	next_contract = Column(Integer)
 	carry_contract = Column(Integer)
 	__table_args__ = (
-		Index('ix_roll_calendars_date_time', 'date_time'),
+		Index('ix_roll_calendars_time', 'time'),
 		Index('ix_roll_calendars_symbol', 'symbol'),
 	)
 

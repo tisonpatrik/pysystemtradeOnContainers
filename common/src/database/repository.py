@@ -42,12 +42,21 @@ class Repository:
         records = statement.get_records()
         columns = statement.get_columns()
         table_name = statement.get_table_name()
-
+        batch_size: int = 1000000
         try:
-            async with self.pool.acquire() as connection, connection.transaction():
-                await connection.copy_records_to_table(table_name=table_name, records=records, columns=columns)
+            async with self.pool.acquire() as connection:
+                for i in range(0, len(records), batch_size):
+                    batch_records = records[i:i + batch_size]
+                    async with connection.transaction():
+                        await connection.copy_records_to_table(
+                            table_name=table_name,
+                            records=batch_records,
+                            columns=columns
+                        )
+                    self.logger.info(f"Inserted batch {i//batch_size + 1} with {len(batch_records)} records into {table_name}")
         except Exception as e:
             self.logger.error(f"Failed to insert data into the database: {str(e)}")
+            raise
 
     async def insert_item_async(self, statement: InsertStatement) -> None:
         query = statement.get_insert_query()

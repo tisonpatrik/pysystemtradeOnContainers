@@ -88,7 +88,7 @@ services:
       - ./common:/home/app/common
 
   db_postgres:
-    image: postgres:latest
+    image: timescale/timescaledb:latest-pg16
     container_name: postgres
     hostname: db_postgres
     restart: on-failure

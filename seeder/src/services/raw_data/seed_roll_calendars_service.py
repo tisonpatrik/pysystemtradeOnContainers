@@ -16,8 +16,8 @@ class SeedRollCalendarsService:
 
     async def seed_roll_calendars_service_async(self, raw_data: pd.DataFrame):
         try:
-            date_time = RollCalendarsSchema.date_time
-            raw_data[date_time] = pd.to_datetime(raw_data[date_time])
+            time = RollCalendarsSchema.time
+            raw_data[time] = pd.to_datetime(raw_data[time])
             validated = DataFrame[RollCalendarsSchema](raw_data)
             statement = InsertManyStatement(table_name=RollCalendarsModel.__tablename__, data=validated)
             await self.repository.insert_dataframe_async(statement)

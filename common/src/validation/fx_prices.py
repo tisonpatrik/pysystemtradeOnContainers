@@ -7,9 +7,9 @@ from common.src.validation.base_data_model import BaseDataFrameModel
 T = TypeVar('T', bound='FxPrices')
 
 class FxPrices(BaseDataFrameModel[T]):
-    date_time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
+    time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     price: Float = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_db_to_series(cls: Type[T], items: List[dict], value_field: str = 'vol') -> pd.Series:
+    def from_db_to_series(cls: Type[T], items: List[dict], value_field: str = 'price') -> pd.Series:
         return super().from_db_to_series(items, value_field)
