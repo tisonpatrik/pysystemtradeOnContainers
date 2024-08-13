@@ -17,7 +17,8 @@ def convert_list_dicts_to_dataframe(items: list[dict], index_column: str, values
         data.columns = values_columns
 
         data[index_column] = pd.to_numeric(data[index_column])
-        data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d")
+        data[index_column] = pd.to_datetime(data[index_column], errors='coerce').dt.strftime("%Y-%m-%d %H:%M:%S")
+
         return data
     except Exception as e:
         raise ValueError(f"Error converting list to DataFrame: {str(e)}")

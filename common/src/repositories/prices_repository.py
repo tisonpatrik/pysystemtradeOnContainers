@@ -60,6 +60,7 @@ class PricesRepository:
         try:
             carry_data = await self.repository.fetch_many_async(statement)
             carry = RawCarry.from_db_to_dataframe(carry_data)
+            print(carry)
             return carry
         except Exception as e:
             self.logger.error(f"Database error when fetching raw carry data for symbol {symbol}: {e}")
