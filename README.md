@@ -69,3 +69,26 @@ All endpoints you can find in swagger so you can tested it in browser on url `ht
 
 ### Next Steps
 After the containers are up and running, refer to the [seeder README](seeder/README.md) to inject data into the database.
+
+## Why all of this?
+The motivation behind this project is rooted in my deep appreciation for Robert Carver's work.
+His contributions to the field of systematic trading and quantitative analysis are truly remarkable.
+I encourage you to explore his blog, read his books, and follow his insights:
+- [blog](https://qoppac.blogspot.com/)
+- [books](https://www.systematicmoney.org/)
+- [Rob`s Twitter (fu*k with X name...](https://x.com/investingidiocy)
+
+The original pysystemtrade project is a testament to his expertise, but I believe that there is room for improvement.
+Particularly in terms of performance, scalability, testability, and readability.
+While I can't guarantee that my code fully achieves these goals, it is a sincere attempt to push the boundaries.
+
+
+## Future Considerations
+
+In the future, I plan to maintain a list of issues and areas for improvement, which will include:
+- Known Issues: For example, the current lack of extensive testing.
+- Refactoring Plans: Such as reworking the entire data injection process.
+- Nice-to-Have Features: Potential enhancements like switching from Pandas to Polars,
+implementing gRPC for better communication, or moving towards a Kubernetes-based infrastructure.
+
+Any feedback or contributions to these areas would be highly appreciated as we continue to develop and refine this project.
