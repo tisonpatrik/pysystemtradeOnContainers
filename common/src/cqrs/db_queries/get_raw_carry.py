@@ -7,7 +7,6 @@ class GetRawCarryDataQuery(FetchStatement):
            SELECT time, price, carry, price_contract, carry_contract
            FROM multiple_prices
            WHERE symbol = $1
-           ORDER BY time
            """
         self._parameters = (symbol,)
 

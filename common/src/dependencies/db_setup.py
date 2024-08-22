@@ -16,7 +16,7 @@ async def setup_async_database(app: FastAPI):
     settings = get_settings()
     try:
         # Create an asyncpg connection pool
-        app.state.async_pool = await asyncpg.create_pool(  
+        app.state.async_pool = await asyncpg.create_pool(
             host=settings.POSTGRES_HOST,
             port=settings.POSTGRES_PORT,
             user=settings.POSTGRES_USER,
@@ -25,11 +25,13 @@ async def setup_async_database(app: FastAPI):
             min_size=settings.min_connections,
             max_size=settings.max_connections,
             command_timeout=settings.connection_timeout,
-            max_queries=50000,
-            max_inactive_connection_lifetime=300.0,
+            statement_cache_size=settings.statement_cache_size,
+            max_queries=settings.max_queries,
+            max_inactive_connection_lifetime=settings.max_inactive_connection_lifetime
+
         )
         logger.info("Asyncpg connection pool initialized successfully.")
-        yield  
+        yield
     except Exception as e:
         logger.error(f"Failed to initialize Asyncpg connection pool: {e}")
         raise e

@@ -7,7 +7,6 @@ class GetDenomPriceQuery(FetchStatement):
         SELECT time, price
         FROM multiple_prices
         WHERE symbol = $1
-        ORDER BY time
         """
 		self._parameters = (symbol,)
 

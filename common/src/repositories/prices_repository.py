@@ -1,5 +1,4 @@
 import pandas as pd
-
 from common.src.cqrs.cache_queries.daily_prices_cache import GetDailyPricesCache, SetDailyPricesCache
 from common.src.cqrs.db_queries.get_daily_prices import GetDailyPriceQuery
 from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
@@ -31,6 +30,7 @@ class PricesRepository:
             # If cache miss, fetch from database
             statement = GetDailyPriceQuery(symbol=symbol)
             prices_data = await self.repository.fetch_many_async(statement)
+
             raw_prices = DailyPrices.from_db_to_series(prices_data)
             prices = resample_prices_to_business_day_index(raw_prices)
 
@@ -40,7 +40,6 @@ class PricesRepository:
                 instrument_code=symbol
             )
             await self.redis_repository.set_cache(cache_set_statement)
-
             return prices
         except Exception as e:
             self.logger.error(f"Error when fetching daily prices for symbol {symbol}: {e}")

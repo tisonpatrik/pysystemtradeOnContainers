@@ -7,7 +7,6 @@ class GetFxPrices(FetchStatement):
         SELECT time, price
         FROM fx_prices
         WHERE symbol = $1
-        ORDER BY time
         """
         self._parameters = (fx_code,)
 

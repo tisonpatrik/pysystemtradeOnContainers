@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 import redis.asyncio as redis
@@ -27,7 +28,9 @@ class RedisRepository:
 
     async def set_cache(self, statement: SetCacheStatement) -> None:
         try:
-            await self.redis_client.set(statement.cache_key, json.dumps(statement.cache_value), ex=statement.time_to_live)
+            loop = asyncio.get_event_loop()
+            serialized_value = await loop.run_in_executor(None, json.dumps, statement.cache_value)
+            await self.redis_client.set(statement.cache_key, serialized_value, ex=statement.time_to_live)
             self.logger.info(f"Cache set for key '{statement.cache_key}' with TTL {statement.time_to_live}s")
         except Exception as e:
             self.logger.error(f"Failed to set cache for key '{statement.cache_key}': {e}")
