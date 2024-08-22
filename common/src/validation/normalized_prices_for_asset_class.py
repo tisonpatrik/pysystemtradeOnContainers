@@ -11,5 +11,5 @@ class NormalizedPricesForAssetClass(BaseDataFrameModel[T]):
     vol: Float = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_api_to_series(cls: Type[T], items: dict, value_field: str = 'vol') -> pd.Series:
-        return super().from_api_to_series(items, value_field)
+    def from_api_to_series(cls: Type[T], items: dict, values_column: str = 'vol') -> pd.Series:
+        return super().from_api_to_series(items, values_column)

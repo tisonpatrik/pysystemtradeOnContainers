@@ -1,30 +1,17 @@
-from typing import cast
+from typing import Type, TypeVar
+
 import pandas as pd
-from pandera import DataFrameModel, Field
+from pandera import Field
 from pandera.dtypes import Float, Timestamp
 
-from common.src.utils.convertors import convert_dataframe_to_series, convert_dict_to_dataframe
+from common.src.validation.base_data_model import BaseDataFrameModel
 
+T = TypeVar('T', bound='AggregatedReturnsForAssetClass')
 
-class AggregatedReturnsForAssetClass(DataFrameModel):
+class AggregatedReturnsForAssetClass(BaseDataFrameModel[T]):
     time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     returns: Float = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_api_to_series(cls, items: dict) -> pd.Series:
-        data = convert_dict_to_dataframe(
-            items,
-            str(AggregatedReturnsForAssetClass.time),
-            str(AggregatedReturnsForAssetClass.returns)
-        )
-
-        validated_data = cls.validate(data)
-        data_frame = cast(pd.DataFrame, validated_data)
-
-        series = convert_dataframe_to_series(
-            data_frame,
-            str(AggregatedReturnsForAssetClass.time),
-            str(AggregatedReturnsForAssetClass.returns)
-        )
-
-        return series
+    def from_api_to_series(cls: Type[T], items: dict, values_column: str = 'vol') -> pd.Series:
+        return super().from_api_to_series(items, values_column)

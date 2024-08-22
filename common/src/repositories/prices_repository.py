@@ -10,7 +10,7 @@ from common.src.redis.redis_repository import RedisRepository
 from common.src.validation.daily_prices import DailyPrices
 from common.src.validation.denom_prices import DenomPrices
 from common.src.validation.raw_carry import RawCarry
-
+from common.src.utils.resampler import resample_prices_to_business_day_index
 
 class PricesRepository:
     def __init__(self, db_repository: Repository, redis_repository: RedisRepository):
@@ -31,7 +31,8 @@ class PricesRepository:
             # If cache miss, fetch from database
             statement = GetDailyPriceQuery(symbol=symbol)
             prices_data = await self.repository.fetch_many_async(statement)
-            prices = DailyPrices.from_db_to_series(prices_data)
+            raw_prices = DailyPrices.from_db_to_series(prices_data)
+            prices = resample_prices_to_business_day_index(raw_prices)
 
             # Store the fetched data in Redis cache
             cache_set_statement = SetDailyPricesCache(
@@ -46,21 +47,23 @@ class PricesRepository:
             raise
 
     async def get_denom_prices_async(self, symbol: str) -> pd.Series:
+        self.logger.info(f"Fetching denom prices for {symbol}")
         statement = GetDenomPriceQuery(symbol=symbol)
         try:
             prices_data = await self.repository.fetch_many_async(statement)
-            prices = DenomPrices.from_db_to_series(prices_data)
+            raw_prices = DenomPrices.from_db_to_series(prices_data)
+            prices = resample_prices_to_business_day_index(raw_prices)
             return prices
         except Exception as e:
             self.logger.error(f"Database error when fetching denom price for symbol {symbol}: {e}")
             raise
 
     async def get_raw_carry_async(self, symbol: str) -> pd.DataFrame:
+        self.logger.info(f"Fetching raw carry data for {symbol}")
         statement = GetRawCarryDataQuery(symbol=symbol)
         try:
             carry_data = await self.repository.fetch_many_async(statement)
             carry = RawCarry.from_db_to_dataframe(carry_data)
-            print(carry)
             return carry
         except Exception as e:
             self.logger.error(f"Database error when fetching raw carry data for symbol {symbol}: {e}")

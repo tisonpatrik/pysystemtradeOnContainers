@@ -11,8 +11,8 @@ class DailyPrices(BaseDataFrameModel[T]):
     vol: Float = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_cache_to_series(cls: Type[T], items: dict, value_field: str = 'vol') -> pd.Series:
-        return super().from_cache_to_series(items, value_field)
+    def from_cache_to_series(cls: Type[T], items: dict, values_column: str = 'vol') -> pd.Series:
+        return super().from_cache_to_series(items, values_column)
 
     @classmethod
     def from_db_to_series(cls: Type[T], items: List[dict], value_field: str = 'vol') -> pd.Series:

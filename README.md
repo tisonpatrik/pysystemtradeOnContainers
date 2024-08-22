@@ -8,6 +8,7 @@ Please note that this project is still under active development, and many aspect
 The original pysystemtrade project is a comprehensive system for systematic trading and quantitative analysis.
 Inspired by its robust functionality, this fork aims to modernize the codebase, making it more maintainable, scalable,
 and efficient by leveraging contemporary technologies.
+
 ### Key Technologies
 - Python: The primary programming language used to keep the project's core functionality.
 - FastAPI: A modern, high-performance web framework for building APIs with Python, used for creating RESTful services in this project.

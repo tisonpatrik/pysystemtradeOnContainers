@@ -19,6 +19,7 @@ class AssettrendHandler:
             prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol, asset_class.asset_class)
             assettrend = self.assettrend_service.calculate_assettrend(prices, speed)
             assettrend = assettrend.dropna()
+            print(assettrend)
             return assettrend
         except Exception as e:
             self.logger.error(f"Error calculating AssetTrend rule for {symbol} by speed {speed}: {str(e)}")

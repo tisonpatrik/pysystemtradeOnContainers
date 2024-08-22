@@ -23,7 +23,6 @@ class RiskClient:
 
         cache_statement = GetDailyReturnsVolCache(instrument_code)
         try:
-            # Try to get the data from Redis cache
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
                 series = DailyReturnsVol.from_cache_to_series(cached_data)
@@ -33,7 +32,6 @@ class RiskClient:
             vol_data = await self.client.get_data_async(query)
             vol = DailyReturnsVol.from_api_to_series(vol_data)
 
-            # Store the fetched data in Redis cache
             cache_set_statement = SetDailyReturnsVolCache(
                 vol=vol,
                 instrument_code=instrument_code

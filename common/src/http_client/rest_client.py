@@ -12,7 +12,7 @@ class RestClient:
 
     async def get_data_async(self, request: FetchRequest) -> dict:
         try:
-            response = await self.client.get(request.url_string, params=request.params, timeout=10.0)
+            response = await self.client.get(request.url_string, params=request.params, timeout=600.0)
             response.raise_for_status()
             self.logger.info("GET request successful")
             return response.json()

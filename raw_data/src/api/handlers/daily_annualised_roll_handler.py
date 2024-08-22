@@ -18,7 +18,6 @@ class DailyAnnualisedRollHandler:
             rawrollvalues = self.raw_carry_service.raw_futures_roll(raw_carry)
             annroll = rawrollvalues / rolldiffs
             annroll = annroll.resample("1B").mean()
-            print(annroll)
             return annroll
         except Exception as e:
             self.logger.error(f"Unexpected error occurred while geting Daily annualised roll: {e}")

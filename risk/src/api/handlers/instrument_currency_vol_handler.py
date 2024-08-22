@@ -25,9 +25,9 @@ class InstrumentCurrencyVolHandler:
             denom_prices = await self.prices_repository.get_denom_prices_async(position_query.symbol)
             daily_prices = await self.prices_repository.get_daily_prices_async(position_query.symbol)
             point_size = await self.instruments_repository.get_point_size_async(position_query.symbol)
+            print(denom_prices)
 
             daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
-
             instrument_volatility = self.instrument_vol_service.calculate_instrument_vol_async(
                 denom_prices, daily_returns_vol, point_size.pointsize
             )
