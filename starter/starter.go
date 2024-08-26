@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
-	processes "starter/processes"
+	processes "starter/src"
 )
 
 func main() {
+	dirPath := "data/temp"
+
 	fmt.Println("Welcome to the pysystemtraderOnContainers project setup!")
 	fmt.Println("We have 3 tasks to complete:")
 	fmt.Println("")
 
 	fmt.Println("1. Set up environment variables.")
-	fmt.Println("2. Download and clean the data.")
+	fmt.Println("2. Download and proccess nessesary data.")
 	fmt.Println("3. Inject the data into the database.")
 
 	fmt.Println("")
@@ -22,7 +24,7 @@ func main() {
 		fmt.Println("Failed to set up environment variables:", err)
 		return
 	}
-	if err := processes.DownloadData(); err != nil {
+	if err := processes.ProcessData(dirPath); err != nil {
 		fmt.Println("Failed to download and clean the data:", err)
 		return
 	}
