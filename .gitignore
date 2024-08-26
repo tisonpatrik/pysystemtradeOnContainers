@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 Pipfile.lock
 
-grayfox.code-workspace
 .vscode/
+data

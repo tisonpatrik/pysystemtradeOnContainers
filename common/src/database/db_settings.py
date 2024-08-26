@@ -8,17 +8,17 @@ class Settings(BaseSettings):
     Class for application-wide configuration settings.
     Utilizes environment variables for secure credential management.
     """
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_NAME: str
+    DB_HOST: str
+    DB_PORT: str
 
-    max_connections: int = 20
-    min_connections: int = 1
-    connection_timeout: int = 500
-    statement_cache_size: int =500
-    max_queries: int=50000
+    max_connections: int = 17
+    min_connections: int = 2
+    connection_timeout: int = 5
+    statement_cache_size: int =1000
+    max_queries: int=10000
     max_inactive_connection_lifetime: float=60.0
 
     class Config:

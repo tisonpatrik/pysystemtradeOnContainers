@@ -1,3 +1,9 @@
+.PHONY: init dev run stop down tests cleaner
+
+init:
+	@./starter/starter
+	@echo "Project initialization complete!"
+
 cheers:
 	@echo "Na zdraví! 🍺"
 
@@ -15,6 +21,3 @@ down:
 
 tests: run
 	@echo "IMPLEMENT IT"
-
-cleaner:
-	@vulture . --exclude .venv

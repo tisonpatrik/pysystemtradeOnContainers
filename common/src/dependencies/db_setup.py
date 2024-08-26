@@ -17,18 +17,17 @@ async def setup_async_database(app: FastAPI):
     try:
         # Create an asyncpg connection pool
         app.state.async_pool = await asyncpg.create_pool(
-            host=settings.POSTGRES_HOST,
-            port=settings.POSTGRES_PORT,
-            user=settings.POSTGRES_USER,
-            password=settings.POSTGRES_PASSWORD,
-            database=settings.POSTGRES_DB,
+            host=settings.DB_HOST,
+            port=settings.DB_PORT,
+            user=settings.DB_USER,
+            password=settings.DB_PASSWORD,
+            database=settings.DB_NAME,
             min_size=settings.min_connections,
             max_size=settings.max_connections,
             command_timeout=settings.connection_timeout,
             statement_cache_size=settings.statement_cache_size,
             max_queries=settings.max_queries,
             max_inactive_connection_lifetime=settings.max_inactive_connection_lifetime
-
         )
         logger.info("Asyncpg connection pool initialized successfully.")
         yield
