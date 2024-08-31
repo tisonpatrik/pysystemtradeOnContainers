@@ -1,0 +1,124 @@
+[
+  {
+    "Path": "data/temp/csvconfig/instrumentconfig.csv",
+    "Columns": [
+      "symbol",
+      "description",
+      "pointsize",
+      "currency",
+      "asset_class",
+      "per_block",
+      "percentage",
+      "per_trade",
+      "region"
+    ]
+  },
+  {
+    "Path": "data/temp/csvconfig/moreinstrumentinfo.csv",
+    "Columns": [
+      "symbol",
+      "asset_class",
+      "sub_class",
+      "sub_sub_class",
+      "style",
+      "country",
+      "duration",
+      "description"
+    ]
+  },
+  {
+    "Path": "data/temp/csvconfig/rollconfig.csv",
+    "Columns": [
+      "symbol",
+      "hold_roll_cycle",
+      "roll_offset_days",
+      "carry_offset",
+      "priced_roll_cycle",
+      "expiry_offset"
+    ]
+  },
+  {
+    "Path": "data/temp/csvconfig/spreadcosts.csv",
+    "Columns": ["symbol", "spread_costs"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/adjusted_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/fx_prices_csv",
+    "Columns": ["time", "price"]
+  },
+  {
+    "Path": "data/temp/multiple_prices_csv",
+    "Columns": [
+      "time",
+      "carry",
+      "carry_contract",
+      "price",
+      "price_contract",
+      "forward",
+      "forward_contract"
+    ]
+  },
+  {
+    "Path": "data/temp/roll_calendar_csv",
+    "Columns": ["time", "current_contract", "next_contract", "carry_contract"]
+  }
+]
