@@ -94,3 +94,23 @@ func ReadCSVFile(filePath string) ([][]string, error) {
 
 	return records, nil
 }
+
+// GetCSVFiles returns a list of all CSV files in the specified directory.
+func GetCSVFiles(dir string) ([]string, error) {
+	var csvFiles []string
+
+	// Read all files in the specified directory
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, fmt.Errorf("error reading directory: %w", err)
+	}
+
+	// Iterate over the files and add CSV files to the list
+	for _, file := range files {
+		if !file.IsDir() && filepath.Ext(file.Name()) == ".csv" {
+			csvFiles = append(csvFiles, file.Name())
+		}
+	}
+
+	return csvFiles, nil
+}
