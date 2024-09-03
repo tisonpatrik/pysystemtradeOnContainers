@@ -1,7 +1,7 @@
 [
   {
     "Name": "instrumentconfig.csv",
-    "Source": "data/temp/csvconfig",
+    "Path": "data/temp/csvconfig",
     "Columns": [
       "symbol",
       "description",

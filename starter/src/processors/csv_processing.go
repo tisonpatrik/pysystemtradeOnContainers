@@ -55,3 +55,47 @@ func FilterRecordsBySymbols(records [][]string, columnName string, symbols []str
 
 	return filteredRecords, nil
 }
+func DropColumns(records [][]string, columnsToDrop []string) ([][]string, error) {
+	if len(records) == 0 {
+		return nil, fmt.Errorf("no records found in the CSV file")
+	}
+
+	// Find the indices of the columns to drop
+	var dropIndices []int
+	header := records[0]
+	for i, colName := range header {
+		for _, dropCol := range columnsToDrop {
+			if colName == dropCol {
+				dropIndices = append(dropIndices, i)
+				break
+			}
+		}
+	}
+
+	// If no columns were found to drop, return the original records
+	if len(dropIndices) == 0 {
+		return records, nil
+	}
+
+	// Create new records without the dropped columns
+	var newRecords [][]string
+	for _, record := range records {
+		var newRecord []string
+		for i, value := range record {
+			// Only add columns that are not in dropIndices
+			shouldDrop := false
+			for _, dropIdx := range dropIndices {
+				if i == dropIdx {
+					shouldDrop = true
+					break
+				}
+			}
+			if !shouldDrop {
+				newRecord = append(newRecord, value)
+			}
+		}
+		newRecords = append(newRecords, newRecord)
+	}
+
+	return newRecords, nil
+}

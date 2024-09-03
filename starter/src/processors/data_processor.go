@@ -47,7 +47,6 @@ func ProcessData(dirPath string) error {
 
 		// Construct the full path to the file
 		fullPath := filepath.Join(record.Path, record.Name)
-
 		// Get the base directory name and find the appropriate processor
 		baseDir := filepath.Base(record.Path)
 		processor, exists := processors[baseDir]

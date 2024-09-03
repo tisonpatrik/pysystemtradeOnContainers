@@ -124,3 +124,34 @@ func ConvertToSymbolList(symbols [][]string) []string {
 	}
 	return symbolList
 }
+func SaveRecordsToCSV(directory string, filename string, records [][]string) error {
+	// Ensure the directory exists
+	if err := os.MkdirAll(directory, os.ModePerm); err != nil {
+		return fmt.Errorf("failed to create directory: %v", err)
+	}
+
+	// Create the CSV file
+	filePath := filepath.Join(directory, filename)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to create file: %v", err)
+	}
+	defer file.Close()
+
+	// Create a CSV writer and write the records to the file
+	writer := csv.NewWriter(file)
+	if err := writer.WriteAll(records); err != nil {
+		return fmt.Errorf("failed to write records to CSV file: %v", err)
+	}
+
+	// Ensure all data is flushed to the file
+	writer.Flush()
+
+	// Check if there were any errors during flushing
+	if err := writer.Error(); err != nil {
+		return fmt.Errorf("error occurred while flushing data to CSV: %v", err)
+	}
+
+	fmt.Printf("Successfully saved CSV to: %s\n", filePath)
+	return nil
+}
