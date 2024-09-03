@@ -8,6 +8,9 @@ import (
 	"starter/src"
 )
 
+// Define a type for processor functions
+type ProcessorFunc func(string, [][]string, []string) error
+
 // ProcessData processes the data in the downloaded directories based on the mappings.
 func ProcessData(dirPath string) error {
 	// Load mappings from JSON
@@ -17,8 +20,8 @@ func ProcessData(dirPath string) error {
 		return fmt.Errorf("error loading mappings: %w", err)
 	}
 
-	// Call DownloadData and get the list of successfully downloaded directories
-	directories, err := DownloadData(dirPath)
+	// Call DownloadData to download required data
+	err = DownloadData(dirPath)
 	if err != nil {
 		return err
 	}
@@ -29,48 +32,37 @@ func ProcessData(dirPath string) error {
 		return err
 	}
 
-	// Process each downloaded directory
-	for _, dir := range directories {
-		// Get the base name of the directory
-		baseName := filepath.Base(dir)
-		fmt.Printf("Processing directory: %s\n", baseName)
+	// Define the map of processors based on directory name (Path)
+	processors := map[string]ProcessorFunc{
+		"csvconfig":           CSVConfigProcessor,
+		"adjusted_prices_csv": AdjustedPricesProcessor,
+		"multiple_prices_csv": MultiplePricesProcessor,
+		"fx_prices_csv":       FXPricesProcessor,
+		"roll_calendar_csv":   RollCalendarsProcessor,
+	}
 
-		// Find the matching mapping record
-		for _, record := range mappings {
-			if filepath.Base(record.Path) == baseName {
-				switch baseName {
-				case "csvconfig":
-					err := CSVConfigProcessor(dir, symbols, record.Columns)
-					if err != nil {
-						return fmt.Errorf("error processing csvconfig: %v", err)
-					}
-				case "adjusted_prices_csv":
-					err := AdjustedPricesProcessor(dir, symbols, record.Columns)
-					if err != nil {
-						return fmt.Errorf("error processing adjusted prices: %v", err)
-					}
-				case "multiple_prices_csv":
-					err := MultiplePricesProcessor(dir, symbols, record.Columns)
-					if err != nil {
-						return fmt.Errorf("error processing multiple prices: %v", err)
-					}
-				case "fx_prices_csv":
-					err := FXPricesProcessor(dir, symbols, record.Columns)
-					if err != nil {
-						return fmt.Errorf("error processing fx prices: %v", err)
-					}
-				case "roll_calendars_csv":
-					err := RollCalendarsProcessor(dir, symbols, record.Columns)
-					if err != nil {
-						return fmt.Errorf("error processing roll calendars: %v", err)
-					}
-				default:
-					fmt.Printf("No specific processor for directory: %s\n", baseName)
-				}
-				break
-			}
+	// Process each mapping entry
+	for _, record := range mappings {
+		fmt.Printf("Processing file: %s in directory: %s\n", record.Name, record.Path)
+
+		// Construct the full path to the file
+		fullPath := filepath.Join(record.Path, record.Name)
+
+		// Get the base directory name and find the appropriate processor
+		baseDir := filepath.Base(record.Path)
+		processor, exists := processors[baseDir]
+		if !exists {
+			fmt.Printf("No specific processor for directory: %s\n", baseDir)
+			continue
+		}
+
+		// Call the processor function
+		err := processor(fullPath, symbols, record.Columns)
+		if err != nil {
+			return fmt.Errorf("error processing %s: %v", baseDir, err)
 		}
 	}
+
 	return nil
 }
 

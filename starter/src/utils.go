@@ -114,3 +114,13 @@ func GetCSVFiles(dir string) ([]string, error) {
 
 	return csvFiles, nil
 }
+
+func ConvertToSymbolList(symbols [][]string) []string {
+	var symbolList []string
+	for _, symbol := range symbols {
+		if len(symbol) > 0 {
+			symbolList = append(symbolList, symbol[0])
+		}
+	}
+	return symbolList
+}

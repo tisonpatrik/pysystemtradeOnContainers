@@ -11,72 +11,55 @@ import (
 	"sync"
 )
 
-// DownloadData downloads the entire contents of the GitHub directory into the specified local directory and returns a list of downloaded or existing subdirectories.
-func DownloadData(dirPath string) ([]string, error) {
+// DownloadData downloads the entire contents of the GitHub directory into the specified local directory.
+func DownloadData(dirPath string) error {
 	// Ensure the directory exists
-	err := createDataDir(dirPath)
-	if err != nil {
-		return nil, err
+	if err := createDataDir(dirPath); err != nil {
+		return err
 	}
 
 	// Check if the directory is empty
 	isEmpty, err := isDirEmpty(dirPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
+
+	// If the directory is not empty, no need to download again
+	if !isEmpty {
+		fmt.Printf("Directory %s is not empty, skipping download.\n", dirPath)
+		return nil
+	}
+
+	// Start downloading data from GitHub
+	baseURL := "https://api.github.com/repos/tisonpatrik/pysystemtrade/contents/data/futures"
+	rootDir := "data/futures" // This is the part of the path we want to strip
 
 	var wg sync.WaitGroup
 	errors := make(chan error, 10)
-	subdirectories := make(chan string, 10) // Channel to collect successfully downloaded or existing subdirectories
 
-	// If the directory is empty, download the data
-	if isEmpty {
-		baseURL := "https://api.github.com/repos/tisonpatrik/pysystemtrade/contents/data/futures"
-		rootDir := "data/futures" // This is the part of the path we want to strip
+	wg.Add(1)
+	go downloadDirectory(baseURL, dirPath, rootDir, &wg, errors)
 
-		wg.Add(1)
-		go downloadDirectory(baseURL, dirPath, rootDir, &wg, errors, subdirectories)
-	} else {
-		// If not empty, gather existing subdirectories
-		err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.IsDir() && path != dirPath {
-				subdirectories <- path
-			}
-			return nil
-		})
-		if err != nil {
-			return nil, err
-		}
-	}
-
+	// Wait for all downloads to complete
 	go func() {
 		wg.Wait()
 		close(errors)
-		close(subdirectories)
 	}()
 
-	var downloadedDirs []string
-	for dir := range subdirectories {
-		downloadedDirs = append(downloadedDirs, dir)
-	}
-
+	// Check for any errors that occurred during download
 	for err := range errors {
 		if err != nil {
-			return nil, fmt.Errorf("download encountered an error: %v", err)
+			return fmt.Errorf("download encountered an error: %v", err)
 		}
 	}
 
-	return downloadedDirs, nil
+	return nil
 }
 
 // createDataDir creates the specified directory if it doesn't exist.
 func createDataDir(dirPath string) error {
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
-		err := os.MkdirAll(dirPath, os.ModePerm)
-		if err != nil {
+		if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
 			return fmt.Errorf("cannot create directory: %v", err)
 		}
 	}
@@ -128,8 +111,8 @@ func downloadFile(url, filePath string, wg *sync.WaitGroup, errors chan<- error)
 	fmt.Printf("Downloaded: %s\n", filePath)
 }
 
-// downloadDirectory recursively downloads a directory from the GitHub repository and records the subdirectory names.
-func downloadDirectory(baseURL, localDir, rootDir string, wg *sync.WaitGroup, errors chan<- error, subdirectories chan<- string) {
+// downloadDirectory recursively downloads a directory from the GitHub repository.
+func downloadDirectory(baseURL, localDir, rootDir string, wg *sync.WaitGroup, errors chan<- error) {
 	defer wg.Done()
 
 	resp, err := http.Get(baseURL)
@@ -146,7 +129,6 @@ func downloadDirectory(baseURL, localDir, rootDir string, wg *sync.WaitGroup, er
 	}
 
 	for _, item := range contents {
-		// Adjust the localPath to strip the root directory part from the GitHub path
 		relativePath := strings.TrimPrefix(item.Path, rootDir)
 		localPath := filepath.Join(localDir, relativePath)
 
@@ -159,10 +141,9 @@ func downloadDirectory(baseURL, localDir, rootDir string, wg *sync.WaitGroup, er
 				errors <- fmt.Errorf("cannot create directory: %v", err)
 				return
 			}
-			subdirectories <- localPath // Record the successfully created subdirectory
 			wg.Add(1)
 			dirURL := baseURL + "/" + item.Name
-			go downloadDirectory(dirURL, localDir, rootDir, wg, errors, subdirectories)
+			go downloadDirectory(dirURL, localDir, rootDir, wg, errors)
 		}
 	}
 }
