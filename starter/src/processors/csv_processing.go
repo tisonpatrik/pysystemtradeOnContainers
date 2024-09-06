@@ -1,7 +1,27 @@
 package processors
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
+// FindColumnIndex is a helper method that returns the index of a given column name in the records.
+// It returns an error if the column is not found.
+func FindColumnIndex(records [][]string, columnName string) (int, error) {
+	if len(records) == 0 {
+		return -1, fmt.Errorf("no records found in the CSV file")
+	}
+
+	for i, colName := range records[0] {
+		if colName == columnName {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("column %s not found in the records", columnName)
+}
+
+// RenameCSVColumns renames the columns of the CSV records to the provided new column names.
+// It returns an error if the number of new column names does not match the existing columns.
 func RenameCSVColumns(records [][]string, newColumnNames []string) ([][]string, error) {
 	if len(records) == 0 {
 		return nil, fmt.Errorf("no records found in the CSV file")
@@ -19,22 +39,17 @@ func RenameCSVColumns(records [][]string, newColumnNames []string) ([][]string, 
 	return records, nil
 }
 
+// FilterRecordsBySymbols filters the CSV records based on a specified column and a list of symbols.
+// It returns a new set of records that include only the rows where the specified column's value is in the symbols list.
 func FilterRecordsBySymbols(records [][]string, columnName string, symbols []string) ([][]string, error) {
 	if len(records) == 0 {
 		return nil, fmt.Errorf("no records found in the CSV file")
 	}
 
-	// Find the index of the column that matches columnName
-	colIndex := -1
-	for i, colName := range records[0] {
-		if colName == columnName {
-			colIndex = i
-			break
-		}
-	}
-
-	if colIndex == -1 {
-		return nil, fmt.Errorf("column %s not found in the records", columnName)
+	// Use the helper method to find the column index
+	colIndex, err := FindColumnIndex(records, columnName)
+	if err != nil {
+		return nil, err
 	}
 
 	// Create a map for quick lookup of symbols
@@ -47,7 +62,10 @@ func FilterRecordsBySymbols(records [][]string, columnName string, symbols []str
 	var filteredRecords [][]string
 	filteredRecords = append(filteredRecords, records[0]) // include header
 
-	for _, record := range records[1:] {
+	for rowIndex, record := range records[1:] {
+		if colIndex >= len(record) {
+			return nil, fmt.Errorf("record %d has fewer columns than expected", rowIndex+2) // +2 to account for header and zero indexing
+		}
 		if _, exists := symbolSet[record[colIndex]]; exists {
 			filteredRecords = append(filteredRecords, record)
 		}
@@ -55,6 +73,9 @@ func FilterRecordsBySymbols(records [][]string, columnName string, symbols []str
 
 	return filteredRecords, nil
 }
+
+// DropColumns removes specified columns from the CSV records.
+// It returns a new set of records without the dropped columns.
 func DropColumns(records [][]string, columnsToDrop []string) ([][]string, error) {
 	if len(records) == 0 {
 		return nil, fmt.Errorf("no records found in the CSV file")
@@ -77,7 +98,7 @@ func DropColumns(records [][]string, columnsToDrop []string) ([][]string, error)
 		return records, nil
 	}
 
-	// Create new records without the dropped columns
+	// Create a new records slice without the dropped columns
 	var newRecords [][]string
 	for _, record := range records {
 		var newRecord []string
@@ -98,4 +119,82 @@ func DropColumns(records [][]string, columnsToDrop []string) ([][]string, error)
 	}
 
 	return newRecords, nil
+}
+
+// ConvertDateToTime converts the specified time column in the CSV records to a standardized time format ("2006-01-02 15:04:05").
+// It replaces invalid or unparsable dates with an empty string, similar to pandas' `errors="coerce"`.
+// The function returns the updated records.
+func ConvertDateToTime(records [][]string, timeColumnName string) ([][]string, error) {
+	if len(records) == 0 {
+		return nil, fmt.Errorf("no records found in the CSV file")
+	}
+
+	// Use the helper method to find the time column index
+	timeColIndex, err := FindColumnIndex(records, timeColumnName)
+	if err != nil {
+		return nil, err
+	}
+
+	// Iterate over the records and convert the time column
+	for i, record := range records[1:] { // Skip header
+		if timeColIndex >= len(record) {
+			return nil, fmt.Errorf("record %d has fewer columns than expected", i+2) // +2 for header and zero indexing
+		}
+
+		// Try parsing the time in RFC3339 format first
+		parsedTime, err := time.Parse(time.RFC3339, record[timeColIndex])
+		if err != nil {
+			// If RFC3339 fails, try parsing in the specific "2006-01-02 15:04:05" format
+			parsedTime, err = time.Parse("2006-01-02 15:04:05", record[timeColIndex])
+			if err != nil {
+				// If parsing fails, assign an empty string (similar to pandas `errors="coerce"`)
+				records[i+1][timeColIndex] = ""
+				continue
+			}
+		}
+
+		// Format the parsed time as "2006-01-02 15:04:05" and overwrite the value in the record
+		records[i+1][timeColIndex] = parsedTime.Format("2006-01-02 15:04:05")
+	}
+
+	return records, nil
+}
+
+func FillSymbolName(records [][]string, symbolName string) ([][]string, error) {
+	// Check if "symbol" column exists, if not, add it as the first column.
+	symbolColIdx, err := FindColumnIndex(records, "symbol")
+	if err != nil {
+		// If "symbol" column doesn't exist, we need to add it
+		// Create a new header with the "symbol" column
+		newRecords := [][]string{{"symbol"}}
+		newRecords[0] = append(newRecords[0], records[0]...) // Add existing headers
+
+		// Add symbol name to each row and append to the new records
+		for _, record := range records[1:] {
+			newRecord := append([]string{symbolName}, record...)
+			newRecords = append(newRecords, newRecord)
+		}
+		return newRecords, nil
+	}
+
+	// If "symbol" column exists, fill it with the symbol name
+	for i := 1; i < len(records); i++ { // Skip header
+		records[i][symbolColIdx] = symbolName
+	}
+	return records, nil
+}
+func ConcatenateDataFrames(dataFrames [][][]string) ([][]string, error) {
+	if len(dataFrames) == 0 {
+		return nil, fmt.Errorf("no data frames to concatenate")
+	}
+
+	// Use the header of the first data frame
+	concatenated := dataFrames[0]
+
+	// Append rows from subsequent data frames
+	for _, df := range dataFrames[1:] {
+		concatenated = append(concatenated, df[1:]...) // Skip header row for subsequent data frames
+	}
+
+	return concatenated, nil
 }

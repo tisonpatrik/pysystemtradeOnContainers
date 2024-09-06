@@ -7,17 +7,14 @@ import (
 	"starter/src"
 )
 
-func CSVConfigProcessor(full_path string, symbols [][]string, columns []string) error {
-	filename := filepath.Base(full_path)
-	fmt.Printf("Processing file: %s\n\n", filename) // Print the filename with a newline for spacing
-	fmt.Println("")
-
+func CSVConfigProcessor(path string, name string, symbols [][]string, columns []string) error {
+	fullPath := filepath.Join(path, name)
+	filename := filepath.Base(fullPath)
 	if filename == "moreinstrumentinfo.csv" {
-		generate_metadata(full_path, symbols, columns)
+		generate_metadata(fullPath, symbols, columns)
 	} else {
-		generate_config_file(full_path, symbols, columns)
+		generate_config_file(fullPath, symbols, columns)
 	}
-
 	return nil
 }
 

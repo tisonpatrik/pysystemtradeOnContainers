@@ -25,9 +25,10 @@ func main() {
 		fmt.Println("Failed to set up environment variables:", err)
 		return
 	}
+	fmt.Println("")
+	fmt.Println("Ok, now download and process data.")
 	if err := processors.ProcessData(dirPath); err != nil {
 		fmt.Println("Failed to download and process the data:", err)
 		return
 	}
-	// Additional steps such as injecting data into the database would go here
 }

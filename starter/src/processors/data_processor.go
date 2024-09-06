@@ -9,10 +9,11 @@ import (
 )
 
 // Define a type for processor functions
-type ProcessorFunc func(string, [][]string, []string) error
+type ProcessorFunc func(string, string, [][]string, []string) error
 
 // ProcessData processes the data in the downloaded directories based on the mappings.
 func ProcessData(dirPath string) error {
+
 	// Load mappings from JSON
 	mappingsPath := "starter/mappings.json"
 	mappings, err := loadMappings(mappingsPath)
@@ -32,6 +33,7 @@ func ProcessData(dirPath string) error {
 		return err
 	}
 
+	fmt.Println("")
 	// Define the map of processors based on directory name (Path)
 	processors := map[string]ProcessorFunc{
 		"csvconfig":           CSVConfigProcessor,
@@ -45,8 +47,6 @@ func ProcessData(dirPath string) error {
 	for _, record := range mappings {
 		fmt.Printf("Processing file: %s in directory: %s\n", record.Name, record.Path)
 
-		// Construct the full path to the file
-		fullPath := filepath.Join(record.Path, record.Name)
 		// Get the base directory name and find the appropriate processor
 		baseDir := filepath.Base(record.Path)
 		processor, exists := processors[baseDir]
@@ -56,10 +56,11 @@ func ProcessData(dirPath string) error {
 		}
 
 		// Call the processor function
-		err := processor(fullPath, symbols, record.Columns)
+		err := processor(record.Path, record.Name, symbols, record.Columns)
 		if err != nil {
 			return fmt.Errorf("error processing %s: %v", baseDir, err)
 		}
+		fmt.Println("")
 	}
 
 	return nil

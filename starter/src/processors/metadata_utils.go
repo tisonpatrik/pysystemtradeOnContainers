@@ -22,16 +22,6 @@ func determineSubClass(symbol, currentSubClass string) string {
 	}
 }
 
-// Function to find the index of a column by name
-func findColumnIndex(header []string, columnName string) (int, error) {
-	for i, colName := range header {
-		if colName == columnName {
-			return i, nil
-		}
-	}
-	return -1, fmt.Errorf("column %s not found", columnName)
-}
-
 // Function to process and update the 'sub_class' field based on 'symbol'
 func FinishData(records [][]string) ([][]string, error) {
 	if len(records) == 0 {
@@ -39,12 +29,12 @@ func FinishData(records [][]string) ([][]string, error) {
 	}
 
 	// Get column indexes for 'sub_class' and 'symbol'
-	subClassIdx, err := findColumnIndex(records[0], "sub_class")
+	subClassIdx, err := FindColumnIndex(records, "sub_class")
 	if err != nil {
 		return nil, err
 	}
 
-	symbolIdx, err := findColumnIndex(records[0], "symbol")
+	symbolIdx, err := FindColumnIndex(records, "symbol")
 	if err != nil {
 		return nil, err
 	}

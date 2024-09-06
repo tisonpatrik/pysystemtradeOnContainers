@@ -155,3 +155,40 @@ func SaveRecordsToCSV(directory string, filename string, records [][]string) err
 	fmt.Printf("Successfully saved CSV to: %s\n", filePath)
 	return nil
 }
+
+func LoadMultipleCSVFiles(directory string, listOfSymbols []string, ignoreSymbols bool) (map[string][][]string, error) {
+	// Get a list of all CSV files in the directory
+	csvFiles, err := GetCSVFiles(directory)
+	if err != nil {
+		return nil, fmt.Errorf("error getting CSV files: %v", err)
+	}
+
+	// Prepare a map to store the loaded CSV data
+	dataFramesDict := make(map[string][][]string)
+
+	// Convert listOfSymbols to a map for faster lookups
+	symbolSet := make(map[string]bool)
+	for _, symbol := range listOfSymbols {
+		symbolSet[symbol] = true
+	}
+
+	// Iterate through the CSV files
+	for _, file := range csvFiles {
+		// Extract the symbol name (filename without extension)
+		symbolName := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
+
+		// Check if we should load the file based on ignoreSymbols or if the symbol is in the list
+		if ignoreSymbols || symbolSet[symbolName] {
+			// Read the CSV file
+			records, err := ReadCSVFile(filepath.Join(directory, file))
+			if err != nil {
+				return nil, fmt.Errorf("error reading CSV file '%s': %v", file, err)
+			}
+
+			// Store the data in the map
+			dataFramesDict[symbolName] = records
+		}
+	}
+
+	return dataFramesDict, nil
+}
