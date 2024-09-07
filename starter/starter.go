@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"starter/src/env_generator"
-	"starter/src/processors"
+	"starter/src/data_processing"
+	"starter/src/env_service"
 )
 
 func main() {
+
 	dirPath := "data/temp"
 
 	fmt.Println("Welcome to the pysystemtraderOnContainers project setup!")
@@ -21,13 +22,15 @@ func main() {
 	fmt.Println("Let's start with the first task.")
 
 	// Initialize environment variables and create the .env file in the project root
-	if err := env_generator.SetupEnv(); err != nil {
+	if err := env_service.SetupEnv(); err != nil {
 		fmt.Println("Failed to set up environment variables:", err)
 		return
 	}
+
 	fmt.Println("")
 	fmt.Println("Ok, now download and process data.")
-	if err := processors.ProcessData(dirPath); err != nil {
+	// Call the ProcessData function from the data_processing package
+	if err := data_processing.ProcessData(dirPath); err != nil {
 		fmt.Println("Failed to download and process the data:", err)
 		return
 	}
