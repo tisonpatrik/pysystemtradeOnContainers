@@ -64,7 +64,7 @@ func generate_metadata(filePath string, symbols []src.CSVRecord, columns []strin
 		log.Fatalf("Failed to save final records to CSV: %v", err)
 	}
 
-	fmt.Println("Metadata generation complete. Final records saved to CSV.")
+	fmt.Println(outputFilename + "generation complete. Final records saved to CSV.")
 }
 
 func generate_config_file(filePath string, symbols []src.CSVRecord, columns []string) {
@@ -93,5 +93,5 @@ func generate_config_file(filePath string, symbols []src.CSVRecord, columns []st
 		log.Fatalf("Failed to save final records to CSV: %v", err)
 	}
 
-	fmt.Println("Metadata generation complete. Final records saved to CSV.")
+	fmt.Println(outputFilename + " generation complete. Final records saved to CSV.")
 }

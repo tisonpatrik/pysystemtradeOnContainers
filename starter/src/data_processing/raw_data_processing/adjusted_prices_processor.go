@@ -11,6 +11,8 @@ import (
 
 // AdjustedPricesProcessor processes adjusted prices based on CSV files in the directory and symbols.
 func AdjustedPricesProcessor(input src.ProcessorInput) error {
+	fmt.Printf("Generating metadata for file: %s\n", input.Name)
+
 	var wg sync.WaitGroup
 	results := make(chan src.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                          // Semaphore to limit concurrent goroutines
@@ -43,14 +45,23 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 		mergedData = append(mergedData, df.Records...)
 	}
 
-	// Write the final merged CSV
-	err := writeMergedCSV(filepath.Join(input.Path, input.Name), input.NewColumnsNames, mergedData)
+	// Ensure the directory exists before writing the final merged CSV
+	outputDir := filepath.Join("data", "adjusted_prices")
+	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+		return fmt.Errorf("failed to create directory: %w", err)
+	}
+
+	// Write the final merged CSV to the specified directory and with the specified name
+	outputPath := filepath.Join(outputDir, input.Name)
+	err := writeMergedCSV(outputPath, input.NewColumnsNames, mergedData)
 	if err != nil {
 		return err
 	}
 
 	return nil
 }
+
+// processSingleCSV reads and processes a single CSV file without loading all rows at once (streaming approach).
 func processSingleCSV(path string, symbol src.CSVRecord, newColumnsNames []string) (src.DataFrame, error) {
 	filePath := filepath.Join(path, symbol.Values[0]+".csv")
 	file, err := os.Open(filePath)
