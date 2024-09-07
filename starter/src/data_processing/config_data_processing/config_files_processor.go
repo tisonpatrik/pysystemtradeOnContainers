@@ -9,22 +9,21 @@ import (
 )
 
 func CSVConfigProcessor(input src.ProcessorInput) error {
-	// Use the struct fields instead of separate arguments
 	fullPath := filepath.Join(input.Path, input.Name)
 	filename := filepath.Base(fullPath)
 
-	// Check the file name and call the appropriate function
+	// Check the file name and process accordingly
 	if filename == "moreinstrumentinfo.csv" {
-		generate_metadata(fullPath, input.Symbols, input.NewColumnsNames)
+		processFile(fullPath, input.Symbols, input.NewColumnsNames, true)
 	} else {
-		generate_config_file(fullPath, input.Symbols, input.NewColumnsNames)
+		processFile(fullPath, input.Symbols, input.NewColumnsNames, false)
 	}
 
 	return nil
 }
 
-func generate_metadata(filePath string, symbols []src.CSVRecord, columns []string) {
-	fmt.Printf("Generating metadata for file: %s\n", filePath)
+func processFile(filePath string, symbols []src.CSVRecord, columns []string, isMetadata bool) {
+	fmt.Printf("Processing file: %s\n", filePath)
 
 	// Read the CSV file
 	records, err := utils.ReadCSVFile(filePath)
@@ -32,7 +31,7 @@ func generate_metadata(filePath string, symbols []src.CSVRecord, columns []strin
 		log.Fatalf("Failed to read the CSV file: %v", err)
 	}
 
-	// Rename columns using the new function
+	// Rename columns
 	records, err = utils.RenameCSVColumns(records, columns)
 	if err != nil {
 		log.Fatalf("Failed to rename columns: %v", err)
@@ -44,17 +43,15 @@ func generate_metadata(filePath string, symbols []src.CSVRecord, columns []strin
 		log.Fatalf("Failed to filter records: %v", err)
 	}
 
-	// Drop unnecessary columns
-	columnsToDrop := []string{"sub_sub_class", "style", "country", "duration"}
-	droppedRecords, err := utils.DropColumns(filteredRecords, columnsToDrop)
-	if err != nil {
-		log.Fatalf("Failed to drop columns: %v", err)
-	}
-
-	// Process the dropped records to finalize the data
-	finalRecords, err := FinishData(droppedRecords)
-	if err != nil {
-		log.Fatalf("Failed to finalize data: %v", err)
+	// If generating metadata, drop unnecessary columns and finalize data
+	var finalRecords []src.CSVRecord
+	if isMetadata {
+		finalRecords, err = finalizeMetadata(filteredRecords)
+		if err != nil {
+			log.Fatalf("Failed to finalize metadata: %v", err)
+		}
+	} else {
+		finalRecords = filteredRecords
 	}
 
 	// Save the final records to a CSV file
@@ -64,34 +61,22 @@ func generate_metadata(filePath string, symbols []src.CSVRecord, columns []strin
 		log.Fatalf("Failed to save final records to CSV: %v", err)
 	}
 
-	fmt.Println(outputFilename + "generation complete. Final records saved to CSV.")
+	fmt.Println(outputFilename + " generation complete. Final records saved to CSV.")
 }
 
-func generate_config_file(filePath string, symbols []src.CSVRecord, columns []string) {
-	fmt.Printf("Generating config file for: %s\n", filePath)
-	// Read the CSV file
-	records, err := utils.ReadCSVFile(filePath)
+func finalizeMetadata(records []src.CSVRecord) ([]src.CSVRecord, error) {
+	// Drop unnecessary columns
+	columnsToDrop := []string{"sub_sub_class", "style", "country", "duration"}
+	droppedRecords, err := utils.DropColumns(records, columnsToDrop)
 	if err != nil {
-		log.Fatalf("Failed to read the CSV file: %v", err)
+		return nil, err
 	}
 
-	// Rename columns using the new function
-	records, err = utils.RenameCSVColumns(records, columns)
+	// Finalize the data
+	finalRecords, err := FinishData(droppedRecords)
 	if err != nil {
-		log.Fatalf("Failed to rename columns: %v", err)
+		return nil, err
 	}
 
-	// Filter records based on symbols
-	filteredRecords, err := utils.FilterRecordsBySymbols(records, "symbol", symbols)
-	if err != nil {
-		log.Fatalf("Failed to filter records: %v", err)
-	}
-	// Save the final records to a CSV file
-	outputDirectory := "data/csvconfig"
-	outputFilename := filepath.Base(filePath)
-	if err := utils.SaveRecordsToCSV(outputDirectory, outputFilename, filteredRecords); err != nil {
-		log.Fatalf("Failed to save final records to CSV: %v", err)
-	}
-
-	fmt.Println(outputFilename + " generation complete. Final records saved to CSV.")
+	return finalRecords, nil
 }

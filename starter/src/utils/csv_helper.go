@@ -141,35 +141,3 @@ func DropColumns(records []src.CSVRecord, columnsToDrop []string) ([]src.CSVReco
 
 	return newRecords, nil
 }
-
-func FillSymbolName(records []src.CSVRecord, symbolName string) ([]src.CSVRecord, error) {
-	if len(records) == 0 {
-		return nil, fmt.Errorf("no records found")
-	}
-
-	// Iterate over each record and add the "symbol" column with the provided symbolName
-	for i := range records {
-		// Add "symbol" to the Columns if it's not present
-		records[i].Columns = append(records[i].Columns, "symbol")
-
-		// Add symbolName to the Values
-		records[i].Values = append(records[i].Values, symbolName)
-	}
-
-	return records, nil
-}
-
-func ConcatenateDataFrames(dataFrames []src.DataFrame, symbolName string) (src.DataFrame, error) {
-	var concatenatedRecords []src.CSVRecord
-
-	for _, df := range dataFrames {
-		concatenatedRecords = append(concatenatedRecords, df.Records...)
-	}
-
-	concatenatedDataFrame := src.DataFrame{
-		SymbolName: symbolName,
-		Records:    concatenatedRecords,
-	}
-
-	return concatenatedDataFrame, nil
-}

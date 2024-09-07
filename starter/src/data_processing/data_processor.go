@@ -57,13 +57,17 @@ func defineProcessors() map[string]src.ProcessorFunc {
 // processMappingsConcurrently processes each mapping concurrently using goroutines.
 func processMappingsConcurrently(mappings []src.Mapping, symbols []src.CSVRecord, processors map[string]src.ProcessorFunc) error {
 	var wg sync.WaitGroup
-	errChan := make(chan error, len(mappings)) // Error channel to collect errors
+	errChan := make(chan error, len(mappings)) // Buffered error channel
+	sem := make(chan struct{}, 10)             // Semaphore to limit the number of concurrent goroutines
 
 	for _, record := range mappings {
 		wg.Add(1)
 
 		go func(record src.Mapping) {
 			defer wg.Done()
+			sem <- struct{}{}        // Acquire semaphore to limit concurrency
+			defer func() { <-sem }() // Release semaphore
+
 			if err := processMapping(record, symbols, processors); err != nil {
 				errChan <- err
 			}
@@ -73,10 +77,16 @@ func processMappingsConcurrently(mappings []src.Mapping, symbols []src.CSVRecord
 	wg.Wait()
 	close(errChan)
 
+	// Collect all errors
+	var errs []error
 	for err := range errChan {
 		if err != nil {
-			return err
+			errs = append(errs, err)
 		}
+	}
+
+	if len(errs) > 0 {
+		return fmt.Errorf("multiple errors occurred: %v", errs)
 	}
 
 	return nil
