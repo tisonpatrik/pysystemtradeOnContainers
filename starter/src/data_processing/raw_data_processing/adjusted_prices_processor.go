@@ -24,7 +24,7 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
 
-			df, err := processSingleCSV(input.Path, symbol, input.NewColumnsNames)
+			df, err := processSingleCSV(input.Path, symbol)
 			if err != nil {
 				fmt.Println("Error processing CSV:", err)
 				return
@@ -61,8 +61,8 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 	return nil
 }
 
-// processSingleCSV reads and processes a single CSV file without loading all rows at once (streaming approach).
-func processSingleCSV(path string, symbol src.CSVRecord, newColumnsNames []string) (src.DataFrame, error) {
+// processSingleCSV reads and processes a single CSV file without changing the header (header will be added during the merge).
+func processSingleCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) {
 	filePath := filepath.Join(path, symbol.Values[0]+".csv")
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -74,6 +74,11 @@ func processSingleCSV(path string, symbol src.CSVRecord, newColumnsNames []strin
 
 	// Stream process the CSV file row by row
 	var processedRecords []src.CSVRecord
+	_, err = reader.Read() // Skip the first row (header) because it will be handled during the merge
+	if err != nil {
+		return src.DataFrame{}, err
+	}
+
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -83,9 +88,9 @@ func processSingleCSV(path string, symbol src.CSVRecord, newColumnsNames []strin
 			return src.DataFrame{}, err
 		}
 
+		// Process the rows by appending the symbol
 		newRow := src.CSVRecord{
-			Columns: newColumnsNames,
-			Values:  append(row, symbol.Values[0]),
+			Values: append(row, symbol.Values[0]), // Append symbol value
 		}
 		processedRecords = append(processedRecords, newRow)
 	}
@@ -96,8 +101,10 @@ func processSingleCSV(path string, symbol src.CSVRecord, newColumnsNames []strin
 	}, nil
 }
 
-// writeMergedCSV writes the final merged CSV file.
+// writeMergedCSV writes the final merged CSV file and adds the header.
 func writeMergedCSV(filePath string, columns []string, records []src.CSVRecord) error {
+	// Append the "symbol" column to the header
+	columns = append(columns, "symbol")
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
@@ -107,7 +114,7 @@ func writeMergedCSV(filePath string, columns []string, records []src.CSVRecord) 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
-	// Write the header
+	// Write the header once here
 	if err := writer.Write(columns); err != nil {
 		return err
 	}
