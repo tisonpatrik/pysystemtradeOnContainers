@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"starter/src"
+	"strconv"
 	"sync"
 )
 
@@ -87,6 +88,18 @@ func processSingleCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) 
 			}
 			return src.DataFrame{}, err
 		}
+
+		// Skip rows where the price field is empty
+		if row[1] == "" {
+			continue // Silently skip rows with an empty price field
+		}
+
+		// Parse and format the price to 3 decimal places
+		price, err := strconv.ParseFloat(row[1], 64)
+		if err != nil {
+			return src.DataFrame{}, fmt.Errorf("error parsing price: %w", err)
+		}
+		row[1] = fmt.Sprintf("%.3f", price) // Round to 3 decimal places
 
 		// Process the rows by appending the symbol
 		newRow := src.CSVRecord{
