@@ -50,7 +50,7 @@ func defineProcessors() map[string]src.ProcessorFunc {
 		"adjusted_prices_csv": raw_data_processing.AdjustedPricesProcessor,
 		"multiple_prices_csv": raw_data_processing.MultiplePricesProcessor,
 		"fx_prices_csv":       raw_data_processing.FXPricesProcessor,
-		"roll_calendar_csv":   raw_data_processing.RollCalendarsProcessor,
+		"roll_calendars_csv":  raw_data_processing.RollCalendarsProcessor,
 	}
 }
 

@@ -6,13 +6,12 @@ import (
 	"os"
 	"path/filepath"
 	"starter/src"
-	"strconv"
 	"sync"
 )
 
 // AdjustedPricesProcessor processes adjusted prices based on CSV files in the directory and symbols.
 func AdjustedPricesProcessor(input src.ProcessorInput) error {
-	fmt.Printf("Generating metadata for file: %s\n", input.Name)
+	fmt.Printf("Generating adjusted prices\n")
 
 	var wg sync.WaitGroup
 	results := make(chan src.DataFrame, len(input.Symbols)) // Channel to collect processed data
@@ -25,7 +24,7 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
 
-			df, err := processSingleCSV(input.Path, symbol)
+			df, err := processSingleAdjustedPriceCSV(input.Path, symbol)
 			if err != nil {
 				fmt.Println("Error processing CSV:", err)
 				return
@@ -47,7 +46,7 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 	}
 
 	// Ensure the directory exists before writing the final merged CSV
-	outputDir := filepath.Join("data", "adjusted_prices")
+	outputDir := filepath.Join("data", "raw_data")
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
@@ -63,9 +62,9 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 }
 
 // processSingleCSV reads and processes a single CSV file without changing the header (header will be added during the merge).
-func processSingleCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) {
-	filePath := filepath.Join(path, symbol.Values[0]+".csv")
-	file, err := os.Open(filePath)
+func processSingleAdjustedPriceCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) {
+	// Step 1: Open the CSV file
+	file, err := openCSVFile(path, symbol.Values[0])
 	if err != nil {
 		return src.DataFrame{}, err
 	}
@@ -73,39 +72,16 @@ func processSingleCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) 
 
 	reader := csv.NewReader(file)
 
-	// Stream process the CSV file row by row
-	var processedRecords []src.CSVRecord
-	_, err = reader.Read() // Skip the first row (header) because it will be handled during the merge
+	// Step 2: Read the header and find the price column index
+	priceIndex, err := readHeaderAndFindColumn(reader, "price")
 	if err != nil {
 		return src.DataFrame{}, err
 	}
 
-	for {
-		row, err := reader.Read()
-		if err != nil {
-			if err.Error() == "EOF" {
-				break // End of file reached
-			}
-			return src.DataFrame{}, err
-		}
-
-		// Skip rows where the price field is empty
-		if row[1] == "" {
-			continue // Silently skip rows with an empty price field
-		}
-
-		// Parse and format the price to 3 decimal places
-		price, err := strconv.ParseFloat(row[1], 64)
-		if err != nil {
-			return src.DataFrame{}, fmt.Errorf("error parsing price: %w", err)
-		}
-		row[1] = fmt.Sprintf("%.3f", price) // Round to 3 decimal places
-
-		// Process the rows by appending the symbol
-		newRow := src.CSVRecord{
-			Values: append(row, symbol.Values[0]), // Append symbol value
-		}
-		processedRecords = append(processedRecords, newRow)
+	// Step 3: Process all rows
+	processedRecords, err := processAdjustedPricesRows(reader, priceIndex, symbol)
+	if err != nil {
+		return src.DataFrame{}, err
 	}
 
 	return src.DataFrame{
@@ -114,30 +90,37 @@ func processSingleCSV(path string, symbol src.CSVRecord) (src.DataFrame, error) 
 	}, nil
 }
 
-// writeMergedCSV writes the final merged CSV file and adds the header.
-func writeMergedCSV(filePath string, columns []string, records []src.CSVRecord) error {
-	// Append the "symbol" column to the header
-	columns = append(columns, "symbol")
-	file, err := os.Create(filePath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
+// processAdjustedPricesRows processes each row, parses and rounds the price, and appends the symbol.
+func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol src.CSVRecord) ([]src.CSVRecord, error) {
+	var processedRecords []src.CSVRecord
 
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-
-	// Write the header once here
-	if err := writer.Write(columns); err != nil {
-		return err
-	}
-
-	// Write all records
-	for _, record := range records {
-		if err := writer.Write(record.Values); err != nil {
-			return err
+	for {
+		row, err := reader.Read()
+		if err != nil {
+			if err.Error() == "EOF" {
+				break // End of file reached
+			}
+			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
+
+		// Skip rows where the price field is empty
+		if row[priceIndex] == "" {
+			continue // Silently skip rows with an empty price field
+		}
+
+		// Parse and round the price
+		price, err := parseAndRoundFloat(row, priceIndex, 3)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing price: %w", err)
+		}
+		row[priceIndex] = price
+
+		// Append the symbol to the row
+		newRow := src.CSVRecord{
+			Values: append(row, symbol.Values[0]),
+		}
+		processedRecords = append(processedRecords, newRow)
 	}
 
-	return nil
+	return processedRecords, nil
 }
