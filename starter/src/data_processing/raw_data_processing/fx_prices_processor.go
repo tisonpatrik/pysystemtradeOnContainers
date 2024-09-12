@@ -101,7 +101,7 @@ func processSingleFXPriceCSV(path string, symbol src.CSVRecord) (src.DataFrame, 
 	}, nil
 }
 
-// process FxPricesRows processes each row, parses and rounds the price, and appends the symbol.
+// processFxPricesRows processes each row, parses and rounds the price, and appends the symbol.
 func processFxPricesRows(reader *csv.Reader, priceIndex int, symbol src.CSVRecord) ([]src.CSVRecord, error) {
 	var processedRecords []src.CSVRecord
 
@@ -114,12 +114,17 @@ func processFxPricesRows(reader *csv.Reader, priceIndex int, symbol src.CSVRecor
 			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
 
-		// Skip rows where the price field is empty
+		// Check if the price field is empty
 		if row[priceIndex] == "" {
-			continue // Silently skip rows with an empty price field
+			// Add the row to the list without processing the price
+			newRow := src.CSVRecord{
+				Values: append(row, symbol.Values[0]),
+			}
+			processedRecords = append(processedRecords, newRow)
+			continue
 		}
 
-		// Parse and round the price
+		// Parse and round the price if it's not empty
 		price, err := parseAndRoundFloat(row, priceIndex, 3)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing price: %w", err)

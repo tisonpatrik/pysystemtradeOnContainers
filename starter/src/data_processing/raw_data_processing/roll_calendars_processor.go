@@ -84,7 +84,7 @@ func processSingleRollCalendarsCSV(path string, symbol src.CSVRecord) (src.DataF
 	}, nil
 }
 
-// process RollCalendars Rows processes each row and appends the symbol.
+// processRollCalendarsRows processes each row and appends the symbol, removing any extra columns beyond the expected count.
 func processRollCalendarsRows(reader *csv.Reader, symbol src.CSVRecord) ([]src.CSVRecord, error) {
 	var processedRecords []src.CSVRecord
 
@@ -93,7 +93,10 @@ func processRollCalendarsRows(reader *csv.Reader, symbol src.CSVRecord) ([]src.C
 	if err != nil {
 		return nil, fmt.Errorf("failed to read header: %w", err)
 	}
-	columnCount := len(header) // Get the number of columns from the header
+	columnCount := len(header)
+
+	// We expect 4 columns based on the structure (DATE_TIME, current_contract, next_contract, carry_contract)
+	expectedColumnCount := 4
 
 	for {
 		row, err := reader.Read()
@@ -104,12 +107,12 @@ func processRollCalendarsRows(reader *csv.Reader, symbol src.CSVRecord) ([]src.C
 			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
 
-		// Truncate or adjust the row to fit the number of columns in the header
-		if len(row) > columnCount {
-			row = row[:columnCount] // Keep only values up to the column count
+		// If there are more than 4 columns, truncate the row to the first 4 columns
+		if columnCount > expectedColumnCount {
+			row = row[:expectedColumnCount] // Remove any extra columns
 		}
 
-		// Append the symbol to the row
+		// Append the symbol as the 5th column
 		newRow := src.CSVRecord{
 			Values: append(row, symbol.Values[0]),
 		}

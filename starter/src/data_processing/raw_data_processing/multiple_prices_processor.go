@@ -128,38 +128,45 @@ func processMultiplePricesRows(reader *csv.Reader, priceIndex int, carryContract
 			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
 
-		// Skip rows where the price field is empty
-		if row[priceIndex] == "" {
-			continue // Silently skip rows with an empty price field
+		// Check if the price field is empty, but add the row to the list
+		if row[priceIndex] != "" {
+			// Parse and round the price if it's not empty
+			price, err := parseAndRoundFloat(row, priceIndex, 3)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing price: %w", err)
+			}
+			row[priceIndex] = price
 		}
 
-		// Parse and round the price
-		price, err := parseAndRoundFloat(row, priceIndex, 3)
-		if err != nil {
-			return nil, fmt.Errorf("error parsing price: %w", err)
+		// Check if the carry_contract field is empty
+		if row[carryContractIndex] != "" {
+			// Parse carry_contract as an integer if it's not empty
+			carryContract, err := parseAndFormatInt(row, carryContractIndex)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing carry_contract: %w", err)
+			}
+			row[carryContractIndex] = carryContract
 		}
-		row[priceIndex] = price
 
-		// Parse carry_contract as an integer
-		carryContract, err := parseAndFormatInt(row, carryContractIndex)
-		if err != nil {
-			return nil, fmt.Errorf("error parsing carry_contract: %w", err)
+		// Check if the forward_contract field is empty
+		if row[forwardContractIndex] != "" {
+			// Parse forward_contract as an integer if it's not empty
+			forwardContract, err := parseAndFormatInt(row, forwardContractIndex)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing forward_contract: %w", err)
+			}
+			row[forwardContractIndex] = forwardContract
 		}
-		row[carryContractIndex] = carryContract
 
-		// Parse forward_contract as an integer
-		forwardContract, err := parseAndFormatInt(row, forwardContractIndex)
-		if err != nil {
-			return nil, fmt.Errorf("error parsing forward_contract: %w", err)
+		// Check if the price_contract field is empty
+		if row[priceContractIndex] != "" {
+			// Parse price_contract as an integer if it's not empty
+			priceContract, err := parseAndFormatInt(row, priceContractIndex)
+			if err != nil {
+				return nil, fmt.Errorf("error parsing price_contract: %w", err)
+			}
+			row[priceContractIndex] = priceContract
 		}
-		row[forwardContractIndex] = forwardContract
-
-		// Parse price_contract as an integer
-		priceContract, err := parseAndFormatInt(row, priceContractIndex)
-		if err != nil {
-			return nil, fmt.Errorf("error parsing price_contract: %w", err)
-		}
-		row[priceContractIndex] = priceContract
 
 		// Append the symbol to the row
 		newRow := src.CSVRecord{
