@@ -167,8 +167,6 @@ func SaveRecordsToCSV(directory string, filename string, records []src.CSVRecord
 	if err := writer.Error(); err != nil {
 		return fmt.Errorf("error occurred while flushing data to CSV: %v", err)
 	}
-
-	fmt.Printf("Successfully saved CSV to: %s\n", filePath)
 	return nil
 }
 

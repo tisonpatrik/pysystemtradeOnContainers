@@ -11,8 +11,6 @@ import (
 )
 
 func FXPricesProcessor(input src.ProcessorInput) error {
-	fmt.Printf("Generating Fx prices\n")
-
 	var wg sync.WaitGroup
 	results := make(chan src.DataFrame) // Channel to collect processed data
 	sem := make(chan struct{}, 10)      // Semaphore to limit concurrent goroutines
@@ -68,7 +66,7 @@ func FXPricesProcessor(input src.ProcessorInput) error {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println(input.Name + " generation complete. Final records saved to CSV.")
 	return nil
 }
 

@@ -11,8 +11,6 @@ import (
 
 // AdjustedPricesProcessor processes adjusted prices based on CSV files in the directory and symbols.
 func AdjustedPricesProcessor(input src.ProcessorInput) error {
-	fmt.Printf("Generating adjusted prices\n")
-
 	var wg sync.WaitGroup
 	results := make(chan src.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                          // Semaphore to limit concurrent goroutines
@@ -57,7 +55,7 @@ func AdjustedPricesProcessor(input src.ProcessorInput) error {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println(input.Name + " generation complete. Final records saved to CSV.")
 	return nil
 }
 

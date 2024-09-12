@@ -10,8 +10,6 @@ import (
 )
 
 func MultiplePricesProcessor(input src.ProcessorInput) error {
-	fmt.Printf("Generating Multiple prices\n")
-
 	var wg sync.WaitGroup
 	results := make(chan src.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                          // Semaphore to limit concurrent goroutines
@@ -56,7 +54,7 @@ func MultiplePricesProcessor(input src.ProcessorInput) error {
 	if err != nil {
 		return err
 	}
-
+	fmt.Println(input.Name + " generation complete. Final records saved to CSV.")
 	return nil
 }
 

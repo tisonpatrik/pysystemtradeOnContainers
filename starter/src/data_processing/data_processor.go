@@ -94,8 +94,6 @@ func processMappingsConcurrently(mappings []src.Mapping, symbols []src.CSVRecord
 
 // processMapping processes an individual mapping.
 func processMapping(record src.Mapping, symbols []src.CSVRecord, processors map[string]src.ProcessorFunc) error {
-	fmt.Printf("Processing file: %s in directory: %s\n", record.Name, record.Path)
-
 	baseDir := filepath.Base(record.Path)
 	processor, exists := processors[baseDir]
 	if !exists {
@@ -113,6 +111,5 @@ func processMapping(record src.Mapping, symbols []src.CSVRecord, processors map[
 	if err := processor(input); err != nil {
 		return fmt.Errorf("error processing %s: %v", baseDir, err)
 	}
-	fmt.Println("")
 	return nil
 }

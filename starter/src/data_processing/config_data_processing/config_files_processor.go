@@ -23,8 +23,6 @@ func CSVConfigProcessor(input src.ProcessorInput) error {
 }
 
 func processFile(filePath string, symbols []src.CSVRecord, columns []string, isMetadata bool) {
-	fmt.Printf("Processing file: %s\n", filePath)
-
 	// Read the CSV file
 	records, err := utils.ReadCSVFile(filePath)
 	if err != nil {
