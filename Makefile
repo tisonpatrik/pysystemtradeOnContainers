@@ -14,7 +14,7 @@ init:
 	@$(MAKE) -C database seed_config_data
 	@echo "Seeding raw data... This may take a few minutes."
 	@$(MAKE) -C database seed_raw_data
-	@echo "Running remaining migrations..."
+	@echo "Running remaining migrations...This will also feel like eternity."
 	@$(MAKE) -C database migrate_up
 	@echo "Initialization complete!"
 
