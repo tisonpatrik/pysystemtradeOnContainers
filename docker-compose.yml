@@ -88,16 +88,11 @@ services:
       - ./common:/home/app/common
 
   db_postgres:
-    image: timescale/timescaledb:latest-pg16
+    build:
+      context: ./database
     container_name: postgres
     hostname: db_postgres
     restart: on-failure
-    environment:
-      - DB_USER=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${POSTGRES_DB}
-    ports:
-      - "${DB_PORT}:5432"
     volumes:
       - db-postgres:/var/lib/postgresql/data
 
