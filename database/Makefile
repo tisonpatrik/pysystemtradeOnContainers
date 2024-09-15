@@ -1,4 +1,4 @@
-.PHONY: build run stop migration_up migration_down force_version clean
+.PHONY: build run stop migration_up migration_down force_version clean seed_config_data
 
 # Load environment variables from .env file
 include .env
@@ -13,12 +13,12 @@ build:
 
 # Run the database container
 run: build
-	@docker run --name timescale_container -e POSTGRES_PASSWORD=$(DB_PASSWORD) -e DB_USER=$(DB_USER) -e DB_PASSWORD=$(DB_PASSWORD) -e DB_NAME=$(DB_NAME) -p 5432:5432 -d timescale_image
+	@docker run --name timescale_container -e POSTGRES_PASSWORD=$(DB_PASSWORD) -e DB_USER=$(DB_USER) -e DB_PASSWORD=$(DB_PASSWORD) -e DB_NAME=$(DB_NAME) -p 5432:5432 -v $(PWD)/data:/data -d timescale_image
 
 # Stop the database container
 stop:
-	@docker stop timescale_container
-	@docker rm timescale_container
+	@docker stop $(DB_HOST)
+	@docker rm $(DB_HOST)
 
 # Run migrations up
 migration_up:
@@ -31,3 +31,10 @@ migration_down:
 # Clean migration state
 clean:
 	@$(MIGRATE_CMD) -verbose drop -f
+
+# Seed the database with CSV config data
+seed_config_data:
+	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_config FROM '/data/config_data/instrumentconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_metadata FROM '/data/config_data/moreinstrumentinfo.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/config_data/rollconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/config_data/spreadcosts.csv' DELIMITER ',' CSV HEADER"

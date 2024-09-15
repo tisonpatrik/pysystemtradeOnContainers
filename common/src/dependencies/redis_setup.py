@@ -9,7 +9,7 @@ from common.src.logging.logger import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-@lru_cache()
+@lru_cache
 @asynccontextmanager
 async def setup_async_redis(app: FastAPI):
     try:
@@ -18,9 +18,9 @@ async def setup_async_redis(app: FastAPI):
         app.state.redis_pool = pool
         logger.info("Redis connection pool initialized successfully.")
         yield
-    except redis.ConnectionError as e:
-        logger.error(f"Failed to initialize Redis connection pool: {e}")
-        raise e
+    except redis.ConnectionError:
+        logger.exception("Failed to initialize Redis connection pool: ")
+        raise
     finally:
         await app.state.redis_pool.aclose()  # type: ignore
         logger.info("Redis connection pool closed successfully.")

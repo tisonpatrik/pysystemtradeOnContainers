@@ -14,7 +14,6 @@ CREATE TABLE instrument_metadata (
     symbol VARCHAR PRIMARY KEY,
     asset_class VARCHAR,
     sub_class VARCHAR,
-    description VARCHAR,
     CONSTRAINT fk_symbol FOREIGN KEY(symbol) REFERENCES instrument_config(symbol)
 );
 

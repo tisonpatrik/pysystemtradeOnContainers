@@ -10,7 +10,7 @@ from common.src.logging.logger import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-@lru_cache()
+@lru_cache
 @asynccontextmanager
 async def setup_async_database(app: FastAPI):
     settings = get_settings()
@@ -27,13 +27,13 @@ async def setup_async_database(app: FastAPI):
             command_timeout=settings.connection_timeout,
             statement_cache_size=settings.statement_cache_size,
             max_queries=settings.max_queries,
-            max_inactive_connection_lifetime=settings.max_inactive_connection_lifetime
+            max_inactive_connection_lifetime=settings.max_inactive_connection_lifetime,
         )
         logger.info("Asyncpg connection pool initialized successfully.")
         yield
-    except Exception as e:
-        logger.error(f"Failed to initialize Asyncpg connection pool: {e}")
-        raise e
+    except Exception:
+        logger.exception("Failed to initialize Asyncpg connection pool")
+        raise
     finally:
         await app.state.async_pool.close()  # type: ignore
         logger.info("Asyncpg connection pool closed successfully.")
