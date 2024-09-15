@@ -35,8 +35,6 @@ func downloadFile(url, filePath string, wg *sync.WaitGroup, errors chan<- error)
 		errors <- fmt.Errorf("cannot save file: %v", err)
 		return
 	}
-
-	fmt.Printf("Downloaded: %s\n", filePath)
 }
 
 // downloadDirectory recursively downloads a directory from the GitHub repository.

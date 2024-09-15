@@ -9,12 +9,10 @@ import (
 	"main/src/utils"
 	"path/filepath"
 	"sync"
-	"time"
 )
 
 // ProcessData processes the data in the downloaded directories based on the mappings.
 func ProcessData(dirPath string) error {
-	startTime := time.Now()
 
 	// Load mappings from JSON
 	mappings, err := utils.LoadJSONfile("database/data_processing/configs/mappings.json")
@@ -38,9 +36,6 @@ func ProcessData(dirPath string) error {
 	if err := processMappingsConcurrently(mappings, symbols, processors); err != nil {
 		return err
 	}
-
-	elapsedTime := time.Since(startTime)
-	fmt.Printf("The ProcessData function took: %s\n", elapsedTime)
 	return nil
 }
 

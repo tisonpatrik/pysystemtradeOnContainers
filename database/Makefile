@@ -18,15 +18,26 @@ run: build
 # Stop the database container
 stop:
 	@docker stop $(DB_HOST)
+
+kill:
+	@docker stop $(DB_HOST)
 	@docker rm $(DB_HOST)
 
 # Run migrations up
-migration_up:
+migrate_up:
 	@$(MIGRATE_CMD) -verbose up
 
 # Run migrations down
-migration_down:
+migrate_down:
 	@$(MIGRATE_CMD) -verbose down
+
+# Migrate to a specific version
+migrate_to_version:
+	@$(MIGRATE_CMD) -verbose goto $(VERSION)
+
+# Force the database version (fix dirty database state)
+force_version:
+	@$(MIGRATE_CMD) -verbose force $(VERSION)
 
 # Clean migration state
 clean:

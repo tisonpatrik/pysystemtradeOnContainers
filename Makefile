@@ -1,25 +1,26 @@
-.PHONY: cheers create_db_env process_data seed_config_data seed_raw_data clean dev run stop down tests migration_up migration_down
+.PHONY: cheers dev run stop down tests
 
 cheers:
-	@echo "Na zdraví! 🍺"
+	@echo "Na zdraví! 🍺🍺🍺🍺🍺"
 
-create_db_env:
+init:
+	@echo "Initializing environment..."
 	@database/env_generator/main
-
-process_data:
+	@echo "Processing data..."
 	@database/data_processing/main
-
-migration_up:
-	@$(MAKE) -C database migration_up
-
-seed_config_data:
+	@echo "Migrating database to version $(VERSION)..."
+	@$(MAKE) -C database migrate_to_version "VERSION=3"
+	@echo "Seeding config data..."
 	@$(MAKE) -C database seed_config_data
-
-seed_raw_data:
+	@echo "Seeding raw data... This may take a few minutes."
 	@$(MAKE) -C database seed_raw_data
+	@echo "Running remaining migrations..."
+	@$(MAKE) -C database migrate_up
+	@echo "Initialization complete!"
 
 clean:
 	@$(MAKE) -C database clean
+
 
 dev:
 	@docker compose -f docker-compose.yml up --build
@@ -35,18 +36,3 @@ down:
 
 tests: run
 	@echo "IMPLEMENT IT"
-
-# Calling migration targets from the Makefile in the database directory
-
-
-migration_down:
-	@$(MAKE) -C database migration_down
-
-migration_force:
-	@$(MAKE) -C database migration_force
-
-migration_step_up:
-	@$(MAKE) -C database migration_step_up
-
-migration_step_down:
-	@$(MAKE) -C database migration_step_down

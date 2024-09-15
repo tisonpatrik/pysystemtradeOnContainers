@@ -8,7 +8,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8100:8000"
+      - "8000:8000"
     volumes:
       - ./raw_data:/home/app/raw_data
       - ./common:/home/app/common
@@ -22,7 +22,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8200:8000"
+      - "8100:8000"
     volumes:
       - ./risk:/home/app/risk
       - ./common:/home/app/common
@@ -36,7 +36,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8300:8000"
+      - "8200:8000"
     volumes:
       - ./rules:/home/app/rules
       - ./common:/home/app/common
@@ -51,7 +51,7 @@ services:
       - db_postgres
       - risk
     ports:
-      - "8400:8000"
+      - "8300:8000"
     volumes:
       - ./positions:/home/app/positions
       - ./common:/home/app/common
@@ -65,7 +65,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8500:8000"
+      - "8400:8000"
     volumes:
       - ./forecast:/home/app/forecast
       - ./common:/home/app/common
