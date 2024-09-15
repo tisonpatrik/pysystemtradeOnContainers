@@ -43,26 +43,11 @@ func CSVConfigProcessor(input models.ProcessorInput) error {
 	return nil
 }
 
-// getHeader reads the CSV header and returns a map of column names to their indices and the header slice.
-func getHeader(reader *csv.Reader) (map[string]int, []string, error) {
-	header, err := reader.Read()
-	if err != nil {
-		return nil, nil, fmt.Errorf("failed to read header: %w", err)
-	}
-
-	columnIndices := make(map[string]int)
-	for idx, colName := range header {
-		columnIndices[colName] = idx
-	}
-
-	return columnIndices, header, nil
-}
-
 // filterRecords filters rows from the CSV based on the provided symbols and modifies columns if necessary.
 func filterRecords(reader *csv.Reader, symbols models.Symbols, inputName string) ([]models.CSVRecord, error) {
 
 	// Get the header and column indices
-	headerMap, header, err := getHeader(reader)
+	headerMap, header, err := utils.GetHeader(reader)
 	if err != nil {
 		return nil, err
 	}

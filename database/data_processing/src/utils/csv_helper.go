@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/csv"
 	"fmt"
 	"main/src/models"
 )
@@ -37,69 +38,17 @@ func RenameCSVColumns(records []models.CSVRecord, newColumnNames []string) ([]mo
 	return records, nil
 }
 
-func DropColumns(records []models.CSVRecord, columnsToDrop []string) ([]models.CSVRecord, error) {
-	if len(records) == 0 {
-		return nil, fmt.Errorf("no records found in the CSV file")
+// GetHeader reads the CSV header and returns a map of column names to their indices and the header slice.
+func GetHeader(reader *csv.Reader) (map[string]int, []string, error) {
+	header, err := reader.Read()
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to read header: %w", err)
 	}
 
-	// Find the indices of the columns to drop
-	var dropIndices []int
-	header := records[0].Columns
-	for i, colName := range header {
-		for _, dropCol := range columnsToDrop {
-			if colName == dropCol {
-				dropIndices = append(dropIndices, i)
-				break
-			}
-		}
+	columnIndices := make(map[string]int)
+	for idx, colName := range header {
+		columnIndices[colName] = idx
 	}
 
-	// If no columns were found to drop, return the original records
-	if len(dropIndices) == 0 {
-		return records, nil
-	}
-
-	// Create new records without the dropped columns
-	var newRecords []models.CSVRecord
-	for _, record := range records {
-		var newValues []string
-		var newColumns []string
-
-		// Remove the columns in the dropIndices
-		for i, value := range record.Values {
-			shouldDrop := false
-			for _, dropIdx := range dropIndices {
-				if i == dropIdx {
-					shouldDrop = true
-					break
-				}
-			}
-			if !shouldDrop {
-				newValues = append(newValues, value)
-			}
-		}
-
-		// Remove the dropped columns from the Columns if it's not empty
-		for i, col := range record.Columns {
-			shouldDrop := false
-			for _, dropIdx := range dropIndices {
-				if i == dropIdx {
-					shouldDrop = true
-					break
-				}
-			}
-			if !shouldDrop {
-				newColumns = append(newColumns, col)
-			}
-		}
-
-		// Create a new CSVRecord with the remaining columns and values
-		newRecord := models.CSVRecord{
-			Columns: newColumns,
-			Values:  newValues,
-		}
-		newRecords = append(newRecords, newRecord)
-	}
-
-	return newRecords, nil
+	return columnIndices, header, nil
 }
