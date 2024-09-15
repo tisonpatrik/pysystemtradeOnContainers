@@ -15,9 +15,9 @@ func MultiplePricesProcessor(input models.ProcessorInput) error {
 	results := make(chan models.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                             // Semaphore to limit concurrent goroutines
 
-	for _, symbol := range input.Symbols {
+	for symbol := range input.Symbols {
 		wg.Add(1)
-		go func(symbol models.CSVRecord) {
+		go func(symbol string) {
 			defer wg.Done()
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
@@ -60,9 +60,9 @@ func MultiplePricesProcessor(input models.ProcessorInput) error {
 }
 
 // processSingleMultiplePriceCSV reads and processes a single CSV file, ensuring that the first row is treated as a header.
-func processSingleMultiplePriceCSV(path string, symbol models.CSVRecord) (models.DataFrame, error) {
+func processSingleMultiplePriceCSV(path string, symbol string) (models.DataFrame, error) {
 	// Step 1: Open the CSV file
-	file, err := utils.OpenCSVFile(path, symbol.Values[0])
+	file, err := utils.OpenCSVFile(path, symbol)
 	if err != nil {
 		return models.DataFrame{}, fmt.Errorf("error opening file: %w", err)
 	}
@@ -109,13 +109,13 @@ func processSingleMultiplePriceCSV(path string, symbol models.CSVRecord) (models
 	}
 
 	return models.DataFrame{
-		SymbolName: symbol.Values[0],
+		SymbolName: symbol,
 		Records:    processedRecords,
 	}, nil
 }
 
 // processMultiplePricesRows processes each row, parses and rounds the price, and appends the symbol.
-func processMultiplePricesRows(reader *csv.Reader, priceIndex int, carryContractIndex int, forwardContractIndex int, priceContractIndex int, symbol models.CSVRecord) ([]models.CSVRecord, error) {
+func processMultiplePricesRows(reader *csv.Reader, priceIndex int, carryContractIndex int, forwardContractIndex int, priceContractIndex int, symbol string) ([]models.CSVRecord, error) {
 	var processedRecords []models.CSVRecord
 
 	for {
@@ -169,7 +169,7 @@ func processMultiplePricesRows(reader *csv.Reader, priceIndex int, carryContract
 
 		// Append the symbol to the row
 		newRow := models.CSVRecord{
-			Values: append(row, symbol.Values[0]),
+			Values: append(row, symbol),
 		}
 		processedRecords = append(processedRecords, newRow)
 	}

@@ -16,9 +16,10 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 	results := make(chan models.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                             // Semaphore to limit concurrent goroutines
 
-	for _, symbol := range input.Symbols {
+	// Iterate over symbols in the Symbols map
+	for symbol := range input.Symbols {
 		wg.Add(1)
-		go func(symbol models.CSVRecord) {
+		go func(symbol string) { // symbol is now a string, not models.CSVRecord
 			defer wg.Done()
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
@@ -29,7 +30,7 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 				return
 			}
 			results <- df
-		}(symbol) // Pass symbol as argument here to avoid closure issue
+		}(symbol) // Pass symbol (string) as argument to avoid closure issue
 	}
 
 	// Wait for all goroutines to finish
@@ -62,9 +63,9 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 }
 
 // processSingleCSV reads and processes a single CSV file without changing the header (header will be added during the merge).
-func processSingleAdjustedPriceCSV(path string, symbol models.CSVRecord) (models.DataFrame, error) {
+func processSingleAdjustedPriceCSV(path string, symbol string) (models.DataFrame, error) {
 	// Step 1: Open the CSV file
-	file, err := utils.OpenCSVFile(path, symbol.Values[0])
+	file, err := utils.OpenCSVFile(path, symbol)
 	if err != nil {
 		return models.DataFrame{}, err
 	}
@@ -85,13 +86,13 @@ func processSingleAdjustedPriceCSV(path string, symbol models.CSVRecord) (models
 	}
 
 	return models.DataFrame{
-		SymbolName: symbol.Values[0],
+		SymbolName: symbol,
 		Records:    processedRecords,
 	}, nil
 }
 
 // processAdjustedPricesRows processes each row, parses and rounds the price, and appends the symbol.
-func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol models.CSVRecord) ([]models.CSVRecord, error) {
+func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol string) ([]models.CSVRecord, error) {
 	var processedRecords []models.CSVRecord
 
 	for {
@@ -107,7 +108,7 @@ func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol models
 		if row[priceIndex] == "" {
 			// Add the row to the list without processing the price
 			newRow := models.CSVRecord{
-				Values: append(row, symbol.Values[0]),
+				Values: append(row, symbol),
 			}
 			processedRecords = append(processedRecords, newRow)
 			continue
@@ -122,7 +123,7 @@ func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol models
 
 		// Append the symbol to the row
 		newRow := models.CSVRecord{
-			Values: append(row, symbol.Values[0]),
+			Values: append(row, symbol),
 		}
 		processedRecords = append(processedRecords, newRow)
 	}

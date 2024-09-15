@@ -10,16 +10,15 @@ import (
 	"strings"
 )
 
-// CSVConfigProcessor processes a single CSV file and filters rows based on the provided symbols.
+// CSVConfigProcessor processes a single CSV file, filters rows based on the provided symbols, and writes the result to a new file.
 func CSVConfigProcessor(input models.ProcessorInput) error {
-
-	// Ensure the output directory exists before writing the final filtered CSV
+	// Ensure the output directory exists
 	outputDir := filepath.Join("database/data", "config_data")
 	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create directory: %w", err)
 	}
 
-	// Step 1: Open the CSV file
+	// Open the CSV file
 	file, err := utils.OpenCSVFile(input.Path, strings.TrimSuffix(input.Name, ".csv"))
 	if err != nil {
 		return fmt.Errorf("error opening CSV file %s: %w", input.Name, err)
@@ -28,15 +27,15 @@ func CSVConfigProcessor(input models.ProcessorInput) error {
 
 	reader := csv.NewReader(file)
 
-	// Step 3: Filter rows by the provided symbols
-	filteredRecords, err := filterRecordsBySymbols(reader, input.Symbols, input.Name)
+	// Filter rows based on symbols
+	filteredRecords, err := filterRecords(reader, input.Symbols, input.Name)
 	if err != nil {
 		return fmt.Errorf("error filtering records: %w", err)
 	}
 
-	// Step 4: Write the filtered (and potentially updated) data to a new CSV file
-	err = utils.WriteCSVFile(filepath.Join(outputDir, input.Name), input.NewColumnsNames, filteredRecords)
-	if err != nil {
+	// Write the filtered data to a new CSV file
+	outputPath := filepath.Join(outputDir, input.Name)
+	if err := utils.WriteCSVFile(outputPath, input.NewColumnsNames, filteredRecords); err != nil {
 		return fmt.Errorf("error writing filtered CSV: %w", err)
 	}
 
@@ -44,72 +43,76 @@ func CSVConfigProcessor(input models.ProcessorInput) error {
 	return nil
 }
 
-// getHeader reads the header from the CSV and returns a map of all column names and their indices.
+// getHeader reads the CSV header and returns a map of column names to their indices and the header slice.
 func getHeader(reader *csv.Reader) (map[string]int, []string, error) {
-	// Read the header
 	header, err := reader.Read()
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read header: %w", err)
 	}
 
-	// Create a map to store column indices
 	columnIndices := make(map[string]int)
-
-	// Populate the map with column names and their respective indices
-	for index, colName := range header {
-		columnIndices[colName] = index
+	for idx, colName := range header {
+		columnIndices[colName] = idx
 	}
 
 	return columnIndices, header, nil
 }
 
-// filterRecordsBySymbols filters rows from a CSV based on the provided symbols and column index.
-func filterRecordsBySymbols(reader *csv.Reader, symbols []models.CSVRecord, inputName string) ([]models.CSVRecord, error) {
-	var filteredRecords []models.CSVRecord
-	symbolSet := make(map[string]struct{})
+// filterRecords filters rows from the CSV based on the provided symbols and modifies columns if necessary.
+func filterRecords(reader *csv.Reader, symbols models.Symbols, inputName string) ([]models.CSVRecord, error) {
 
-	// Populate symbol set for fast lookup
-	for _, symbolRecord := range symbols {
-		if len(symbolRecord.Values) > 0 {
-			symbolSet[symbolRecord.Values[0]] = struct{}{}
-		}
-	}
-
-	// Step 1: Get header from CSV
+	// Get the header and column indices
 	headerMap, header, err := getHeader(reader)
 	if err != nil {
 		return nil, err
 	}
 
-	// Step 2: Get symbol index (Instrument column must exist)
-	symbolIndex, ok := headerMap["Instrument"]
-	if !ok {
+	symbolIndex, exists := headerMap["Instrument"]
+	if !exists {
 		return nil, fmt.Errorf("'Instrument' column not found in CSV")
 	}
 
-	// Step 3: Optional: Get subclass index only for "moreinstrumentinfo.csv"
-	var subClassIndex int
 	var removeIndices []int
-
+	var subClassIndex int
 	if inputName == "moreinstrumentinfo.csv" {
-		subClassIndex, ok = headerMap["SubClass"]
-		if !ok {
-			return nil, fmt.Errorf("'SubClass' column not found in 'moreinstrumentinfo.csv'")
+		subClassIndex, removeIndices, err = prepareSpecialCaseColumns(headerMap)
+		if err != nil {
+			return nil, err
 		}
-
-		// Identify the columns to remove by their indices
-		removeColumns := []string{"SubSubClass", "Style", "Country", "Duration", "Description"}
-		for _, col := range removeColumns {
-			if idx, exists := headerMap[col]; exists {
-				removeIndices = append(removeIndices, idx)
-			}
-		}
-
-		// Remove the specified columns from the header as well
-		header = removeColumnsByIndices(header, removeIndices)
+		header = removeColumns(header, removeIndices)
 	}
 
-	// Step 4: Process and filter rows
+	return processRows(reader, symbols, symbolIndex, subClassIndex, removeIndices, inputName == "moreinstrumentinfo.csv")
+}
+
+// prepareSpecialCaseColumns finds the indices of columns that need to be modified or removed for "moreinstrumentinfo.csv".
+func prepareSpecialCaseColumns(headerMap map[string]int) (int, []int, error) {
+	subClassIndex, exists := headerMap["SubClass"]
+	if !exists {
+		return 0, nil, fmt.Errorf("'SubClass' column not found in 'moreinstrumentinfo.csv'")
+	}
+
+	removeColumns := []string{"SubSubClass", "Style", "Country", "Duration", "Description"}
+	removeIndices := findColumnIndices(headerMap, removeColumns)
+
+	return subClassIndex, removeIndices, nil
+}
+
+// findColumnIndices returns the indices of the specified columns that exist in the header.
+func findColumnIndices(headerMap map[string]int, columns []string) []int {
+	var indices []int
+	for _, col := range columns {
+		if idx, exists := headerMap[col]; exists {
+			indices = append(indices, idx)
+		}
+	}
+	return indices
+}
+
+// processRows processes each row, filtering by symbol and applying modifications if necessary.
+func processRows(reader *csv.Reader, symbolSet map[string]struct{}, symbolIndex, subClassIndex int, removeIndices []int, isSpecialCase bool) ([]models.CSVRecord, error) {
+	var filteredRecords []models.CSVRecord
+
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -119,25 +122,11 @@ func filterRecordsBySymbols(reader *csv.Reader, symbols []models.CSVRecord, inpu
 			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
 
-		// Check if the row contains a symbol that needs to be filtered
 		if _, exists := symbolSet[row[symbolIndex]]; exists {
-			// If the input file is "moreinstrumentinfo.csv", modify the row
-			if inputName == "moreinstrumentinfo.csv" {
-				// Modify SubClass based on Instrument values
-				switch row[symbolIndex] {
-				case "V2X":
-					row[subClassIndex] = "EU-Vol"
-				case "VIX":
-					row[subClassIndex] = "VIX_mini"
-				case "VNKI":
-					row[subClassIndex] = "JPY-Vol"
-				}
-
-				// Remove values for specified columns
-				row = removeColumnsByIndices(row, removeIndices)
+			if isSpecialCase {
+				modifySubClass(row, symbolIndex, subClassIndex)
+				row = removeColumns(row, removeIndices)
 			}
-
-			// Append the filtered (and potentially modified) record
 			filteredRecords = append(filteredRecords, models.CSVRecord{Values: row})
 		}
 	}
@@ -145,12 +134,22 @@ func filterRecordsBySymbols(reader *csv.Reader, symbols []models.CSVRecord, inpu
 	return filteredRecords, nil
 }
 
-// removeColumnsByIndices removes columns from a row by their indices.
-func removeColumnsByIndices(row []string, indices []int) []string {
-	// Sort indices in descending order to avoid index shifting issues during removal
+// modifySubClass updates the SubClass column based on the Instrument value.
+func modifySubClass(row []string, symbolIndex, subClassIndex int) {
+	switch row[symbolIndex] {
+	case "V2X":
+		row[subClassIndex] = "EU-Vol"
+	case "VIX":
+		row[subClassIndex] = "VIX_mini"
+	case "VNKI":
+		row[subClassIndex] = "JPY-Vol"
+	}
+}
+
+// removeColumns removes columns from a row by their indices.
+func removeColumns(row []string, indices []int) []string {
 	for i := len(indices) - 1; i >= 0; i-- {
-		idx := indices[i]
-		row = append(row[:idx], row[idx+1:]...)
+		row = append(row[:indices[i]], row[indices[i]+1:]...)
 	}
 	return row
 }

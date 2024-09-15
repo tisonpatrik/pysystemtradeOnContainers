@@ -15,9 +15,9 @@ func RollCalendarsProcessor(input models.ProcessorInput) error {
 	results := make(chan models.DataFrame, len(input.Symbols)) // Channel to collect processed data
 	sem := make(chan struct{}, 10)                             // Semaphore to limit concurrent goroutines
 
-	for _, symbol := range input.Symbols {
+	for symbol := range input.Symbols {
 		wg.Add(1)
-		go func(symbol models.CSVRecord) {
+		go func(symbol string) {
 			defer wg.Done()
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
@@ -62,9 +62,9 @@ func RollCalendarsProcessor(input models.ProcessorInput) error {
 }
 
 // process single RollCalendarCSV reads and processes a single CSV file without changing the header (header will be added during the merge).
-func processSingleRollCalendarsCSV(path string, symbol models.CSVRecord) (models.DataFrame, error) {
+func processSingleRollCalendarsCSV(path string, symbol string) (models.DataFrame, error) {
 	// Step 1: Open the CSV file
-	file, err := utils.OpenCSVFile(path, symbol.Values[0])
+	file, err := utils.OpenCSVFile(path, symbol)
 	if err != nil {
 		return models.DataFrame{}, err
 	}
@@ -79,13 +79,13 @@ func processSingleRollCalendarsCSV(path string, symbol models.CSVRecord) (models
 	}
 
 	return models.DataFrame{
-		SymbolName: symbol.Values[0],
+		SymbolName: symbol,
 		Records:    processedRecords,
 	}, nil
 }
 
 // processRollCalendarsRows processes each row and appends the symbol, removing any extra columns beyond the expected count.
-func processRollCalendarsRows(reader *csv.Reader, symbol models.CSVRecord) ([]models.CSVRecord, error) {
+func processRollCalendarsRows(reader *csv.Reader, symbol string) ([]models.CSVRecord, error) {
 	var processedRecords []models.CSVRecord
 
 	// Read the header to determine the correct number of columns
@@ -114,7 +114,7 @@ func processRollCalendarsRows(reader *csv.Reader, symbol models.CSVRecord) ([]mo
 
 		// Append the symbol as the 5th column
 		newRow := models.CSVRecord{
-			Values: append(row, symbol.Values[0]),
+			Values: append(row, symbol),
 		}
 		processedRecords = append(processedRecords, newRow)
 	}

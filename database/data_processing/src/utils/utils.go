@@ -89,8 +89,8 @@ func GetProjectRoot() (string, error) {
 	return projectRoot, nil
 }
 
-// ReadCSVFile reads a CSV file and returns its contents.
-func ReadCSVFile(filePath string) ([]models.CSVRecord, error) {
+// ReadSymbolsFromCSV reads a CSV file and returns a Symbols set based on its content.
+func ReadSymbolsFromCSV(filePath string) (models.Symbols, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("could not open the file: %v", err)
@@ -107,20 +107,18 @@ func ReadCSVFile(filePath string) ([]models.CSVRecord, error) {
 		return nil, fmt.Errorf("the CSV file is empty")
 	}
 
-	// First row is the header (columns)
-	columns := rawRecords[0]
+	// Create a Symbols set to hold unique symbols
+	symbols := make(models.Symbols)
 
-	// Rest of the rows are data
-	var records []models.CSVRecord
-	for _, row := range rawRecords[1:] {
-		record := models.CSVRecord{
-			Columns: columns, // Header (columns) stays the same for all records
-			Values:  row,     // Values from the CSV row
+	// Populate the Symbols set from the CSV file
+	for _, row := range rawRecords {
+		if len(row) > 0 {
+			symbol := row[0]             // Assume each row has the symbol in the first column
+			symbols[symbol] = struct{}{} // Add symbol to the set
 		}
-		records = append(records, record)
 	}
 
-	return records, nil
+	return symbols, nil
 }
 
 // GetCSVFiles returns a list of all CSV files in the specified directory.

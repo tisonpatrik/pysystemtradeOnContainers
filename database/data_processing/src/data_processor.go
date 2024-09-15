@@ -28,7 +28,7 @@ func ProcessData(dirPath string) error {
 	}
 
 	// Load symbols from CSV
-	symbols, err := utils.ReadCSVFile("database/data_processing/configs/tradable_instruments.csv")
+	symbols, err := utils.ReadSymbolsFromCSV("database/data_processing/configs/tradable_instruments.csv")
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func defineProcessors() map[string]models.ProcessorFunc {
 }
 
 // processMappingsConcurrently processes each mapping concurrently using goroutines.
-func processMappingsConcurrently(mappings []models.Mapping, symbols []models.CSVRecord, processors map[string]models.ProcessorFunc) error {
+func processMappingsConcurrently(mappings []models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
 	var wg sync.WaitGroup
 	errChan := make(chan error, len(mappings)) // Buffered error channel
 	sem := make(chan struct{}, 10)             // Semaphore to limit the number of concurrent goroutines
@@ -94,7 +94,7 @@ func processMappingsConcurrently(mappings []models.Mapping, symbols []models.CSV
 }
 
 // processMapping processes an individual mapping.
-func processMapping(record models.Mapping, symbols []models.CSVRecord, processors map[string]models.ProcessorFunc) error {
+func processMapping(record models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
 	baseDir := filepath.Base(record.Path)
 	processor, exists := processors[baseDir]
 	if !exists {

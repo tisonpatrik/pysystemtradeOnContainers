@@ -3,6 +3,8 @@ package models
 // Define a type for processor functions
 type ProcessorFunc func(ProcessorInput) error
 
+type Symbols map[string]struct{}
+
 // Mapping represents an object with a file path and an ordered collection of column names.
 type Mapping struct {
 	Name    string   `json:"Name"`
@@ -14,7 +16,7 @@ type Mapping struct {
 type ProcessorInput struct {
 	Path            string
 	Name            string
-	Symbols         []CSVRecord
+	Symbols         Symbols
 	NewColumnsNames []string
 }
 
