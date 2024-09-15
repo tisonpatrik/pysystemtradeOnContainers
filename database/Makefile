@@ -1,4 +1,4 @@
-.PHONY: build run stop migration_up migration_down force_version clean seed_config_data
+.PHONY: build run stop migration_up migration_down force_version clean seed_config_data seed_raw_data
 
 # Load environment variables from .env file
 include .env
@@ -34,7 +34,14 @@ clean:
 
 # Seed the database with CSV config data
 seed_config_data:
-	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_config FROM '/data/config_data/instrumentconfig.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_metadata FROM '/data/config_data/moreinstrumentinfo.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/config_data/rollconfig.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i timescale_container psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/config_data/spreadcosts.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_config FROM '/data/config_data/instrumentconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_metadata FROM '/data/config_data/moreinstrumentinfo.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/config_data/rollconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/config_data/spreadcosts.csv' DELIMITER ',' CSV HEADER"
+
+# Seed the database with CSV raw data
+seed_raw_data:
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY adjusted_prices FROM '/data/raw_data/adjusted_prices.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY fx_prices FROM '/data/raw_data/fx_prices.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY multiple_prices FROM '/data/raw_data/multiple_prices.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_calendars FROM '/data/raw_data/roll_calendars.csv' DELIMITER ',' CSV HEADER"

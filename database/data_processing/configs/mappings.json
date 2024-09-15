@@ -60,7 +60,7 @@
     ]
   },
   {
-    "Name": "roll_calendar.csv",
+    "Name": "roll_calendars.csv",
     "Path": "database/data/temp/roll_calendars_csv",
     "Columns": ["time", "current_contract", "next_contract", "carry_contract"]
   }
