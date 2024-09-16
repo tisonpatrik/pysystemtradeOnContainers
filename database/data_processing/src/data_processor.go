@@ -1,15 +1,27 @@
 package src
 
 import (
+	"bufio"
 	"fmt"
 	"main/src/config_data_processing"
 	"main/src/data_downloader"
 	"main/src/models"
 	"main/src/raw_data_processing"
 	"main/src/utils"
+	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
+
+// askForConfirmation prompts the user with a yes/no question and returns true for "y" or false for "n".
+func askForConfirmation() bool {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Directory already exists. Do you want to overwrite it? (y/N): ")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(strings.ToLower(input))
+	return input == "y"
+}
 
 // ProcessData processes the data in the downloaded directories based on the mappings.
 func ProcessData(dirPath string) error {
@@ -18,6 +30,20 @@ func ProcessData(dirPath string) error {
 	mappings, err := utils.LoadJSONfile("database/data_processing/configs/mappings.json")
 	if err != nil {
 		return fmt.Errorf("error loading mappings: %w", err)
+	}
+
+	// Check if config data directory exists
+	configExist, err := utils.DirExists("database/data/config_data")
+	if err != nil {
+		return err
+	}
+
+	// If directory exists, ask for confirmation to overwrite
+	if configExist {
+		if !askForConfirmation() {
+			fmt.Println("Operation canceled. Directory will not be overwritten.")
+			return nil
+		}
 	}
 
 	// Download required data

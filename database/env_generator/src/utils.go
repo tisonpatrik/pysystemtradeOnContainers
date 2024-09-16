@@ -18,8 +18,11 @@ func GetProjectRoot() (string, error) {
 	// Get the directory of the executable
 	executableDir := filepath.Dir(executablePath)
 
-	// Return the parent directory of the executable's directory (which is the project root)
-	projectRoot := filepath.Dir(executableDir)
+	// Get the parent directory of the executable's directory
+	parentDir := filepath.Dir(executableDir)
+
+	// Return the grandparent directory (which is two levels up from the executable)
+	projectRoot := filepath.Dir(parentDir)
 	return projectRoot, nil
 }
 

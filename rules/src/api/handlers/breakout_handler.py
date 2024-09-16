@@ -13,11 +13,10 @@ class BreakoutHandler:
 
     async def get_breakout_async(self, symbol: str, speed: int) -> pd.Series:
         try:
-            self.logger.info(f"Calculating Breakout rule for {symbol} by speed {speed}")
+            self.logger.info("Calculating Breakout rule for %s by speed %d", symbol, speed)
             daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
             breakout = self.breakout_service.calculate_breakout(daily_prices, speed)
-            breakout = breakout.dropna()
-            return breakout
-        except Exception as e:
-            self.logger.error(f"Error calculating breakout rule for {symbol} by speed {speed}: {str(e)}")
-            raise e
+            return breakout.dropna()
+        except Exception:
+            self.logger.exception("Error calculating breakout rule for %s by speed %d", symbol, speed)
+            raise

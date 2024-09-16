@@ -1,9 +1,0 @@
-FROM timescale/timescaledb:latest-pg16
-
-ARG DB_USER
-ARG DB_NAME
-
-ENV POSTGRES_USER=${DB_USER}
-ENV POSTGRES_DB=${DB_NAME}
-
-EXPOSE 5432

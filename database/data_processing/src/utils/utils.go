@@ -153,3 +153,16 @@ func LoadJSONfile(filePath string) ([]models.Mapping, error) {
 
 	return records, nil
 }
+
+// DirExists checks if a directory exists and is indeed a directory.
+func DirExists(dirPath string) (bool, error) {
+	info, err := os.Stat(dirPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, fmt.Errorf("error checking if directory exists: %w", err)
+	}
+
+	return info.IsDir(), nil
+}

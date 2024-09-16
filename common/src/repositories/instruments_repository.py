@@ -22,8 +22,8 @@ class InstrumentsRepository:
             if point_size is None:
                 raise ValueError(f"No data found for symbol {symbol}")
             return point_size
-        except Exception as e:
-            self.logger.error(f"Database error when fetching point size for symbol {symbol}: {e}")
+        except Exception:
+            self.logger.exception("Database error when fetching point size for symbol '%s'", symbol)
             raise
 
     async def get_asset_class_async(self, symbol: str) -> AssetClass:
@@ -34,16 +34,15 @@ class InstrumentsRepository:
             if asset_class is None:
                 raise ValueError(f"No data found for symbol {symbol}")
             return asset_class
-        except Exception as e:
-            self.logger.error(f"Database error when fetching asset class for symbol {symbol}: {e}")
+        except Exception:
+            self.logger.exception("Database error when fetching asset class for symbol '%s'", symbol)
             raise
 
     async def get_instruments_for_asset_class_async(self, asset_class: str) -> list:
         statement = GetInstrumentsForAssetClass(symbol=asset_class)
         try:
             instruments_data = await self.repository.fetch_many_async(statement)
-            instruments = [to_pydantic(instrument, Instrument) for instrument in instruments_data]
-            return instruments
-        except Exception as e:
-            self.logger.error(f"Database error when fetching instruments for asset class {asset_class}: {e}")
+            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
+        except Exception:
+            self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
             raise

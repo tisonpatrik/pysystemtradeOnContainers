@@ -8,6 +8,8 @@ init:
 	@database/env_generator/main
 	@echo "Processing data..."
 	@database/data_processing/main
+	@echo "Running the app..."
+	@$(MAKE) run  # Call the run method from this Makefile
 	@echo "Migrating database to version $(VERSION)..."
 	@$(MAKE) -C database migrate_to_version "VERSION=3"
 	@echo "Seeding config data..."
@@ -21,6 +23,8 @@ init:
 clean:
 	@$(MAKE) -C database clean
 
+migrate:
+	@$(MAKE) -C database migrate_up
 
 dev:
 	@docker compose -f docker-compose.yml up --build
