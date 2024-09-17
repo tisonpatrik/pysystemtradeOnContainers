@@ -24,7 +24,7 @@ async def get_all_rules(rules_handler: RulesManagerHandler = Depends(get_rules_h
         logger.info("Successfully fetched all rules")
         return rules
     except HTTPException as e:
-        logger.error(f"Error fetching all rules, Error: {str(e)}")
+        logger.exception("Error fetching all rules")
         return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
@@ -35,25 +35,10 @@ async def get_all_rules(rules_handler: RulesManagerHandler = Depends(get_rules_h
 )
 async def create_rule(command: Rule = Depends(), rules_handler: RulesManagerHandler = Depends(get_rules_handler)):
     try:
-        logger.info(f"Creating rule with details: {command.model_dump()}")
+        logger.info("Creating rule with details %s", command.model_dump())
         await rules_handler.create_rule_async(command)
-        logger.info(f"Successfully created rule: {command.model_dump()}")
+        logger.info("Successfully created rule %s", command.model_dump())
         return {"message": "Rule created successfully"}
     except HTTPException as e:
-        logger.error(f"Error creating rule {command.model_dump()}, Error: {str(e)}")
-        return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
-
-
-@router.delete(
-    "/delete_rule/{rule_id}",
-    status_code=status.HTTP_204_NO_CONTENT,
-    name="Delete Rule",
-)
-async def delete_rule(command: Rule = Depends(), rules_handler: RulesManagerHandler = Depends(get_rules_handler)):
-    try:
-        logger.info(f"Deleting rule with details: {command.model_dump()}")
-        await rules_handler.delete_rule_async(command)
-        logger.info(f"Successfully deleted rule: {command.model_dump()}")
-    except HTTPException as e:
-        logger.error(f"Error deleting rule {command.model_dump()}, Error: {str(e)}")
+        logger.exception("Error creating rule %s", command.model_dump())
         return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -30,7 +30,7 @@ func SetupEnv() error {
 // getEnvVariables prompts the user for all required environment variables and returns them as a map.
 func getEnvVariables() map[string]string {
 	return map[string]string{
-		"DB_NAME":     promptEnvVariable("DB_NAME", "postgres_db"),
+		"DB_NAME":     promptEnvVariable("DB_NAME", "postgres"),
 		"DB_USER":     promptEnvVariable("DB_USER", "postgres"),
 		"DB_PASSWORD": promptEnvVariable("DB_PASSWORD", "postgres"),
 		"DB_HOST":     promptEnvVariable("DB_HOST", "postgres"),

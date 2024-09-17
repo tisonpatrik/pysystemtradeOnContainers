@@ -15,12 +15,11 @@ class AccelHandler:
 
     async def get_accel_async(self, symbol: str, speed: int) -> pd.Series:
         try:
-            self.logger.info(f"Calculating Accel rule for {symbol} by speed {speed}")
+            self.logger.info("Calculating Accel rule for %s by speed %d", symbol, speed)
             daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
             vol = await self.risk_client.get_daily_retuns_vol_async(symbol)
             accel = self.accel_service.calculate_accel(daily_prices, vol, speed)
-            accel = accel.dropna()
-            return accel
-        except Exception as e:
-            self.logger.error(f"Error calculating accel rule for {symbol} by speed {speed}: {str(e)}")
-            raise e
+            return accel.dropna()
+        except Exception:
+            self.logger.exception("Error calculating accel rule for %s by speed %d", symbol, speed)
+            raise

@@ -2,9 +2,6 @@ from typing import Any
 
 from asyncpg.pool import Pool
 
-from common.src.database.base_statements.delete_statement import (
-    DeleteStatement,
-)
 from common.src.database.base_statements.fetch_statement import FetchStatement
 from common.src.database.base_statements.insert_statement import (
     InsertManyStatement,
@@ -22,20 +19,18 @@ class Repository:
         try:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
-                record = await prepared_stmt.fetchrow(*statement.parameters)
-                return record
-        except Exception as e:
-            self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
+                return await prepared_stmt.fetchrow(*statement.parameters)
+        except Exception:
+            self.logger.exception("Failed to fetch data with query %s", statement.query)
             raise
 
     async def fetch_many_async(self, statement: FetchStatement) -> list:
         try:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
-                records = await prepared_stmt.fetch(*statement.parameters)
-                return records
-        except Exception as e:
-            self.logger.error(f"Failed to fetch data with query '{statement.query}': {e}")
+                return await prepared_stmt.fetch(*statement.parameters, timeout=60)
+        except Exception:
+            self.logger.exception("Failed to fetch data with query %s", statement.query)
             raise
 
     async def insert_dataframe_async(self, statement: InsertManyStatement) -> None:
@@ -46,16 +41,12 @@ class Repository:
         try:
             async with self.pool.acquire() as connection:
                 for i in range(0, len(records), batch_size):
-                    batch_records = records[i:i + batch_size]
+                    batch_records = records[i : i + batch_size]
                     async with connection.transaction():
-                        await connection.copy_records_to_table(
-                            table_name=table_name,
-                            records=batch_records,
-                            columns=columns
-                        )
-                    self.logger.info(f"Inserted batch {i//batch_size + 1} with {len(batch_records)} records into {table_name}")
-        except Exception as e:
-            self.logger.error(f"Failed to insert data into the database: {str(e)}")
+                        await connection.copy_records_to_table(table_name=table_name, records=batch_records, columns=columns)
+                    self.logger.info("Inserted batch %s with %u records into %v", i // batch_size + 1, len(batch_records), table_name)
+        except Exception:
+            self.logger.exception("Failed to insert data into the database")
             raise
 
     async def insert_item_async(self, statement: InsertStatement) -> None:
@@ -64,17 +55,6 @@ class Repository:
         try:
             async with self.pool.acquire() as connection, connection.transaction():
                 await connection.execute(query, *values)
-        except Exception as e:
-            self.logger.error(f"Failed to insert data into the database: {str(e)}")
-            raise
-
-    async def delete_item_async(self, statement: DeleteStatement) -> None:
-        query = statement.get_delete_query()
-        values = statement.get_values()
-        try:
-            async with self.pool.acquire() as connection, connection.transaction():
-                await connection.execute(query, *values)
-                self.logger.info(f"Successfully deleted record from {statement._table_name} with condition: {statement._condition.json()}")
-        except Exception as e:
-            self.logger.error(f"Failed to delete data from the database: {str(e)}")
+        except Exception:
+            self.logger.exception("Failed to insert data into the database")
             raise

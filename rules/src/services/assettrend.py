@@ -14,9 +14,8 @@ class AssettrendService:
             Lslow = Lfast * 4
             vol_days = 35
             vol = robust_vol_calc(price, vol_days)
-            forecast = ewmac(price, vol, Lfast, Lslow)
 
-            return forecast
-        except Exception as e:
-            self.logger.error(f"An error occurred: {e}")
+            return ewmac(price, vol, Lfast, Lslow)
+        except Exception:
+            self.logger.exception("An error occurred")
             raise

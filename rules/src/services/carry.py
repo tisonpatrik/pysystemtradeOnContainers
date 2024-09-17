@@ -11,9 +11,8 @@ class CarryService:
     def calculate_raw_carry(self, daily_ann_roll: pd.Series, vol: pd.Series) -> pd.Series:
         try:
             ann_stdev = vol * get_root_bdays_inyear()
-            raw_carry = daily_ann_roll / ann_stdev
-            return raw_carry
+            return daily_ann_roll / ann_stdev
 
-        except Exception as e:
-            self.logger.error(f"An error occurred: {e}")
+        except Exception:
+            self.logger.exception("An error occurred")
             raise

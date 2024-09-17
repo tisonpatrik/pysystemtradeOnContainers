@@ -9,9 +9,7 @@ def robust_daily_vol_given_price(price: pd.Series, **kwargs):
     price = resample_prices_to_business_day_index(price)
     daily_returns = price.diff()
 
-    vol = robust_vol_calc(daily_returns, **kwargs)
-
-    return vol
+    return robust_vol_calc(daily_returns, **kwargs)
 
 
 def robust_vol_calc(
@@ -100,10 +98,7 @@ def apply_vol_floor(
     vol_min.iloc[0] = 0.0
     vol_min = vol_min.bfill()
 
-    # apply the vol floor
-    vol_floored = np.maximum(vol, vol_min)
-
-    return vol_floored  # type: ignore
+    return np.maximum(vol, vol_min)  # type: ignore
 
 
 def backfill_vol(vol: pd.Series) -> pd.Series:
@@ -111,6 +106,5 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
     # backfill, eg before any value available
 
     vol_forward_fill = vol.ffill()
-    vol_backfilled = vol_forward_fill.bfill()
 
-    return vol_backfilled
+    return vol_forward_fill.bfill()

@@ -17,8 +17,7 @@ class BreakoutService:
 
             # gives a nice natural scaling
             output = 40.0 * ((price - roll_mean) / (roll_max - roll_min))
-            smoothed_output = output.ewm(span=smooth, min_periods=np.ceil(smooth / 2.0)).mean()
-            return smoothed_output
-        except Exception as e:
-            self.logger.error("Error occurred in breakout calculation: %s", str(e))
+            return output.ewm(span=smooth, min_periods=np.ceil(smooth / 2.0)).mean()
+        except Exception:
+            self.logger.exception("Error occurred in breakout calculation")
             raise

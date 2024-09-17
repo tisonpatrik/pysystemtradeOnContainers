@@ -12,9 +12,8 @@ class AccelService:
         try:
             Lslow = Lfast * 4
             ewmac_signal = ewmac(price, vol, Lfast, Lslow)
-            accel = ewmac_signal - ewmac_signal.shift(Lfast)
-            return accel
+            return ewmac_signal - ewmac_signal.shift(Lfast)
 
-        except Exception as e:
-            self.logger.error(f"An error occurred: {e}")
+        except Exception:
+            self.logger.exception("An error occurred")
             raise

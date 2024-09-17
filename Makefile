@@ -7,7 +7,7 @@ init:
 	@echo "Initializing environment..."
 	@database/env_generator/main
 	@echo "Processing data..."
-	@database/data_processing/main
+	@set -e; database/data_processing/main  # If this fail, stop the process
 	@echo "Running the app..."
 	@$(MAKE) run  # Call the run method from this Makefile
 	@echo "Migrating database to version $(VERSION)..."

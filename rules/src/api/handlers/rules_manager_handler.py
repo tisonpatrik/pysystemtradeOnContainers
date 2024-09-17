@@ -4,7 +4,6 @@ from common.src.logging.logger import AppLogger
 from common.src.utils.convertors import to_pydantic
 from common.src.validation.rule import Rule
 from rules.src.validation.create_rule import CreateRule
-from rules.src.validation.delete_rule import DeleteRule
 
 
 class RulesManagerHandler:
@@ -16,24 +15,15 @@ class RulesManagerHandler:
         try:
             statement = CreateRule(rule)
             await self.repository.insert_item_async(statement)
-        except Exception as e:
-            self.logger.error(f"Error creating rule, Error: {str(e)}")
-            raise e
+        except Exception:
+            self.logger.exception("Error creating rule")
+            raise
 
     async def get_all_rules_async(self):
         try:
             statement = GetAllRules()
             rules_data = await self.repository.fetch_many_async(statement)
-            rules = [to_pydantic(rule_data, Rule) for rule_data in rules_data]
-            return rules
-        except Exception as e:
-            self.logger.error(f"Error fetching all rules, Error: {str(e)}")
-            raise e
-
-    async def delete_rule_async(self, rule: Rule):
-        try:
-            statement = DeleteRule(rule)
-            await self.repository.delete_item_async(statement)
-        except Exception as e:
-            self.logger.error(f"Error deleting rule, Error: {str(e)}")
-            raise e
+            return [to_pydantic(rule_data, Rule) for rule_data in rules_data]
+        except Exception:
+            self.logger.exception("Error fetching all rules")
+            raise

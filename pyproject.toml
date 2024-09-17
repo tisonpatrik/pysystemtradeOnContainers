@@ -120,6 +120,9 @@ docstring-code-format = true
 # enabled.
 docstring-code-line-length = "dynamic"
 
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Form", "fastapi.File"]
+
 [tool.mypy]
 plugins = ["pydantic.mypy", "pandera.mypy"]
 ignore_missing_imports = true

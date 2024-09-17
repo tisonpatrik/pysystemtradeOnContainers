@@ -15,17 +15,16 @@ class FxService:
             end_date = datetime.now()
             default_rate = 1.0
             dates = pd.date_range(start=start_date, freq="B", end=end_date)
-            rate_series = pd.Series(np.full(len(dates), default_rate), index=dates)
-            return rate_series
-        except Exception as e:
-            self.logger.error(f"Failed to generate default rate series: {e}")
+            return pd.Series(np.full(len(dates), default_rate), index=dates)
+        except Exception:
+            self.logger.exception("Failed to generate default rate series")
             raise
 
     def calculate_inversion(self, fx_prices: pd.Series) -> pd.Series:
         try:
             return 1.0 / fx_prices
-        except Exception as e:
-            self.logger.error(f"Error inverting FX prices: {e}")
+        except Exception:
+            self.logger.exception("Error inverting FX prices")
             raise
 
     def calculate_fx_cross(self, fx_prices1: pd.Series, fx_prices2: pd.Series) -> pd.Series:
@@ -33,6 +32,6 @@ class FxService:
             (aligned_c1, aligned_c2) = fx_prices1.align(fx_prices2, join="outer")
             fx_rate_series = aligned_c1.ffill() / aligned_c2.ffill()
             return fx_rate_series.dropna()
-        except Exception as e:
-            self.logger.error(f"Error calculating FX cross rate: {e}")
+        except Exception:
+            self.logger.exception("Error calculating FX cross rate")
             raise

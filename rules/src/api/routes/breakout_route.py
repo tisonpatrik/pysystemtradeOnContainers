@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
@@ -21,14 +20,16 @@ async def get_breakout_for_instrument_async(
     breakout_handler: BreakoutHandler = Depends(get_breakout_handler),
 ):
     try:
-        breakout = await breakout_handler.get_breakout_async(query.symbol, query.speed)
-        return jsonable_encoder(breakout)
+        result = await breakout_handler.get_breakout_async(query.symbol, query.speed)
+        if result is None:
+            raise HTTPException(status_code=404, detail="No data found for the given parameters")
+        return result
     except HTTPException as e:
-        logger.error(f"An error occurred while trying to calculate breakout for symbol {query.symbol}. Error: {e.detail}")
-        return {"error": e.detail, "status_code": e.status_code}
+        logger.exception("An error occurred while trying to calculate breakout for symbol %s. Error: %s", query.symbol, e.detail)
+        raise
     except ValidationError as e:
-        logger.error(f"Validation error for symbol. Error: {e.json()}")
-        return {"error": "Validation error", "details": e.errors(), "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY}
-    except Exception as e:
-        logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.exception("Validation error for symbol. Error: %s", e.json())
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation error") from None
+    except Exception:
+        logger.exception("Unhandled exception for symbol %s", query.symbol)
+        raise HTTPException(status_code=500, detail="Internal server error") from None

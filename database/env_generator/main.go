@@ -6,6 +6,7 @@ import (
 	"main/src"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -24,12 +25,12 @@ func main() {
 	// Check if .env file already exists
 	if src.FileExists(envFilePath) {
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print(".env file already exists. Do you want to overwrite it? (Y/n): ")
+		fmt.Print(".env file already exists. Do you want to overwrite it? (y/N): ")
 		overwrite, _ := reader.ReadString('\n')
-		overwrite = src.TrimSpace(overwrite)
+		overwrite = strings.TrimSpace(overwrite)
 
-		// If the user presses Enter or types "Y/y", we proceed with overwriting
-		if overwrite != "" && (overwrite != "Y" && overwrite != "y") {
+		// If the user presses Enter or types anything other than "Y" or "y", we skip overwriting
+		if overwrite == "" || (overwrite != "Y" && overwrite != "y") {
 			fmt.Println("Skipping .env file creation.")
 			return
 		}
