@@ -5,7 +5,7 @@ class GetDailyPriceQuery(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
         SELECT time, price
-        FROM adjusted_prices
+        FROM daily_adjusted_prices
         WHERE symbol = $1
         """
         self._parameters = (symbol,)

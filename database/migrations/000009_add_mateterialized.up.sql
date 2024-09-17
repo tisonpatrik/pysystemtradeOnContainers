@@ -7,9 +7,3 @@ SELECT
   last(price, time) AS last_price
 FROM adjusted_prices
 GROUP BY symbol, day_bucket;
-
--- Add continuous aggregate policy to refresh every hour
-SELECT add_continuous_aggregate_policy('daily_adjusted_prices',
-  start_offset => INTERVAL '1 month',
-  end_offset   => INTERVAL '1 day',
-  schedule_interval => INTERVAL '1 hour');
