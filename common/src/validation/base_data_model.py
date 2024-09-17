@@ -18,7 +18,6 @@ class BaseDataFrameModel(DataFrameModel, Generic[T]):
     def from_cache_to_series(cls: type[T], items: dict, values_column: str) -> pd.Series:
         try:
             data = pd.DataFrame(list(items.items()), columns=[index_column, values_column])
-            print(values_column)
             data[index_column] = pd.to_numeric(data[index_column])
             data[index_column] = pd.to_datetime(data[index_column], unit="s")
             validated_data = cls.validate(data)

@@ -1,5 +1,6 @@
+from typing import Annotated
+
 from pydantic import BaseModel, NonNegativeInt, StringConstraints
-from typing_extensions import Annotated
 
 
 class Rule(BaseModel):

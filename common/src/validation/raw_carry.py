@@ -1,10 +1,13 @@
-from pandera import Field
-from pandera.dtypes import Float, Timestamp, Int
+from typing import TypeVar
+
 import pandas as pd
-from typing import TypeVar, Type, List
+from pandera import Field
+from pandera.dtypes import Float, Int, Timestamp
+
 from common.src.validation.base_data_model import BaseDataFrameModel
 
-T = TypeVar('T', bound='RawCarry')
+T = TypeVar("T", bound="RawCarry")
+
 
 class RawCarry(BaseDataFrameModel[T]):
     time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
@@ -14,5 +17,5 @@ class RawCarry(BaseDataFrameModel[T]):
     carry_contract: Int = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_db_to_dataframe(cls: Type[T], items: List[dict]) -> pd.DataFrame:
+    def from_db_to_dataframe(cls: type[T], items: list[dict]) -> pd.DataFrame:
         return super().from_db_to_dataframe(items)

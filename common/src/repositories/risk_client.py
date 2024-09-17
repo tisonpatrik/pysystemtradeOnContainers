@@ -1,6 +1,7 @@
+import asyncio
+
 import httpx
 import pandas as pd
-from fastapi import HTTPException
 
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
@@ -32,28 +33,32 @@ class RiskClient:
             vol = DailyReturnsVol.from_api_to_series(vol_data)
 
             cache_set_statement = SetDailyReturnsVolCache(vol=vol, instrument_code=instrument_code)
-            await self.redis_repository.set_cache(cache_set_statement)
+            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+
+            # Optional: add a callback to handle task completion
+            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
             return vol
-        except Exception as e:
-            self.logger.exception(f"Error fetching daily returns vol rate for {instrument_code}: {e!s}")
-            raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")
+        except Exception:
+            self.logger.exception("Error fetching daily returns vol rate for %s", instrument_code)
+            raise
 
     async def get_normalized_prices_for_asset_class_async(self, instrument_code: str, asset_class: str) -> pd.Series:
         query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
         try:
             vol_data = await self.client.get_data_async(query)
-            vol = NormalizedPricesForAssetClass.from_api_to_series(vol_data)
-            return vol
+            return NormalizedPricesForAssetClass.from_api_to_series(vol_data)
 
         except httpx.HTTPStatusError as http_exc:
-            self.logger.error(
-                f"HTTP error occurred while fetching data for {instrument_code}: {http_exc.response.status_code} - {http_exc.response.text}"
+            self.logger.exception(
+                "HTTP error occurred while fetching data for %s: %s - %s",
+                instrument_code,
+                http_exc.response.status_code,
+                http_exc.response.text,
             )
-            raise HTTPException(status_code=http_exc.response.status_code, detail=f"HTTP error: {http_exc.response.text}")
-        except httpx.RequestError as req_exc:
-            self.logger.error(f"Request error occurred while fetching data for {instrument_code}: {req_exc}")
-            raise HTTPException(status_code=500, detail=f"Request error: {req_exc}")
-        except Exception as e:
-            self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {e!s}")
-            self.logger.debug(e, exc_info=True)  # Log the full stack trace for debugging
-            raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")
+            raise
+        except httpx.RequestError:
+            self.logger.exception("Request error occurred while fetching data for %s", instrument_code)
+            raise
+        except Exception:
+            self.logger.exception("Error fetching daily returns vol rate for %s", instrument_code)
+            raise

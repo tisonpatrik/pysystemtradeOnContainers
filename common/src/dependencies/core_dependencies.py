@@ -5,8 +5,9 @@ from common.src.http_client.rest_client import RestClient
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
-from common.src.repositories.risk_client import RiskClient
 from common.src.repositories.raw_data_client import RawDataClient
+from common.src.repositories.risk_client import RiskClient
+
 
 def get_db_repository(request: Request) -> Repository:
     return Repository(request.app.state.async_pool)
@@ -38,6 +39,7 @@ def get_risk_client(
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> RiskClient:
     return RiskClient(rest_client=rest_client, redis_repository=redis_repository)
+
 
 def get_raw_data_client(
     rest_client: RestClient = Depends(get_client),

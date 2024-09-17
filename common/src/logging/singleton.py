@@ -7,7 +7,7 @@ has only one instance and provides a global point to access it.
 """
 
 from threading import Lock
-from typing import Any, Type
+from typing import Any
 
 
 class SingletonMeta(type):
@@ -15,7 +15,7 @@ class SingletonMeta(type):
     This is a thread-safe implementation of Singleton.
     """
 
-    _instances: dict[Type[Any], Any] = {}
+    _instances: dict[type[Any], Any] = {}
 
     _lock: Lock = Lock()
 

@@ -25,9 +25,7 @@ def apply_vol_floor(
     vol_min = vol_min.bfill()
 
     # apply the vol floor
-    vol_floored = np.maximum(vol, vol_min)
-
-    return vol_floored  # type: ignore
+    return np.maximum(vol, vol_min)  # type: ignore
 
 
 def backfill_vol(vol: pd.Series) -> pd.Series:
@@ -35,8 +33,7 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
     # backfill, eg before any value available
 
     vol_forward_fill = vol.ffill()
-    vol_backfilled = vol_forward_fill.bfill()
-    return vol_backfilled
+    return vol_forward_fill.bfill()
 
 
 def mixed_vol_calc(
@@ -98,9 +95,8 @@ def mixed_vol_calc(
 
 def simple_ewvol_calc(daily_returns: pd.Series, days: int = 35, min_periods: int = 10) -> pd.Series:
     # Standard deviation will be nan for first 10 non nan values
-    vol = daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
-    return vol
+    return daily_returns.ewm(adjust=True, span=days, min_periods=min_periods).std()
+
 
 def daily_returns(daily_prices: pd.Series) -> pd.Series:
-  dailyreturns = daily_prices.diff()
-  return dailyreturns
+    return daily_prices.diff()
