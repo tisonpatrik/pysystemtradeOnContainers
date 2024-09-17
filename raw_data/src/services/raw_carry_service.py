@@ -23,8 +23,8 @@ class RawCarryService:
             unique_differential = pd.Series(data=unique_differential.values, index=raw_carry.time)
             self.logger.info("Successfully calculated roll differentials.")
             return unique_differential
-        except Exception as e:
-            self.logger.error(f"Error in get_roll_differentials: {e}")
+        except Exception:
+            self.logger.exception("Error in get_roll_differentials")
             raise
 
     def raw_futures_roll(self, raw_carry: pd.DataFrame) -> pd.Series:
@@ -36,19 +36,17 @@ class RawCarryService:
             raw_roll = uniquets_series(raw_roll)
             self.logger.info("Successfully calculated raw futures roll.")
             return raw_roll
-        except Exception as e:
-            self.logger.error(f"Error in raw_futures_roll: {e}")
+        except Exception:
+            self.logger.exception("Error in raw_futures_roll")
             raise
 
     def _price_contract_as_year_frac(self, raw_data: pd.DataFrame) -> pd.Series:
         price_contract_as_float = raw_data.price_contract.astype(float)
-        price_contract_as_float = self._total_year_frac_from_contract_series(price_contract_as_float)
-        return price_contract_as_float
+        return self._total_year_frac_from_contract_series(price_contract_as_float)
 
     def _carry_contract_as_year_frac(self, raw_data: pd.DataFrame) -> pd.Series:
         carry_contract_as_float = raw_data.carry_contract.astype(float)
-        carry_contract_as_float = self._total_year_frac_from_contract_series(carry_contract_as_float)
-        return carry_contract_as_float
+        return self._total_year_frac_from_contract_series(carry_contract_as_float)
 
     def _total_year_frac_from_contract_series(self, contract_as_float: pd.Series) -> pd.Series:
         years_from_contract_series = contract_as_float.floordiv(10000)

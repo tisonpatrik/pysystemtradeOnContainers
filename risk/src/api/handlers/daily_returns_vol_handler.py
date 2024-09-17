@@ -13,10 +13,9 @@ class DailyReturnsVolHandler:
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         try:
-            self.logger.info(f"Starting to get daily returns volatility for {symbol}.")
+            self.logger.info("Starting to get daily returns volatility for %s.", symbol)
             daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
-            daily_returns_vol = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
-            return daily_returns_vol
-        except Exception as e:
-            self.logger.error(f"Error in processing instrument volatility: {str(e)}")
-            raise e
+            return self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
+        except Exception:
+            self.logger.exception("Error in processing instrument volatility")
+            raise

@@ -1,7 +1,9 @@
+from typing import Annotated
+
 from pydantic import StringConstraints
-from typing_extensions import Annotated
 
 from common.src.http_client.requests.fetch_request import FetchRequest
+
 
 class GetDailyAnnualisedRollQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=10)]

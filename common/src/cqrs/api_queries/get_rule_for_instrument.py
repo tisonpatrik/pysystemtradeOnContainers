@@ -1,5 +1,6 @@
+from typing import Annotated
+
 from pydantic import NonNegativeInt, StringConstraints
-from typing_extensions import Annotated
 
 from common.src.http_client.requests.fetch_request import FetchRequest
 

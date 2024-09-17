@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_forecast_for_symbol_query import GetForecastForSymbolQuery
@@ -17,19 +16,21 @@ logger = AppLogger.get_instance().get_logger()
     name="Get raw forecast",
 )
 async def get_forecast_for_instrument_async(
-    query: GetForecastForSymbolQuery = Depends(),
+    request: GetForecastForSymbolQuery = Depends(),
     instrument_vol_handler: RawForecastHandler = Depends(get_raw_forecast_handler),
 ):
     try:
-        forecast = await instrument_vol_handler.get_raw_forecast_async(query)
-        logger.info(f"Successfully fetched forecast: {forecast}")
-        return jsonable_encoder(forecast)
+        result = await instrument_vol_handler.get_raw_forecast_async(request)
+        if result is None:
+            raise HTTPException(status_code=404, detail="No data found for the given parameters")
+        return result
+
     except HTTPException as e:
-        logger.error(f"An error occurred while trying to fetch forecast. Error: {e.detail}")
-        return {"error": e.detail, "status_code": e.status_code}
+        logger.exception("An error occurred while trying to get forecast for symbol %s. Error: %s", request.symbol, e.detail)
+        raise
     except ValidationError as e:
-        logger.error(f"Validation error for symbol. Error: {e.json()}")
-        return {"error": "Validation error", "details": e.errors(), "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY}
-    except Exception as e:
-        logger.error(f"Unhandled exception for forecast: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.exception("Validation error for symbol. Error: %s", e.json())
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation error") from None
+    except Exception:
+        logger.exception("Unhandled exception for symbol %s", request.symbol)
+        raise HTTPException(status_code=500, detail="Internal server error") from None

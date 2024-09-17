@@ -26,44 +26,57 @@ class AggregatedReturnsForAssetClassHandler:
         self.redis_repository = redis_repository
 
     async def get_aggregated_returns_for_asset_class_async(self, asset_class: str) -> pd.Series:
-        cache_statement = GetAggregatedReturnsForAssetClassCache(asset_class)
         try:
-            cached_data = await self.redis_repository.get_cache(cache_statement)
-            if cached_data is not None:
-                return AggregatedReturnsForAssetClass.from_cache_to_series(cached_data)
+            cached_returns = await self._get_cached_aggregated_returns(asset_class)
+            if cached_returns is not None:
+                return cached_returns
 
-            instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class)
+            instruments = await self._get_instruments_for_asset_class(asset_class)
+            aggregate_returns = await self._fetch_returns_for_instruments(instruments)
 
-            if not instruments:
-                self.logger.warning("No instruments found for asset class: %s", asset_class)
-                raise ValueError(f"No instruments found for asset class: {asset_class}")
-
-            aggregate_returns_across_instruments_list = []
-
-            for instrument_code in instruments:
-                try:
-                    self.logger.info("Fetching returns for instrument: %s", instrument_code.symbol)
-                    returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns(instrument_code.symbol)
-                    if returns is not None:
-                        aggregate_returns_across_instruments_list.append(returns)
-                except Exception:
-                    self.logger.exception("Error fetching returns for instrument %s", instrument_code.symbol)
-
-            if not aggregate_returns_across_instruments_list:
-                self.logger.warning("No returns data found for asset class: %s", asset_class)
-                raise ValueError(f"No returns data found for asset class: {asset_class}")
-
-            aggregate_returns_across_instruments = pd.concat(aggregate_returns_across_instruments_list, axis=1)
-
-            median_returns = aggregate_returns_across_instruments.median(axis=1)
-            self.logger.info("Successfully aggregated returns for asset class: %s", asset_class)
-
-            cache_set_statement = SetAggregatedReturnsForAssetClassCache(returns=median_returns, asset_class=asset_class)
-            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            median_returns = self._calculate_median_returns(aggregate_returns)
+            self._cache_aggregated_returns(median_returns, asset_class)
 
             return median_returns
 
         except Exception:
-            self.logger.exception("Error in get_aggregated_returns_across_instruments for asset class: %s", asset_class)
+            self.logger.exception("Error aggregating returns for asset class: %s", asset_class)
             raise
+
+    async def _get_cached_aggregated_returns(self, asset_class: str) -> pd.Series | None:
+        cache_statement = GetAggregatedReturnsForAssetClassCache(asset_class)
+        cached_data = await self.redis_repository.get_cache(cache_statement)
+        if cached_data is not None:
+            self.logger.info("Cache hit for asset class: %s", asset_class)
+            return AggregatedReturnsForAssetClass.from_cache_to_series(cached_data)
+        return None
+
+    async def _get_instruments_for_asset_class(self, asset_class: str) -> list:
+        instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class)
+        if not instruments:
+            self.logger.warning("No instruments found for asset class: %s", asset_class)
+            raise ValueError(f"No instruments found for asset class: {asset_class}")
+        return instruments
+
+    async def _fetch_returns_for_instruments(self, instruments: list) -> list:
+        aggregate_returns = []
+        for instrument in instruments:
+            try:
+                self.logger.info("Fetching returns for instrument: %s", instrument.symbol)
+                returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns(instrument.symbol)
+                if returns is not None:
+                    aggregate_returns.append(returns)
+            except Exception:
+                self.logger.exception("Error fetching returns for instrument: %s", instrument.symbol)
+        if not aggregate_returns:
+            raise ValueError("No returns data found for instruments")
+        return aggregate_returns
+
+    def _calculate_median_returns(self, aggregate_returns: list) -> pd.Series:
+        aggregated_data = pd.concat(aggregate_returns, axis=1)
+        return aggregated_data.median(axis=1)
+
+    def _cache_aggregated_returns(self, median_returns: pd.Series, asset_class: str) -> None:
+        cache_statement = SetAggregatedReturnsForAssetClassCache(returns=median_returns, asset_class=asset_class)
+        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
+        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
