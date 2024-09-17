@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
+from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
@@ -13,16 +13,26 @@ logger = AppLogger.get_instance().get_logger()
 @router.get(
     "/get_normalized_prices_for_asset_class/",
     status_code=status.HTTP_200_OK,
-    name="Get Normalized Price For Asset Class",
+    name="Get normalized price for asset class",
 )
 async def get_normalized_prices_for_asset_class(
     query: GetNormalizedPriceForAssetClassQuery = Depends(),
     normalizedPriceHandler: NormalizedPricesForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
 ):
     try:
-        logger.info(f"Fetching normalized prices for asset class for symbol: {query.symbol}")
-        normalized_price = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
-        return jsonable_encoder(normalized_price)
+        result = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
+        if result is None:
+            raise HTTPException(status_code=404, detail="No data found for the given parameters")
+        return result
+
     except HTTPException as e:
-        logger.error(f"Error fetching normalized prices for asset class for symbol: {query.symbol}, Error: {str(e)}")
-        return {"message": "Internal server error", "error": str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR
+        logger.exception(
+            "An error occurred while trying to get normalized price for asset class for symbol %s. Error: %s", query.symbol, e.detail
+        )
+        raise
+    except ValidationError as e:
+        logger.exception("Validation error for symbol. Error: %s", e.json())
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation error") from None
+    except Exception:
+        logger.exception("Unhandled exception for symbol %s", query.symbol)
+        raise HTTPException(status_code=500, detail="Internal server error") from None

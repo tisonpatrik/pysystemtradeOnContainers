@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class SetCacheStatement(ABC):
     """Abstract class for setting cache key and value."""
 
@@ -12,13 +13,11 @@ class SetCacheStatement(ABC):
     @abstractmethod
     def cache_key(self) -> str:
         """Abstract property to return the cache key."""
-        pass
 
     @property
     @abstractmethod
     def cache_value(self) -> dict:
         """Abstract property to return the cache value."""
-        pass
 
     @property
     def time_to_live(self) -> int:

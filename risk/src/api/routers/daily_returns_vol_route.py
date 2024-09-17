@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
@@ -21,14 +20,17 @@ async def get_daily_returns_vol(
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ):
     try:
-        daily_returns_vol = await daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
-        return jsonable_encoder(daily_returns_vol)
+        result = await daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
+        if result is None:
+            raise HTTPException(status_code=404, detail="No data found for the given parameters")
+        return result
+
     except HTTPException as e:
-        logger.error(f"An error occurred while trying to fetch daily returns vol for symbol {query.symbol}. Error: {e.detail}")
-        return {"error": e.detail, "status_code": e.status_code}
+        logger.exception("An error occurred while trying to get daily returns volatility for symbol %s. Error: %s", query.symbol, e.detail)
+        raise
     except ValidationError as e:
-        logger.error(f"Validation error for symbol. Error: {e.json()}")
-        return {"error": "Validation error", "details": e.errors(), "status_code": status.HTTP_422_UNPROCESSABLE_ENTITY}
-    except Exception as e:
-        logger.error(f"Unhandled exception for symbol {query.symbol}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.exception("Validation error for symbol. Error: %s", e.json())
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation error") from None
+    except Exception:
+        logger.exception("Unhandled exception for symbol %s", query.symbol)
+        raise HTTPException(status_code=500, detail="Internal server error") from None
