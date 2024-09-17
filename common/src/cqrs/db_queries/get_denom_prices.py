@@ -2,14 +2,14 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
 class GetDenomPriceQuery(FetchStatement):
-	def __init__(self, symbol: str):
-		self._query = """
-        SELECT time, price
-        FROM multiple_prices
+    def __init__(self, symbol: str):
+        self._query = """
+        SELECT day_bucket, last_price
+        FROM daily_denom_prices
         WHERE symbol = $1
         """
-		self._parameters = (symbol,)
+        self._parameters = (symbol,)
 
-	@property
-	def parameters(self) -> tuple:
-		return self._parameters
+    @property
+    def parameters(self) -> tuple:
+        return self._parameters

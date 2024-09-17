@@ -12,8 +12,7 @@ class DailyVolnormalizedReturnsService:
         try:
             returnvol = returnvol_data.shift(1)
             dailyreturns = daily_returns(prices)
-            norm_return = dailyreturns / returnvol
-            return norm_return
-        except Exception as e:
-            self.logger.error(f"Unexpected error occurred while calculating Daily volatility normalized returns: {e}")
-            raise RuntimeError(f"An unexpected error occurred: {e}")
+            return dailyreturns / returnvol
+        except Exception:
+            self.logger.exception("Unexpected error occurred while calculating Daily volatility normalized returns")
+            raise

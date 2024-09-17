@@ -9,8 +9,7 @@ class CumulativeDailyVolNormalizedReturnsService:
 
     def get_cumulative_daily_vol_normalized_returns(self, norm_returns: pd.Series) -> pd.Series:
         try:
-            cum_norm_returns = norm_returns.cumsum()
-            return cum_norm_returns
-        except Exception as e:
-            self.logger.error(f"Unexpected error occurred while calculating Cumulative Daily volatility normalized returns: {e}")
-            raise RuntimeError(f"An unexpected error occurred: {e}")
+            return norm_returns.cumsum()
+        except Exception:
+            self.logger.exception("Unexpected error occurred while calculating Cumulative Daily volatility normalized returns")
+            raise

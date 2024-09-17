@@ -12,18 +12,18 @@ class RestClient:
 
     async def get_data_async(self, request: FetchRequest) -> dict:
         try:
-            response = await self.client.get(request.url_string, params=request.params, timeout=10.0)
+            response = await self.client.get(request.url_string, params=request.params, timeout=20.0)
             response.raise_for_status()
             self.logger.info("GET request successful")
             return response.json()
         except httpx.HTTPStatusError as exc:
-            self.logger.error(f"HTTP error occurred: {exc.response.status_code} - {exc.response.text}")
+            self.logger.exception("HTTP error occurred: %s - %s", exc.response.status_code, exc.response.text)
             raise
         except httpx.RequestError as exc:
-            self.logger.error(f"An error occurred while requesting {exc.request.url!r}: {exc}")
+            self.logger.exception("An error occurred while requesting %r", exc.request.url)
             raise
-        except Exception as e:
-            self.logger.error(f"Failed to complete GET request: {e}")
+        except Exception:
+            self.logger.exception("Failed to complete GET request")
             raise
 
     async def post_data_async(self, request: PostRequest) -> dict:
@@ -33,11 +33,11 @@ class RestClient:
             self.logger.info("POST request successful")
             return response.json()
         except httpx.HTTPStatusError as exc:
-            self.logger.error(f"HTTP error occurred: {exc.response.status_code} - {exc.response.text}")
+            self.logger.exception("HTTP error occurred: %s - %s", exc.response.status_code, exc.response.text)
             raise
         except httpx.RequestError as exc:
-            self.logger.error(f"An error occurred while requesting {exc.request.url!r}: {exc}")
+            self.logger.exception("An error occurred while requesting %r", exc.request.url)
             raise
-        except Exception as e:
-            self.logger.error(f"Failed to complete POST request: {e}")
+        except Exception:
+            self.logger.exception("Failed to complete POST request")
             raise

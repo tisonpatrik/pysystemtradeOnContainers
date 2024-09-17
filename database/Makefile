@@ -20,7 +20,7 @@ migrate_to_version:
 	@$(MIGRATE_CMD) -verbose goto $(VERSION)
 
 # Force the database version (fix dirty database state)
-force_version:
+migrate_force:
 	@$(MIGRATE_CMD) -verbose force $(VERSION)
 
 # Clean migration state

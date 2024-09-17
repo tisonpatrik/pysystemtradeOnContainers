@@ -7,9 +7,10 @@ init:
 	@echo "Initializing environment..."
 	@database/env_generator/main
 	@echo "Processing data..."
-	@set -e; database/data_processing/main  # If this fail, stop the process
+	@set -e; database/data_processing/main  # If this fails, stop the process
 	@echo "Running the app..."
 	@$(MAKE) run  # Call the run method from this Makefile
+	@sleep 10  # Add a 10-second timeout
 	@echo "Migrating database to version $(VERSION)..."
 	@$(MAKE) -C database migrate_to_version "VERSION=3"
 	@echo "Seeding config data..."
@@ -19,6 +20,7 @@ init:
 	@echo "Running remaining migrations...This will also feel like eternity."
 	@$(MAKE) -C database migrate_up
 	@echo "Initialization complete!"
+
 
 clean:
 	@$(MAKE) -C database clean

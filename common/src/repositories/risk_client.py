@@ -19,29 +19,24 @@ class RiskClient:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_daily_retuns_vol_async(self, instrument_code: str) -> pd.Series:
-        self.logger.info(f"Fetching daily returns vol rate for {instrument_code}")
+        self.logger.info("Fetching daily returns vol rate for %s", instrument_code)
 
         cache_statement = GetDailyReturnsVolCache(instrument_code)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                series = DailyReturnsVol.from_cache_to_series(cached_data)
-                return series
+                return DailyReturnsVol.from_cache_to_series(cached_data)
 
             query = GetDailyReturnsVolQuery(symbol=instrument_code)
             vol_data = await self.client.get_data_async(query)
             vol = DailyReturnsVol.from_api_to_series(vol_data)
 
-            cache_set_statement = SetDailyReturnsVolCache(
-                vol=vol,
-                instrument_code=instrument_code
-            )
+            cache_set_statement = SetDailyReturnsVolCache(vol=vol, instrument_code=instrument_code)
             await self.redis_repository.set_cache(cache_set_statement)
             return vol
         except Exception as e:
-            self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {str(e)}")
+            self.logger.exception(f"Error fetching daily returns vol rate for {instrument_code}: {e!s}")
             raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")
-
 
     async def get_normalized_prices_for_asset_class_async(self, instrument_code: str, asset_class: str) -> pd.Series:
         query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
@@ -59,6 +54,6 @@ class RiskClient:
             self.logger.error(f"Request error occurred while fetching data for {instrument_code}: {req_exc}")
             raise HTTPException(status_code=500, detail=f"Request error: {req_exc}")
         except Exception as e:
-            self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {str(e)}")
+            self.logger.error(f"Error fetching daily returns vol rate for {instrument_code}: {e!s}")
             self.logger.debug(e, exc_info=True)  # Log the full stack trace for debugging
             raise HTTPException(status_code=500, detail="Error in fetching daily returns vol rate")

@@ -1,4 +1,4 @@
--- Create continuous aggregate view for multiple_prices
+-- Create continuous aggregate view for daily_denom_prices
 CREATE MATERIALIZED VIEW daily_denom_prices
 WITH (timescaledb.continuous) AS
 SELECT

@@ -14,10 +14,8 @@ class DailyReturnsVolService:
             vol_multiplier = 1
             raw_vol = mixed_vol_calc(price_returns)
 
-            vol = vol_multiplier * raw_vol
-            return vol
+            return vol_multiplier * raw_vol
 
-        except Exception as error:
-            error_message = f"An error occurred during the processing: {error}"
-            self.logger.error(error_message)
-            raise ValueError(error_message)
+        except Exception:
+            self.logger.exception("Unexpected error occurred while calculating daily returns volatility")
+            raise

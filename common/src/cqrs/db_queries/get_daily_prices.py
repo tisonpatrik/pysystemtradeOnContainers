@@ -4,7 +4,7 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 class GetDailyPriceQuery(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
-        SELECT time, price
+        SELECT day_bucket, last_price
         FROM daily_adjusted_prices
         WHERE symbol = $1
         """
