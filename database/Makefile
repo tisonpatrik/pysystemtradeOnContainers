@@ -4,7 +4,7 @@ include ../.env
 export
 
 # Define MIGRATE_CMD with sslmode=disable for reuse
-MIGRATE_CMD = docker run -v ./migrations/:/migrations --network grayfox_default migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
+MIGRATE_CMD = docker run -v ./migrations/:/migrations --network pysystemtradeoncontainers_default migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
 
 .PHONY:create_env
 create_env:
@@ -36,10 +36,10 @@ clean:
 
 .PHONY:seed_config_data
 seed_config_data:
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_config FROM '/data/config_data/instrumentconfig.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_metadata FROM '/data/config_data/moreinstrumentinfo.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/config_data/rollconfig.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/config_data/spreadcosts.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_config FROM '/data/csvconfig/instrumentconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY instrument_metadata FROM '/data/csvconfig/moreinstrumentinfo.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/csvconfig/rollconfig.csv' DELIMITER ',' CSV HEADER"
+	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/csvconfig/spreadcosts.csv' DELIMITER ',' CSV HEADER"
 
 .PHONY:seed_raw_data
 seed_raw_data:
