@@ -1,7 +1,8 @@
 [
   {
     "Name": "instrumentconfig.csv",
-    "Path": "database/data/temp/csvconfig",
+    "Path": "/data/temp/csvconfig",
+    "Output": "/data/csvconfig",
     "Columns": [
       "symbol",
       "description",
@@ -16,12 +17,14 @@
   },
   {
     "Name": "moreinstrumentinfo.csv",
-    "Path": "database/data/temp/csvconfig",
+    "Path": "/data/temp/csvconfig",
+    "Output": "/data/csvconfig",
     "Columns": ["symbol", "asset_class", "sub_class"]
   },
   {
     "Name": "rollconfig.csv",
-    "Path": "database/data/temp/csvconfig",
+    "Path": "/data/temp/csvconfig",
+    "Output": "/data/csvconfig",
     "Columns": [
       "symbol",
       "hold_roll_cycle",
@@ -33,22 +36,26 @@
   },
   {
     "Name": "spreadcosts.csv",
-    "Path": "database/data/temp/csvconfig",
+    "Path": "/data/temp/csvconfig",
+    "Output": "/data/csvconfig",
     "Columns": ["symbol", "spread_costs"]
   },
   {
     "Name": "adjusted_prices.csv",
-    "Path": "database/data/temp/adjusted_prices_csv",
+    "Path": "/data/temp/adjusted_prices_csv",
+    "Output": "/data/raw_data",
     "Columns": ["time", "price"]
   },
   {
     "Name": "fx_prices.csv",
-    "Path": "database/data/temp/fx_prices_csv",
+    "Path": "/data/temp/fx_prices_csv",
+    "Output": "/data/raw_data",
     "Columns": ["time", "price"]
   },
   {
     "Name": "multiple_prices.csv",
-    "Path": "database/data/temp/multiple_prices_csv",
+    "Path": "/data/temp/multiple_prices_csv",
+    "Output": "/data/raw_data",
     "Columns": [
       "time",
       "carry",
@@ -61,7 +68,8 @@
   },
   {
     "Name": "roll_calendars.csv",
-    "Path": "database/data/temp/roll_calendars_csv",
+    "Path": "/data/temp/roll_calendars_csv",
+    "Output": "/data/raw_data",
     "Columns": ["time", "current_contract", "next_contract", "carry_contract"]
   }
 ]

@@ -27,13 +27,13 @@ func askForConfirmation() bool {
 func ProcessData(dirPath string) error {
 
 	// Load mappings from JSON
-	mappings, err := utils.LoadJSONfile("database/data_processing/configs/mappings.json")
+	mappings, err := utils.LoadJSONfile(dirPath + "/data_processing/configs/mappings.json")
 	if err != nil {
 		return fmt.Errorf("error loading mappings: %w", err)
 	}
 
 	// Check if config data directory exists
-	configExist, err := utils.DirExists("database/data/config_data")
+	configExist, err := utils.DirExists(dirPath + "/data/csvconfig")
 	if err != nil {
 		return err
 	}
@@ -52,14 +52,14 @@ func ProcessData(dirPath string) error {
 	}
 
 	// Load symbols from CSV
-	symbols, err := utils.ReadSymbolsFromCSV("database/data_processing/configs/tradable_instruments.csv")
+	symbols, err := utils.ReadSymbolsFromCSV(dirPath + "/data_processing/configs/tradable_instruments.csv")
 	if err != nil {
 		return err
 	}
 
 	// Define and execute processors
 	processors := defineProcessors()
-	if err := processMappingsConcurrently(mappings, symbols, processors); err != nil {
+	if err := processMappingsConcurrently(dirPath, mappings, symbols, processors); err != nil {
 		return err
 	}
 	return nil
@@ -77,7 +77,7 @@ func defineProcessors() map[string]models.ProcessorFunc {
 }
 
 // processMappingsConcurrently processes each mapping concurrently using goroutines.
-func processMappingsConcurrently(mappings []models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
+func processMappingsConcurrently(dirPath string, mappings []models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
 	var wg sync.WaitGroup
 	errChan := make(chan error, len(mappings)) // Buffered error channel
 	sem := make(chan struct{}, 10)             // Semaphore to limit the number of concurrent goroutines
@@ -90,7 +90,7 @@ func processMappingsConcurrently(mappings []models.Mapping, symbols models.Symbo
 			sem <- struct{}{}        // Acquire semaphore to limit concurrency
 			defer func() { <-sem }() // Release semaphore
 
-			if err := processMapping(record, symbols, processors); err != nil {
+			if err := processMapping(dirPath, record, symbols, processors); err != nil {
 				errChan <- err
 			}
 		}(record)
@@ -115,7 +115,7 @@ func processMappingsConcurrently(mappings []models.Mapping, symbols models.Symbo
 }
 
 // processMapping processes an individual mapping.
-func processMapping(record models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
+func processMapping(dirPath string, record models.Mapping, symbols models.Symbols, processors map[string]models.ProcessorFunc) error {
 	baseDir := filepath.Base(record.Path)
 	processor, exists := processors[baseDir]
 	if !exists {
@@ -124,7 +124,8 @@ func processMapping(record models.Mapping, symbols models.Symbols, processors ma
 	}
 
 	input := models.ProcessorInput{
-		Path:            record.Path,
+		InputPath:       dirPath + record.Path,
+		OutputPath:      dirPath + record.Output,
 		Name:            record.Name,
 		Symbols:         symbols,
 		NewColumnsNames: record.Columns,

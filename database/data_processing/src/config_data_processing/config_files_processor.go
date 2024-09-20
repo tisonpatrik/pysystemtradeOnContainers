@@ -13,13 +13,12 @@ import (
 // CSVConfigProcessor processes a single CSV file, filters rows based on the provided symbols, and writes the result to a new file.
 func CSVConfigProcessor(input models.ProcessorInput) error {
 	// Ensure the output directory exists
-	outputDir := filepath.Join("database/data", "config_data")
-	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
-		return fmt.Errorf("failed to create directory: %w", err)
+	err := os.MkdirAll(input.OutputPath, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("error creating output directory %s: %w", input.OutputPath, err)
 	}
-
 	// Open the CSV file
-	file, err := utils.OpenCSVFile(input.Path, strings.TrimSuffix(input.Name, ".csv"))
+	file, err := utils.OpenCSVFile(input.InputPath, strings.TrimSuffix(input.Name, ".csv"))
 	if err != nil {
 		return fmt.Errorf("error opening CSV file %s: %w", input.Name, err)
 	}
@@ -34,7 +33,7 @@ func CSVConfigProcessor(input models.ProcessorInput) error {
 	}
 
 	// Write the filtered data to a new CSV file
-	outputPath := filepath.Join(outputDir, input.Name)
+	outputPath := filepath.Join(input.OutputPath, input.Name)
 	if err := utils.WriteCSVFile(outputPath, input.NewColumnsNames, filteredRecords); err != nil {
 		return fmt.Errorf("error writing filtered CSV: %w", err)
 	}

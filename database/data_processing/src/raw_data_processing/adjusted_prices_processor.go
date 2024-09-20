@@ -24,7 +24,7 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
 			defer func() { <-sem }() // Release semaphore after processing
 
-			df, err := processSingleAdjustedPriceCSV(input.Path, symbol)
+			df, err := processSingleAdjustedPriceCSV(input.InputPath, symbol)
 			if err != nil {
 				fmt.Println("Error processing CSV:", err)
 				return
@@ -45,16 +45,17 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 		mergedData = append(mergedData, df.Records...)
 	}
 
-	// Ensure the directory exists before writing the final merged CSV
-	outputDir := filepath.Join("database/data", "raw_data")
-	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
-		return fmt.Errorf("failed to create directory: %w", err)
+	// Write the final merged CSV to the specified directory and with the specified name
+	outputPath := filepath.Join(input.OutputPath, input.Name)
+	columns := append(input.NewColumnsNames, "symbol")
+
+	// Ensure the output directory exists
+	err := os.MkdirAll(input.OutputPath, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("error creating output directory %s: %w", input.OutputPath, err)
 	}
 
-	// Write the final merged CSV to the specified directory and with the specified name
-	outputPath := filepath.Join(outputDir, input.Name)
-	columns := append(input.NewColumnsNames, "symbol")
-	err := utils.WriteCSVFile(outputPath, columns, mergedData)
+	err = utils.WriteCSVFile(outputPath, columns, mergedData)
 	if err != nil {
 		return err
 	}

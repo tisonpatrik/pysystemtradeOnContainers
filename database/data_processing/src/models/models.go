@@ -9,12 +9,14 @@ type Symbols map[string]struct{}
 type Mapping struct {
 	Name    string   `json:"Name"`
 	Path    string   `json:"Path"`
+	Output  string   `json:"Output"`
 	Columns []string `json:"Columns"`
 }
 
 // Struct for input to processor functions
 type ProcessorInput struct {
-	Path            string
+	InputPath       string
+	OutputPath      string
 	Name            string
 	Symbols         Symbols
 	NewColumnsNames []string
