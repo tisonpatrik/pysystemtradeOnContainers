@@ -1,18 +1,45 @@
-FROM python:3.12-alpine AS base
+FROM python:3.12-slim AS base
 
-RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache curl git build-base \
-    && rm -rf /var/cache/apk/*
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONOPTIMIZE=2
 
-# Setting the working directory in the container
-WORKDIR /home/app
+RUN apt update && \
+    apt upgrade -y && \
+    apt clean && \
+    rm -rf /var/cache/apt/*
+
+FROM base AS uv
+ENV UV_PYTHON_PREFERENCE=only-system
+ENV UV_PYTHON_DOWNLOADS=never
+ENV UV_NO_CACHE=1
+ENV UV_PROJECT_ENVIRONMENT=/usr/local/
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+ENV PATH="/root/.local/bin:${PATH}"
+
+FROM uv AS dev
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen # --no-install-project
+
+FROM uv AS prod
+ENV UV_COMPILE_BYTECODE=1
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+
+RUN uv sync --no-dev --locked
 
 COPY common/ ./common
-
 COPY risk/ ./risk
 COPY .env ./
 
-RUN pip install --no-cache-dir -r risk/requirements.txt
+# Set a non-root user for security
+RUN adduser --disabled-password --gecos '' myuser
 
-CMD ["uvicorn", "risk.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Ensure /app directory exists and set ownership to myuser
+RUN chown -R myuser:myuser /app
+
+USER myuser
+
+CMD ["uvicorn", "risk.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
