@@ -19,7 +19,6 @@ class PositionsHandler:
     async def get_subsystem_position_async(self, request: GetSubsystemPositionForInstrument) -> pd.Series:
         try:
             self.logger.info("Starting to get average position at subsystem level.")
-            # avg_abs_forecast = request.avarage_absolute_forecas
 
             fx_rate = await self.get_fx_rates_async(request.symbol, request.base_currency)
             instr_ccy_vol = await self.get_instrument_volatility_async(request.symbol)
@@ -30,12 +29,6 @@ class PositionsHandler:
             )
             vol_scalar = cash_vol_target / instr_value_vol
 
-            # forecast = self.get_combined_forecast3(request.instrument_code)
-            # vol_scalar_r33eindexed = vol_scalar.reindex(forecast.index, method="ffill")
-            # subsystem_position_raw = vol_scalar_reindexed * forecast / avg_abs_forecast
-            # subsystem_position = self._apply_long_only_constraint_to_position(
-            #     positions=subsystem_position_raw, instrument_code=request.instrument_code
-            # )
             self.logger.info("Successfully computed average position.")
             return vol_scalar
         except Exception:

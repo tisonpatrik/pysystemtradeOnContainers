@@ -4,8 +4,8 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 class GetAssetClass(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
-        SELECT asset_class 
-        FROM instrument_config 
+        SELECT asset_class
+        FROM instrument_config
         WHERE symbol = $1
         """
         self._parameters = (symbol,)

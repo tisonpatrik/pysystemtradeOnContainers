@@ -5,6 +5,7 @@ import asyncpg
 from fastapi import FastAPI
 
 from common.src.database.db_settings import get_settings
+from common.src.dependencies.errors.dependencies_errors import DatabaseInitializationError
 from common.src.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()
@@ -31,9 +32,12 @@ async def setup_async_database(app: FastAPI):
         )
         logger.info("Asyncpg connection pool initialized successfully.")
         yield
-    except Exception:
-        logger.exception("Failed to initialize Asyncpg connection pool")
-        raise
+    except asyncpg.PostgresError as e:
+        logger.exception("Postgres error during Asyncpg connection pool initialization.")
+        raise DatabaseInitializationError("Postgres error during database initialization.") from e
+    except Exception as e:
+        logger.exception("Unexpected error during Asyncpg connection pool initialization.")
+        raise DatabaseInitializationError("Unexpected error during database initialization.") from e
     finally:
         await app.state.async_pool.close()  # type: ignore
         logger.info("Asyncpg connection pool closed successfully.")

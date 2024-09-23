@@ -1,6 +1,7 @@
 .PHONY: cheers
 cheers:
 	@echo "Na zdraví! 🍺🍺🍺🍺🍺"
+
 .PHONY: init
 init:
 	@echo "Initializing environment..."

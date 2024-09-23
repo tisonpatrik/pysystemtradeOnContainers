@@ -27,9 +27,7 @@ class AppLogger(metaclass=SingletonMeta):
         if not self._logger.hasHandlers():
             # Initialize and set the RichConsoleHandler
             rich_handler = RichConsoleHandler()
-            rich_handler.setFormatter(
-                logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
-            )
+            rich_handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
             self._logger.addHandler(rich_handler)
 
     def get_logger(self):
@@ -47,6 +45,4 @@ class RichConsoleHandler(RichHandler):
 
     def __init__(self, width=200, style=None, **kwargs):
         """Initialize the RichConsoleHandler."""
-        super().__init__(
-            console=Console(color_system="256", width=width, style=style), **kwargs
-        )
+        super().__init__(console=Console(color_system="256", width=width, style=style), **kwargs)

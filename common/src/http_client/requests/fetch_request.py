@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 
 class FetchRequest(BaseModel, ABC):
-
     @property
     @abstractmethod
     def url_string(self) -> str:

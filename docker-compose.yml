@@ -10,8 +10,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./raw_data:/home/app/raw_data
-      - ./common:/home/app/common
+      - ./raw_data:/app/raw_data
+      - ./common:/app/common
 
   risk:
     build:
@@ -24,8 +24,8 @@ services:
     ports:
       - "8100:8000"
     volumes:
-      - ./risk:/home/app/risk
-      - ./common:/home/app/common
+      - ./risk:/app/risk
+      - ./common:/app/common
 
   rules:
     build:
@@ -38,8 +38,8 @@ services:
     ports:
       - "8200:8000"
     volumes:
-      - ./rules:/home/app/rules
-      - ./common:/home/app/common
+      - ./rules:/app/rules
+      - ./common:/app/common
 
   positions:
     build:
@@ -53,8 +53,8 @@ services:
     ports:
       - "8300:8000"
     volumes:
-      - ./positions:/home/app/positions
-      - ./common:/home/app/common
+      - ./positions:/app/positions
+      - ./common:/app/common
 
   forecast:
     build:
@@ -67,8 +67,8 @@ services:
     ports:
       - "8400:8000"
     volumes:
-      - ./forecast:/home/app/forecast
-      - ./common:/home/app/common
+      - ./forecast:/app/forecast
+      - ./common:/app/common
 
   db_postgres:
     image: timescale/timescaledb:latest-pg16

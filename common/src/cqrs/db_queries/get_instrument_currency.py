@@ -2,7 +2,6 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
 class GetInstrumentCurrency(FetchStatement):
-
     def __init__(self, symbol: str):
         self._query = """
         SELECT currency

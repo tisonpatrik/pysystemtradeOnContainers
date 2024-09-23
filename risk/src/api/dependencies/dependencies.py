@@ -33,15 +33,15 @@ async def get_daily_returns_vol_handler(
 ) -> DailyReturnsVolHandler:
     return DailyReturnsVolHandler(prices_repository=prices_repository)
 
+
 def get_daily_vol_normalized_returns_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> DailyvolNormalizedReturnsHandler:
     return DailyvolNormalizedReturnsHandler(
-        prices_repository=prices_repository,
-        daily_returns_vol_handler=daily_returns_vol_handler,
-        redis_repository=redis_repository)
+        prices_repository=prices_repository, daily_returns_vol_handler=daily_returns_vol_handler, redis_repository=redis_repository
+    )
 
 
 def get_aggregated_returns_for_asset_class_handler(
@@ -52,14 +52,15 @@ def get_aggregated_returns_for_asset_class_handler(
     return AggregatedReturnsForAssetClassHandler(
         instrument_repository=instrument_repository,
         daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
-        redis_repository=redis_repository
+        redis_repository=redis_repository,
     )
+
 
 def get_normalized_price_for_asset_class_handler(
     daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
-    aggregated_returns_for_asset_class_handler: AggregatedReturnsForAssetClassHandler = Depends(get_aggregated_returns_for_asset_class_handler),
+    aggregated_returns_handler: AggregatedReturnsForAssetClassHandler = Depends(get_aggregated_returns_for_asset_class_handler),
 ) -> NormalizedPricesForAssetClassHandler:
     return NormalizedPricesForAssetClassHandler(
         daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
-        aggregated_returns_for_asset_class_handler=aggregated_returns_for_asset_class_handler
+        aggregated_returns_for_asset_class_handler=aggregated_returns_handler,
     )

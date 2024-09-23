@@ -7,7 +7,7 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 
 class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
     def __init__(self, instrument_code: str):
-        super().__init__(parameter = instrument_code)
+        super().__init__(parameter=instrument_code)
         self.name = "daily_vol_normalized_returns"
 
     @property

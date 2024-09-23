@@ -109,6 +109,10 @@ exclude = [
 fixable = ["ALL"]
 unfixable = []
 
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Form", "fastapi.File"]
+
+
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
 quote-style = "double"
@@ -136,9 +140,6 @@ docstring-code-format = true
 # This only has an effect when the `docstring-code-format` setting is
 # enabled.
 docstring-code-line-length = "dynamic"
-
-[tool.ruff.flake8-bugbear]
-extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Form", "fastapi.File"]
 
 [tool.mypy]
 plugins = ["pydantic.mypy", "pandera.mypy"]

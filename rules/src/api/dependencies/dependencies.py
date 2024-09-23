@@ -44,7 +44,8 @@ def get_breakout_handler(
     return BreakoutHandler(prices_repository=prices_repository)
 
 
-def get_asserttrend_handler(risk_client: RiskClient = Depends(get_risk_client),
+def get_asserttrend_handler(
+    risk_client: RiskClient = Depends(get_risk_client),
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
 ) -> AssettrendHandler:
     return AssettrendHandler(risk_client=risk_client, instrument_repository=instrument_repository)

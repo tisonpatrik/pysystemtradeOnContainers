@@ -9,7 +9,7 @@ from common.src.logging.logger import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-@lru_cache()
+@lru_cache
 @asynccontextmanager
 async def setup_async_client(app: FastAPI):
     app.state.requests_client = AsyncClient()

@@ -7,12 +7,13 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 
 class GetDailyAnnualisedRollCache(GetCacheStatement):
     def __init__(self, symbol: str):
-        super().__init__(parameter = symbol)
+        super().__init__(parameter=symbol)
         self.name = "daily_annualised_roll_cache"
 
     @property
     def cache_key(self) -> str:
         return get_series_key(self.name, self.parameter)
+
 
 class SetDailyAnnualisedRollCache(SetCacheStatement):
     def __init__(self, daily_roll: pd.Series, symbol: str):

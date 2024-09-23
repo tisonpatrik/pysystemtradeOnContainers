@@ -7,12 +7,13 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 
 class GetAggregatedReturnsForAssetClassCache(GetCacheStatement):
     def __init__(self, asset_class: str):
-        super().__init__(parameter = asset_class)
+        super().__init__(parameter=asset_class)
         self.name = "aggregated_returns_for_asset_class"
 
     @property
     def cache_key(self) -> str:
         return get_series_key(self.name, self.parameter)
+
 
 class SetAggregatedReturnsForAssetClassCache(SetCacheStatement):
     def __init__(self, returns: pd.Series, asset_class: str):
