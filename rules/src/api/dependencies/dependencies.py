@@ -7,6 +7,7 @@ from common.src.dependencies.core_dependencies import (
     get_daily_prices_repository,
     get_db_repository,
     get_instruments_repository,
+    get_raw_data_client,
     get_risk_client,
 )
 from common.src.dependencies.db_setup import setup_async_database
@@ -14,10 +15,12 @@ from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
 from rules.src.api.handlers.accel_handler import AccelHandler
 from rules.src.api.handlers.assettrend_handler import AssettrendHandler
 from rules.src.api.handlers.breakout_handler import BreakoutHandler
+from rules.src.api.handlers.carry_handler import CarryHandler
 from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 
 
@@ -49,3 +52,9 @@ def get_asserttrend_handler(
     instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
 ) -> AssettrendHandler:
     return AssettrendHandler(risk_client=risk_client, instrument_repository=instrument_repository)
+
+
+def get_carry_handler(
+    risk_client: RiskClient = Depends(get_risk_client), raw_data_client: RawDataClient = Depends(get_raw_data_client)
+) -> CarryHandler:
+    return CarryHandler(risk_client=risk_client, raw_data_client=raw_data_client)

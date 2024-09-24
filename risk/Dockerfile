@@ -42,4 +42,4 @@ RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "risk.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
+CMD ["uvicorn", "risk.src.app.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]

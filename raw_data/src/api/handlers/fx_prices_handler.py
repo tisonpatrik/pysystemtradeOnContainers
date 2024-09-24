@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
-from common.src.cqrs.db_queries.get_fx_prices import GetFxPrices
+from common.src.cqrs.db_queries.get_fx_prices import GetDailyFxPrices
 from common.src.cqrs.db_queries.get_instrument_currency import GetInstrumentCurrency
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
@@ -52,7 +52,7 @@ class FxPricesHandler:
 
     async def get_standard_fx_prices_async(self, instrument_currency: str, conversion_currency: str) -> pd.Series:
         fx_code = f"{instrument_currency}{conversion_currency}"
-        statement = GetFxPrices(fx_code=fx_code)
+        statement = GetDailyFxPrices(fx_code=fx_code)
         try:
             fx_prices_data = await self.repository.fetch_many_async(statement)
             return FxPrices.from_db_to_series(fx_prices_data)

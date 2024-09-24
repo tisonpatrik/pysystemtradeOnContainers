@@ -42,4 +42,4 @@ RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "positions.src.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
+CMD ["uvicorn", "positions.src.app.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]

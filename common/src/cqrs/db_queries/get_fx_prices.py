@@ -1,11 +1,11 @@
 from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
-class GetFxPrices(FetchStatement):
+class GetDailyFxPrices(FetchStatement):
     def __init__(self, fx_code: str):
         self._query = """
-        SELECT time, price
-        FROM fx_prices
+        SELECT day_bucket, last_price
+        FROM daily_fx_prices
         WHERE symbol = $1
         """
         self._parameters = (fx_code,)

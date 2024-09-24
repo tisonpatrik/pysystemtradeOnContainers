@@ -42,8 +42,8 @@ class RiskClient:
             self.logger.exception("Error fetching daily returns vol rate for %s", instrument_code)
             raise
 
-    async def get_normalized_prices_for_asset_class_async(self, instrument_code: str, asset_class: str) -> pd.Series:
-        query = GetNormalizedPriceForAssetClassQuery(symbol=instrument_code, asset_class=asset_class)
+    async def get_normalized_prices_for_asset_class_async(self, symbol: str, asset_class: str) -> pd.Series:
+        query = GetNormalizedPriceForAssetClassQuery(symbol=symbol, asset_class=asset_class)
         try:
             vol_data = await self.client.get_data_async(query)
             return NormalizedPricesForAssetClass.from_api_to_series(vol_data)
@@ -51,14 +51,14 @@ class RiskClient:
         except httpx.HTTPStatusError as http_exc:
             self.logger.exception(
                 "HTTP error occurred while fetching data for %s: %s - %s",
-                instrument_code,
+                symbol,
                 http_exc.response.status_code,
                 http_exc.response.text,
             )
             raise
         except httpx.RequestError:
-            self.logger.exception("Request error occurred while fetching data for %s", instrument_code)
+            self.logger.exception("Request error occurred while fetching data for %s", symbol)
             raise
         except Exception:
-            self.logger.exception("Error fetching daily returns vol rate for %s", instrument_code)
+            self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
             raise
