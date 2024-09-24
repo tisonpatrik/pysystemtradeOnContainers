@@ -11,12 +11,12 @@ T = TypeVar("T", bound="DailyPrices")
 
 class DailyPrices(BaseDataFrameModel[T]):
     time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
-    vol: Float = Field(coerce=True, nullable=True)
+    price: Float = Field(coerce=True, nullable=True)
 
     @classmethod
-    def from_cache_to_series(cls: type[T], items: dict, values_column: str = "vol") -> pd.Series:
+    def from_cache_to_series(cls: type[T], items: dict, values_column: str = "price") -> pd.Series:
         return super().from_cache_to_series(items, values_column)
 
     @classmethod
-    def from_db_to_series(cls: type[T], items: list[dict], value_field: str = "vol") -> pd.Series:
+    def from_db_to_series(cls: type[T], items: list[dict], value_field: str = "price") -> pd.Series:
         return super().from_db_to_series(items, value_field)

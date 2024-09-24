@@ -36,7 +36,7 @@ def backfill_vol(vol: pd.Series) -> pd.Series:
     return vol_forward_fill.bfill()
 
 
-def mixed_vol_calc(
+def mixed_vol_calc(  # noqa: PLR0913
     daily_returns: pd.Series,
     days: int = 35,
     min_periods: int = 10,

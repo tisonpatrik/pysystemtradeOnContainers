@@ -1,7 +1,7 @@
 from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
-class GetRawCarryDataQuery(FetchStatement):
+class GetCarryDataQuery(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
            SELECT time, price, carry, price_contract, carry_contract

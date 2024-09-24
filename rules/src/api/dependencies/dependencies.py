@@ -54,7 +54,5 @@ def get_asserttrend_handler(
     return AssettrendHandler(risk_client=risk_client, instrument_repository=instrument_repository)
 
 
-def get_carry_handler(
-    risk_client: RiskClient = Depends(get_risk_client), raw_data_client: RawDataClient = Depends(get_raw_data_client)
-) -> CarryHandler:
-    return CarryHandler(risk_client=risk_client, raw_data_client=raw_data_client)
+def get_carry_handler(raw_data_client: RawDataClient = Depends(get_raw_data_client)) -> CarryHandler:
+    return CarryHandler(raw_data_client=raw_data_client)

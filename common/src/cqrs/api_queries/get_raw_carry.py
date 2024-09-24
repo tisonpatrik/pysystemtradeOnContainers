@@ -5,9 +5,9 @@ from pydantic import StringConstraints
 from common.src.http_client.requests.fetch_request import FetchRequest
 
 
-class GetDailyAnnualisedRollQuery(FetchRequest):
+class GetRawCarryQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=10)]
 
     @property
     def url_string(self) -> str:
-        return "http://raw_data:8000/daily_annualised_roll_route/get_daily_annualised_roll/"
+        return "http://raw_data:8000/raw_carry_route/get_raw_carry/"

@@ -20,7 +20,7 @@ async def get_carry_for_instrument_async(
     carry_handler: CarryHandler = Depends(get_carry_handler),
 ):
     try:
-        result = await carry_handler.get_carry_async(query.symbol)
+        result = await carry_handler.get_carry_async(query.symbol, query.speed)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result
