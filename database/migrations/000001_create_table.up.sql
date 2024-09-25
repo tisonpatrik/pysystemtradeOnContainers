@@ -1,11 +1,13 @@
+BEGIN;
+
 CREATE TABLE instrument_config (
     symbol VARCHAR PRIMARY KEY,
     description VARCHAR,
-    pointsize FLOAT,
+    pointsize NUMERIC(14, 3),
     currency VARCHAR,
     asset_class VARCHAR,
-    per_block FLOAT,
-    percentage FLOAT,
+    per_block NUMERIC(14, 3),
+    percentage NUMERIC(14, 3),
     per_trade INTEGER,
     region VARCHAR
 );
@@ -29,6 +31,8 @@ CREATE TABLE roll_config (
 
 CREATE TABLE spread_costs (
     symbol VARCHAR PRIMARY KEY,
-    spread_costs FLOAT,
+    spread_costs NUMERIC(14, 3),
     CONSTRAINT fk_symbol_spread FOREIGN KEY(symbol) REFERENCES instrument_config(symbol)
 );
+
+COMMIT;
