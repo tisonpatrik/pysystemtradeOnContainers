@@ -10,9 +10,17 @@ MIGRATE_CMD = docker run -v ./migrations/:/migrations --network pysystemtradeonc
 create_env:
 	@env_generator/main
 
+.PHONY:downoad_data
+download_data:
+	@downloader/main
+
 .PHONY:process_data
 process_data:
 	@data_processing/main
+
+.PHONY:clean_data
+clean_data:
+	@data_cleaning/main
 
 .PHONY:migrate_up
 migrate_up:

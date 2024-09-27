@@ -21,10 +21,4 @@ func main() {
 		fmt.Println("Failed to download and process the data:", err)
 		return
 	}
-
-	// Remove the temporary directory
-	if err := src.DeleteTempDirectory(rootPath); err != nil {
-		fmt.Println("Failed to delete the temporary directory:", err)
-		return
-	}
 }
