@@ -18,6 +18,11 @@ download_data:
 process_data:
 	@data_processing/main
 
+.PHONY:resample_data
+resample_data:
+	python resampling/main.py
+
+
 .PHONY:clean_data
 clean_data:
 	@data_cleaning/main
