@@ -12,7 +12,7 @@ def robust_daily_vol_given_price(price: pd.Series, **kwargs):
     return robust_vol_calc(daily_returns, **kwargs)
 
 
-def robust_vol_calc(
+def robust_vol_calc(  # noqa: PLR0913
     daily_returns: pd.Series,
     days: int = 35,
     min_periods: int = 10,

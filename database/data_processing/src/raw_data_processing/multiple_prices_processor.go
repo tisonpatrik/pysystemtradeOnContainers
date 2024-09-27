@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"main/src/models"
 	"main/src/utils"
-	"os"
 	"path/filepath"
 	"sync"
 )
@@ -37,27 +36,38 @@ func MultiplePricesProcessor(input models.ProcessorInput) error {
 		close(results)
 	}()
 
-	// Collect results and merge them
-	var mergedData []models.CSVRecord
+	// Collect results and write them in chunks of 50,000 rows
+	rowLimit := 50000
+	batchIndex := 0
+	var currentBatch []models.CSVRecord
+
 	for df := range results {
-		mergedData = append(mergedData, df.Records...)
+		currentBatch = append(currentBatch, df.Records...)
+
+		// Once we've reached 50,000 rows, write the batch to a new CSV file
+		for len(currentBatch) >= rowLimit {
+			batch := currentBatch[:rowLimit]
+			currentBatch = currentBatch[rowLimit:]
+
+			outputPath := filepath.Join(input.OutputPath, fmt.Sprintf("%s_part_%d.csv", input.Name, batchIndex))
+			err := writeBatchToCSV(outputPath, input.NewColumnsNames, batch)
+			if err != nil {
+				return err
+			}
+			batchIndex++
+		}
 	}
 
-	// Write the final merged CSV to the specified directory and with the specified name
-	outputPath := filepath.Join(input.OutputPath, input.Name)
-	columns := append(input.NewColumnsNames, "symbol")
-
-	// Ensure the output directory exists
-	err := os.MkdirAll(input.OutputPath, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("error creating output directory %s: %w", input.OutputPath, err)
+	// Write any remaining records that didn't fill up to 50,000 rows
+	if len(currentBatch) > 0 {
+		outputPath := filepath.Join(input.OutputPath, fmt.Sprintf("%s_part_%d.csv", input.Name, batchIndex))
+		err := writeBatchToCSV(outputPath, input.NewColumnsNames, currentBatch)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = utils.WriteCSVFile(outputPath, columns, mergedData)
-	if err != nil {
-		return err
-	}
-	fmt.Println(input.Name + " generation complete. Final records saved to CSV.")
+	fmt.Println(input.Name + " generation complete. Data split into multiple files.")
 	return nil
 }
 

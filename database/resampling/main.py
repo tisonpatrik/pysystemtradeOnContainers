@@ -9,7 +9,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 csv_dir = Path.cwd() / "data" / "temp" / "adjusted_prices_csv"
-out_dir = Path.cwd() / "data" / "temp" / "daily_adjusted_prices_csv"
+out_dir = Path.cwd() / "data" / "daily_adjusted_prices_csv"
 
 # Ensure the output directory exists
 out_dir.mkdir(parents=True, exist_ok=True)
@@ -33,8 +33,8 @@ def process_file(file_path):
             resampled.to_csv(out_file)
 
             logging.info("Resampled series saved to %s", out_file)
-        except Exception as e:
-            logging.exception("Failed to process %s: %s", file_path.name, str(e))
+        except Exception:
+            logging.exception("Failed to process %s", file_path.name)
 
 
 if not csv_dir.exists():

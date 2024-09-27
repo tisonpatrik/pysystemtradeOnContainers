@@ -3,6 +3,10 @@ package raw_data_processing
 import (
 	"encoding/csv"
 	"fmt"
+	"main/src/models"
+	"main/src/utils"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -58,4 +62,22 @@ func parseAndFormatInt(row []string, colIndex int) (string, error) {
 
 	// Return the integer value formatted as a string
 	return strconv.Itoa(intValue), nil
+}
+
+// writeBatchToCSV writes a batch of CSV records to a file.
+func writeBatchToCSV(outputPath string, columns []string, records []models.CSVRecord) error {
+	// Ensure the directory exists
+	dir := filepath.Dir(outputPath)
+	err := os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("error creating directory %s: %w", dir, err)
+	}
+
+	// Write the CSV file
+	columns = append(columns, "symbol")
+	err = utils.WriteCSVFile(outputPath, columns, records)
+	if err != nil {
+		return fmt.Errorf("error writing CSV file: %w", err)
+	}
+	return nil
 }

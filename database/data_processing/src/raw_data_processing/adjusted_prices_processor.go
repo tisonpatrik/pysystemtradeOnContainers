@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"main/src/models"
 	"main/src/utils"
-	"os"
 	"path/filepath"
 	"sync"
 )
 
-// AdjustedPricesProcessor processes adjusted prices based on CSV files in the directory and symbols.
+// AdjustedPricesProcessor processes adjusted prices and stores them in multiple smaller CSV files (e.g., 50,000 rows per file).
 func AdjustedPricesProcessor(input models.ProcessorInput) error {
 	var wg sync.WaitGroup
 	results := make(chan models.DataFrame, len(input.Symbols)) // Channel to collect processed data
@@ -19,10 +18,10 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 	// Iterate over symbols in the Symbols map
 	for symbol := range input.Symbols {
 		wg.Add(1)
-		go func(symbol string) { // symbol is now a string, not models.CSVRecord
+		go func(symbol string) {
 			defer wg.Done()
-			sem <- struct{}{}        // Acquire semaphore to limit concurrent goroutines
-			defer func() { <-sem }() // Release semaphore after processing
+			sem <- struct{}{}        // Acquire semaphore
+			defer func() { <-sem }() // Release semaphore
 
 			df, err := processSingleAdjustedPriceCSV(input.InputPath, symbol)
 			if err != nil {
@@ -30,7 +29,7 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 				return
 			}
 			results <- df
-		}(symbol) // Pass symbol (string) as argument to avoid closure issue
+		}(symbol)
 	}
 
 	// Wait for all goroutines to finish
@@ -39,33 +38,43 @@ func AdjustedPricesProcessor(input models.ProcessorInput) error {
 		close(results)
 	}()
 
-	// Collect results and merge them
-	var mergedData []models.CSVRecord
+	// Collect results and write them in chunks of 50,000 rows
+	rowLimit := 50000
+	batchIndex := 0
+
+	var currentBatch []models.CSVRecord
 	for df := range results {
-		mergedData = append(mergedData, df.Records...)
+		currentBatch = append(currentBatch, df.Records...)
+
+		// Once we've reached 50,000 rows, write the batch to a new CSV file
+		for len(currentBatch) >= rowLimit {
+			batch := currentBatch[:rowLimit]
+			currentBatch = currentBatch[rowLimit:]
+
+			outputPath := filepath.Join(input.OutputPath, fmt.Sprintf("%s_part_%d.csv", input.Name, batchIndex))
+			err := writeBatchToCSV(outputPath, input.NewColumnsNames, batch)
+			if err != nil {
+				return err
+			}
+			batchIndex++
+		}
 	}
 
-	// Write the final merged CSV to the specified directory and with the specified name
-	outputPath := filepath.Join(input.OutputPath, input.Name)
-	columns := append(input.NewColumnsNames, "symbol")
-
-	// Ensure the output directory exists
-	err := os.MkdirAll(input.OutputPath, os.ModePerm)
-	if err != nil {
-		return fmt.Errorf("error creating output directory %s: %w", input.OutputPath, err)
+	// Write any remaining records that didn't fill up to 50,000 rows
+	if len(currentBatch) > 0 {
+		outputPath := filepath.Join(input.OutputPath, fmt.Sprintf("%s_part_%d.csv", input.Name, batchIndex))
+		err := writeBatchToCSV(outputPath, input.NewColumnsNames, currentBatch)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = utils.WriteCSVFile(outputPath, columns, mergedData)
-	if err != nil {
-		return err
-	}
-	fmt.Println(input.Name + " generation complete. Final records saved to CSV.")
+	fmt.Println(input.Name + " generation complete. Data split into multiple files.")
 	return nil
 }
 
-// processSingleCSV reads and processes a single CSV file without changing the header (header will be added during the merge).
+// processSingleCSV reads and processes a single CSV file.
 func processSingleAdjustedPriceCSV(path string, symbol string) (models.DataFrame, error) {
-	// Step 1: Open the CSV file
 	file, err := utils.OpenCSVFile(path, symbol)
 	if err != nil {
 		return models.DataFrame{}, err
@@ -74,13 +83,11 @@ func processSingleAdjustedPriceCSV(path string, symbol string) (models.DataFrame
 
 	reader := csv.NewReader(file)
 
-	// Step 2: Read the header and find the price column index
 	priceIndex, err := readHeaderAndFindColumn(reader, "price")
 	if err != nil {
 		return models.DataFrame{}, err
 	}
 
-	// Step 3: Process all rows
 	processedRecords, err := processAdjustedPricesRows(reader, priceIndex, symbol)
 	if err != nil {
 		return models.DataFrame{}, err
@@ -100,14 +107,12 @@ func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol string
 		row, err := reader.Read()
 		if err != nil {
 			if err.Error() == "EOF" {
-				break // End of file reached
+				break
 			}
 			return nil, fmt.Errorf("failed to read row: %w", err)
 		}
 
-		// Check if the price field is empty
 		if row[priceIndex] == "" {
-			// Add the row to the list without processing the price
 			newRow := models.CSVRecord{
 				Values: append(row, symbol),
 			}
@@ -115,14 +120,12 @@ func processAdjustedPricesRows(reader *csv.Reader, priceIndex int, symbol string
 			continue
 		}
 
-		// Parse and round the price if it's not empty
 		price, err := parseAndRoundFloat(row, priceIndex, 3)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing price: %w", err)
 		}
 		row[priceIndex] = price
 
-		// Append the symbol to the row
 		newRow := models.CSVRecord{
 			Values: append(row, symbol),
 		}

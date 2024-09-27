@@ -41,19 +41,19 @@
     "Columns": ["symbol", "spread_costs"]
   },
   {
-    "Name": "adjusted_prices.csv",
+    "Name": "adjusted_prices",
     "Path": "/data/temp/adjusted_prices_csv",
     "Output": "/data/raw_data",
     "Columns": ["time", "price"]
   },
   {
-    "Name": "fx_prices.csv",
+    "Name": "fx_prices",
     "Path": "/data/temp/fx_prices_csv",
     "Output": "/data/raw_data",
     "Columns": ["time", "price"]
   },
   {
-    "Name": "multiple_prices.csv",
+    "Name": "multiple_prices",
     "Path": "/data/temp/multiple_prices_csv",
     "Output": "/data/raw_data",
     "Columns": [
@@ -67,7 +67,7 @@
     ]
   },
   {
-    "Name": "roll_calendars.csv",
+    "Name": "roll_calendars",
     "Path": "/data/temp/roll_calendars_csv",
     "Output": "/data/raw_data",
     "Columns": ["time", "current_contract", "next_contract", "carry_contract"]
