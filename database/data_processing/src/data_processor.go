@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"main/src/config_data_processing"
-	"main/src/data_downloader"
 	"main/src/models"
 	"main/src/raw_data_processing"
 	"main/src/utils"
@@ -44,11 +43,6 @@ func ProcessData(dirPath string) error {
 			fmt.Println("Operation canceled. Directory will not be overwritten.")
 			return nil
 		}
-	}
-
-	// Download required data
-	if err := data_downloader.DownloadData(dirPath); err != nil {
-		return err
 	}
 
 	// Load symbols from CSV

@@ -1,59 +1,43 @@
-WITH last_non_null_prices AS (
-  SELECT
-    symbol,
-    time_bucket(INTERVAL '1 day', time) AS day_bucket,
-    MAX(time) FILTER (WHERE price IS NOT NULL) AS last_non_null_time
-  FROM
-    adjusted_prices
-  WHERE
-    symbol = 'AEX'
-    AND EXTRACT(ISODOW FROM time) BETWEEN 1 AND 5  -- Filtruje pondělí až pátek
-  GROUP BY
-    symbol,
-    day_bucket
+WITH date_range AS (
+    SELECT
+        MIN(time::date) AS start_date,
+        MAX(time::date) AS end_date
+    FROM
+        adjusted_prices
+),
+business_days AS (
+    SELECT
+        date::date AS day
+    FROM generate_series(
+        (SELECT start_date FROM date_range),
+        (SELECT end_date FROM date_range),
+        INTERVAL '1 day'
+    ) AS date
+    WHERE EXTRACT(ISODOW FROM date) BETWEEN 1 AND 5  -- Filters Monday to Friday
+),
+symbols AS (
+    SELECT DISTINCT symbol FROM adjusted_prices
 )
 SELECT
-  l.symbol,
-  l.day_bucket,
-  ap.price AS last_price
+    s.symbol,
+    bd.day AS day_bucket,
+    sub.last_price
 FROM
-  last_non_null_prices l
-JOIN
-  adjusted_prices ap
-  ON l.symbol = ap.symbol
-  AND time_bucket(INTERVAL '1 day', ap.time) = l.day_bucket
-  AND ap.time = l.last_non_null_time
-ORDER BY
-  l.symbol,
-  l.day_bucket;
-
-
-
-  CREATE MATERIALIZED VIEW daily_denom_prices
-  WITH (timescaledb.continuous) AS
-  SELECT
-    l.symbol,
-    l.day_bucket,
-    ap.price AS last_price
-  FROM (
+    symbols s
+CROSS JOIN business_days bd
+LEFT JOIN LATERAL (
     SELECT
-      symbol,
-      time_bucket(INTERVAL '1 day', time) AS day_bucket,
-      MAX(time) FILTER (WHERE price IS NOT NULL) AS last_non_null_time
+        ap.price AS last_price
     FROM
-      multiple_prices
+        adjusted_prices ap
     WHERE
-      EXTRACT(ISODOW FROM time) BETWEEN 1 AND 5  -- Filtruje pondělí až pátek
-    GROUP BY
-      symbol,
-      day_bucket
-  ) l
-  JOIN
-    multiple_prices ap
-    ON l.symbol = ap.symbol
-    AND time_bucket(INTERVAL '1 day', ap.time) = l.day_bucket
-    AND ap.time = l.last_non_null_time
-  ORDER BY
-    l.symbol,
-    l.day_bucket
-  WITH NO DATA;
+        ap.symbol = s.symbol
+        AND ap.time::date = bd.day
+        AND ap.price IS NOT NULL
+    ORDER BY
+        ap.time DESC
+    LIMIT 1
+) sub ON TRUE
+ORDER BY
+    s.symbol,
+    bd.day;

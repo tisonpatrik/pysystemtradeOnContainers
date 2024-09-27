@@ -14,8 +14,7 @@ CREATE TABLE fx_prices (
     time TIMESTAMPTZ NOT NULL,
     price NUMERIC(14, 3) NULL,
     symbol VARCHAR NOT NULL,
-    PRIMARY KEY (time, symbol),
-    FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
+    PRIMARY KEY (time, symbol)
 );
 
 -- Create multiple_prices table with foreign key reference
