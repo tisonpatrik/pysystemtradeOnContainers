@@ -36,9 +36,9 @@ def get_rules_handler(repository: Repository = Depends(get_db_repository)) -> Ru
 
 def get_accel_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
-    risk_client: RiskClient = Depends(get_risk_client),
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> AccelHandler:
-    return AccelHandler(prices_repository=prices_repository, risk_client=risk_client)
+    return AccelHandler(prices_repository=prices_repository, raw_data_client=raw_data_client)
 
 
 def get_breakout_handler(

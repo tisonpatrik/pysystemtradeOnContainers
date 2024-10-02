@@ -10,4 +10,4 @@ class GetDailyReturnsVolQuery(FetchRequest):
 
     @property
     def url_string(self) -> str:
-        return "http://risk:8000/daily_returns_vol_route/get_daily_returns_vol/"
+        return "http://raw_data:8000/daily_returns_vol_route/get_daily_returns_vol/"

@@ -9,18 +9,16 @@ from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_repository import PricesRepository
-from risk.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from common.src.repositories.raw_data_client import RawDataClient
 from risk.src.services.daily_vol_normalized_returns_service import DailyVolnormalizedReturnsService
 from risk.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
 
 
 class DailyvolNormalizedReturnsHandler:
-    def __init__(
-        self, prices_repository: PricesRepository, daily_returns_vol_handler: DailyReturnsVolHandler, redis_repository: RedisRepository
-    ):
+    def __init__(self, prices_repository: PricesRepository, raw_data_client: RawDataClient, redis_repository: RedisRepository):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
-        self.daily_returns_vol_handler = daily_returns_vol_handler
+        self.raw_data_client = raw_data_client
         self.redis_repository = redis_repository
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()
 
@@ -32,7 +30,7 @@ class DailyvolNormalizedReturnsHandler:
             if cached_data is not None:
                 return DailyvolNormalizedReturns.from_cache_to_series(cached_data)
 
-            returnvol_data = await self.daily_returns_vol_handler.get_daily_returns_vol_async(instrument_code)
+            returnvol_data = await self.raw_data_client.get_daily_returns_vol_async(instrument_code)
             prices = await self.prices_repository.get_daily_prices_async(instrument_code)
             norm_return = self.daily_vol_normalized_returns_service.get_daily_vol_normalized_returns(prices, returnvol_data)
 

@@ -2,14 +2,20 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
-from common.src.dependencies.core_dependencies import get_daily_prices_repository, get_instruments_repository, get_redis
+from common.src.dependencies.core_dependencies import (
+    get_daily_prices_repository,
+    get_instruments_repository,
+    get_raw_data_client,
+    get_redis,
+)
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
+from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.raw_data_client import RawDataClient
 from risk.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
-from risk.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from risk.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
@@ -17,30 +23,27 @@ from risk.src.api.handlers.normalize_prices_for_asset_class_handler import Norma
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
-    async with setup_async_database(app), setup_async_redis(app):
+    async with setup_async_database(app), setup_async_redis(app), setup_async_client(app):
         yield
 
 
 async def get_instrument_vol_handler(
-    dprices_repository: PricesRepository = Depends(get_daily_prices_repository),
-    instruments_repository: InstrumentsRepository = Depends(get_instruments_repository),
-) -> InstrumentCurrencyVolHandler:
-    return InstrumentCurrencyVolHandler(prices_repository=dprices_repository, instruments_repository=instruments_repository)
-
-
-async def get_daily_returns_vol_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
-) -> DailyReturnsVolHandler:
-    return DailyReturnsVolHandler(prices_repository=prices_repository)
+    instruments_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+) -> InstrumentCurrencyVolHandler:
+    return InstrumentCurrencyVolHandler(
+        prices_repository=prices_repository, instruments_repository=instruments_repository, raw_data_client=raw_data_client
+    )
 
 
 def get_daily_vol_normalized_returns_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
-    daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> DailyvolNormalizedReturnsHandler:
     return DailyvolNormalizedReturnsHandler(
-        prices_repository=prices_repository, daily_returns_vol_handler=daily_returns_vol_handler, redis_repository=redis_repository
+        prices_repository=prices_repository, raw_data_client=raw_data_client, redis_repository=redis_repository
     )
 
 

@@ -5,7 +5,7 @@ class GetDenomPriceQuery(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
         SELECT time, price
-        FROM daily_denom_prices
+        FROM multiple_prices
         WHERE symbol = $1
         """
         self._parameters = (symbol,)

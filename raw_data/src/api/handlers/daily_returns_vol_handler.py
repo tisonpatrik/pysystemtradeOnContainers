@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 from common.src.repositories.prices_repository import PricesRepository
-from risk.src.services.daily_returns_vol_service import DailyReturnsVolService
+from raw_data.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolHandler:
