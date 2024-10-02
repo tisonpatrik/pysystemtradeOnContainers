@@ -4,7 +4,7 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 class GetDenomPriceQuery(FetchStatement):
     def __init__(self, symbol: str):
         self._query = """
-        SELECT day_bucket, last_price
+        SELECT time, price
         FROM daily_denom_prices
         WHERE symbol = $1
         """

@@ -5,21 +5,26 @@ cheers:
 .PHONY: init
 init:
 	@echo "Initializing environment..."
-	@database/env_generator/main
+	@$(MAKE) -C database create_env
 	@echo "Processing data..."
-	@set -e; database/data_processing/main  # If this fails, stop the process
+	@$(MAKE) -C database download_data
+	@$(MAKE) -C database process_data
+	@$(MAKE) -C database resample_data
 	@echo "Running the app..."
 	@$(MAKE) run  # Call the run method from this Makefile
 	@sleep 10  # Add a 10-second timeout
 	@echo "Running remaining migrations"
-	@$(MAKE) -C database migrate_to_version VERSION=8
+	@$(MAKE) -C database migrate_to_version VERSION=5
 	@echo "Seeding config data..."
 	@$(MAKE) -C database seed_config_data
 	@echo "Seeding raw data...This may take a few minutes.."
 	@$(MAKE) -C database seed_raw_data
 	@echo "Manual compresion of database...This will also feel like eternity."
 	@$(MAKE) -C database migrate_up
+	@$(MAKE) -C database clean_data
 	@echo "Initialization complete!"
+
+.PHONY: clean
 clean:
 	@$(MAKE) -C database clean
 

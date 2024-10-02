@@ -9,6 +9,15 @@ CREATE TABLE adjusted_prices (
     PRIMARY KEY (time, symbol)
 );
 
+-- Drop hypertable and recreate as regular PostgreSQL table for adjusted_prices
+DROP TABLE IF EXISTS daily_adjusted_prices;
+CREATE TABLE daily_adjusted_prices (
+    time TIMESTAMPTZ NOT NULL,
+    price NUMERIC(14, 3) NULL,
+    symbol VARCHAR NOT NULL,
+    PRIMARY KEY (time, symbol)
+);
+
 -- Drop hypertable and recreate as regular PostgreSQL table for fx_prices
 DROP TABLE IF EXISTS fx_prices;
 CREATE TABLE fx_prices (

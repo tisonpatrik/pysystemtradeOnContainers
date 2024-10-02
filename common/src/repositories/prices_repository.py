@@ -34,7 +34,6 @@ class PricesRepository:
             statement = GetDailyPriceQuery(symbol=symbol)
             prices_data = await self.repository.fetch_many_async(statement)
             raw_prices = DailyPrices.from_db_to_series(prices_data)
-            print(raw_prices)
             prices = resample_prices_to_business_day_index(raw_prices)
 
             # Store the fetched data in Redis cache in the background (fire-and-forget)

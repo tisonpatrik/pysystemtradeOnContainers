@@ -15,7 +15,6 @@ class CarryHandler:
         try:
             self.logger.info("Calculating Carry rule for %s", symbol)
             raw_carry = await self.raw_data_client.get_raw_carry_async(symbol)
-            print(raw_carry)
             return self.carry_service.calculate_raw_carry(raw_carry=raw_carry, smooth_days=smooth_days)
 
         except Exception:

@@ -43,19 +43,19 @@
   {
     "Name": "adjusted_prices",
     "Path": "/data/temp/adjusted_prices_csv",
-    "Output": "/data/raw_data",
+    "Output": "/data/raw_data/adjusted_prices",
     "Columns": ["time", "price"]
   },
   {
     "Name": "fx_prices",
     "Path": "/data/temp/fx_prices_csv",
-    "Output": "/data/raw_data",
+    "Output": "/data/raw_data/fx_prices",
     "Columns": ["time", "price"]
   },
   {
     "Name": "multiple_prices",
     "Path": "/data/temp/multiple_prices_csv",
-    "Output": "/data/raw_data",
+    "Output": "/data/raw_data/multiple_prices",
     "Columns": [
       "time",
       "carry",
@@ -69,7 +69,7 @@
   {
     "Name": "roll_calendars",
     "Path": "/data/temp/roll_calendars_csv",
-    "Output": "/data/raw_data",
+    "Output": "/data/raw_data/roll_calendars",
     "Columns": ["time", "current_contract", "next_contract", "carry_contract"]
   }
 ]

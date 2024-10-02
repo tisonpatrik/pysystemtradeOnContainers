@@ -10,7 +10,7 @@ MIGRATE_CMD = docker run -v ./migrations/:/migrations --network pysystemtradeonc
 create_env:
 	@env_generator/main
 
-.PHONY:downoad_data
+.PHONY:download_data
 download_data:
 	@downloader/main
 
@@ -54,9 +54,47 @@ seed_config_data:
 	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_config FROM '/data/csvconfig/rollconfig.csv' DELIMITER ',' CSV HEADER"
 	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY spread_costs FROM '/data/csvconfig/spreadcosts.csv' DELIMITER ',' CSV HEADER"
 
-.PHONY:seed_raw_data
+
+.PHONY: seed_raw_data
 seed_raw_data:
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY adjusted_prices FROM '/data/raw_data/adjusted_prices.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY fx_prices FROM '/data/raw_data/fx_prices.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY multiple_prices FROM '/data/raw_data/multiple_prices.csv' DELIMITER ',' CSV HEADER"
-	@docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_calendars FROM '/data/raw_data/roll_calendars.csv' DELIMITER ',' CSV HEADER"
+	@$(MAKE) seed_adjusted_prices
+	@$(MAKE) seed_daily_adjusted_prices
+	@$(MAKE) seed_multiple_prices
+	@$(MAKE) seed_fx_prices
+	@$(MAKE) seed_roll_calendars
+
+
+.PHONY: seed_adjusted_prices
+seed_adjusted_prices:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/raw_data/adjusted_prices/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY adjusted_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_daily_adjusted_prices
+seed_daily_adjusted_prices:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/daily_adjusted_prices/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY daily_adjusted_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_multiple_prices
+seed_multiple_prices:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/raw_data/multiple_prices/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY multiple_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_fx_prices
+seed_fx_prices:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/raw_data/fx_prices/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY fx_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_roll_calendars
+seed_roll_calendars:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/raw_data/roll_calendars/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY roll_calendars FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
