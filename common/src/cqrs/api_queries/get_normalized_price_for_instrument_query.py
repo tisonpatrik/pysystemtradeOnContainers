@@ -5,10 +5,9 @@ from pydantic import StringConstraints
 from common.src.http_client.requests.fetch_request import FetchRequest
 
 
-class GetNormalizedPriceForAssetClassQuery(FetchRequest):
+class GetNormalizedPriceForInstrumentQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=15)]
-    asset_class: Annotated[str, StringConstraints(max_length=15)]
 
     @property
     def url_string(self) -> str:
-        return "http://risk:8000/normalized_prices_for_asset_class_route/get_normalized_prices_for_asset_class/"
+        return "http://risk:8000/normalized_prices_for_instrument_route/get_normalized_prices_for_instrument/"

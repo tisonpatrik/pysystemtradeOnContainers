@@ -18,8 +18,7 @@ class AccelHandler:
             self.logger.info("Calculating Accel rule for %s by speed %d", symbol, speed)
             daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
             vol = await self.raw_data_client.get_daily_returns_vol_async(symbol)
-            accel = self.accel_service.calculate_accel(daily_prices, vol, speed)
-            return accel.dropna()
+            return self.accel_service.calculate_accel(daily_prices, vol, speed)
         except Exception:
             self.logger.exception("Error calculating accel rule for %s by speed %d", symbol, speed)
             raise

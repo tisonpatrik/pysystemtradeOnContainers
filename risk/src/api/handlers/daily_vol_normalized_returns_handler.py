@@ -10,8 +10,8 @@ from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_repository import PricesRepository
 from common.src.repositories.raw_data_client import RawDataClient
+from common.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
 from risk.src.services.daily_vol_normalized_returns_service import DailyVolnormalizedReturnsService
-from risk.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
 
 
 class DailyvolNormalizedReturnsHandler:
@@ -35,7 +35,7 @@ class DailyvolNormalizedReturnsHandler:
             norm_return = self.daily_vol_normalized_returns_service.get_daily_vol_normalized_returns(prices, returnvol_data)
 
             # Store the fetched data in Redis cache
-            cache_set_statement = SetDailyvolNormalizedReturnsCache(prices=prices, instrument_code=instrument_code)
+            cache_set_statement = SetDailyvolNormalizedReturnsCache(prices=prices, symbol=instrument_code)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
             cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
             return norm_return

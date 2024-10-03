@@ -21,6 +21,8 @@ from rules.src.api.handlers.accel_handler import AccelHandler
 from rules.src.api.handlers.assettrend_handler import AssettrendHandler
 from rules.src.api.handlers.breakout_handler import BreakoutHandler
 from rules.src.api.handlers.carry_handler import CarryHandler
+from rules.src.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
+from rules.src.api.handlers.momentum_handler import MomentumHandler
 from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 
 
@@ -56,3 +58,17 @@ def get_asserttrend_handler(
 
 def get_carry_handler(raw_data_client: RawDataClient = Depends(get_raw_data_client)) -> CarryHandler:
     return CarryHandler(raw_data_client=raw_data_client)
+
+
+def get_momentum_handler(
+    prices_repository: PricesRepository = Depends(get_daily_prices_repository),
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+) -> MomentumHandler:
+    return MomentumHandler(prices_repository=prices_repository, raw_data_client=raw_data_client)
+
+
+def get_cs_mean_reversion_handler(
+    risk_client: RiskClient = Depends(get_risk_client),
+    instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
+) -> CSMeanReversionHandler:
+    return CSMeanReversionHandler(risk_client=risk_client, instrument_repository=instrument_repository)

@@ -1,21 +1,21 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from rules.src.utils.ewmac import ewmac
+from rules.src.services.momentum import MomentumService
 from rules.src.utils.robust_vol_calc import robust_vol_calc
 
 
 class AssettrendService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
+        self.momentum_service = MomentumService()
 
     def calculate_assettrend(self, price: pd.Series, Lfast: int) -> pd.Series:
         try:
-            Lslow = Lfast * 4
             vol_days = 35
             vol = robust_vol_calc(price, vol_days)
 
-            return ewmac(price, vol, Lfast, Lslow)
-        except Exception:
-            self.logger.exception("An error occurred")
-            raise
+            return self.momentum_service.calculate_ewmac(price, vol, Lfast)
+        except Exception as e:
+            self.logger.exception("Error occurred in Assettrend calculation")
+            raise ValueError("Failed to compute Assettrend due to invalid inputs or unexpected data issues.") from e

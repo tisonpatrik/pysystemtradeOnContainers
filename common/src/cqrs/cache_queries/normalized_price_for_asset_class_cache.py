@@ -5,25 +5,25 @@ from common.src.redis.base_statements.set_cache_statement import SetCacheStateme
 from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_key
 
 
-class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
-    def __init__(self, symbol: str):
-        super().__init__(parameter=symbol)
-        self.name = "daily_vol_normalized_returns"
+class GetNormalizedPriceForAssetClassCache(GetCacheStatement):
+    def __init__(self, asset_class: str):
+        super().__init__(parameter=asset_class)
+        self.name = "normalized_price_for_asset_class"
 
     @property
     def cache_key(self) -> str:
         return get_series_key(self.name, self.parameter)
 
 
-class SetDailyvolNormalizedReturnsCache(SetCacheStatement):
-    def __init__(self, prices: pd.Series, symbol: str):
+class SetNormalizedPriceForAssetClassCache(SetCacheStatement):
+    def __init__(self, prices: pd.Series, asset_class: str):
         super().__init__(prices)
-        self.instrument_code = symbol
-        self.name = "daily_vol_normalized_returns"
+        self.asset_class = asset_class
+        self.name = "normalized_price_for_asset_class"
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.instrument_code)
+        return get_series_key(self.name, self.asset_class)
 
     @property
     def cache_value(self) -> dict:

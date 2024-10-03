@@ -5,6 +5,7 @@ from common.src.middleware.middleware import AppMiddleware
 from risk.src.api.dependencies.dependencies import app_lifespan
 from risk.src.api.routers.instrument_volatility_route import router as instrument_vol_route
 from risk.src.api.routers.normalized_prices_for_asset_class_router import router as normalized_prices_for_asset_class_route
+from risk.src.api.routers.normalized_prices_for_instrument_router import router as normalized_prices_for_instrument_route
 
 app_configs = {
     "title": "Risk API",
@@ -19,4 +20,5 @@ app = FastAPI(**app_configs)
 app.add_middleware(AppMiddleware)
 
 app.include_router(instrument_vol_route, prefix="/instrument_currency_vol_route")
-app.include_router(normalized_prices_for_asset_class_route, prefix="/normalized_prices_for_asset_class_router")
+app.include_router(normalized_prices_for_asset_class_route, prefix="/normalized_prices_for_asset_class_route")
+app.include_router(normalized_prices_for_instrument_route, prefix="/normalized_prices_for_instrument_route")

@@ -1,10 +1,21 @@
-import httpx
+import asyncio
+
 import pandas as pd
 
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_instrument_query import GetNormalizedPriceForInstrumentQuery
+from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
+    GetDailyvolNormalizedReturnsCache,
+    SetDailyvolNormalizedReturnsCache,
+)
+from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import (
+    GetNormalizedPriceForAssetClassCache,
+    SetNormalizedPriceForAssetClassCache,
+)
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
+from common.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 
 
@@ -15,22 +26,40 @@ class RiskClient:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_normalized_prices_for_asset_class_async(self, symbol: str, asset_class: str) -> pd.Series:
-        query = GetNormalizedPriceForAssetClassQuery(symbol=symbol, asset_class=asset_class)
+        self.logger.info("Fetching normalized prices for asset class for %s", asset_class)
+        cache_statement = GetNormalizedPriceForAssetClassCache(asset_class)
         try:
-            vol_data = await self.client.get_data_async(query)
-            return NormalizedPricesForAssetClass.from_api_to_series(vol_data)
+            cached_data = await self.redis_repository.get_cache(cache_statement)
+            if cached_data is not None:
+                return NormalizedPricesForAssetClass.from_cache_to_series(cached_data)
+            query = GetNormalizedPriceForAssetClassQuery(symbol=symbol, asset_class=asset_class)
+            raw_data = await self.client.get_data_async(query)
+            data = NormalizedPricesForAssetClass.from_api_to_series(raw_data)
+            cache_set_statement = SetNormalizedPriceForAssetClassCache(prices=data, asset_class=asset_class)
+            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-        except httpx.HTTPStatusError as http_exc:
-            self.logger.exception(
-                "HTTP error occurred while fetching data for %s: %s - %s",
-                symbol,
-                http_exc.response.status_code,
-                http_exc.response.text,
-            )
+            # Optional: add a callback to handle task completion
+            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            return data
+        except Exception:
+            self.logger.exception("Error fetching daily returns vol rate for %s", asset_class)
             raise
-        except httpx.RequestError:
-            self.logger.exception("Request error occurred while fetching data for %s", symbol)
-            raise
+
+    async def get_normalized_price_for_instrument_async(self, symbol: str) -> pd.Series:
+        self.logger.info("Fetching normalized prices for instrument for %s", symbol)
+        cache_statement = GetDailyvolNormalizedReturnsCache(symbol)
+        try:
+            cached_data = await self.redis_repository.get_cache(cache_statement)
+            if cached_data is not None:
+                return DailyvolNormalizedReturns.from_cache_to_series(cached_data)
+            query = GetNormalizedPriceForInstrumentQuery(symbol=symbol)
+            raw_data = await self.client.get_data_async(query)
+            data = NormalizedPricesForAssetClass.from_api_to_series(raw_data)
+            cache_set_statement = SetDailyvolNormalizedReturnsCache(prices=data, symbol=symbol)
+            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+
+            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            return data
         except Exception:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
             raise
