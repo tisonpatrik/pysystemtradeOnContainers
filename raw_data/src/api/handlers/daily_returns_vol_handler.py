@@ -1,12 +1,12 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.prices_client import PricesClient
 from raw_data.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolHandler:
-    def __init__(self, prices_repository: PricesRepository):
+    def __init__(self, prices_repository: PricesClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
         self.daily_returns_vol_service = DailyReturnsVolService()

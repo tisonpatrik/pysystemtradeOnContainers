@@ -14,7 +14,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.repositories.instruments_repository import InstrumentsRepository
-from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
 from rules.src.api.handlers.accel_handler import AccelHandler
@@ -37,14 +37,14 @@ def get_rules_handler(repository: Repository = Depends(get_db_repository)) -> Ru
 
 
 def get_accel_handler(
-    prices_repository: PricesRepository = Depends(get_daily_prices_repository),
+    prices_repository: PricesClient = Depends(get_daily_prices_repository),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> AccelHandler:
     return AccelHandler(prices_repository=prices_repository, raw_data_client=raw_data_client)
 
 
 def get_breakout_handler(
-    prices_repository: PricesRepository = Depends(get_daily_prices_repository),
+    prices_repository: PricesClient = Depends(get_daily_prices_repository),
 ) -> BreakoutHandler:
     return BreakoutHandler(prices_repository=prices_repository)
 
@@ -61,7 +61,7 @@ def get_carry_handler(raw_data_client: RawDataClient = Depends(get_raw_data_clie
 
 
 def get_momentum_handler(
-    prices_repository: PricesRepository = Depends(get_daily_prices_repository),
+    prices_repository: PricesClient = Depends(get_daily_prices_repository),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> MomentumHandler:
     return MomentumHandler(prices_repository=prices_repository, raw_data_client=raw_data_client)

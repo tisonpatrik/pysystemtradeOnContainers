@@ -1,18 +1,18 @@
 BEGIN;
--- Remove compression policy from fx_prices
+
 SELECT remove_compression_policy('fx_prices');
-SELECT remove_compression_policy('adjusted_prices');
 SELECT remove_compression_policy('daily_adjusted_prices');
+SELECT remove_compression_policy('daily_denominator_prices');
 SELECT remove_compression_policy('multiple_prices');
 SELECT remove_compression_policy('roll_calendars');
 
--- Disable compression on hypertables
+
 ALTER TABLE fx_prices
 SET (
     timescaledb.compress = false
 );
 
-ALTER TABLE adjusted_prices
+ALTER TABLE daily_denominator_prices
 SET (
     timescaledb.compress = false
 );
@@ -21,6 +21,7 @@ ALTER TABLE daily_adjusted_prices
 SET (
     timescaledb.compress = false
 );
+
 ALTER TABLE multiple_prices
 SET (
     timescaledb.compress = false

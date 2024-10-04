@@ -57,25 +57,25 @@ seed_config_data:
 
 .PHONY: seed_raw_data
 seed_raw_data:
-	@$(MAKE) seed_adjusted_prices
 	@$(MAKE) seed_daily_adjusted_prices
+	@$(MAKE) seed_daily_denominator_prices
 	@$(MAKE) seed_multiple_prices
 	@$(MAKE) seed_fx_prices
 	@$(MAKE) seed_roll_calendars
 
-
-.PHONY: seed_adjusted_prices
-seed_adjusted_prices:
-	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/raw_data/adjusted_prices/*.csv'); do \
-		echo "Processing file: $$file"; \
-		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY adjusted_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
-	done
 
 .PHONY: seed_daily_adjusted_prices
 seed_daily_adjusted_prices:
 	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/daily_adjusted_prices/*.csv'); do \
 		echo "Processing file: $$file"; \
 		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY daily_adjusted_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_daily_denominator_prices
+seed_daily_denominator_prices:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/daily_multiple_prices/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY daily_denominator_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
 	done
 
 .PHONY: seed_multiple_prices

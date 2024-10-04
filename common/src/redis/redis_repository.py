@@ -17,9 +17,7 @@ class RedisRepository:
         try:
             value = await self.redis_client.get(statement.cache_key)
             if value is None:
-                self.logger.info("Cache miss for key '%s'", statement.cache_key)
                 return None
-            self.logger.info("Cache hit for key '%s'", statement.cache_key)
             return json.loads(value)
         except Exception:
             self.logger.exception("Failed to get cache for key '%s'", statement.cache_key)
@@ -30,7 +28,6 @@ class RedisRepository:
             loop = asyncio.get_event_loop()
             serialized_value = await loop.run_in_executor(None, json.dumps, statement.cache_value)
             await self.redis_client.set(statement.cache_key, serialized_value, ex=statement.time_to_live)
-            self.logger.info("Cache set for key '%s' with TTL %ss", statement.cache_key, statement.time_to_live)
         except Exception:
             self.logger.exception("Failed to set cache for key '%s'", statement.cache_key)
             raise

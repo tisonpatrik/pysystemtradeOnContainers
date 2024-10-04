@@ -5,7 +5,7 @@ from common.src.redis.base_statements.set_cache_statement import SetCacheStateme
 from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_key
 
 
-class GetAggregatedReturnsForAssetClassCache(GetCacheStatement):
+class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
     def __init__(self, asset_class: str):
         super().__init__(parameter=asset_class)
         self.name = "aggregated_returns_for_asset_class"
@@ -15,7 +15,7 @@ class GetAggregatedReturnsForAssetClassCache(GetCacheStatement):
         return get_series_key(self.name, self.parameter)
 
 
-class SetAggregatedReturnsForAssetClassCache(SetCacheStatement):
+class SetDailyvolNormalizedReturnsCache(SetCacheStatement):
     def __init__(self, returns: pd.Series, asset_class: str):
         super().__init__(returns)
         self.asset_class = asset_class

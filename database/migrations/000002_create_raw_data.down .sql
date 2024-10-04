@@ -4,7 +4,6 @@ BEGIN;
 DROP TABLE IF EXISTS roll_calendars;
 DROP TABLE IF EXISTS multiple_prices;
 DROP TABLE IF EXISTS fx_prices;
-DROP TABLE IF EXISTS adjusted_prices;
 DROP TABLE IF EXISTS daily_adjusted_prices;
-
+DROP TABLE IF EXISTS daily_denominator_prices;
 COMMIT;

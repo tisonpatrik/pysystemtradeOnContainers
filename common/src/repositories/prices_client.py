@@ -15,7 +15,7 @@ from common.src.validation.daily_prices import DailyPrices
 from common.src.validation.denom_prices import DenomPrices
 
 
-class PricesRepository:
+class PricesClient:
     def __init__(self, db_repository: Repository, redis_repository: RedisRepository):
         self.repository = db_repository
         self.redis_repository = redis_repository

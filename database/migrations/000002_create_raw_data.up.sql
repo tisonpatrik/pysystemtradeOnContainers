@@ -1,15 +1,5 @@
 BEGIN;
 
--- Create adjusted_prices table with foreign key reference
-CREATE TABLE adjusted_prices (
-    time TIMESTAMPTZ NOT NULL,
-    price NUMERIC(14, 3) NULL,
-    symbol VARCHAR NOT NULL,
-    PRIMARY KEY (time, symbol),
-    FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
-);
-
--- Create adjusted_prices table with foreign key reference
 CREATE TABLE daily_adjusted_prices (
     time TIMESTAMPTZ NOT NULL,
     price NUMERIC(14, 3) NULL,
@@ -18,7 +8,6 @@ CREATE TABLE daily_adjusted_prices (
     FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
 );
 
--- Create fx_prices table with foreign key reference
 CREATE TABLE fx_prices (
     time TIMESTAMPTZ NOT NULL,
     price NUMERIC(14, 3) NULL,
@@ -26,7 +15,14 @@ CREATE TABLE fx_prices (
     PRIMARY KEY (time, symbol)
 );
 
--- Create multiple_prices table with foreign key reference
+CREATE TABLE daily_denominator_prices (
+    time TIMESTAMPTZ NOT NULL,
+    price NUMERIC(14, 3) NULL,
+    symbol VARCHAR NOT NULL,
+    PRIMARY KEY (time, symbol),
+    FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
+);
+
 CREATE TABLE multiple_prices (
     time TIMESTAMPTZ NOT NULL,
     carry NUMERIC(14, 3) NULL,
@@ -40,7 +36,6 @@ CREATE TABLE multiple_prices (
     FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
 );
 
--- Create roll_calendars table with foreign key reference
 CREATE TABLE roll_calendars (
     time TIMESTAMPTZ NOT NULL,
     current_contract INTEGER NOT NULL,

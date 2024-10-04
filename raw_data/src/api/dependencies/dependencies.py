@@ -7,7 +7,7 @@ from common.src.dependencies.core_dependencies import get_daily_prices_repositor
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
-from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from raw_data.src.api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
@@ -25,7 +25,7 @@ def get_fx_prices_handler(repository: Repository = Depends(get_db_repository)) -
     return FxPricesHandler(repository=repository)
 
 
-def get_annualised_roll_handler(prices_repository: PricesRepository = Depends(get_daily_prices_repository)) -> DailyAnnualisedRollHandler:
+def get_annualised_roll_handler(prices_repository: PricesClient = Depends(get_daily_prices_repository)) -> DailyAnnualisedRollHandler:
     return DailyAnnualisedRollHandler(prices_repository=prices_repository)
 
 
@@ -37,6 +37,6 @@ def get_raw_carry_handler(
 
 
 async def get_daily_returns_vol_handler(
-    prices_repository: PricesRepository = Depends(get_daily_prices_repository),
+    prices_repository: PricesClient = Depends(get_daily_prices_repository),
 ) -> DailyReturnsVolHandler:
     return DailyReturnsVolHandler(prices_repository=prices_repository)

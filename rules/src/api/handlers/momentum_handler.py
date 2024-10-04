@@ -1,13 +1,13 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from common.src.repositories.prices_repository import PricesRepository
+from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from rules.src.services.momentum import MomentumService
 
 
 class MomentumHandler:
-    def __init__(self, prices_repository: PricesRepository, raw_data_client: RawDataClient):
+    def __init__(self, prices_repository: PricesClient, raw_data_client: RawDataClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
         self.raw_data_client = raw_data_client

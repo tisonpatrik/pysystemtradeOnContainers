@@ -8,9 +8,8 @@ class InstrumentCurrencyVolService:
         self.logger = AppLogger.get_instance().get_logger()
 
     def calculate_instrument_vol_async(self, denom_price: pd.Series, daily_returns_vol: pd.Series, point_size: float) -> pd.Series:
-        """ """
         try:
-            block_value = self.get_block_value(denom_price, point_size)
+            block_value = denom_price.ffill() * point_size * 0.01
             daily_perc_vol = self.get_daily_percentage_volatility(denom_price, daily_returns_vol)
             ## FIXME WHY NOT RESAMPLE?
             (block_value, daily_perc_vol) = block_value.align(daily_perc_vol, join="inner")
@@ -20,9 +19,6 @@ class InstrumentCurrencyVolService:
         except Exception:
             self.logger.exception("Unexpected error occurred while calculating instrument volatility")
             raise
-
-    def get_block_value(self, denom_price: pd.Series, value_of_price_move: float) -> pd.Series:
-        return denom_price.ffill() * value_of_price_move * 0.01
 
     def get_daily_percentage_volatility(self, denom_price: pd.Series, daily_returns_vol: pd.Series) -> pd.Series:
         # Calculate the volatility of daily returns

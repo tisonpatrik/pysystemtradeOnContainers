@@ -6,10 +6,10 @@ from pandera.dtypes import Float, Timestamp
 
 from common.src.validation.base_data_model import BaseDataFrameModel
 
-T = TypeVar("T", bound="AggregatedReturnsForAssetClass")
+T = TypeVar("T", bound="DailyVolNormalizedReturns")
 
 
-class AggregatedReturnsForAssetClass(BaseDataFrameModel[T]):
+class DailyVolNormalizedReturns(BaseDataFrameModel[T]):
     time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     returns: Float = Field(coerce=True, nullable=True)
 
