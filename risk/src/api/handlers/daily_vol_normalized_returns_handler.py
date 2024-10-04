@@ -22,7 +22,7 @@ class DailyvolNormalizedReturnsHandler:
         self.redis_repository = redis_repository
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()
 
-    async def get_daily_vol_normalized_returns(self, instrument_code: str) -> pd.Series:
+    async def get_daily_vol_normalized_returns_async(self, instrument_code: str) -> pd.Series:
         self.logger.info("Fetching Daily volatility normalized returns for %s", instrument_code)
         cache_statement = GetDailyvolNormalizedReturnsCache(instrument_code)
         try:

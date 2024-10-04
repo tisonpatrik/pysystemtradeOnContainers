@@ -25,7 +25,7 @@ class AggregatedReturnsForAssetClassHandler:
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.redis_repository = redis_repository
 
-    async def get_aggregated_returns_for_asset_class_async(self, asset_class: str) -> pd.Series:
+    async def get_aggregated_returns_for_asset_async(self, asset_class: str) -> pd.Series:
         try:
             cached_returns = await self._get_cached_aggregated_returns(asset_class)
             if cached_returns is not None:
@@ -36,7 +36,6 @@ class AggregatedReturnsForAssetClassHandler:
 
             median_returns = self._calculate_median_returns(aggregate_returns)
             self._cache_aggregated_returns(median_returns, asset_class)
-
             return median_returns
 
         except Exception:
@@ -63,7 +62,7 @@ class AggregatedReturnsForAssetClassHandler:
         for instrument in instruments:
             try:
                 self.logger.info("Fetching returns for instrument: %s", instrument.symbol)
-                returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns(instrument.symbol)
+                returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns_async(instrument.symbol)
                 if returns is not None:
                     aggregate_returns.append(returns)
             except Exception:

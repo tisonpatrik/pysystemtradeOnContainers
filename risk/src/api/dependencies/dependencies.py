@@ -16,6 +16,8 @@ from common.src.repositories.instruments_repository import InstrumentsRepository
 from common.src.repositories.prices_repository import PricesRepository
 from common.src.repositories.raw_data_client import RawDataClient
 from risk.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
+from risk.src.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
+from risk.src.api.handlers.daily_vol_normalized_price_for_asset_handler import DailyVolNormalizedPriceForAssetHandler
 from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from risk.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
@@ -59,11 +61,31 @@ def get_aggregated_returns_for_asset_class_handler(
     )
 
 
-def get_normalized_price_for_asset_class_handler(
-    daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
+def get_daily_vol_normalized_price_for_asset_class_handler(
     aggregated_returns_handler: AggregatedReturnsForAssetClassHandler = Depends(get_aggregated_returns_for_asset_class_handler),
+) -> DailyVolNormalizedPriceForAssetHandler:
+    return DailyVolNormalizedPriceForAssetHandler(
+        aggregated_returns_for_asset_handler=aggregated_returns_handler,
+    )
+
+
+def get_cumulative_daily_vol_norm_returns_handler(
+    daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
+) -> CumulativeDailyVolNormReturnsHandler:
+    return CumulativeDailyVolNormReturnsHandler(
+        daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
+    )
+
+
+def get_normalized_price_for_asset_class_handler(
+    daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = Depends(
+        get_daily_vol_normalized_price_for_asset_class_handler
+    ),
+    cumulative_daily_vol_norm_returns_handler: CumulativeDailyVolNormReturnsHandler = Depends(
+        get_cumulative_daily_vol_norm_returns_handler
+    ),
 ) -> NormalizedPricesForAssetClassHandler:
     return NormalizedPricesForAssetClassHandler(
-        daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler,
-        aggregated_returns_for_asset_class_handler=aggregated_returns_handler,
+        daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
+        cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
     )

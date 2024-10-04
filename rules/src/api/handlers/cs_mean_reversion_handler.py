@@ -26,7 +26,7 @@ class CSMeanReversionHandler:
             print(symbol_prices)
             print(asset_prices)
             return self.cs_mean_reversion_service.calculate_cross_sectional_mean_reversion(
-                normalised_price_this_instrument=symbol_prices, normalised_price_for_asset_class=asset_prices, horizon=speed
+                normalized_price_this_instrument=symbol_prices, normalized_price_for_asset_class=asset_prices, horizon=speed
             )
 
         except Exception as e:

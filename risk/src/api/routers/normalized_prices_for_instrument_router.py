@@ -20,7 +20,7 @@ async def get_normalized_prices_for_instrument(
     normalizedPriceHandler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_normalized_returns_handler),
 ):
     try:
-        result = await normalizedPriceHandler.get_daily_vol_normalized_returns(query.symbol)
+        result = await normalizedPriceHandler.get_daily_vol_normalized_returns_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

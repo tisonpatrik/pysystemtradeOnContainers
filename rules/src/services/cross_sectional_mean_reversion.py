@@ -9,18 +9,15 @@ class CSMeanReversionService:
 
     def calculate_cross_sectional_mean_reversion(
         self,
-        normalised_price_this_instrument: pd.Series,
-        normalised_price_for_asset_class: pd.Series,
+        normalized_price_this_instrument: pd.Series,
+        normalized_price_for_asset_class: pd.Series,
         horizon: int,
     ) -> pd.Series:
         try:
             ewma_span = int(horizon / 4.0)
             ewma_span = max(ewma_span, 2)
 
-            outperformance = (
-                normalised_price_this_instrument.ffill()
-                - normalised_price_for_asset_class.ffill()
-            )
+            outperformance = normalized_price_this_instrument.ffill() - normalized_price_for_asset_class.ffill()
             relative_return = outperformance.diff()
             outperformance_over_horizon = relative_return.rolling(horizon).mean()
 
