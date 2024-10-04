@@ -20,8 +20,6 @@ class RawDataClient:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_daily_returns_vol_async(self, instrument_code: str) -> pd.Series:
-        self.logger.info("Fetching daily returns vol rate for %s", instrument_code)
-
         cache_statement = GetDailyReturnsVolCache(instrument_code)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
@@ -43,8 +41,6 @@ class RawDataClient:
             raise
 
     async def get_raw_carry_async(self, instrument_code: str) -> pd.Series:
-        self.logger.info("Fetching raw carry for, %s", instrument_code)
-
         cache_statement = GetRawCarryCache(instrument_code)
         try:
             # Try to get the data from Redis cache

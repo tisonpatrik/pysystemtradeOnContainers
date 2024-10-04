@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Cross Sectional Mean Reversion",
 )
-async def get_momentum_for_instrument_async(
+async def get_cs_mean_reversion_async(
     query: GetRuleForInstrumentQuery = Depends(),
     momentum_handler: CSMeanReversionHandler = Depends(get_cs_mean_reversion_handler),
 ):

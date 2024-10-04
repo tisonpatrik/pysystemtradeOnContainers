@@ -20,11 +20,9 @@ class CSMeanReversionHandler:
     async def get_cs_mean_reversion_async(self, symbol: str, speed: int) -> pd.Series:
         try:
             self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, speed)
-            symbol_prices = await self.risk_client.get_normalized_price_for_instrument_async(symbol)
+            symbol_prices = await self.risk_client.get_cumulative_daily_vol_normalised_returns_async(symbol)
             asset_class = await self.instrument_repository.get_asset_class_async(symbol)
             asset_prices = await self.risk_client.get_normalized_prices_for_asset_class_async(symbol, asset_class.asset_class)
-            print(symbol_prices)
-            print(asset_prices)
             return self.cs_mean_reversion_service.calculate_cross_sectional_mean_reversion(
                 normalized_price_this_instrument=symbol_prices, normalized_price_for_asset_class=asset_prices, horizon=speed
             )

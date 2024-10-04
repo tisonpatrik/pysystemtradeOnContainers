@@ -5,7 +5,7 @@ from common.src.redis.base_statements.set_cache_statement import SetCacheStateme
 from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_key
 
 
-class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
+class GetCumulativeDailyVolNormReturnsCache(GetCacheStatement):
     def __init__(self, symbol: str):
         super().__init__(parameter=symbol)
         self.name = "daily_vol_normalized_returns"
@@ -15,7 +15,7 @@ class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
         return get_series_key(self.name, self.parameter)
 
 
-class SetDailyvolNormalizedReturnsCache(SetCacheStatement):
+class SetCumulativeDailyVolNormReturnsCache(SetCacheStatement):
     def __init__(self, prices: pd.Series, symbol: str):
         super().__init__(prices)
         self.instrument_code = symbol

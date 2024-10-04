@@ -27,16 +27,9 @@ class AggregatedReturnsForAssetClassHandler:
 
     async def get_aggregated_returns_for_asset_async(self, asset_class: str) -> pd.Series:
         try:
-            cached_returns = await self._get_cached_aggregated_returns(asset_class)
-            if cached_returns is not None:
-                return cached_returns
-
             instruments = await self._get_instruments_for_asset_class(asset_class)
             aggregate_returns = await self._fetch_returns_for_instruments(instruments)
-
-            median_returns = self._calculate_median_returns(aggregate_returns)
-            self._cache_aggregated_returns(median_returns, asset_class)
-            return median_returns
+            return self._calculate_median_returns(aggregate_returns)
 
         except Exception:
             self.logger.exception("Error aggregating returns for asset class: %s", asset_class)

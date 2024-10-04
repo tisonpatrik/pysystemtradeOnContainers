@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Accel",
 )
-async def get_accel_for_instrument_async(
+async def get_accel_async(
     query: GetRuleForInstrumentQuery = Depends(),
     accel_handler: AccelHandler = Depends(get_accel_handler),
 ):

@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Assettrend",
 )
-async def get_breakout_for_instrument_async(
+async def get_breakout_async(
     query: GetRuleForInstrumentQuery = Depends(),
     handler: AssettrendHandler = Depends(get_asserttrend_handler),
 ):

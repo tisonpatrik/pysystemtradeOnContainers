@@ -2,11 +2,11 @@ import asyncio
 
 import pandas as pd
 
+from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns_query import CumulativeDailyVolNormReturnsQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
-from common.src.cqrs.api_queries.get_normalized_price_for_instrument_query import GetNormalizedPriceForInstrumentQuery
-from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
-    GetDailyvolNormalizedReturnsCache,
-    SetDailyvolNormalizedReturnsCache,
+from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
+    GetCumulativeDailyVolNormReturnsCache,
+    SetCumulativeDailyVolNormReturnsCache,
 )
 from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import (
     GetNormalizedPriceForAssetClassCache,
@@ -15,7 +15,7 @@ from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
-from common.src.validation.daily_vol_normalized_returns import DailyvolNormalizedReturns
+from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 
 
@@ -26,7 +26,6 @@ class RiskClient:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_normalized_prices_for_asset_class_async(self, symbol: str, asset_class: str) -> pd.Series:
-        self.logger.info("Fetching normalized prices for asset class for %s", asset_class)
         cache_statement = GetNormalizedPriceForAssetClassCache(asset_class)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
@@ -45,17 +44,16 @@ class RiskClient:
             self.logger.exception("Error fetching daily returns vol rate for %s", asset_class)
             raise
 
-    async def get_normalized_price_for_instrument_async(self, symbol: str) -> pd.Series:
-        self.logger.info("Fetching normalized prices for instrument for %s", symbol)
-        cache_statement = GetDailyvolNormalizedReturnsCache(symbol)
+    async def get_cumulative_daily_vol_normalised_returns_async(self, symbol: str) -> pd.Series:
+        cache_statement = GetCumulativeDailyVolNormReturnsCache(symbol)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                return DailyvolNormalizedReturns.from_cache_to_series(cached_data)
-            query = GetNormalizedPriceForInstrumentQuery(symbol=symbol)
+                return CumulativeDailyVolNormReturns.from_cache_to_series(cached_data)
+            query = CumulativeDailyVolNormReturnsQuery(symbol=symbol)
             raw_data = await self.client.get_data_async(query)
-            data = NormalizedPricesForAssetClass.from_api_to_series(raw_data)
-            cache_set_statement = SetDailyvolNormalizedReturnsCache(prices=data, symbol=symbol)
+            data = CumulativeDailyVolNormReturns.from_api_to_series(raw_data)
+            cache_set_statement = SetCumulativeDailyVolNormReturnsCache(prices=data, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))

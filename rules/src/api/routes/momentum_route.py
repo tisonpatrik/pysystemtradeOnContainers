@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Momentum",
 )
-async def get_momentum_for_instrument_async(
+async def get_momentum_async(
     query: GetRuleForInstrumentQuery = Depends(),
     momentum_handler: MomentumHandler = Depends(get_momentum_handler),
 ):

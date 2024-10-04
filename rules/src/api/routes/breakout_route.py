@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Breakout",
 )
-async def get_breakout_for_instrument_async(
+async def get_breakout_async(
     query: GetRuleForInstrumentQuery = Depends(),
     breakout_handler: BreakoutHandler = Depends(get_breakout_handler),
 ):

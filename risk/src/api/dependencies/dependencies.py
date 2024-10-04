@@ -42,11 +42,8 @@ async def get_instrument_vol_handler(
 def get_daily_vol_normalized_returns_handler(
     prices_repository: PricesRepository = Depends(get_daily_prices_repository),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
-    redis_repository: RedisRepository = Depends(get_redis),
 ) -> DailyvolNormalizedReturnsHandler:
-    return DailyvolNormalizedReturnsHandler(
-        prices_repository=prices_repository, raw_data_client=raw_data_client, redis_repository=redis_repository
-    )
+    return DailyvolNormalizedReturnsHandler(prices_repository=prices_repository, raw_data_client=raw_data_client)
 
 
 def get_aggregated_returns_for_asset_class_handler(

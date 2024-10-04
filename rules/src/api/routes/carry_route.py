@@ -15,7 +15,7 @@ logger = AppLogger.get_instance().get_logger()
     status_code=status.HTTP_200_OK,
     name="Get Carry",
 )
-async def get_carry_for_instrument_async(
+async def get_carry_async(
     query: GetRuleForInstrumentQuery = Depends(),
     carry_handler: CarryHandler = Depends(get_carry_handler),
 ):

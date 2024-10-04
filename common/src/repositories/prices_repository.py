@@ -22,7 +22,6 @@ class PricesRepository:
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_daily_prices_async(self, symbol: str) -> pd.Series:
-        self.logger.info("Fetching daily prices for %s", symbol)
         cache_statement = GetDailyPricesCache(symbol)
         try:
             # Try to get the data from Redis cache
@@ -49,7 +48,6 @@ class PricesRepository:
             raise
 
     async def get_denom_prices_async(self, symbol: str) -> pd.Series:
-        self.logger.info("Fetching denom prices for %s", symbol)
         statement = GetDenomPriceQuery(symbol=symbol)
         try:
             prices_data = await self.repository.fetch_many_async(statement)
@@ -60,7 +58,6 @@ class PricesRepository:
             raise
 
     async def get_raw_carry_async(self, symbol: str) -> pd.DataFrame:
-        self.logger.info("Fetching raw carry data for %s", symbol)
         statement = GetCarryDataQuery(symbol=symbol)
         try:
             carry_data = await self.repository.fetch_many_async(statement)
