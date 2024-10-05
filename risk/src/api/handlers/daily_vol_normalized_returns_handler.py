@@ -46,6 +46,6 @@ class DailyvolNormalizedReturnsHandler:
         return None
 
     def _cache_aggregated_returns(self, returns: pd.Series, symbol: str) -> None:
-        cache_statement = SetDailyvolNormalizedReturnsCache(returns=returns, asset_class=symbol)
+        cache_statement = SetDailyvolNormalizedReturnsCache(returns=returns, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
         cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))

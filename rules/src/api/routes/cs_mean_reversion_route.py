@@ -21,6 +21,7 @@ async def get_cs_mean_reversion_async(
 ):
     try:
         result = await momentum_handler.get_cs_mean_reversion_async(query.symbol, query.speed)
+        print(result)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

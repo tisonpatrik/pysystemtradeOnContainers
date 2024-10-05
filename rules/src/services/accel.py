@@ -1,19 +1,19 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from rules.src.services.momentum import MomentumService
 
 
 class AccelService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
-        self.momentum_service = MomentumService()
 
-    def calculate_accel(self, price: pd.Series, vol: pd.Series, Lfast: int) -> pd.Series:
+    def calculate_accel(self, ewmac_signal: pd.Series, Lfast: int) -> pd.Series:
         try:
-            ewmac_signal = self.momentum_service.calculate_ewmac(price, vol, Lfast)
             return ewmac_signal - ewmac_signal.shift(Lfast)
 
+        except IndexError:
+            self.logger.exception("Index error")
+            raise
         except Exception:
-            self.logger.exception("An error occurred")
+            self.logger.exception("An unexpected error occurred")
             raise

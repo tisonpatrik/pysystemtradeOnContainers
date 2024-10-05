@@ -4,7 +4,7 @@ SELECT create_hypertable(
     'daily_adjusted_prices',
     'time',
     'symbol',
-    number_partitions => 8
+    number_partitions => 16
 );
 
 SELECT create_hypertable(
