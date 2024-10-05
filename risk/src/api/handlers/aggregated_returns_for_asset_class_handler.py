@@ -1,14 +1,14 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
 class AggregatedReturnsForAssetClassHandler:
     def __init__(
         self,
-        instrument_repository: InstrumentsRepository,
+        instrument_repository: InstrumentsClient,
         daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()

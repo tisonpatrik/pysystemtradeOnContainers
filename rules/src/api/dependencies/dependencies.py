@@ -15,7 +15,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
@@ -60,7 +60,7 @@ def get_breakout_handler(
 
 def get_asserttrend_handler(
     risk_client: RiskClient = Depends(get_risk_client),
-    instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> AssettrendHandler:
     return AssettrendHandler(risk_client=risk_client, instrument_repository=instrument_repository)
 
@@ -71,6 +71,6 @@ def get_carry_handler(raw_data_client: RawDataClient = Depends(get_raw_data_clie
 
 def get_cs_mean_reversion_handler(
     risk_client: RiskClient = Depends(get_risk_client),
-    instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> CSMeanReversionHandler:
     return CSMeanReversionHandler(risk_client=risk_client, instrument_repository=instrument_repository)

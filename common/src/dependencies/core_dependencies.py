@@ -3,7 +3,7 @@ from fastapi import Depends, Request
 from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from common.src.repositories.risk_client import RiskClient
@@ -30,8 +30,8 @@ def get_daily_prices_repository(
 
 def get_instruments_repository(
     repository: Repository = Depends(get_db_repository),
-) -> InstrumentsRepository:
-    return InstrumentsRepository(repository=repository)
+) -> InstrumentsClient:
+    return InstrumentsClient(repository=repository)
 
 
 def get_risk_client(

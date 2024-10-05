@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.logging.logger import AppLogger
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
@@ -12,7 +12,7 @@ class InstrumentCurrencyVolHandler:
     def __init__(
         self,
         prices_repository: PricesClient,
-        instruments_repository: InstrumentsRepository,
+        instruments_repository: InstrumentsClient,
         raw_data_client: RawDataClient,
     ):
         self.logger = AppLogger.get_instance().get_logger()

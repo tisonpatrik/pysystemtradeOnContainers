@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.risk_client import RiskClient
 from rules.src.services.cross_sectional_mean_reversion import CSMeanReversionService
 
@@ -10,7 +10,7 @@ class CSMeanReversionHandler:
     def __init__(
         self,
         risk_client: RiskClient,
-        instrument_repository: InstrumentsRepository,
+        instrument_repository: InstrumentsClient,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.risk_client = risk_client

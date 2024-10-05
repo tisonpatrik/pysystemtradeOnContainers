@@ -9,7 +9,7 @@ from common.src.validation.instrument import Instrument
 from common.src.validation.point_size import PointSize
 
 
-class InstrumentsRepository:
+class InstrumentsClient:
     def __init__(self, repository: Repository):
         self.repository = repository
         self.logger = AppLogger.get_instance().get_logger()

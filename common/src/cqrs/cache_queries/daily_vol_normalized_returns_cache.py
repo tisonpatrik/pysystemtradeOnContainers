@@ -4,11 +4,13 @@ from common.src.redis.base_statements.get_cache_statement import GetCacheStateme
 from common.src.redis.base_statements.set_cache_statement import SetCacheStatement
 from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_key
 
+NAME = "dailyvol_normalized_returns_cache"
+
 
 class GetDailyvolNormalizedReturnsCache(GetCacheStatement):
     def __init__(self, symbol: str):
         super().__init__(parameter=symbol)
-        self.name = "dailyvol_normalized_returns_cache"
+        self.name = NAME
 
     @property
     def cache_key(self) -> str:
@@ -19,7 +21,7 @@ class SetDailyvolNormalizedReturnsCache(SetCacheStatement):
     def __init__(self, returns: pd.Series, symbol: str):
         super().__init__(returns)
         self.symbol = symbol
-        self.name = "dailyvol_normalized_returns_cache"
+        self.name = NAME
 
     @property
     def cache_key(self) -> str:

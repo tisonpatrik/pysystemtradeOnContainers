@@ -1,13 +1,13 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.risk_client import RiskClient
 from rules.src.services.assettrend import AssettrendService
 
 
 class AssettrendHandler:
-    def __init__(self, risk_client: RiskClient, instrument_repository: InstrumentsRepository):
+    def __init__(self, risk_client: RiskClient, instrument_repository: InstrumentsClient):
         self.risk_client = risk_client
         self.instrument_repository = instrument_repository
         self.logger = AppLogger.get_instance().get_logger()

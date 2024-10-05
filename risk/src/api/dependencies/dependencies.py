@@ -12,7 +12,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.instruments_repository import InstrumentsRepository
+from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from risk.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
@@ -31,7 +31,7 @@ async def app_lifespan(app: FastAPI):
 
 async def get_instrument_vol_handler(
     prices_repository: PricesClient = Depends(get_daily_prices_repository),
-    instruments_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> InstrumentCurrencyVolHandler:
     return InstrumentCurrencyVolHandler(
@@ -50,7 +50,7 @@ def get_daily_vol_norm_returns_handler(
 
 
 def get_aggregated_returns_for_asset_class_handler(
-    instrument_repository: InstrumentsRepository = Depends(get_instruments_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
     daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
 ) -> AggregatedReturnsForAssetClassHandler:
     return AggregatedReturnsForAssetClassHandler(

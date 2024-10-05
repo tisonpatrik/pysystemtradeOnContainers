@@ -6,10 +6,10 @@ from pandera.dtypes import Float, Timestamp
 
 from common.src.validation.base_data_model import BaseDataFrameModel
 
-T = TypeVar("T", bound="RawCarry")
+T = TypeVar("T", bound="SmoothedCarry")
 
 
-class RawCarry(BaseDataFrameModel[T]):
+class SmoothedCarry(BaseDataFrameModel[T]):
     time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     carry: Float = Field(coerce=True, nullable=True)
 
