@@ -9,6 +9,7 @@ from rules.src.api.routes.breakout_route import router as breakout_route
 from rules.src.api.routes.carry_route import router as carry_route
 from rules.src.api.routes.cs_mean_reversion_route import router as cd_mean_reversion_route
 from rules.src.api.routes.momentum_route import router as momentum_route
+from rules.src.api.routes.relative_carry_route import router as relative_carry_route
 from rules.src.api.routes.rules_manager_router import router as rules_manager_route
 
 app_configs = {
@@ -30,3 +31,4 @@ app.include_router(assettrend_route, prefix="/assettrend_route")
 app.include_router(carry_route, prefix="/carry_route")
 app.include_router(momentum_route, prefix="/momentum_route")
 app.include_router(cd_mean_reversion_route, prefix="/cd_mean_reversion_route")
+app.include_router(relative_carry_route, prefix="/relative_carry_route")

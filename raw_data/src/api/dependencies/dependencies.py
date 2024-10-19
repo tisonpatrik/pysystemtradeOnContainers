@@ -27,6 +27,7 @@ from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.src.api.handlers.raw_carry_handler import RawCarryHandler
+from raw_data.src.api.handlers.smooth_carry_handler import SmoothCarryHandler
 
 
 @asynccontextmanager
@@ -119,3 +120,9 @@ def get_raw_carry_handler(
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ) -> RawCarryHandler:
     return RawCarryHandler(daily_annualised_roll_handler=daily_annualised_roll_handler, daily_returns_vol_handler=daily_returns_vol_handler)
+
+
+def get_smooth_carry_handler(
+    raw_carry_handler: RawCarryHandler = Depends(get_raw_carry_handler),
+) -> SmoothCarryHandler:
+    return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)

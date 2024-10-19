@@ -15,7 +15,7 @@ class RelativeCarryHandler:
 
     async def get_relative_carry_async(self, symbol: str) -> pd.Series:
         try:
-            self.logger.info("Calculating Carry rule for %s", symbol)
+            self.logger.info("Calculating Relative carry rule for %s", symbol)
             asset_class = await self.instrument_client.get_asset_class_async(symbol=symbol)
             smoothed_carry = await self.carry_client.get_smoothed_carry_async(symbol)
             median_carry_for_asset_class = await self.carry_client.get_median_carry_for_asset_class_async(asset_class.asset_class)

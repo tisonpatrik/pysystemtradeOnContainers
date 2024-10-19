@@ -9,6 +9,7 @@ from raw_data.src.api.routers.fx_prices_router import router as fx_prices_route
 from raw_data.src.api.routers.instrument_volatility_route import router as instrument_vol_route
 from raw_data.src.api.routers.normalized_prices_for_asset_class_router import router as normalized_prices_for_asset_class_route
 from raw_data.src.api.routers.raw_carry_router import router as raw_carry_route
+from raw_data.src.api.routers.smooth_carry_router import router as smooth_carry_route
 
 app_configs = {
     "title": "Raw data API",
@@ -28,3 +29,4 @@ app.include_router(cumulative_daily_vol_normalised_returns_route, prefix="/cumul
 app.include_router(fx_prices_route, prefix="/fx_prices_route")
 app.include_router(raw_carry_route, prefix="/raw_carry_route")
 app.include_router(daily_returns_vol_route, prefix="/daily_returns_vol_route")
+app.include_router(smooth_carry_route, prefix="/smooth_carry_route")

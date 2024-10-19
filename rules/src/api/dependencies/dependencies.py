@@ -25,6 +25,7 @@ from rules.src.api.handlers.breakout_handler import BreakoutHandler
 from rules.src.api.handlers.carry_handler import CarryHandler
 from rules.src.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
 from rules.src.api.handlers.momentum_handler import MomentumHandler
+from rules.src.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 
 
@@ -74,3 +75,10 @@ def get_cs_mean_reversion_handler(
     instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> CSMeanReversionHandler:
     return CSMeanReversionHandler(raw_data_client=raw_data_client, instrument_repository=instrument_repository)
+
+
+def get_relative_carry_handler(
+    carry_client: CarryClient = Depends(get_carry_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
+) -> RelativeCarryHandler:
+    return RelativeCarryHandler(carry_client=carry_client, instrument_client=instrument_repository)
