@@ -85,15 +85,6 @@ services:
       - db-postgres:/var/lib/postgresql/data
       - ./database/data:/data:rw
 
-  pg-admin:
-    image: dpage/pgadmin4
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@email.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-      - PGADMIN_LISTEN_PORT=5050
-    ports:
-      - "5050:5050"
-
   redis:
     image: redis:latest
     container_name: "redis"

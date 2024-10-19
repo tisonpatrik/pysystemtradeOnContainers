@@ -14,13 +14,11 @@ init:
 	@$(MAKE) run  # Call the run method from this Makefile
 	@sleep 10  # Add a 10-second timeout
 	@echo "Running remaining migrations"
-	@$(MAKE) -C database migrate_to_version VERSION=5
+	@$(MAKE) -C database migrate_up
 	@echo "Seeding config data..."
 	@$(MAKE) -C database seed_config_data
 	@echo "Seeding raw data...This may take a few minutes.."
 	@$(MAKE) -C database seed_raw_data
-	@echo "Manual compresion of database...This will also feel like eternity."
-	@$(MAKE) -C database migrate_up
 	@$(MAKE) -C database clean_data
 	@echo "Initialization complete!"
 
