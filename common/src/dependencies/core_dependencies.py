@@ -6,7 +6,6 @@ from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
-from common.src.repositories.risk_client import RiskClient
 
 
 def get_db_repository(request: Request) -> Repository:
@@ -32,13 +31,6 @@ def get_instruments_repository(
     repository: Repository = Depends(get_db_repository),
 ) -> InstrumentsClient:
     return InstrumentsClient(repository=repository)
-
-
-def get_risk_client(
-    rest_client: RestClient = Depends(get_client),
-    redis_repository: RedisRepository = Depends(get_redis),
-) -> RiskClient:
-    return RiskClient(rest_client=rest_client, redis_repository=redis_repository)
 
 
 def get_raw_data_client(

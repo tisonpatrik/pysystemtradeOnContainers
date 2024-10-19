@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 from common.src.repositories.instruments_client import InstrumentsClient
-from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
 class AggregatedReturnsForAssetClassHandler:

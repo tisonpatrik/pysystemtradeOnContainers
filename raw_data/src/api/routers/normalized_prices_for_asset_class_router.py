@@ -1,32 +1,33 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
-from risk.src.api.dependencies.dependencies import get_instrument_vol_handler
-from risk.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
+from raw_data.src.api.dependencies.dependencies import get_normalized_price_for_asset_class_handler
+from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_instrument_currency_volatility/",
+    "/get_normalized_prices_for_asset_class/",
     status_code=status.HTTP_200_OK,
-    name="Get instrument currency volatility",
+    name="Get normalized price for asset class",
 )
-async def get_instrument_currency_volalitlty_async(
-    query: GetInstrumentCurrencyVolQuery = Depends(),
-    instrument_vol_handler: InstrumentCurrencyVolHandler = Depends(get_instrument_vol_handler),
+async def get_normalized_prices_for_asset_class(
+    query: GetNormalizedPriceForAssetClassQuery = Depends(),
+    normalizedPriceHandler: NormalizedPricesForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
 ):
     try:
-        result = await instrument_vol_handler.get_instrument_vol_for_symbol_async(query)
+        result = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result
+
     except HTTPException as e:
         logger.exception(
-            "An error occurred while trying to get instrument currency volatility for symbol %s. Error: %s", query.symbol, e.detail
+            "An error occurred while trying to get normalized price for asset class for symbol %s. Error: %s", query.symbol, e.detail
         )
         raise
     except ValidationError as e:

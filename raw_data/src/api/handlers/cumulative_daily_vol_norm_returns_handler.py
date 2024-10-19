@@ -9,7 +9,7 @@ from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache impor
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
-from risk.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
 class CumulativeDailyVolNormReturnsHandler:

@@ -1,10 +1,10 @@
 import pandas as pd
 
-from risk.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
+from raw_data.src.services.instrument_currency_vol_service import InstrumentCurrencyVolService
 
 
 def load_csv_data(filename: str) -> pd.Series:
-    filepath = f"risk/tests/test_data/{filename}.csv"
+    filepath = f"raw_data/tests/test_data/{filename}.csv"
     data = pd.read_csv(filepath)
     return data["price"]
 

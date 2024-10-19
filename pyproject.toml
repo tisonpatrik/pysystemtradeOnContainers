@@ -30,10 +30,9 @@ testpaths = [
     "common/tests",
     "positions/tests",
     "raw_data/tests",
-    "risk/tests",
     "rules/tests",
 ]
-pythonpath = [".", "common", "positions", "raw_data", "risk", "rules"]
+pythonpath = [".", "common", "positions", "raw_data",  "rules"]
 
 [tool.pyright]
 venvPath = "."

@@ -13,20 +13,6 @@ services:
       - ./raw_data:/app/raw_data
       - ./common:/app/common
 
-  risk:
-    build:
-      context: .
-      dockerfile: risk/Dockerfile
-    hostname: risk
-    container_name: risk
-    depends_on:
-      - db_postgres
-    ports:
-      - "8100:8000"
-    volumes:
-      - ./risk:/app/risk
-      - ./common:/app/common
-
   rules:
     build:
       context: .
@@ -35,8 +21,9 @@ services:
     container_name: rules
     depends_on:
       - db_postgres
+      - raw_data
     ports:
-      - "8200:8000"
+      - "8100:8000"
     volumes:
       - ./rules:/app/rules
       - ./common:/app/common
@@ -49,9 +36,8 @@ services:
     container_name: positions
     depends_on:
       - db_postgres
-      - risk
     ports:
-      - "8300:8000"
+      - "8200:8000"
     volumes:
       - ./positions:/app/positions
       - ./common:/app/common
@@ -65,7 +51,7 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8400:8000"
+      - "8300:8000"
     volumes:
       - ./forecast:/app/forecast
       - ./common:/app/common

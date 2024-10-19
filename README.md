@@ -21,9 +21,7 @@ efficient time-series data management.
 ### Features
 This project currently includes the following services, each with its own dedicated README for more detailed information:
 
-- [seeder](seeder/README.md): Responsible for seeding initial data and configurations required for the system.
 - [raw_data]([raw_data/README.md): Handles the ingestion and processing of raw market data.
-- [risk]([risk/README.md): Manages risk calculations and risk management strategies.
 - [rules]([rules/README.md): Implements the trading rules and decision logic based on the strategies.
 - [forecast]([forecast/README.md): Forecasts market movements based on historical data and statistical models.
 - [positions]([positions/README.md): Tracks and manages open positions and their performance.

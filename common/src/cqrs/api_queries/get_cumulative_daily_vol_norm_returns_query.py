@@ -10,4 +10,4 @@ class CumulativeDailyVolNormReturnsQuery(FetchRequest):
 
     @property
     def url_string(self) -> str:
-        return "http://risk:8000/cumulative_daily_vol_normalised_returns_route/get_cum_daily_vol_normalised_returns/"
+        return "http://raw_data:8000/cumulative_daily_vol_normalised_returns_route/get_cum_daily_vol_normalised_returns/"
