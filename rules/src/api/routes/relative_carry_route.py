@@ -23,7 +23,6 @@ async def get_carry_async(
         result = await relative_carry_handler.get_relative_carry_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
-        print(result)
         return result
     except HTTPException as e:
         logger.exception("An error occurred while trying to calculate relatives carry for symbol %s. Error: %s", query.symbol, e.detail)

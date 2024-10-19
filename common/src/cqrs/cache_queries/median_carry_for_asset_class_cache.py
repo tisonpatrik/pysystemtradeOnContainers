@@ -8,8 +8,8 @@ NAME = "median_carry_for_asset_class"
 
 
 class GetMedianCarryForAssetClassCache(GetCacheStatement):
-    def __init__(self, asset_class: str):
-        super().__init__(parameter=asset_class)
+    def __init__(self, symbol: str):
+        super().__init__(parameter=symbol)
         self.name = NAME
 
     @property
@@ -18,14 +18,14 @@ class GetMedianCarryForAssetClassCache(GetCacheStatement):
 
 
 class SetMedianCarryForAssetClassCache(SetCacheStatement):
-    def __init__(self, daily_roll: pd.Series, asset_class: str):
+    def __init__(self, daily_roll: pd.Series, symbol: str):
         super().__init__(daily_roll)
-        self.asset_class = asset_class
+        self.symbol = symbol
         self.name = NAME
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.asset_class)
+        return get_series_key(self.name, self.symbol)
 
     @property
     def cache_value(self) -> dict:

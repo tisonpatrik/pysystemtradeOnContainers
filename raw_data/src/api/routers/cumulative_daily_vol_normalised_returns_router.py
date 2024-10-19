@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_cum_daily_vol_normalised_returns(
     query: CumulativeDailyVolNormReturnsQuery = Depends(),
-    normalizedPriceHandler: CumulativeDailyVolNormReturnsHandler = Depends(get_cumulative_daily_vol_norm_returns_handler),
+    handler: CumulativeDailyVolNormReturnsHandler = Depends(get_cumulative_daily_vol_norm_returns_handler),
 ):
     try:
-        result = await normalizedPriceHandler.get_cumulative_daily_vol_normalized_returns_async(query.symbol)
+        result = await handler.get_cumulative_daily_vol_normalized_returns_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

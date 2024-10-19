@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_instrument_currency_volalitlty_async(
     query: GetInstrumentCurrencyVolQuery = Depends(),
-    instrument_vol_handler: InstrumentCurrencyVolHandler = Depends(get_instrument_vol_handler),
+    handler: InstrumentCurrencyVolHandler = Depends(get_instrument_vol_handler),
 ):
     try:
-        result = await instrument_vol_handler.get_instrument_vol_for_symbol_async(query)
+        result = await handler.get_instrument_vol_for_symbol_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

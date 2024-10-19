@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_daily_returns_vol(
     query: GetDailyReturnsVolQuery = Depends(),
-    daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
+    handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ):
     try:
-        result = await daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
+        result = await handler.get_daily_returns_vol_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

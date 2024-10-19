@@ -84,25 +84,25 @@ class CarryClient:
             self.logger.exception("Error fetching raw carry for %s", symbol)
             raise
 
-    async def get_median_carry_for_asset_class_async(self, asset_class: str) -> pd.Series:
-        cache_statement = GetMedianCarryForAssetClassCache(asset_class)
+    async def get_median_carry_for_asset_class_async(self, symbol: str) -> pd.Series:
+        cache_statement = GetMedianCarryForAssetClassCache(symbol)
         try:
             # Try to get the data from Redis cache
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
                 return MedianCarryForAssetClass.from_cache_to_series(cached_data)
 
-            query = GetMedianCarryForAssetClassQuery(asset_class=asset_class)
+            query = GetMedianCarryForAssetClassQuery(symbol=symbol)
             data = await self.client.get_data_async(query)
             daily_roll = MedianCarryForAssetClass.from_api_to_series(data)
 
             # Store the fetched data in Redis cache
-            cache_set_statement = SetMedianCarryForAssetClassCache(daily_roll=daily_roll, asset_class=asset_class)
+            cache_set_statement = SetMedianCarryForAssetClassCache(daily_roll=daily_roll, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
             cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
             return daily_roll
         except Exception:
-            self.logger.exception("Error fetching raw carry for %s", asset_class)
+            self.logger.exception("Error fetching raw carry for %s", symbol)
             raise

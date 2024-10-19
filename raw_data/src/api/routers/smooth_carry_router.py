@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_raw_carry_by_symbol(
     query: GetRawCarryQuery = Depends(),
-    smooth_carry_handler: SmoothCarryHandler = Depends(get_smooth_carry_handler),
+    handler: SmoothCarryHandler = Depends(get_smooth_carry_handler),
 ):
     try:
-        result = await smooth_carry_handler.get_smooth_carry_async(query.symbol)
+        result = await handler.get_smooth_carry_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

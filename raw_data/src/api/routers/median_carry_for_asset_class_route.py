@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_raw_carry import GetRawCarryQuery
+from common.src.cqrs.api_queries.get_median_carry_for_asset_class import GetMedianCarryForAssetClassQuery
 from common.src.logging.logger import AppLogger
 from raw_data.src.api.dependencies.dependencies import get_median_carry_for_asset_class_handler
 from raw_data.src.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
@@ -16,11 +16,11 @@ logger = AppLogger.get_instance().get_logger()
     name="Get median carry for asset class router",
 )
 async def get_median_carry_for_asset_class(
-    query: GetRawCarryQuery = Depends(),
-    median_carry_for_asset_class_handler: MedianCarryForAssetClassHandler = Depends(get_median_carry_for_asset_class_handler),
+    query: GetMedianCarryForAssetClassQuery = Depends(),
+    handler: MedianCarryForAssetClassHandler = Depends(get_median_carry_for_asset_class_handler),
 ):
     try:
-        result = await median_carry_for_asset_class_handler.get_median_carry_for_asset_class_async(query.symbol)
+        result = await handler.get_median_carry_for_asset_class_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

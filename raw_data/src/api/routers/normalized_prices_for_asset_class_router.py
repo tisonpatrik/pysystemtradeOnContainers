@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_normalized_prices_for_asset_class(
     query: GetNormalizedPriceForAssetClassQuery = Depends(),
-    normalizedPriceHandler: NormalizedPricesForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
+    handler: NormalizedPricesForAssetClassHandler = Depends(get_normalized_price_for_asset_class_handler),
 ):
     try:
-        result = await normalizedPriceHandler.get_normalized_price_for_asset_class_async(query)
+        result = await handler.get_normalized_price_for_asset_class_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

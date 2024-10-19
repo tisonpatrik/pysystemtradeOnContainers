@@ -79,6 +79,5 @@ def get_cs_mean_reversion_handler(
 
 def get_relative_carry_handler(
     carry_client: CarryClient = Depends(get_carry_repository),
-    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> RelativeCarryHandler:
-    return RelativeCarryHandler(carry_client=carry_client, instrument_client=instrument_repository)
+    return RelativeCarryHandler(carry_client=carry_client)

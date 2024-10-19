@@ -17,10 +17,10 @@ logger = AppLogger.get_instance().get_logger()
 )
 async def get_fx_rate_for_instrument(
     query: GetFxRateQuery = Depends(),
-    fx_prices_handler: FxPricesHandler = Depends(get_fx_prices_handler),
+    handler: FxPricesHandler = Depends(get_fx_prices_handler),
 ):
     try:
-        result = await fx_prices_handler.get_fx_prices_for_symbol_async(query)
+        result = await handler.get_fx_prices_for_symbol_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

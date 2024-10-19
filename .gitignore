@@ -131,3 +131,7 @@ Pipfile.lock
 
 .vscode/
 data
+# Ignore Go binaries
+main
+*.exe
+*.out
