@@ -17,5 +17,5 @@ class SmoothCarryHandler:
             carry = await self.raw_carry_handler.get_raw_carry_async(symbol)
             return self.smooth_carry_service.calculate_smooth_carry(carry)
         except Exception:
-            self.logger.exception("Unexpected error occurred while geting Raw Carry")
+            self.logger.exception("Unexpected error occurred while geting Smooth Carry")
             raise

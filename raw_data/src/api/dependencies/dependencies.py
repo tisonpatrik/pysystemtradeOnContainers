@@ -25,6 +25,7 @@ from raw_data.src.api.handlers.daily_vol_normalized_price_for_asset_handler impo
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.src.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
+from raw_data.src.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.src.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.src.api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.src.api.handlers.smooth_carry_handler import SmoothCarryHandler
@@ -126,3 +127,10 @@ def get_smooth_carry_handler(
     raw_carry_handler: RawCarryHandler = Depends(get_raw_carry_handler),
 ) -> SmoothCarryHandler:
     return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)
+
+
+def get_median_carry_for_asset_class_handler(
+    raw_carry_handler: RawCarryHandler = Depends(get_raw_carry_handler),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
+) -> MedianCarryForAssetClassHandler:
+    return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=instrument_repository)

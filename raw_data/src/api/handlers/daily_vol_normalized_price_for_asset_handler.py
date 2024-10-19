@@ -9,11 +9,11 @@ class DailyVolNormalizedPriceForAssetHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.aggregated_returns_for_asset_handler = aggregated_returns_for_asset_handler
 
-    async def daily_vol_normalized_price_for_asset_async(self, asset_class: str) -> pd.Series:
+    async def daily_vol_normalized_price_for_asset_async(self, asset: str) -> pd.Series:
         try:
-            self.logger.info("Fetching daily volatility normalized prices for asset class %s", asset_class)
+            self.logger.info("Fetching daily volatility normalized prices for asset class %s", asset)
             aggregated_returns_for_asset_class = await self.aggregated_returns_for_asset_handler.get_aggregated_returns_for_asset_async(
-                asset_class
+                asset
             )
             return aggregated_returns_for_asset_class.cumsum()
 
