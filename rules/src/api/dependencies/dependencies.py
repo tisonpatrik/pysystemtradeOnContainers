@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI
 
 from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
+    get_carry_repository,
     get_daily_prices_repository,
     get_db_repository,
     get_instruments_repository,
@@ -14,6 +15,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
+from common.src.repositories.carry_client import CarryClient
 from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
@@ -63,8 +65,8 @@ def get_asserttrend_handler(
     return AssettrendHandler(raw_data_client=raw_data_client, instrument_repository=instrument_repository)
 
 
-def get_carry_handler(raw_data_client: RawDataClient = Depends(get_raw_data_client)) -> CarryHandler:
-    return CarryHandler(raw_data_client=raw_data_client)
+def get_carry_handler(carry_client: CarryClient = Depends(get_carry_repository)) -> CarryHandler:
+    return CarryHandler(carry_client=carry_client)
 
 
 def get_cs_mean_reversion_handler(

@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI
 
 from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
+    get_carry_repository,
     get_daily_prices_repository,
     get_db_repository,
     get_instruments_repository,
@@ -13,6 +14,7 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
+from common.src.repositories.carry_client import CarryClient
 from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from raw_data.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
@@ -35,8 +37,9 @@ async def app_lifespan(app: FastAPI):
 
 async def get_daily_returns_vol_handler(
     prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    redis_repository: RedisRepository = Depends(get_redis),
 ) -> DailyReturnsVolHandler:
-    return DailyReturnsVolHandler(prices_repository=prices_repository)
+    return DailyReturnsVolHandler(prices_repository=prices_repository, redis_repository=redis_repository)
 
 
 async def get_instrument_vol_handler(
@@ -107,8 +110,8 @@ def get_fx_prices_handler(repository: Repository = Depends(get_db_repository)) -
     return FxPricesHandler(repository=repository)
 
 
-def get_annualised_roll_handler(prices_repository: PricesClient = Depends(get_daily_prices_repository)) -> DailyAnnualisedRollHandler:
-    return DailyAnnualisedRollHandler(prices_repository=prices_repository)
+def get_annualised_roll_handler(carry_client: CarryClient = Depends(get_carry_repository)) -> DailyAnnualisedRollHandler:
+    return DailyAnnualisedRollHandler(carry_client=carry_client)
 
 
 def get_raw_carry_handler(
