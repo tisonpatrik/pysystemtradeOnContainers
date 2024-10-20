@@ -7,7 +7,6 @@ from common.src.dependencies.core_dependencies import (
     get_carry_repository,
     get_daily_prices_repository,
     get_db_repository,
-    get_instruments_repository,
     get_raw_data_client,
     get_redis,
 )
@@ -16,7 +15,6 @@ from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.carry_client import CarryClient
-from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from rules.src.api.handlers.accel_handler import AccelHandler
@@ -26,6 +24,7 @@ from rules.src.api.handlers.carry_handler import CarryHandler
 from rules.src.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
 from rules.src.api.handlers.momentum_handler import MomentumHandler
 from rules.src.api.handlers.relative_carry_handler import RelativeCarryHandler
+from rules.src.api.handlers.relative_momentum_handler import RelativeMomentumHandler
 from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 
 
@@ -61,9 +60,8 @@ def get_breakout_handler(
 
 def get_asserttrend_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
-    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> AssettrendHandler:
-    return AssettrendHandler(raw_data_client=raw_data_client, instrument_repository=instrument_repository)
+    return AssettrendHandler(raw_data_client=raw_data_client)
 
 
 def get_carry_handler(carry_client: CarryClient = Depends(get_carry_repository)) -> CarryHandler:
@@ -72,12 +70,17 @@ def get_carry_handler(carry_client: CarryClient = Depends(get_carry_repository))
 
 def get_cs_mean_reversion_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
-    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
 ) -> CSMeanReversionHandler:
-    return CSMeanReversionHandler(raw_data_client=raw_data_client, instrument_repository=instrument_repository)
+    return CSMeanReversionHandler(raw_data_client=raw_data_client)
 
 
 def get_relative_carry_handler(
     carry_client: CarryClient = Depends(get_carry_repository),
 ) -> RelativeCarryHandler:
     return RelativeCarryHandler(carry_client=carry_client)
+
+
+def get_relative_momentum_handler(
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+) -> RelativeMomentumHandler:
+    return RelativeMomentumHandler(raw_data_client=raw_data_client)

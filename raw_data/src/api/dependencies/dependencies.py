@@ -95,6 +95,7 @@ def get_cumulative_daily_vol_norm_returns_handler(
 
 
 def get_normalized_price_for_asset_class_handler(
+    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
     daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = Depends(
         get_daily_vol_normalized_price_for_asset_class_handler
     ),
@@ -103,6 +104,7 @@ def get_normalized_price_for_asset_class_handler(
     ),
 ) -> NormalizedPricesForAssetClassHandler:
     return NormalizedPricesForAssetClassHandler(
+        instruments_repository=instruments_repository,
         daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
         cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
     )

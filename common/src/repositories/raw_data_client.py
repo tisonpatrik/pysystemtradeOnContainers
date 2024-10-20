@@ -49,23 +49,23 @@ class RawDataClient:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
             raise
 
-    async def get_normalized_prices_for_asset_class_async(self, symbol: str, asset_class: str) -> pd.Series:
-        cache_statement = GetNormalizedPriceForAssetClassCache(asset_class)
+    async def get_normalized_prices_for_asset_class_async(self, symbol: str) -> pd.Series:
+        cache_statement = GetNormalizedPriceForAssetClassCache(symbol)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
                 return NormalizedPricesForAssetClass.from_cache_to_series(cached_data)
-            query = GetNormalizedPriceForAssetClassQuery(symbol=symbol, asset_class=asset_class)
+            query = GetNormalizedPriceForAssetClassQuery(symbol=symbol)
             raw_data = await self.client.get_data_async(query)
             data = NormalizedPricesForAssetClass.from_api_to_series(raw_data)
-            cache_set_statement = SetNormalizedPriceForAssetClassCache(prices=data, asset_class=asset_class)
+            cache_set_statement = SetNormalizedPriceForAssetClassCache(prices=data, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
             cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
             return data
         except Exception:
-            self.logger.exception("Error fetching daily returns vol rate for %s", asset_class)
+            self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
             raise
 
     async def get_cumulative_daily_vol_normalised_returns_async(self, symbol: str) -> pd.Series:

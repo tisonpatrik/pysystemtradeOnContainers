@@ -8,8 +8,8 @@ NAME = "normalized_price_for_asset_class"
 
 
 class GetNormalizedPriceForAssetClassCache(GetCacheStatement):
-    def __init__(self, asset_class: str):
-        super().__init__(parameter=asset_class)
+    def __init__(self, symbol: str):
+        super().__init__(parameter=symbol)
         self.name = NAME
 
     @property
@@ -18,9 +18,9 @@ class GetNormalizedPriceForAssetClassCache(GetCacheStatement):
 
 
 class SetNormalizedPriceForAssetClassCache(SetCacheStatement):
-    def __init__(self, prices: pd.Series, asset_class: str):
+    def __init__(self, prices: pd.Series, symbol: str):
         super().__init__(prices)
-        self.asset_class = asset_class
+        self.asset_class = symbol
         self.name = NAME
 
     @property
