@@ -23,7 +23,6 @@ async def get_momentum_async(
         result = await relative_momentum_handler.get_relative_momentum_async(query.symbol, query.speed)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
-        print(result)
         return result
     except HTTPException as e:
         logger.exception("An error occurred while trying to calculate relatives momentum for symbol %s. Error: %s", query.symbol, e.detail)

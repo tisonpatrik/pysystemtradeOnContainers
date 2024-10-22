@@ -1,3 +1,4 @@
+from common.src.cqrs.db_queries.get_all_instruments import GetAllInstruments
 from common.src.cqrs.db_queries.get_asset_class import GetAssetClass
 from common.src.cqrs.db_queries.get_instruments_for_asset_class import GetInstrumentsForAssetClass
 from common.src.cqrs.db_queries.get_point_size import GetPointSize
@@ -45,4 +46,13 @@ class InstrumentsClient:
             return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
         except Exception:
             self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
+            raise
+
+    async def get_all_instrument_async(self) -> list:
+        statement = GetAllInstruments()
+        try:
+            instruments_data = await self.repository.fetch_many_async(statement)
+            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
+        except Exception:
+            self.logger.exception("Database error when fetching all instruments")
             raise

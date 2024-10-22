@@ -7,15 +7,17 @@ from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_client import PricesClient
 from common.src.validation.daily_returns_vol import DailyReturnsVol
+from raw_data.src.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.src.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolHandler:
-    def __init__(self, prices_repository: PricesClient, redis_repository: RedisRepository):
+    def __init__(self, prices_repository: PricesClient, redis_repository: RedisRepository, daily_returns_handler: DailyReturnsHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
-        self.daily_returns_vol_service = DailyReturnsVolService()
         self.redis_repository = redis_repository
+        self.daily_returns_handler = daily_returns_handler
+        self.daily_returns_vol_service = DailyReturnsVolService()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         try:
@@ -24,7 +26,8 @@ class DailyReturnsVolHandler:
                 return cached_returns
             self.logger.info("Starting to get daily returns volatility for %s.", symbol)
             daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
-            returns = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices)
+            daily_returns = await self.daily_returns_handler.get_daily_returns_async(symbol)
+            returns = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices, daily_returns)
             self._cache_aggregated_returns(returns, symbol)
             return returns
         except Exception:

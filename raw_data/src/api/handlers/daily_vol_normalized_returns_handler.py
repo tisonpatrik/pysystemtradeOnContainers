@@ -9,6 +9,7 @@ from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.prices_client import PricesClient
+from raw_data.src.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.src.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.src.services.daily_vol_normalized_returns_service import DailyVolnormalizedReturnsService
 from raw_data.src.validation.daily_vol_normalized_returns import DailyVolNormalizedReturns
@@ -16,12 +17,18 @@ from raw_data.src.validation.daily_vol_normalized_returns import DailyVolNormali
 
 class DailyvolNormalizedReturnsHandler:
     def __init__(
-        self, prices_repository: PricesClient, daily_returns_vol_handler: DailyReturnsVolHandler, redis_repository: RedisRepository
+        self,
+        prices_repository: PricesClient,
+        daily_returns_vol_handler: DailyReturnsVolHandler,
+        redis_repository: RedisRepository,
+        daily_returns_handler: DailyReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
         self.daily_returns_vol_handler = daily_returns_vol_handler
         self.redis_repository = redis_repository
+        self.daily_returns_handler = daily_returns_handler
+
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()
 
     async def get_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
@@ -32,7 +39,8 @@ class DailyvolNormalizedReturnsHandler:
                 return cached_returns
             returnvol_data = await self.daily_returns_vol_handler.get_daily_returns_vol_async(symbol)
             prices = await self.prices_repository.get_daily_prices_async(symbol)
-            returns = self.daily_vol_normalized_returns_service.get_daily_vol_normalized_returns(prices, returnvol_data)
+            dailyreturns = await self.daily_returns_handler.get_daily_returns_async(symbol)
+            returns = self.daily_vol_normalized_returns_service.calculate_daily_vol_normalized_returns(prices, returnvol_data, dailyreturns)
             self._cache_aggregated_returns(returns, symbol)
             return returns
         except Exception:
