@@ -1,9 +1,10 @@
-from common.src.http_client.requests.fetch_request import FetchRequest
-from raw_data.src.validation.factor_name import FactorName
+from typing import Literal
+
+from pydantic import BaseModel
 
 
-class GetHistoricAverageFactorValueAllAssetsQuery(FetchRequest):
-    factor_name: FactorName
+class GetHistoricAverageFactorValueAllAssetsQuery(BaseModel):
+    factor_name: Literal["skew", "neg_skew"]
     lookback: int
 
     @property

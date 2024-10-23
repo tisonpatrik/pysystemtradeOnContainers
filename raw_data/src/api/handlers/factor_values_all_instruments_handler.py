@@ -3,7 +3,6 @@ import pandas as pd
 from common.src.logging.logger import AppLogger
 from common.src.repositories.instruments_client import InstrumentsClient
 from raw_data.src.api.handlers.factor_values_over_instrument_list_handler import FactorValuesOverInstrumentListHandler
-from raw_data.src.validation.factor_name import FactorName
 
 
 class FactorValuesAllInstrumentsHandler:
@@ -16,7 +15,7 @@ class FactorValuesAllInstrumentsHandler:
         self.instruments_client = instruments_client
         self.factor_values_over_instrument_list_handler = factor_values_over_instrument_list_handler
 
-    async def get_factor_values_for_all_instruments_async(self, factor_name: FactorName, lookback: int) -> pd.DataFrame:
+    async def get_factor_values_for_all_instruments_async(self, factor_name: str, lookback: int) -> pd.DataFrame:
         try:
             instrument_list = await self.instruments_client.get_all_instrument_async()
             return await self.factor_values_over_instrument_list_handler.get_factor_values_over_instrument_list_async(

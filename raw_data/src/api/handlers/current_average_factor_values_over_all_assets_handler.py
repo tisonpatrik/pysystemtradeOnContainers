@@ -2,7 +2,6 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 from raw_data.src.api.handlers.factor_values_all_instruments_handler import FactorValuesAllInstrumentsHandler
-from raw_data.src.validation.factor_name import FactorName
 
 
 class CurrentAverageFactorValuesOverAllAssetsHandler:
@@ -13,7 +12,7 @@ class CurrentAverageFactorValuesOverAllAssetsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.factor_values_all_instruments_handler = factor_values_all_instruments_handler
 
-    async def get_current_avg_factor_values_for_all_assets_async(self, factor_name: FactorName, lookback: int) -> pd.Series:
+    async def get_current_avg_factor_values_for_all_assets_async(self, factor_name: str, lookback: int) -> pd.Series:
         try:
             all_factor_values = await self.factor_values_all_instruments_handler.get_factor_values_for_all_instruments_async(
                 factor_name=factor_name, lookback=lookback

@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_historic_average_factor_value_all_assets import GetHistoricAverageFactorValueAllAssetsQuery
@@ -11,12 +13,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_historic_average_factor_value_all_assets/",
+    "/historic_average_factor_value_all_assets/",
     status_code=status.HTTP_200_OK,
     name="Get historic average factor value for all assets",
 )
 async def get_historic_average_factor_value_all_assets_async(
-    query: GetHistoricAverageFactorValueAllAssetsQuery = Depends(),
+    query: Annotated[GetHistoricAverageFactorValueAllAssetsQuery, Query()],
     handler: HistoricAverageFactorValueAllAssetsHandler = Depends(get_historic_average_factor_value_all_assets_handler),
 ):
     try:
