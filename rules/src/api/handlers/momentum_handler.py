@@ -18,6 +18,7 @@ class MomentumHandler:
         self.raw_data_client = raw_data_client
         self.redis_repository = redis_repository
         self.momentum_service = MomentumService()
+        self.background_tasks = set()
 
     async def get_momentum_async(self, symbol: str, Lfast: int) -> pd.Series:
         self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, Lfast)
@@ -46,4 +47,5 @@ class MomentumHandler:
     def _cache_aggregated_signal(self, signal: pd.Series, symbol: str, speed: int) -> None:
         cache_statement = SetMomentumCache(signal=signal, symbol=symbol, speed=speed)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
-        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)

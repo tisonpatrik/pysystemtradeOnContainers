@@ -27,8 +27,8 @@ class AppLogger(metaclass=SingletonMeta):
         if not self._logger.hasHandlers():
             # Initialize and set the RichConsoleHandler
             rich_handler = RichConsoleHandler()
-            # Set a formatter for structured logs
-            structured_formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(pathname)s:%(lineno)d] [%(funcName)s] %(message)s")
+            # Set a formatter without the timestamp
+            structured_formatter = logging.Formatter("[%(levelname)s] [%(pathname)s:%(lineno)d] [%(funcName)s] %(message)s")
             rich_handler.setFormatter(structured_formatter)
             self._logger.addHandler(rich_handler)
 

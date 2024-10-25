@@ -30,6 +30,7 @@ class DailyvolNormalizedReturnsHandler:
         self.daily_returns_handler = daily_returns_handler
 
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()
+        self.background_tasks = set()
 
     async def get_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching Daily volatility normalized returns for %s", symbol)
@@ -58,4 +59,5 @@ class DailyvolNormalizedReturnsHandler:
     def _cache_aggregated_returns(self, returns: pd.Series, symbol: str) -> None:
         cache_statement = SetDailyvolNormalizedReturnsCache(returns=returns, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
-        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)

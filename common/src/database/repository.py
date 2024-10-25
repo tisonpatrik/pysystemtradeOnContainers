@@ -33,7 +33,7 @@ class Repository:
         try:
             async with self.pool.acquire() as connection:
                 prepared_stmt = await connection.prepare(statement.query)
-                return await prepared_stmt.fetch(*statement.parameters, timeout=60)
+                return await prepared_stmt.fetch(*statement.parameters, timeout=10)
         except PostgresError as pg_err:
             self.logger.exception("Postgres error while fetching multiple records with query: %s", statement.query)
             raise FetchError(f"Failed to fetch multiple records: {pg_err}") from pg_err

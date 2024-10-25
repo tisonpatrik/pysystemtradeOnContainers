@@ -14,6 +14,7 @@ class DailyReturnsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_repository = prices_repository
         self.redis_repository = redis_repository
+        self.background_tasks = set()
 
     async def get_daily_returns_async(self, symbol: str) -> pd.Series:
         try:
@@ -39,4 +40,5 @@ class DailyReturnsHandler:
     def _cache_aggregated_returns(self, returns: pd.Series, symbol: str) -> None:
         cache_statement = SetDailyReturnsCache(returns=returns, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
-        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)

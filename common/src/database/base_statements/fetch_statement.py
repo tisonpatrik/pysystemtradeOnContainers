@@ -8,7 +8,8 @@ class FetchStatement(ABC):
 
     def __init__(self):
         self._query = ""
-        self._parameters = tuple
+        self._parameters = tuple()
+        self.batch_size = 1000  # Default batch size
 
     @property
     def query(self) -> str:

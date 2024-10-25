@@ -28,6 +28,7 @@ class CarryClient:
         self.db_repository = db_repository
         self.redis_repository = redis_repository
         self.logger = AppLogger.get_instance().get_logger()
+        self.background_tasks = set()
 
     async def get_carry_data_async(self, symbol: str) -> pd.DataFrame:
         statement = GetCarryDataQuery(symbol=symbol)
@@ -55,7 +56,8 @@ class CarryClient:
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return daily_roll
         except Exception:
             self.logger.exception("Error fetching raw carry for %s", symbol)
@@ -78,7 +80,8 @@ class CarryClient:
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return daily_roll
         except Exception:
             self.logger.exception("Error fetching raw carry for %s", symbol)
@@ -101,7 +104,8 @@ class CarryClient:
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return daily_roll
         except Exception:
             self.logger.exception("Error fetching raw carry for %s", symbol)

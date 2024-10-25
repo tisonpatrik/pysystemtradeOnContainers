@@ -18,6 +18,7 @@ class DailyReturnsVolHandler:
         self.redis_repository = redis_repository
         self.daily_returns_handler = daily_returns_handler
         self.daily_returns_vol_service = DailyReturnsVolService()
+        self.background_tasks = set()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         try:
@@ -45,4 +46,5 @@ class DailyReturnsVolHandler:
     def _cache_aggregated_returns(self, vol: pd.Series, symbol: str) -> None:
         cache_statement = SetDailyReturnsVolCache(vol=vol, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
-        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)

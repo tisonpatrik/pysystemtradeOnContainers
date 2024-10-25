@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 from functools import lru_cache
 
@@ -15,6 +16,7 @@ logger = AppLogger.get_instance().get_logger()
 @asynccontextmanager
 async def setup_async_database(app: FastAPI):
     settings = get_settings()
+    await asyncio.sleep(3)
     try:
         # Create an asyncpg connection pool
         app.state.async_pool = await asyncpg.create_pool(

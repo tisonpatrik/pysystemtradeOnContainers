@@ -17,6 +17,7 @@ class CumulativeDailyVolNormReturnsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.redis_repository = redis_repository
+        self.background_tasks = set()
 
     async def get_cumulative_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching cumulative daily vol normalized returns for asset class %s", symbol)
@@ -43,4 +44,5 @@ class CumulativeDailyVolNormReturnsHandler:
     def _cache_aggregated_returns(self, prices: pd.Series, symbol: str) -> None:
         cache_statement = SetCumulativeDailyVolNormReturnsCache(prices=prices, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
-        cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)

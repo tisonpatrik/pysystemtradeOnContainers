@@ -27,6 +27,7 @@ class RawDataClient:
         self.client = rest_client
         self.redis_repository = redis_repository
         self.logger = AppLogger.get_instance().get_logger()
+        self.background_tasks = set()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         cache_statement = GetDailyReturnsVolCache(symbol)
@@ -43,7 +44,8 @@ class RawDataClient:
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return vol
         except Exception:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
@@ -62,7 +64,8 @@ class RawDataClient:
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             # Optional: add a callback to handle task completion
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return data
         except Exception:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
@@ -80,7 +83,8 @@ class RawDataClient:
             cache_set_statement = SetCumulativeDailyVolNormReturnsCache(prices=data, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-            cache_task.add_done_callback(lambda t: self.logger.info("Cache set task completed"))
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
             return data
         except Exception:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
