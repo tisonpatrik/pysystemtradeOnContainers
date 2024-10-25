@@ -6,7 +6,7 @@ from common.src.http_client.requests.fetch_request import FetchRequest
 
 
 class GetRuleQuery(FetchRequest):
-    name: Annotated[str, StringConstraints(max_length=15)]
+    name: Annotated[str, StringConstraints(max_length=30)]
     speed: NonNegativeInt
 
     @property

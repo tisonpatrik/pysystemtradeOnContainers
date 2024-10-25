@@ -6,7 +6,7 @@ from common.src.http_client.requests.fetch_request import FetchRequest
 
 
 class GetFxRateQuery(FetchRequest):
-    symbol: Annotated[str, StringConstraints(max_length=10)]
+    symbol: Annotated[str, StringConstraints(max_length=30)]
     base_currency: Annotated[str, StringConstraints(max_length=3)]
 
     @property

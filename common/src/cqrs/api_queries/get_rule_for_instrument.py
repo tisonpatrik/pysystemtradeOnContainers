@@ -6,7 +6,7 @@ from common.src.http_client.requests.fetch_request import FetchRequest
 
 
 class GetRuleForInstrumentQuery(FetchRequest):
-    symbol: Annotated[str, StringConstraints(max_length=10)]
+    symbol: Annotated[str, StringConstraints(max_length=30)]
     speed: NonNegativeInt
 
     @property

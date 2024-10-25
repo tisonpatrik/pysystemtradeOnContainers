@@ -6,6 +6,13 @@ export
 # Define MIGRATE_CMD with sslmode=disable for reuse
 MIGRATE_CMD = docker run -v ./migrations/:/migrations --network pysystemtradeoncontainers_default migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
 
+.PHONY: create_binaries
+create_binaries:
+	@for dir in data_cleaning downloader data_processing env_generator; do \
+		echo "Building $$dir..."; \
+		(cd $$dir && go build -o main -ldflags "-s -w"); \
+	done
+
 .PHONY:create_env
 create_env:
 	@env_generator/main

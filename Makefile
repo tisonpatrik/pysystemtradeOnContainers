@@ -4,6 +4,8 @@ cheers:
 
 .PHONY: init
 init:
+	@echo "Create binaries"
+	@$(MAKE) -C database create_binaries
 	@echo "Initializing environment..."
 	@$(MAKE) -C database create_env
 	@echo "Processing data..."

@@ -4,7 +4,7 @@ from pydantic import BaseModel, NonNegativeInt, StringConstraints
 
 
 class Rule(BaseModel):
-    name: Annotated[str, StringConstraints(max_length=15)]
+    name: Annotated[str, StringConstraints(max_length=30)]
     speed: NonNegativeInt
 
     @property
