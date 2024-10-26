@@ -20,14 +20,10 @@ class AggregatedReturnsForAssetClassHandler:
         self.max_concurrent_tasks = 10
 
     async def get_aggregated_returns_for_asset_async(self, asset_class: str) -> pd.Series:
-        try:
-            instruments = await self._get_instruments_for_asset_class(asset_class)
-            aggregate_returns = await self._fetch_returns_for_instruments(instruments)
-            return self._calculate_median_returns(aggregate_returns)
-
-        except Exception:
-            self.logger.exception("Error aggregating returns for asset class: %s", asset_class)
-            raise
+        self.logger.info("Fetching aggregated returns for asset class %s", asset_class)
+        instruments = await self._get_instruments_for_asset_class(asset_class)
+        aggregate_returns = await self._fetch_returns_for_instruments(instruments)
+        return self._calculate_median_returns(aggregate_returns)
 
     async def _get_instruments_for_asset_class(self, asset_class: str) -> list:
         instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class)

@@ -21,17 +21,13 @@ class CumulativeDailyVolNormReturnsHandler:
 
     async def get_cumulative_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching cumulative daily vol normalized returns for asset class %s", symbol)
-        try:
-            cached_returns = await self._get_cached_returns(symbol)
-            if cached_returns is not None:
-                return cached_returns
-            norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns_async(symbol)
-            returns = norm_returns.cumsum()
-            self._cache_aggregated_returns(returns, symbol)
-            return returns
-        except Exception:
-            self.logger.exception("Unexpected error occurred while fetching normalied prices for asset class")
-            raise
+        cached_returns = await self._get_cached_returns(symbol)
+        if cached_returns is not None:
+            return cached_returns
+        norm_returns = await self.daily_vol_normalized_returns_handler.get_daily_vol_normalized_returns_async(symbol)
+        returns = norm_returns.cumsum()
+        self._cache_aggregated_returns(returns, symbol)
+        return returns
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetCumulativeDailyVolNormReturnsCache(symbol)

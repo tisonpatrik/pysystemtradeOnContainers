@@ -21,19 +21,15 @@ class DailyReturnsVolHandler:
         self.background_tasks = set()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
-        try:
-            cached_returns = await self._get_cached_returns(symbol)
-            if cached_returns is not None:
-                return cached_returns
-            self.logger.info("Starting to get daily returns volatility for %s.", symbol)
-            daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
-            daily_returns = await self.daily_returns_handler.get_daily_returns_async(symbol)
-            returns = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices, daily_returns)
-            self._cache_aggregated_returns(returns, symbol)
-            return returns
-        except Exception:
-            self.logger.exception("Error in processing instrument volatility")
-            raise
+        self.logger.info("Fetching daily returns volatility for %s.", symbol)
+        cached_returns = await self._get_cached_returns(symbol)
+        if cached_returns is not None:
+            return cached_returns
+        daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
+        daily_returns = await self.daily_returns_handler.get_daily_returns_async(symbol)
+        returns = self.daily_returns_vol_service.calculate_daily_returns_vol(daily_prices, daily_returns)
+        self._cache_aggregated_returns(returns, symbol)
+        return returns
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetDailyReturnsVolCache(symbol)

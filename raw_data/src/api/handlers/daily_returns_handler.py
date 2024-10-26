@@ -17,17 +17,14 @@ class DailyReturnsHandler:
         self.background_tasks = set()
 
     async def get_daily_returns_async(self, symbol: str) -> pd.Series:
-        try:
-            cached_returns = await self._get_cached_returns(symbol)
-            if cached_returns is not None:
-                return cached_returns
-            prices = await self.prices_repository.get_daily_prices_async(symbol)
-            returns = prices.diff()
-            self._cache_aggregated_returns(returns, symbol)
-            return returns
-        except Exception:
-            self.logger.exception("Error in processing daily returns")
-            raise
+        self.logger.info("Fetching to get daily returns for %s.", symbol)
+        cached_returns = await self._get_cached_returns(symbol)
+        if cached_returns is not None:
+            return cached_returns
+        prices = await self.prices_repository.get_daily_prices_async(symbol)
+        returns = prices.diff()
+        self._cache_aggregated_returns(returns, symbol)
+        return returns
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetDailyReturnsCache(symbol)

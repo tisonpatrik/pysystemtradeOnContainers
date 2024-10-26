@@ -16,10 +16,6 @@ class DailyPercentageReturnsHandler:
         self.daily_returns_handler = daily_returns_handler
 
     async def get_daily_percentage_returns_async(self, symbol: str) -> pd.Series:
-        try:
-            denom_prices = await self.prices_repository.get_denom_prices_async(symbol)
-            num_returns = await self.daily_returns_handler.get_daily_returns_async(symbol)
-            return num_returns / denom_prices.ffill()
-        except Exception:
-            self.logger.exception("Error in processing daily percentage returns")
-            raise
+        denom_prices = await self.prices_repository.get_denom_prices_async(symbol)
+        num_returns = await self.daily_returns_handler.get_daily_returns_async(symbol)
+        return num_returns / denom_prices.ffill()

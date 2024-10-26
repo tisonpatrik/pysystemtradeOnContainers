@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from common.src.middleware.middleware import AppMiddleware
+from common.src.middleware.logging import AppMiddleware
 from raw_data.src.api.dependencies.dependencies import app_lifespan
 from raw_data.src.api.routers.cumulative_daily_vol_normalised_returns_router import router as cumulative_daily_vol_normalised_returns_route
 from raw_data.src.api.routers.daily_returns_vol_route import router as daily_returns_vol_route

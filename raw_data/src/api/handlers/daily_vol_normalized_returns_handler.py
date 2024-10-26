@@ -34,19 +34,15 @@ class DailyvolNormalizedReturnsHandler:
 
     async def get_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching Daily volatility normalized returns for %s", symbol)
-        try:
-            cached_returns = await self._get_cached_returns(symbol)
-            if cached_returns is not None:
-                return cached_returns
-            returnvol_data = await self.daily_returns_vol_handler.get_daily_returns_vol_async(symbol)
-            prices = await self.prices_repository.get_daily_prices_async(symbol)
-            dailyreturns = await self.daily_returns_handler.get_daily_returns_async(symbol)
-            returns = self.daily_vol_normalized_returns_service.calculate_daily_vol_normalized_returns(prices, returnvol_data, dailyreturns)
-            self._cache_aggregated_returns(returns, symbol)
-            return returns
-        except Exception:
-            self.logger.exception("Unexpected error occurred while fetching Daily volatility normalized returns")
-            raise
+        cached_returns = await self._get_cached_returns(symbol)
+        if cached_returns is not None:
+            return cached_returns
+        returnvol_data = await self.daily_returns_vol_handler.get_daily_returns_vol_async(symbol)
+        prices = await self.prices_repository.get_daily_prices_async(symbol)
+        dailyreturns = await self.daily_returns_handler.get_daily_returns_async(symbol)
+        returns = self.daily_vol_normalized_returns_service.calculate_daily_vol_normalized_returns(prices, returnvol_data, dailyreturns)
+        self._cache_aggregated_returns(returns, symbol)
+        return returns
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetDailyvolNormalizedReturnsCache(symbol)

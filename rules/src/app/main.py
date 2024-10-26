@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from common.src.middleware.middleware import AppMiddleware
+from common.src.middleware.logging import AppMiddleware
 from rules.src.api.dependencies.dependencies import app_lifespan
 from rules.src.api.routes.accel_route import router as accel_route
 from rules.src.api.routes.assettrend_route import router as assettrend_route

@@ -20,18 +20,13 @@ class NormalizedPricesForAssetClassHandler:
         self.cumulative_daily_vol_norm_returns_handler = cumulative_daily_vol_norm_returns_handler
 
     async def get_normalized_price_for_asset_class_async(self, query: GetNormalizedPriceForAssetClassQuery) -> pd.Series:
-        try:
-            self.logger.info("Fetching normalized prices for asset class %s", query)
-            asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)
+        self.logger.info("Fetching normalized prices for asset class %s", query)
+        asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)
 
-            normalized_price_for_asset_class = (
-                await self.daily_vol_normalized_price_for_asset_handler.daily_vol_normalized_price_for_asset_async(asset_class.asset_class)
-            )
-            normalized_price_this_instrument = (
-                await self.cumulative_daily_vol_norm_returns_handler.get_cumulative_daily_vol_normalized_returns_async(query.symbol)
-            )
-            return normalized_price_for_asset_class.reindex(normalized_price_this_instrument.index).ffill()
-
-        except Exception:
-            self.logger.exception("Unexpected error occurred while fetching normalied prices for asset class")
-            raise
+        normalized_price_for_asset_class = (
+            await self.daily_vol_normalized_price_for_asset_handler.daily_vol_normalized_price_for_asset_async(asset_class.asset_class)
+        )
+        normalized_price_this_instrument = (
+            await self.cumulative_daily_vol_norm_returns_handler.get_cumulative_daily_vol_normalized_returns_async(query.symbol)
+        )
+        return normalized_price_for_asset_class.reindex(normalized_price_this_instrument.index).ffill()

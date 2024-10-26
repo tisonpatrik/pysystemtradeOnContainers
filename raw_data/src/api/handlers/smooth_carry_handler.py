@@ -12,10 +12,6 @@ class SmoothCarryHandler:
         self.smooth_carry_service = SmoothCarryService()
 
     async def get_smooth_carry_async(self, symbol: str) -> pd.Series:
-        try:
-            self.logger.info("Fetching Smooth Carry for symbol %s", symbol)
-            carry = await self.raw_carry_handler.get_raw_carry_async(symbol)
-            return self.smooth_carry_service.calculate_smooth_carry(carry)
-        except Exception:
-            self.logger.exception("Unexpected error occurred while geting Smooth Carry")
-            raise
+        self.logger.info("Fetching Smooth Carry for symbol %s", symbol)
+        carry = await self.raw_carry_handler.get_raw_carry_async(symbol)
+        return self.smooth_carry_service.calculate_smooth_carry(carry)

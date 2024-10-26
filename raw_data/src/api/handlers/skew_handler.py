@@ -12,17 +12,11 @@ class SkewHandler:
         self.skew_service = SkewService()
 
     async def get_skew_async(self, symbol: str, lookback: int) -> pd.Series:
-        try:
-            perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
-            return await self.skew_service.calculate_skew(perc_returns, lookback)
-        except Exception:
-            self.logger.exception("Error in fetching skew")
-            raise
+        self.logger.info("Fetching skew for symbol %s", symbol)
+        perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
+        return await self.skew_service.calculate_skew(perc_returns, lookback)
 
     async def get_neg_skew_async(self, symbol: str, lookback: int) -> pd.Series:
-        try:
-            perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
-            return await self.skew_service.calculate_neg_skew(perc_returns, lookback)
-        except Exception:
-            self.logger.exception("Error in fetching negative skew")
-            raise
+        self.logger.info("Fetching negative skew for symbol %s", symbol)
+        perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
+        return await self.skew_service.calculate_neg_skew(perc_returns, lookback)

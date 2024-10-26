@@ -12,18 +12,10 @@ class RulesManagerHandler:
         self.repository = repository
 
     async def create_rule_async(self, rule: Rule):
-        try:
-            statement = CreateRule(rule)
-            await self.repository.insert_item_async(statement)
-        except Exception:
-            self.logger.exception("Error creating rule")
-            raise
+        statement = CreateRule(rule)
+        await self.repository.insert_item_async(statement)
 
     async def get_all_rules_async(self):
-        try:
-            statement = GetAllRules()
-            rules_data = await self.repository.fetch_many_async(statement)
-            return [to_pydantic(rule_data, Rule) for rule_data in rules_data]
-        except Exception:
-            self.logger.exception("Error fetching all rules")
-            raise
+        statement = GetAllRules()
+        rules_data = await self.repository.fetch_many_async(statement)
+        return [to_pydantic(rule_data, Rule) for rule_data in rules_data]

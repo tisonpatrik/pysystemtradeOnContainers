@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from common.src.middleware.middleware import AppMiddleware
+from common.src.middleware.logging import AppMiddleware
 from forecast.src.api.dependencies.forecast_dependencies import app_lifespan
 from forecast.src.api.routers.raw_forecast_router import router as raw_forecast_route
 
@@ -16,4 +16,5 @@ app_configs = {
 
 app = FastAPI(**app_configs)
 app.add_middleware(AppMiddleware)
+
 app.include_router(raw_forecast_route, prefix="/get_raw_forecast_route")

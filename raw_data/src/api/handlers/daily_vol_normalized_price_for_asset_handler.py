@@ -10,13 +10,6 @@ class DailyVolNormalizedPriceForAssetHandler:
         self.aggregated_returns_for_asset_handler = aggregated_returns_for_asset_handler
 
     async def daily_vol_normalized_price_for_asset_async(self, asset: str) -> pd.Series:
-        try:
-            self.logger.info("Fetching daily volatility normalized prices for asset class %s", asset)
-            aggregated_returns_for_asset_class = await self.aggregated_returns_for_asset_handler.get_aggregated_returns_for_asset_async(
-                asset
-            )
-            return aggregated_returns_for_asset_class.cumsum()
-
-        except Exception:
-            self.logger.exception("Unexpected error occurred while fetching normalied prices for asset class")
-            raise
+        self.logger.info("Fetching daily volatility normalized prices for asset class %s", asset)
+        aggregated_returns_for_asset_class = await self.aggregated_returns_for_asset_handler.get_aggregated_returns_for_asset_async(asset)
+        return aggregated_returns_for_asset_class.cumsum()

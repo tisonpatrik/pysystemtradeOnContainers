@@ -19,24 +19,19 @@ class FxPricesHandler:
         self.fx_prices_service = FxService()
 
     async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
-        try:
-            self.logger.info("Fetching FX prices for symbol %s", get_fx_rate_query.symbol)
-            instrument_currency = await self._get_instrument_currency(get_fx_rate_query.symbol)
-            base_currency = get_fx_rate_query.base_currency
+        self.logger.info("Fetching FX prices for symbol %s", get_fx_rate_query.symbol)
+        instrument_currency = await self._get_instrument_currency(get_fx_rate_query.symbol)
+        base_currency = get_fx_rate_query.base_currency
 
-            if instrument_currency.currency == base_currency:
-                fx_data = self.fx_prices_service.get_default_rate_series()
-            elif base_currency == self.default_currency:
-                fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency, self.default_currency)
-            elif instrument_currency.currency == self.default_currency:
-                fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency, base_currency)
-            else:
-                fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
-            return fx_data
-
-        except Exception:
-            self.logger.exception("Unexpected error occurred while fetching FX prices")
-            raise
+        if instrument_currency.currency == base_currency:
+            fx_data = self.fx_prices_service.get_default_rate_series()
+        elif base_currency == self.default_currency:
+            fx_data = await self.get_standard_fx_prices_async(instrument_currency.currency, self.default_currency)
+        elif instrument_currency.currency == self.default_currency:
+            fx_data = await self.get_fx_prices_for_inversion(instrument_currency.currency, base_currency)
+        else:
+            fx_data = await self.get_fx_cross(instrument_currency.currency, base_currency)
+        return fx_data
 
     async def _get_instrument_currency(self, symbol: str) -> InstrumentCurrency:
         statement = GetInstrumentCurrency(symbol=symbol)

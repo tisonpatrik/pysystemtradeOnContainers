@@ -22,25 +22,19 @@ class MomentumHandler:
 
     async def get_momentum_async(self, symbol: str, Lfast: int) -> pd.Series:
         self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, Lfast)
-        try:
-            cached_signal = await self._get_cached_signal(symbol, Lfast)
-            if cached_signal is not None:
-                return cached_signal
-            daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
-            daily_vol = await self.raw_data_client.get_daily_returns_vol_async(symbol)
-            signal = self.momentum_service.calculate_ewmac(daily_prices, daily_vol, Lfast)
-            self._cache_aggregated_signal(signal, symbol, Lfast)
-            return signal
-
-        except Exception as e:
-            self.logger.exception("Unexpected error calculating momentum for %s with Lfast %d", symbol, Lfast)
-            raise ValueError(f"An error occurred while calculating momentum for {symbol} with Lfast {Lfast}.") from e
+        cached_signal = await self._get_cached_signal(symbol, Lfast)
+        if cached_signal is not None:
+            return cached_signal
+        daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
+        daily_vol = await self.raw_data_client.get_daily_returns_vol_async(symbol)
+        signal = self.momentum_service.calculate_ewmac(daily_prices, daily_vol, Lfast)
+        self._cache_aggregated_signal(signal, symbol, Lfast)
+        return signal
 
     async def _get_cached_signal(self, symbol: str, speed: int) -> pd.Series | None:
         cache_statement = GetMomentumCache(symbol, speed)
         cached_data = await self.redis_repository.get_cache(cache_statement)
         if cached_data is not None:
-            self.logger.info("Cache hit for asset class: %s", symbol)
             return EwmacSignal.from_cache_to_series(cached_data)
         return None
 

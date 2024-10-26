@@ -12,14 +12,9 @@ class RelativeCarryHandler:
         self.carry_service = CarryService()
 
     async def get_relative_carry_async(self, symbol: str) -> pd.Series:
-        try:
-            self.logger.info("Calculating Relative carry rule for %s", symbol)
-            smoothed_carry = await self.carry_client.get_smoothed_carry_async(symbol)
-            median_carry_for_asset_class = await self.carry_client.get_median_carry_for_asset_class_async(symbol)
-            return self.carry_service.calculate_relative_carry(
-                smoothed_carry=smoothed_carry, median_carry_for_asset_class=median_carry_for_asset_class
-            )
-
-        except Exception:
-            self.logger.exception("Error calculating Carry rule for %s", symbol)
-            raise
+        self.logger.info("Calculating Relative carry rule for %s", symbol)
+        smoothed_carry = await self.carry_client.get_smoothed_carry_async(symbol)
+        median_carry_for_asset_class = await self.carry_client.get_median_carry_for_asset_class_async(symbol)
+        return self.carry_service.calculate_relative_carry(
+            smoothed_carry=smoothed_carry, median_carry_for_asset_class=median_carry_for_asset_class
+        )

@@ -22,48 +22,43 @@ class PricesClient:
 
     async def get_daily_prices_async(self, symbol: str) -> pd.Series:
         cache_statement = GetDailyPricesCache(symbol)
-        try:
-            # Try to get the data from Redis cache
-            cached_data = await self.redis_repository.get_cache(cache_statement)
-            if cached_data is not None:
-                return DailyPrices.from_cache_to_series(cached_data)
+        cached_data = await self.redis_repository.get_cache(cache_statement)
+        if cached_data is not None:
+            return DailyPrices.from_cache_to_series(cached_data)
 
-            # If cache miss, fetch from database
-            statement = GetDailyPriceQuery(symbol=symbol)
-            prices_data = await self.db_repository.fetch_many_async(statement)
-            prices = DailyPrices.from_db_to_series(prices_data)
+        # If cache miss, fetch from database
+        statement = GetDailyPriceQuery(symbol=symbol)
+        prices_data = await self.db_repository.fetch_many_async(statement)
+        if not prices_data:
+            raise ValueError("The provided data list is empty.")
+        prices = DailyPrices.from_db_to_series(prices_data)
 
-            # Store the fetched data in Redis cache in the background (fire-and-forget)
-            cache_set_statement = SetDailyPricesCache(prices=prices, instrument_code=symbol)
-            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+        # Store the fetched data in Redis cache in the background (fire-and-forget)
+        cache_set_statement = SetDailyPricesCache(prices=prices, instrument_code=symbol)
+        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-            self.background_tasks.add(cache_task)
-            cache_task.add_done_callback(self.background_tasks.discard)
-            return prices
-        except Exception:
-            self.logger.exception("Error when fetching daily prices for symbol %s", symbol)
-            raise
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)
+        return prices
 
     async def get_denom_prices_async(self, symbol: str) -> pd.Series:
         cache_statement = GetDenomPricesCache(symbol)
-        try:
-            # Try to get the data from Redis cache
-            cached_data = await self.redis_repository.get_cache(cache_statement)
-            if cached_data is not None:
-                return DenomPrices.from_cache_to_series(cached_data)
-            # If cache miss, fetch from database
-            statement = GetDenomPriceQuery(symbol=symbol)
-            prices_data = await self.db_repository.fetch_many_async(statement)
-            prices = DenomPrices.from_db_to_series(prices_data)
+        # Try to get the data from Redis cache
+        cached_data = await self.redis_repository.get_cache(cache_statement)
+        if cached_data is not None:
+            return DenomPrices.from_cache_to_series(cached_data)
+        # If cache miss, fetch from database
+        statement = GetDenomPriceQuery(symbol=symbol)
+        prices_data = await self.db_repository.fetch_many_async(statement)
+        if not prices_data:
+            raise ValueError("The provided data list is empty.")
+        prices = DenomPrices.from_db_to_series(prices_data)
 
-            # Store the fetched data in Redis cache in the background (fire-and-forget)
-            cache_set_statement = SetDenomPricesCache(prices=prices, instrument_code=symbol)
-            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+        # Store the fetched data in Redis cache in the background (fire-and-forget)
+        cache_set_statement = SetDenomPricesCache(prices=prices, instrument_code=symbol)
+        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-            self.background_tasks.add(cache_task)
-            cache_task.add_done_callback(self.background_tasks.discard)
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)
 
-            return prices
-        except Exception:
-            self.logger.exception("Error when fetching daily prices for symbol %s", symbol)
-            raise
+        return prices

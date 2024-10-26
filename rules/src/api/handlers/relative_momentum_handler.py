@@ -12,13 +12,9 @@ class RelativeMomentumHandler:
         self.relative_momentum_service = RelativeMomentumService()
 
     async def get_relative_momentum_async(self, symbol: str, speed: int) -> pd.Series:
-        try:
-            self.logger.info("Calculating Relative Momentum rule for %s", symbol)
-            cumulative_daily_vol_norm_returns = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(symbol)
-            normalized_prices_for_asset_class = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
-            return self.relative_momentum_service.calculate_relative_momentum(
-                cumulative_daily_vol_norm_returns, normalized_prices_for_asset_class, speed
-            )
-        except Exception:
-            self.logger.exception("Error calculating Relative Momentum rule for %s", symbol)
-            raise
+        self.logger.info("Calculating Relative Momentum rule for %s", symbol)
+        cumulative_daily_vol_norm_returns = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(symbol)
+        normalized_prices_for_asset_class = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
+        return self.relative_momentum_service.calculate_relative_momentum(
+            cumulative_daily_vol_norm_returns, normalized_prices_for_asset_class, speed
+        )

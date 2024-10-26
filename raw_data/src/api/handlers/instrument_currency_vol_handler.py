@@ -22,12 +22,9 @@ class InstrumentCurrencyVolHandler:
         self.instrument_vol_service = InstrumentCurrencyVolService()
 
     async def get_instrument_vol_for_symbol_async(self, query: GetInstrumentCurrencyVolQuery) -> pd.Series:
-        try:
-            denom_prices = await self.prices_repository.get_denom_prices_async(query.symbol)
-            point_size = await self.instruments_repository.get_point_size_async(query.symbol)
+        self.logger.info("Fetching instrument currency volatility for %s.", query.symbol)
+        denom_prices = await self.prices_repository.get_denom_prices_async(query.symbol)
+        point_size = await self.instruments_repository.get_point_size_async(query.symbol)
 
-            daily_returns_vol = await self.daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
-            return self.instrument_vol_service.calculate_instrument_vol_async(denom_prices, daily_returns_vol, point_size.pointsize)
-        except Exception:
-            self.logger.exception("Error in processing instrument volatility")
-            raise
+        daily_returns_vol = await self.daily_returns_vol_handler.get_daily_returns_vol_async(query.symbol)
+        return self.instrument_vol_service.calculate_instrument_vol_async(denom_prices, daily_returns_vol, point_size.pointsize)

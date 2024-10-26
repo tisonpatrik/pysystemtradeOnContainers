@@ -12,10 +12,6 @@ class AssettrendHandler:
         self.assettrend_service = AssettrendService()
 
     async def get_assettrend_async(self, symbol: str, speed: int) -> pd.Series:
-        try:
-            self.logger.info("Calculating AssetTrend rule for %s by speed %d", symbol, speed)
-            prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
-            return self.assettrend_service.calculate_assettrend(prices, speed)
-        except Exception:
-            self.logger.exception("Error calculating AssetTrend rule for %s by speed %d", symbol, speed)
-            raise
+        self.logger.info("Calculating AssetTrend rule for %s by speed %d", symbol, speed)
+        prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
+        return self.assettrend_service.calculate_assettrend(prices, speed)
