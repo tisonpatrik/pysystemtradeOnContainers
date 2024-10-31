@@ -17,7 +17,7 @@ class FactorValuesOverInstrumentListHandler:
     async def get_factor_values_over_instrument_list_async(
         self, instrument_list: list[Instrument], factor_name: str, lookback: int
     ) -> pd.DataFrame:
-        self.logger.info("Fetching factor values for instruments %s for factor %s", instrument_list, factor_name)
+        self.logger.info("Fetching factor values for instruments for factor %s", factor_name)
         async with BoundedTaskGroup(max_parallelism=self.max_concurrent_tasks) as tg:
             # Schedule the tasks without awaiting, collecting coroutine objects instead
             tasks = [tg.create_task(self._get_skew_task(instrument, factor_name, lookback)) for instrument in instrument_list]
@@ -29,7 +29,6 @@ class FactorValuesOverInstrumentListHandler:
         instrument_symbols = [instrument.symbol for instrument in instrument_list]
         all_factor_values_df = pd.concat(all_factor_values, axis=1)
         all_factor_values_df.columns = instrument_symbols
-
         return all_factor_values_df
 
     def _get_skew_task(self, instrument: Instrument, factor_name: str, lookback: int):

@@ -24,14 +24,11 @@ async def get_instrument_currency_volalitlty_async(
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result
-    except HTTPException as e:
-        logger.exception(
-            "An error occurred while trying to get instrument currency volatility for symbol %s. Error: %s", query.symbol, e.detail
-        )
-        raise
     except ValidationError as e:
-        logger.exception("Validation error for symbol. Error: %s", e.json())
+        logger.exception("Validation error for symbol %s. Error: %s", query.symbol, e.errors())
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Validation error") from None
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from None
     except Exception:
         logger.exception("Unhandled exception for symbol %s", query.symbol)
-        raise HTTPException(status_code=500, detail="Internal server error") from None
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error") from None

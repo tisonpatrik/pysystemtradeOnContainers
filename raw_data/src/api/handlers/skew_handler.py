@@ -14,9 +14,10 @@ class SkewHandler:
     async def get_skew_async(self, symbol: str, lookback: int) -> pd.Series:
         self.logger.info("Fetching skew for symbol %s", symbol)
         perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
-        return await self.skew_service.calculate_skew(perc_returns, lookback)
+        return self.skew_service.calculate_skew(perc_returns, lookback)
 
     async def get_neg_skew_async(self, symbol: str, lookback: int) -> pd.Series:
         self.logger.info("Fetching negative skew for symbol %s", symbol)
         perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
-        return await self.skew_service.calculate_neg_skew(perc_returns, lookback)
+        skew = self.skew_service.calculate_skew(perc_returns, lookback)
+        return -skew

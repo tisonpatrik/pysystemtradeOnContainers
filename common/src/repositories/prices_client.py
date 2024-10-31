@@ -51,7 +51,7 @@ class PricesClient:
         statement = GetDenomPriceQuery(symbol=symbol)
         prices_data = await self.db_repository.fetch_many_async(statement)
         if not prices_data:
-            raise ValueError("The provided data list is empty.")
+            raise ValueError("There are no data for symbol: %s.", symbol)
         prices = DenomPrices.from_db_to_series(prices_data)
 
         # Store the fetched data in Redis cache in the background (fire-and-forget)
