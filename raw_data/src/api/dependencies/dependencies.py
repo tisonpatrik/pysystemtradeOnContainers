@@ -30,6 +30,7 @@ from raw_data.src.api.handlers.daily_vol_normalized_price_for_asset_handler impo
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.src.api.handlers.demanded_factor_value_handler import DemandedFactorValueHandler
 from raw_data.src.api.handlers.factor_values_all_instruments_handler import FactorValuesAllInstrumentsHandler
 from raw_data.src.api.handlers.factor_values_over_instrument_list_handler import FactorValuesOverInstrumentListHandler
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
@@ -208,4 +209,15 @@ def get_historic_average_factor_value_all_assets_handler(
 ) -> HistoricAverageFactorValueAllAssetsHandler:
     return HistoricAverageFactorValueAllAssetsHandler(
         current_average_factor_values_over_all_assets_handler=current_average_factor_values_over_all_assets_handler
+    )
+
+
+def get_demanded_factor_value_handler(
+    historic_average_factor_value_all_assets_handler: HistoricAverageFactorValueAllAssetsHandler = Depends(
+        get_historic_average_factor_value_all_assets_handler
+    ),
+    skew_handler: SkewHandler = Depends(get_skew_handler),
+) -> DemandedFactorValueHandler:
+    return DemandedFactorValueHandler(
+        historic_average_factor_value_all_assets_handler=historic_average_factor_value_all_assets_handler, skew_handler=skew_handler
     )
