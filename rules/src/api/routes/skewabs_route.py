@@ -23,7 +23,6 @@ async def get_skewabs_async(
         result = await skewabs_handler.get_skewabs_async(query.symbol, query.speed, lookback=query.lookback)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
-        print(result)
         return result
     except HTTPException as e:
         logger.exception("An error occurred while trying to calculate skewabs for symbol %s. Error: %s", query.symbol, e.detail)

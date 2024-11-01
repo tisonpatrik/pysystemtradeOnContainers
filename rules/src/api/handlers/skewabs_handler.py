@@ -14,5 +14,4 @@ class SkewAbsHandler:
     async def get_skewabs_async(self, symbol: str, speed: int, lookback: int) -> pd.Series:
         self.logger.info("Calculating Relative Momentum rule for %s", symbol)
         absolute_skew_deviation = await self.raw_data_client.absolute_skew_deviation_async(symbol, lookback)
-        print(absolute_skew_deviation)
         return self.skewabs_service.calculate_skewabs(demean_factor_value=absolute_skew_deviation, smooth=speed)

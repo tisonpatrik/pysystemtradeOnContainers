@@ -16,6 +16,7 @@ from raw_data.src.api.routers.instrument_volatility_route import router as instr
 from raw_data.src.api.routers.median_carry_for_asset_class_route import router as median_carry_for_asset_class_route
 from raw_data.src.api.routers.normalized_prices_for_asset_class_router import router as normalized_prices_for_asset_class_route
 from raw_data.src.api.routers.raw_carry_router import router as raw_carry_route
+from raw_data.src.api.routers.relative_skew_deviation_router import router as relative_skew_deviation_route
 from raw_data.src.api.routers.smooth_carry_router import router as smooth_carry_route
 
 logger = AppLogger.get_instance().get_logger()
@@ -41,6 +42,7 @@ app.include_router(daily_returns_vol_route, prefix="/daily_returns_vol_route")
 app.include_router(smooth_carry_route, prefix="/smooth_carry_route")
 app.include_router(median_carry_for_asset_class_route, prefix="/median_carry_for_asset_class_route")
 app.include_router(absolute_skew_deviation_route, prefix="/absolute_skew_deviation_route")
+app.include_router(relative_skew_deviation_route, prefix="/relative_skew_deviation_route")
 
 
 @app.exception_handler(RequestValidationError)

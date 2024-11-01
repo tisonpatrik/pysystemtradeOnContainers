@@ -8,7 +8,7 @@ from common.src.validation.instrument import Instrument
 from raw_data.src.api.handlers.skew_handler import SkewHandler
 
 
-class FactorValuesOverInstrumentListHandler:
+class NegSkewOverInstrumentListHandler:
     def __init__(self, skew_handler: SkewHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.skew_handler = skew_handler
