@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
 from common.src.repositories.instruments_client import InstrumentsClient
 from raw_data.src.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler

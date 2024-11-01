@@ -18,6 +18,5 @@ class SkewHandler:
 
     async def get_neg_skew_async(self, symbol: str, lookback: int) -> pd.Series:
         self.logger.info("Fetching negative skew for symbol %s", symbol)
-        perc_returns = await self.daily_percentage_returns_handler.get_daily_percentage_returns_async(symbol)
-        skew = self.skew_service.calculate_skew(perc_returns, lookback)
+        skew = await self.get_skew_async(symbol, lookback)
         return -skew

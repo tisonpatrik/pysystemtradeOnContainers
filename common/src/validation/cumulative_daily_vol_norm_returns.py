@@ -3,7 +3,6 @@ from typing import TypeVar
 import pandas as pd
 from pandera import Field
 from pandera.dtypes import Float, Timestamp
-from pandera.errors import SchemaError
 
 from common.src.validation.base_data_model import BaseDataFrameModel
 
@@ -20,9 +19,4 @@ class CumulativeDailyVolNormReturns(BaseDataFrameModel[T]):
 
     @classmethod
     def from_cache_to_series(cls: type[T], items: dict, values_column: str = "vol") -> pd.Series:
-        try:
-            return super().from_cache_to_series(items, values_column)
-        except SchemaError as e:
-            raise ValueError(f"Data validation failed in from_cache_to_series: {e}") from e
-        except Exception as e:
-            raise RuntimeError(f"An error occurred in from_cache_to_series: {e}") from e
+        return super().from_cache_to_series(items, values_column)

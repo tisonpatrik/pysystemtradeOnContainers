@@ -15,9 +15,9 @@ class FactorValuesAllInstrumentsHandler:
         self.instruments_client = instruments_client
         self.factor_values_over_instrument_list_handler = factor_values_over_instrument_list_handler
 
-    async def get_factor_values_for_all_instruments_async(self, factor_name: str, lookback: int) -> pd.DataFrame:
-        self.logger.info("Fetching factor values for all instruments for factor %s", factor_name)
+    async def get_factor_values_for_all_instruments_async(self, lookback: int) -> pd.DataFrame:
+        self.logger.info("Fetching factor values for all instruments")
         instrument_list = await self.instruments_client.get_all_instrument_async()
         return await self.factor_values_over_instrument_list_handler.get_factor_values_over_instrument_list_async(
-            instrument_list, factor_name=factor_name, lookback=lookback
+            instrument_list, lookback=lookback
         )

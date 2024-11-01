@@ -6,11 +6,11 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from common.src.logging.logger import AppLogger
 from common.src.middleware.logging import AppMiddleware
 from raw_data.src.api.dependencies.dependencies import app_lifespan
+from raw_data.src.api.routers.absolute_skew_deviation_router import (
+    router as absolute_skew_deviation_route,
+)
 from raw_data.src.api.routers.cumulative_daily_vol_normalised_returns_router import router as cumulative_daily_vol_normalised_returns_route
 from raw_data.src.api.routers.daily_returns_vol_route import router as daily_returns_vol_route
-from raw_data.src.api.routers.demanded_factor_value_route import (
-    router as demanded_factor_value_route,
-)
 from raw_data.src.api.routers.fx_prices_router import router as fx_prices_route
 from raw_data.src.api.routers.instrument_volatility_route import router as instrument_vol_route
 from raw_data.src.api.routers.median_carry_for_asset_class_route import router as median_carry_for_asset_class_route
@@ -40,7 +40,7 @@ app.include_router(raw_carry_route, prefix="/raw_carry_route")
 app.include_router(daily_returns_vol_route, prefix="/daily_returns_vol_route")
 app.include_router(smooth_carry_route, prefix="/smooth_carry_route")
 app.include_router(median_carry_for_asset_class_route, prefix="/median_carry_for_asset_class_route")
-app.include_router(demanded_factor_value_route, prefix="/demanded_factor_value_route")
+app.include_router(absolute_skew_deviation_route, prefix="/absolute_skew_deviation_route")
 
 
 @app.exception_handler(RequestValidationError)

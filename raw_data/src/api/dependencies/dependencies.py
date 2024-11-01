@@ -17,6 +17,7 @@ from common.src.redis.redis_repository import RedisRepository
 from common.src.repositories.carry_client import CarryClient
 from common.src.repositories.instruments_client import InstrumentsClient
 from common.src.repositories.prices_client import PricesClient
+from raw_data.src.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.src.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.src.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 from raw_data.src.api.handlers.current_average_factor_values_over_all_assets_handler import (
@@ -30,7 +31,6 @@ from raw_data.src.api.handlers.daily_vol_normalized_price_for_asset_handler impo
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.src.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
-from raw_data.src.api.handlers.demanded_factor_value_handler import DemandedFactorValueHandler
 from raw_data.src.api.handlers.factor_values_all_instruments_handler import FactorValuesAllInstrumentsHandler
 from raw_data.src.api.handlers.factor_values_over_instrument_list_handler import FactorValuesOverInstrumentListHandler
 from raw_data.src.api.handlers.fx_prices_handler import FxPricesHandler
@@ -212,12 +212,12 @@ def get_historic_average_factor_value_all_assets_handler(
     )
 
 
-def get_demanded_factor_value_handler(
+def absolute_skew_deviation_handler(
     historic_average_factor_value_all_assets_handler: HistoricAverageFactorValueAllAssetsHandler = Depends(
         get_historic_average_factor_value_all_assets_handler
     ),
     skew_handler: SkewHandler = Depends(get_skew_handler),
-) -> DemandedFactorValueHandler:
-    return DemandedFactorValueHandler(
+) -> AbsoluteSkewDeviationHandler:
+    return AbsoluteSkewDeviationHandler(
         historic_average_factor_value_all_assets_handler=historic_average_factor_value_all_assets_handler, skew_handler=skew_handler
     )

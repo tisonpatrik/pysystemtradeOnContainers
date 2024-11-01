@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns_query import CumulativeDailyVolNormReturnsQuery
+from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.logging.logger import AppLogger
 from raw_data.src.api.dependencies.dependencies import get_cumulative_daily_vol_norm_returns_handler
 from raw_data.src.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler

@@ -12,6 +12,7 @@ from rules.src.api.routes.momentum_route import router as momentum_route
 from rules.src.api.routes.relative_carry_route import router as relative_carry_route
 from rules.src.api.routes.relative_momentum_route import router as relative_momentum_route
 from rules.src.api.routes.rules_manager_router import router as rules_manager_route
+from rules.src.api.routes.skewabs_route import router as skewabs_route
 
 app_configs = {
     "title": "Rules API",
@@ -34,3 +35,4 @@ app.include_router(momentum_route, prefix="/momentum_route")
 app.include_router(cd_mean_reversion_route, prefix="/cd_mean_reversion_route")
 app.include_router(relative_carry_route, prefix="/relative_carry_route")
 app.include_router(relative_momentum_route, prefix="/relative_momentum_route")
+app.include_router(skewabs_route, prefix="/skewabs_route")

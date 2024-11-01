@@ -2,9 +2,10 @@ import asyncio
 
 import pandas as pd
 
-from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns_query import CumulativeDailyVolNormReturnsQuery
+from common.src.cqrs.api_queries.get_absolute_skew_deviation import GetAbsoluteSkewDeviationQuery
+from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class_query import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,
@@ -17,6 +18,7 @@ from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
+from common.src.validation.absolute_skew_deviation import AbsoluteSkewDeviation
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
@@ -89,3 +91,8 @@ class RawDataClient:
         except Exception:
             self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
             raise
+
+    async def absolute_skew_deviation_async(self, symbol: str, lookback: int) -> pd.Series:
+        query = GetAbsoluteSkewDeviationQuery(symbol=symbol, lookback=lookback)
+        raw_data = await self.client.get_data_async(query)
+        return AbsoluteSkewDeviation.from_api_to_series(raw_data)
