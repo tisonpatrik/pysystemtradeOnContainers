@@ -25,7 +25,6 @@ async def get_relative_skew_deviation(
         result = await handler.get_relative_skew_deviation_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
-        print(result)
         return result
     except HTTPException as e:
         logger.exception("An error occurred while trying to get relative skew deviation. Error: %s", e.detail)
