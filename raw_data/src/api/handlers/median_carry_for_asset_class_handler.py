@@ -9,11 +9,11 @@ from raw_data.src.api.handlers.raw_carry_handler import RawCarryHandler
 
 
 class MedianCarryForAssetClassHandler:
-    def __init__(self, raw_carry_handler: RawCarryHandler, instrument_client: InstrumentsClient, max_concurrent_tasks: int = 10):
+    def __init__(self, raw_carry_handler: RawCarryHandler, instrument_client: InstrumentsClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.raw_carry_handler = raw_carry_handler
         self.instrument_client = instrument_client
-        self.max_concurrent_tasks = max_concurrent_tasks
+        self.max_concurrent_tasks = 8
 
     async def get_median_carry_for_asset_class_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching Median Carry For Asset Class for symbol %s", symbol)

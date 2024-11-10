@@ -25,9 +25,9 @@ download_data:
 migrate_up:
 	@$(MIGRATE_CMD) -verbose up
 
-.PHONY:migrate_down
+.PHONY: migrate_down
 migrate_down:
-	@$(MIGRATE_CMD) -verbose down
+	@$(MIGRATE_CMD) -verbose down 999
 
 .PHONY:migrate_to_version
 migrate_to_version:

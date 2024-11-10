@@ -17,8 +17,7 @@ class CurrentAverageNegSkewOverAssetClassHandler:
 
     async def current_average_negskew_over_asset_class_async(self, asset: str, lookback: int) -> pd.Series:
         self.logger.info("Fetching current average negskew over asset class")
-        instrument_list = await self.instruments_repository.get_tradable_instruments_for_asset_class_async(asset)
-
+        instrument_list = await self.instruments_repository.get_all_instruments_for_asset_class_async(asset)
         all_factor_values = await self.negskew_over_instrument_list_handler.get_factor_values_over_instrument_list_async(
             instrument_list, lookback=lookback
         )

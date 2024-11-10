@@ -12,7 +12,7 @@ class NegSkewOverInstrumentListHandler:
     def __init__(self, skew_handler: SkewHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.skew_handler = skew_handler
-        self.max_concurrent_tasks = 10
+        self.max_concurrent_tasks = 8
 
     async def get_factor_values_over_instrument_list_async(self, instrument_list: list[Instrument], lookback: int) -> pd.DataFrame:
         self.logger.info("Fetching factor values for instruments")

@@ -17,7 +17,7 @@ class AggregatedReturnsForAssetClassHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_repository = instrument_repository
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
-        self.max_concurrent_tasks = 10
+        self.max_concurrent_tasks = 8
 
     async def get_aggregated_returns_for_asset_async(self, asset_class: str) -> pd.Series:
         self.logger.info("Fetching aggregated returns for asset class %s", asset_class)
