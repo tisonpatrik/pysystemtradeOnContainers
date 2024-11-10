@@ -36,14 +36,4 @@ CREATE TABLE multiple_prices (
     FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
 );
 
-CREATE TABLE roll_calendars (
-    time TIMESTAMPTZ NOT NULL,
-    current_contract INTEGER NOT NULL,
-    next_contract INTEGER NOT NULL,
-    carry_contract INTEGER NOT NULL,
-    symbol VARCHAR NOT NULL,
-    PRIMARY KEY (time, symbol),
-    FOREIGN KEY (symbol) REFERENCES instrument_config(symbol)
-);
-
 COMMIT;

@@ -23,7 +23,7 @@ class MedianCarryForAssetClassHandler:
         return raw_median_carry.reindex(carry.index).ffill()
 
     async def _by_asset_class_median_carry_for_asset_class(self, asset_class: str, smooth_days=90) -> pd.Series:
-        instruments_in_asset_class = await self.instrument_client.get_instruments_for_asset_class_async(asset_class)
+        instruments_in_asset_class = await self.instrument_client.get_tradable_instruments_for_asset_class_async(asset_class)
         raw_carry_across_asset_class = []
 
         async with BoundedTaskGroup(max_parallelism=self.max_concurrent_tasks) as tg:

@@ -87,7 +87,7 @@ func downloadDirectory(baseURL, localDir, rootDir string, wg *sync.WaitGroup, er
 
 		if item.Type == "file" {
 			wg.Add(1)
-			fileURL := "https://raw.githubusercontent.com/tisonpatrik/pysystemtrade/master/" + item.Path
+			fileURL := "https://raw.githubusercontent.com/tisonpatrik/pysystemtrade_preprocessing/main/" + item.Path
 			go downloadFile(fileURL, localPath, wg, errors)
 		} else if item.Type == "dir" {
 			if err := os.MkdirAll(localPath, os.ModePerm); err != nil {

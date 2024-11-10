@@ -1,14 +1,16 @@
 from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
-class GetAllInstruments(FetchStatement):
-    def __init__(self):
+class GetTradableInstruments(FetchStatement):
+    def __init__(self, is_tradable: bool):
         self._query = """
         SELECT symbol
         FROM instrument_config
+        WHERE tradable = $1
         ORDER BY symbol ASC;
         """
+        self._parameters = (is_tradable,)
 
     @property
     def parameters(self) -> tuple:
-        return ()
+        return self._parameters

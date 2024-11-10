@@ -26,7 +26,7 @@ class AggregatedReturnsForAssetClassHandler:
         return self._calculate_median_returns(aggregate_returns)
 
     async def _get_instruments_for_asset_class(self, asset_class: str) -> list:
-        instruments = await self.instrument_repository.get_instruments_for_asset_class_async(asset_class)
+        instruments = await self.instrument_repository.get_tradable_instruments_for_asset_class_async(asset_class)
         if not instruments:
             self.logger.warning("No instruments found for asset class: %s", asset_class)
             raise ValueError(f"No instruments found for asset class: {asset_class}")

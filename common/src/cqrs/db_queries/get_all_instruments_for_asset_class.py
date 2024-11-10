@@ -1,14 +1,16 @@
 from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
-class GetAllInstruments(FetchStatement):
-    def __init__(self):
+class GetAllInstrumentsForAssetClass(FetchStatement):
+    def __init__(self, asset_class: str):
         self._query = """
         SELECT symbol
         FROM instrument_config
+        WHERE asset_class = $1
         ORDER BY symbol ASC;
         """
+        self._parameters = (asset_class,)
 
     @property
     def parameters(self) -> tuple:
-        return ()
+        return self._parameters

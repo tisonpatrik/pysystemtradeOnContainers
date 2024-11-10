@@ -1,7 +1,9 @@
 from common.src.cqrs.db_queries.get_all_instruments import GetAllInstruments
+from common.src.cqrs.db_queries.get_all_instruments_for_asset_class import GetAllInstrumentsForAssetClass
 from common.src.cqrs.db_queries.get_asset_class import GetAssetClass
-from common.src.cqrs.db_queries.get_instruments_for_asset_class import GetInstrumentsForAssetClass
 from common.src.cqrs.db_queries.get_point_size import GetPointSize
+from common.src.cqrs.db_queries.get_tradable_instruments import GetTradableInstruments
+from common.src.cqrs.db_queries.get_tradable_instruments_for_asset_class import GetTradableInstrumentsForAssetClass
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.utils.convertors import to_pydantic
@@ -39,13 +41,31 @@ class InstrumentsClient:
             self.logger.exception("Database error when fetching asset class for symbol '%s'", symbol)
             raise
 
-    async def get_instruments_for_asset_class_async(self, asset_class: str) -> list:
-        statement = GetInstrumentsForAssetClass(symbol=asset_class)
+    async def get_tradable_instruments_for_asset_class_async(self, asset_class: str) -> list:
+        statement = GetTradableInstrumentsForAssetClass(asset_class=asset_class, is_tradable=True)
         try:
             instruments_data = await self.repository.fetch_many_async(statement)
             return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
         except Exception:
             self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
+            raise
+
+    async def get_all_instruments_for_asset_class_async(self, asset_class: str) -> list:
+        statement = GetAllInstrumentsForAssetClass(asset_class=asset_class)
+        try:
+            instruments_data = await self.repository.fetch_many_async(statement)
+            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
+        except Exception:
+            self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
+            raise
+
+    async def get_tradable_instrument_async(self) -> list:
+        statement = GetTradableInstruments(is_tradable=True)
+        try:
+            instruments_data = await self.repository.fetch_many_async(statement)
+            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
+        except Exception:
+            self.logger.exception("Database error when fetching all instruments")
             raise
 
     async def get_all_instrument_async(self) -> list:

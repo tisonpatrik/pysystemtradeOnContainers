@@ -30,12 +30,4 @@ SELECT create_hypertable(
     chunk_time_interval => INTERVAL '6 months'
 );
 
-SELECT create_hypertable(
-    'roll_calendars',
-    'time',
-    'symbol',
-    number_partitions => 166,
-    chunk_time_interval => INTERVAL '6 months'
-);
-
 COMMIT;

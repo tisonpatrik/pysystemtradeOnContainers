@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// Construct the path where the data should be downloaded
-	dirPath := filepath.Join(rootPath, "data", "temp")
+	dirPath := filepath.Join(rootPath, "data")
 
 	// Check if the directory exists
 	isExist, err := src.IsDirExists(dirPath)
@@ -52,7 +52,7 @@ func main() {
 	}
 
 	// Call the DownloadData function from the src package
-	err = src.DownloadData(dirPath)
+	err = src.DownloadData(rootPath)
 	if err != nil {
 		log.Fatalf("Error downloading data: %v", err)
 		return

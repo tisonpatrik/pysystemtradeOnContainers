@@ -11,8 +11,4 @@ CREATE UNIQUE INDEX ix_fx_prices_symbol_time
 
 CREATE UNIQUE INDEX ix_multiple_prices_symbol_time
     ON multiple_prices (symbol, time);
-
-CREATE UNIQUE INDEX ix_roll_calendars_symbol_time
-    ON roll_calendars (symbol, time);
-
 COMMIT;

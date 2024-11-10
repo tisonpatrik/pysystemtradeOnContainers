@@ -15,7 +15,7 @@ func DownloadData(dirPath string) error {
 	}
 
 	// Start downloading data from GitHub
-	baseURL := "https://api.github.com/repos/tisonpatrik/pysystemtrade/contents/data/futures"
+	baseURL := "https://api.github.com/repos/tisonpatrik/pysystemtrade_preprocessing/contents/data"
 	rootDir := "data/futures" // This is the part of the path we want to strip
 
 	var wg sync.WaitGroup
