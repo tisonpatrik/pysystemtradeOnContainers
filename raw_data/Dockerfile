@@ -31,7 +31,7 @@ COPY raw_data/pyproject.toml raw_data/uv.lock ./
 RUN uv sync --no-dev
 
 COPY common/ ./common
-COPY rules/src/raw_data/ /app/raw_data
+COPY raw_data/src/raw_data/ /app/raw_data
 COPY .env ./
 
 # Set a non-root user for security

@@ -5,9 +5,11 @@ from pydantic import NonNegativeInt, StringConstraints
 from common.src.http_client.requests.fetch_request import FetchRequest
 
 
-class GetRuleForInstrumentQuery(FetchRequest):
+class GetSkewRuleForInstrumentQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=30)]
     speed: NonNegativeInt
+    lookback: NonNegativeInt
+    use_attention: bool
 
     @property
     def url_string(self) -> str:

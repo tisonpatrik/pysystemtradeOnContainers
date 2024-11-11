@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
@@ -12,7 +13,8 @@ class AccelHandler:
 
         self.momentum_handler = momentum_handler
 
-    async def get_accel_async(self, symbol: str, speed: int) -> pd.Series:
+    async def get_accel_async(self, symbol: str, speed: int, use_atttention: bool) -> pd.Series:
         self.logger.info("Calculating Accel rule for %s by speed %d", symbol, speed)
-        ewmac = await self.momentum_handler.get_momentum_async(symbol, speed)
-        return self.accel_service.calculate_accel(ewmac, speed)
+        ewmac = await self.momentum_handler.get_momentum_signal_async(symbol, speed)
+        accel = self.accel_service.calculate_accel(ewmac, speed)
+        return accel.replace(0, np.nan)

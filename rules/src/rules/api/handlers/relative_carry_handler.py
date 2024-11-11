@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
@@ -11,10 +12,12 @@ class RelativeCarryHandler:
         self.carry_client = carry_client
         self.carry_service = CarryService()
 
-    async def get_relative_carry_async(self, symbol: str) -> pd.Series:
+    async def get_relative_carry_async(self, symbol: str, use_atttention: bool) -> pd.Series:
         self.logger.info("Calculating Relative carry rule for %s", symbol)
         smoothed_carry = await self.carry_client.get_smoothed_carry_async(symbol)
         median_carry_for_asset_class = await self.carry_client.get_median_carry_for_asset_class_async(symbol)
-        return self.carry_service.calculate_relative_carry(
+        relative_carry = self.carry_service.calculate_relative_carry(
             smoothed_carry=smoothed_carry, median_carry_for_asset_class=median_carry_for_asset_class
         )
+        relative_carry = relative_carry.replace(0, np.nan)
+        return relative_carry

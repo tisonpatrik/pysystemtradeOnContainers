@@ -20,15 +20,15 @@ class MomentumHandler:
         self.momentum_service = MomentumService()
         self.background_tasks = set()
 
-    async def get_momentum_async(self, symbol: str, Lfast: int) -> pd.Series:
-        self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, Lfast)
-        cached_signal = await self._get_cached_signal(symbol, Lfast)
+    async def get_momentum_signal_async(self, symbol: str, speed: int) -> pd.Series:
+        self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, speed)
+        cached_signal = await self._get_cached_signal(symbol, speed)
         if cached_signal is not None:
             return cached_signal
         daily_prices = await self.prices_repository.get_daily_prices_async(symbol)
         daily_vol = await self.raw_data_client.get_daily_returns_vol_async(symbol)
-        signal = self.momentum_service.calculate_ewmac(daily_prices, daily_vol, Lfast)
-        self._cache_aggregated_signal(signal, symbol, Lfast)
+        signal = self.momentum_service.calculate_ewmac(daily_prices, daily_vol, speed)
+        self._cache_aggregated_signal(signal, symbol, speed)
         return signal
 
     async def _get_cached_signal(self, symbol: str, speed: int) -> pd.Series | None:

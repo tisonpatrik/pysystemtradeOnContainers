@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
@@ -11,7 +12,9 @@ class AssettrendHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.assettrend_service = AssettrendService()
 
-    async def get_assettrend_async(self, symbol: str, speed: int) -> pd.Series:
+    async def get_assettrend_async(self, symbol: str, speed: int, use_atttention: bool) -> pd.Series:
         self.logger.info("Calculating AssetTrend rule for %s by speed %d", symbol, speed)
         prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
-        return self.assettrend_service.calculate_assettrend(prices, speed)
+        assettrend = self.assettrend_service.calculate_assettrend(prices, speed)
+        assettrend = assettrend.replace(0, np.nan)
+        return assettrend

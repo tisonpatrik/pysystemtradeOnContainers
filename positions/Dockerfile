@@ -31,7 +31,7 @@ COPY positions/pyproject.toml positions/uv.lock ./
 RUN uv sync --no-dev
 
 COPY common/ ./common
-COPY rules/src/positions/ /app/positions
+COPY positions/src/positions/ /app/positions
 COPY .env ./
 
 # Set a non-root user for security

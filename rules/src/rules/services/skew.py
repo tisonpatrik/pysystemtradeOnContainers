@@ -5,12 +5,12 @@ from rules.services.momentum import MomentumService
 from rules.utils.robust_vol_calc import robust_vol_calc
 
 
-class SkewabsService:
+class SkewRuleService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
         self.momentum_service = MomentumService()
 
-    def calculate_skewabs(self, demean_factor_value: pd.Series, smooth: int) -> pd.Series:
+    def calculate_skew(self, demean_factor_value: pd.Series, smooth: int) -> pd.Series:
         try:
             vol = robust_vol_calc(demean_factor_value)
             normalised_factor_value = demean_factor_value / vol

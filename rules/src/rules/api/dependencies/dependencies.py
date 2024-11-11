@@ -23,6 +23,7 @@ from rules.api.handlers.breakout_handler import BreakoutHandler
 from rules.api.handlers.carry_handler import CarryHandler
 from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
 from rules.api.handlers.momentum_handler import MomentumHandler
+from rules.api.handlers.momentum_rule_handler import MomentumRuleHandler
 from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
 from rules.api.handlers.rules_manager_handler import RulesManagerHandler
@@ -46,6 +47,12 @@ def get_momentum_handler(
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> MomentumHandler:
     return MomentumHandler(prices_repository=prices_repository, raw_data_client=raw_data_client, redis_repository=redis_repository)
+
+
+def get_momentum_rule_handler(
+    momentum_handler: MomentumHandler = Depends(get_momentum_handler),
+) -> MomentumRuleHandler:
+    return MomentumRuleHandler(momentum_handler=momentum_handler)
 
 
 def get_accel_handler(

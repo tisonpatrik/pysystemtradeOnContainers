@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_cs_mean_reversion_handler
 from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
@@ -20,7 +20,7 @@ async def get_cs_mean_reversion_async(
     momentum_handler: CSMeanReversionHandler = Depends(get_cs_mean_reversion_handler),
 ):
     try:
-        result = await momentum_handler.get_cs_mean_reversion_async(query.symbol, query.speed)
+        result = await momentum_handler.get_cs_mean_reversion_async(query.symbol, query.speed, query.use_attention)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

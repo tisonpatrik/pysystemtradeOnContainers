@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_relative_momentum_handler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
@@ -20,7 +20,7 @@ async def get_momentum_async(
     relative_momentum_handler: RelativeMomentumHandler = Depends(get_relative_momentum_handler),
 ):
     try:
-        result = await relative_momentum_handler.get_relative_momentum_async(query.symbol, query.speed)
+        result = await relative_momentum_handler.get_relative_momentum_async(query.symbol, query.speed, query.use_attention)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

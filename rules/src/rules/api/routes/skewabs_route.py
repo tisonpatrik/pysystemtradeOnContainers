@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_skew_rule_for_instrument import GetSkewRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_skew_rule_for_instrument import GetSkewRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_skewabs_handler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
@@ -20,7 +20,9 @@ async def get_skewabs_async(
     skewabs_handler: SkewAbsHandler = Depends(get_skewabs_handler),
 ):
     try:
-        result = await skewabs_handler.get_skewabs_async(query.symbol, query.speed, lookback=query.lookback)
+        result = await skewabs_handler.get_skewabs_async(
+            query.symbol, query.speed, lookback=query.lookback, use_atttention=query.use_attention
+        )
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

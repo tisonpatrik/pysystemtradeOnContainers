@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
@@ -11,10 +12,12 @@ class RelativeMomentumHandler:
         self.raw_data_client = raw_data_client
         self.relative_momentum_service = RelativeMomentumService()
 
-    async def get_relative_momentum_async(self, symbol: str, speed: int) -> pd.Series:
+    async def get_relative_momentum_async(self, symbol: str, speed: int, use_atttention: bool) -> pd.Series:
         self.logger.info("Calculating Relative Momentum rule for %s", symbol)
         cumulative_daily_vol_norm_returns = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(symbol)
         normalized_prices_for_asset_class = await self.raw_data_client.get_normalized_prices_for_asset_class_async(symbol)
-        return self.relative_momentum_service.calculate_relative_momentum(
+        relative_momentum = self.relative_momentum_service.calculate_relative_momentum(
             cumulative_daily_vol_norm_returns, normalized_prices_for_asset_class, speed
         )
+        relative_momentum = relative_momentum.replace(0, np.nan)
+        return relative_momentum
