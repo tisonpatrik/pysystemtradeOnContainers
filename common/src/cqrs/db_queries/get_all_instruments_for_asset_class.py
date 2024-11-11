@@ -6,7 +6,7 @@ class GetAllInstrumentsForAssetClass(FetchStatement):
         self._query = """
         SELECT symbol
         FROM instrument_config
-        WHERE asset_class = $1
+        WHERE asset_class = $1 AND have_data = true
         ORDER BY symbol ASC;
         """
         self._parameters = (asset_class,)

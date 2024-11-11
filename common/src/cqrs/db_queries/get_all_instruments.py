@@ -6,6 +6,7 @@ class GetAllInstruments(FetchStatement):
         self._query = """
         SELECT symbol
         FROM instrument_config
+        WHERE have_data = true
         ORDER BY symbol ASC;
         """
 

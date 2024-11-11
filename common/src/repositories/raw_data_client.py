@@ -6,6 +6,7 @@ from common.src.cqrs.api_queries.get_absolute_skew_deviation import GetAbsoluteS
 from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
 from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,
@@ -22,6 +23,7 @@ from common.src.validation.absolute_skew_deviation import AbsoluteSkewDeviation
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
+from common.src.validation.relative_skew_deviation import RelativeSkewDeviation
 
 
 class RawDataClient:
@@ -96,3 +98,8 @@ class RawDataClient:
         query = GetAbsoluteSkewDeviationQuery(symbol=symbol, lookback=lookback)
         raw_data = await self.client.get_data_async(query)
         return AbsoluteSkewDeviation.from_api_to_series(raw_data)
+
+    async def relative_skew_deviation_async(self, symbol: str, lookback: int) -> pd.Series:
+        query = GetRelativeSkewDeviationQuery(symbol=symbol, lookback=lookback)
+        raw_data = await self.client.get_data_async(query)
+        return RelativeSkewDeviation.from_api_to_series(raw_data)

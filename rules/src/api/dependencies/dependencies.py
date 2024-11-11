@@ -27,6 +27,7 @@ from rules.src.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.src.api.handlers.relative_momentum_handler import RelativeMomentumHandler
 from rules.src.api.handlers.rules_manager_handler import RulesManagerHandler
 from rules.src.api.handlers.skewabs_handler import SkewAbsHandler
+from rules.src.api.handlers.skewrel_handler import SkewRelHandler
 
 
 @asynccontextmanager
@@ -91,3 +92,9 @@ def get_skewabs_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> SkewAbsHandler:
     return SkewAbsHandler(raw_data_client=raw_data_client)
+
+
+def get_skewrel_handler(
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+) -> SkewRelHandler:
+    return SkewRelHandler(raw_data_client=raw_data_client)

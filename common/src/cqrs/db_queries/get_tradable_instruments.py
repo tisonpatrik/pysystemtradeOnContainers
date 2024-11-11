@@ -6,7 +6,7 @@ class GetTradableInstruments(FetchStatement):
         self._query = """
         SELECT symbol
         FROM instrument_config
-        WHERE tradable = $1
+        WHERE  is_tradable = $1
         ORDER BY symbol ASC;
         """
         self._parameters = (is_tradable,)
