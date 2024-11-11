@@ -31,15 +31,13 @@ COPY forecast/pyproject.toml forecast/uv.lock ./
 RUN uv sync --no-dev
 
 COPY common/ ./common
-COPY forecast/ ./forecast
+COPY forecast/src/forecast/ /app/forecast
 COPY .env ./
 
 # Set a non-root user for security
 RUN adduser --disabled-password --gecos '' myuser
-
-# Ensure /app directory exists and set ownership to myuser
 RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "forecast.src.app.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]
+CMD ["uvicorn", "forecast.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]

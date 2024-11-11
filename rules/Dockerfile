@@ -30,16 +30,14 @@ COPY rules/pyproject.toml rules/uv.lock ./
 
 RUN uv sync --no-dev
 
-COPY common/ ./common
-COPY rules/ ./rules
+COPY common/ ./common/
+COPY rules/src/rules/ /app/rules
 COPY .env ./
 
-# Set a non-root user for security
+# Create user and set permissions
 RUN adduser --disabled-password --gecos '' myuser
-
-# Ensure /app directory exists and set ownership to myuser
 RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "rules.src.app.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]
+CMD ["uvicorn", "rules.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop", "--reload"]

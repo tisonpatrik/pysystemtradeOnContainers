@@ -10,7 +10,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./raw_data:/app/raw_data
+      - ./raw_data/src/raw_data:/app/raw_data
       - ./common:/app/common
 
   rules:
@@ -21,11 +21,10 @@ services:
     container_name: rules
     depends_on:
       - db_postgres
-      - raw_data
     ports:
       - "8100:8000"
     volumes:
-      - ./rules:/app/rules
+      - ./rules/src/rules:/app/rules
       - ./common:/app/common
 
   positions:
@@ -39,7 +38,7 @@ services:
     ports:
       - "8200:8000"
     volumes:
-      - ./positions:/app/positions
+      - ./positions/src/positions:/app/positions
       - ./common:/app/common
 
   forecast:
@@ -53,7 +52,7 @@ services:
     ports:
       - "8300:8000"
     volumes:
-      - ./forecast:/app/forecast
+      - ./forecast/src/forecast:/app/forecast
       - ./common:/app/common
 
   db_postgres:

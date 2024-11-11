@@ -31,7 +31,7 @@ COPY positions/pyproject.toml positions/uv.lock ./
 RUN uv sync --no-dev
 
 COPY common/ ./common
-COPY positions/ ./positions
+COPY rules/src/positions/ /app/positions
 COPY .env ./
 
 # Set a non-root user for security
@@ -42,4 +42,4 @@ RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "positions.src.app.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]
+CMD ["uvicorn", "positions.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]

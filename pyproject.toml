@@ -26,13 +26,6 @@ keep-runtime-typing = true
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra --cov=risk --cov=common --cov-report=term-missing:skip-covered"
-testpaths = [
-    "common/tests",
-    "positions/tests",
-    "raw_data/tests",
-    "rules/tests",
-]
-pythonpath = [".", "common", "positions", "raw_data",  "rules", "scripts"]
 
 [tool.pyright]
 venvPath = "."
