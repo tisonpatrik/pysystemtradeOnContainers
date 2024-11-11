@@ -7,6 +7,7 @@ from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import Cu
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
+from common.src.cqrs.api_queries.get_vol_attenutation import GetVolAttenutationQuery
 from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,
@@ -16,6 +17,7 @@ from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import
     GetNormalizedPriceForAssetClassCache,
     SetNormalizedPriceForAssetClassCache,
 )
+from common.src.cqrs.cache_queries.vol_attenutation_cache import GetVolAttenutationCache, SetVolAttenutationCache
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
@@ -24,6 +26,7 @@ from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDa
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 from common.src.validation.relative_skew_deviation import RelativeSkewDeviation
+from common.src.validation.vol_attenutation import VolAttenutation
 
 
 class RawDataClient:
@@ -39,7 +42,6 @@ class RawDataClient:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
                 return DailyReturnsVol.from_cache_to_series(cached_data)
-
             query = GetDailyReturnsVolQuery(symbol=symbol)
             vol_data = await self.client.get_data_async(query)
             vol = DailyReturnsVol.from_api_to_series(vol_data)
@@ -47,12 +49,11 @@ class RawDataClient:
             cache_set_statement = SetDailyReturnsVolCache(vol=vol, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-            # Optional: add a callback to handle task completion
             self.background_tasks.add(cache_task)
             cache_task.add_done_callback(self.background_tasks.discard)
             return vol
         except Exception:
-            self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
+            self.logger.exception("Error fetching daily returns vol for %s", symbol)
             raise
 
     async def get_normalized_prices_for_asset_class_async(self, symbol: str) -> pd.Series:
@@ -67,12 +68,11 @@ class RawDataClient:
             cache_set_statement = SetNormalizedPriceForAssetClassCache(prices=data, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
-            # Optional: add a callback to handle task completion
             self.background_tasks.add(cache_task)
             cache_task.add_done_callback(self.background_tasks.discard)
             return data
         except Exception:
-            self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
+            self.logger.exception("Error fetching normalised prices for %s", symbol)
             raise
 
     async def get_cumulative_daily_vol_normalised_returns_async(self, symbol: str) -> pd.Series:
@@ -91,7 +91,7 @@ class RawDataClient:
             cache_task.add_done_callback(self.background_tasks.discard)
             return data
         except Exception:
-            self.logger.exception("Error fetching daily returns vol rate for %s", symbol)
+            self.logger.exception("Error fetching cummulative daily vol normalied returns for %s", symbol)
             raise
 
     async def absolute_skew_deviation_async(self, symbol: str, lookback: int) -> pd.Series:
@@ -103,3 +103,22 @@ class RawDataClient:
         query = GetRelativeSkewDeviationQuery(symbol=symbol, lookback=lookback)
         raw_data = await self.client.get_data_async(query)
         return RelativeSkewDeviation.from_api_to_series(raw_data)
+
+    async def get_vol_attenutation_async(self, symbol: str) -> pd.Series:
+        cache_statement = GetVolAttenutationCache(symbol)
+        try:
+            cached_data = await self.redis_repository.get_cache(cache_statement)
+            if cached_data is not None:
+                return VolAttenutation.from_cache_to_series(cached_data)
+            query = GetVolAttenutationQuery(symbol=symbol)
+            raw_data = await self.client.get_data_async(query)
+            data = VolAttenutation.from_api_to_series(raw_data)
+            cache_set_statement = SetVolAttenutationCache(prices=data, symbol=symbol)
+            cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+
+            self.background_tasks.add(cache_task)
+            cache_task.add_done_callback(self.background_tasks.discard)
+            return data
+        except Exception:
+            self.logger.exception("Error fetching vol attenutation for %s", symbol)
+            raise

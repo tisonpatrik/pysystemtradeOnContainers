@@ -21,7 +21,7 @@ async def get_skewabs_async(
 ):
     try:
         result = await skewrel_handler.get_skewrel_async(
-            query.symbol, query.speed, lookback=query.lookback, use_atttention=query.use_attention
+            query.symbol, query.speed, lookback=query.lookback, use_attenuation=query.use_attenuation
         )
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")

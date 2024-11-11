@@ -9,7 +9,7 @@ class GetSkewRuleForInstrumentQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=30)]
     speed: NonNegativeInt
     lookback: NonNegativeInt
-    use_attention: bool
+    use_attenuation: bool
 
     @property
     def url_string(self) -> str:

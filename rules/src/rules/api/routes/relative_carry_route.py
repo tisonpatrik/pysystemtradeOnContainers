@@ -20,7 +20,7 @@ async def get_carry_async(
     relative_carry_handler: RelativeCarryHandler = Depends(get_relative_carry_handler),
 ):
     try:
-        result = await relative_carry_handler.get_relative_carry_async(query.symbol, query.use_attention)
+        result = await relative_carry_handler.get_relative_carry_async(query.symbol, query.use_attenuation)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

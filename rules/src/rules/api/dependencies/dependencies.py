@@ -19,6 +19,7 @@ from common.src.repositories.prices_client import PricesClient
 from common.src.repositories.raw_data_client import RawDataClient
 from rules.api.handlers.accel_handler import AccelHandler
 from rules.api.handlers.assettrend_handler import AssettrendHandler
+from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.breakout_handler import BreakoutHandler
 from rules.api.handlers.carry_handler import CarryHandler
 from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
@@ -41,6 +42,12 @@ def get_rules_handler(repository: Repository = Depends(get_db_repository)) -> Ru
     return RulesManagerHandler(repository=repository)
 
 
+def get_attenuation_handler(
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+) -> AttenutationHandler:
+    return AttenutationHandler(raw_data_client=raw_data_client)
+
+
 def get_momentum_handler(
     prices_repository: PricesClient = Depends(get_daily_prices_repository),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
@@ -51,57 +58,69 @@ def get_momentum_handler(
 
 def get_momentum_rule_handler(
     momentum_handler: MomentumHandler = Depends(get_momentum_handler),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> MomentumRuleHandler:
-    return MomentumRuleHandler(momentum_handler=momentum_handler)
+    return MomentumRuleHandler(momentum_handler=momentum_handler, attenuation_handler=attenuation_handler)
 
 
 def get_accel_handler(
     momentum_handler: MomentumHandler = Depends(get_momentum_handler),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> AccelHandler:
-    return AccelHandler(momentum_handler=momentum_handler)
+    return AccelHandler(momentum_handler=momentum_handler, attenuation_handler=attenuation_handler)
 
 
 def get_breakout_handler(
     prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> BreakoutHandler:
-    return BreakoutHandler(prices_repository=prices_repository)
+    return BreakoutHandler(prices_repository=prices_repository, attenuation_handler=attenuation_handler)
 
 
 def get_asserttrend_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> AssettrendHandler:
-    return AssettrendHandler(raw_data_client=raw_data_client)
+    return AssettrendHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler)
 
 
-def get_carry_handler(carry_client: CarryClient = Depends(get_carry_repository)) -> CarryHandler:
-    return CarryHandler(carry_client=carry_client)
+def get_carry_handler(
+    carry_client: CarryClient = Depends(get_carry_repository),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
+) -> CarryHandler:
+    return CarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler)
 
 
 def get_cs_mean_reversion_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> CSMeanReversionHandler:
-    return CSMeanReversionHandler(raw_data_client=raw_data_client)
+    return CSMeanReversionHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler)
 
 
 def get_relative_carry_handler(
     carry_client: CarryClient = Depends(get_carry_repository),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> RelativeCarryHandler:
-    return RelativeCarryHandler(carry_client=carry_client)
+    return RelativeCarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler)
 
 
 def get_relative_momentum_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> RelativeMomentumHandler:
-    return RelativeMomentumHandler(raw_data_client=raw_data_client)
+    return RelativeMomentumHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler)
 
 
 def get_skewabs_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> SkewAbsHandler:
-    return SkewAbsHandler(raw_data_client=raw_data_client)
+    return SkewAbsHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler)
 
 
 def get_skewrel_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> SkewRelHandler:
-    return SkewRelHandler(raw_data_client=raw_data_client)
+    return SkewRelHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler)

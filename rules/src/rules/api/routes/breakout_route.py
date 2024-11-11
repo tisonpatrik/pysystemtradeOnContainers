@@ -20,7 +20,7 @@ async def get_breakout_async(
     breakout_handler: BreakoutHandler = Depends(get_breakout_handler),
 ):
     try:
-        result = await breakout_handler.get_breakout_async(query.symbol, query.speed, query.use_attention)
+        result = await breakout_handler.get_breakout_async(query.symbol, query.speed, query.use_attenuation)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

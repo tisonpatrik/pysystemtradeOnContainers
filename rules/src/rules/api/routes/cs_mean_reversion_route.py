@@ -20,7 +20,7 @@ async def get_cs_mean_reversion_async(
     momentum_handler: CSMeanReversionHandler = Depends(get_cs_mean_reversion_handler),
 ):
     try:
-        result = await momentum_handler.get_cs_mean_reversion_async(query.symbol, query.speed, query.use_attention)
+        result = await momentum_handler.get_cs_mean_reversion_async(query.symbol, query.speed, query.use_attenuation)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result
