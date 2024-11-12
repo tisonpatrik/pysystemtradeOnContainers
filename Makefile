@@ -47,3 +47,7 @@ down:
 .PHONY: tests
 tests: run
 	@echo "IMPLEMENT IT"
+
+.PHONY: rows
+rows:
+	@find . -type d -name "src" | while read dir; do find "$$dir" -type f -name "*.py" -exec cat {} +; done | wc -l

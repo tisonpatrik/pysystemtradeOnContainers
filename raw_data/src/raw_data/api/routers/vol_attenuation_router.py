@@ -1,26 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
+from common.src.cqrs.api_queries.get_vol_attenuation import GetVolAttenuationQuery
 from common.src.logging.logger import AppLogger
-from raw_data.api.dependencies.dependencies import get_instrument_vol_handler
-from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
+from raw_data.api.dependencies.dependencies import get_vol_attenuation_handler
+from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_instrument_currency_volatility/",
+    "/get_vol_attenuation/",
     status_code=status.HTTP_200_OK,
-    name="Get instrument currency volatility",
+    name="Get volatility attenuation",
 )
-async def get_instrument_currency_volalitlty_async(
-    query: GetInstrumentCurrencyVolQuery = Depends(),
-    handler: InstrumentCurrencyVolHandler = Depends(get_instrument_vol_handler),
+async def get_vol_attenuation_async(
+    query: GetVolAttenuationQuery = Depends(),
+    handler: VolAttenuationHandler = Depends(get_vol_attenuation_handler),
 ):
     try:
-        result = await handler.get_instrument_vol_for_symbol_async(query.symbol)
+        result = await handler.get_vol_attenuation_async(query.symbol)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

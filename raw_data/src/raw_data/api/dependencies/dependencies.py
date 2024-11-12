@@ -27,6 +27,7 @@ from raw_data.api.handlers.current_average_negskew_over_all_assets_handler impor
 from raw_data.api.handlers.current_average_negskew_over_asset_class_handler import CurrentAverageNegSkewOverAssetClassHandler
 from raw_data.api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
+from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import (
@@ -46,6 +47,7 @@ from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
+from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 
 @asynccontextmanager
@@ -71,15 +73,27 @@ def get_daily_returns_vol_handler(
     )
 
 
+def get_daily_percentage_volatility_handler(
+    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    redis_repository: RedisRepository = Depends(get_redis),
+    daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
+) -> DailyPercentageVolatilityHandler:
+    return DailyPercentageVolatilityHandler(
+        prices_repository=prices_repository,
+        redis_repository=redis_repository,
+        daily_returns_vol_handler=daily_returns_vol_handler,
+    )
+
+
 def get_instrument_vol_handler(
     prices_repository: PricesClient = Depends(get_daily_prices_repository),
     instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
-    daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
+    daily_percentage_volatility_handler: DailyPercentageVolatilityHandler = Depends(get_daily_percentage_volatility_handler),
 ) -> InstrumentCurrencyVolHandler:
     return InstrumentCurrencyVolHandler(
         prices_repository=prices_repository,
         instruments_repository=instruments_repository,
-        daily_returns_vol_handler=daily_returns_vol_handler,
+        daily_percentage_volatility_handler=daily_percentage_volatility_handler,
     )
 
 
@@ -255,4 +269,14 @@ def get_relative_skew_deviation_handler(
     return RelativeSkewDeviationHandler(
         average_neg_skew_in_asset_class_for_instrument_handler=average_neg_skew_in_asset_class_for_instrument_handler,
         skew_handler=skew_handler,
+    )
+
+
+def get_vol_attenuation_handler(
+    daily_percentage_volatility_handler: DailyPercentageVolatilityHandler = Depends(get_daily_percentage_volatility_handler),
+    redis_repository: RedisRepository = Depends(get_redis),
+) -> VolAttenuationHandler:
+    return VolAttenuationHandler(
+        daily_percentage_volatility_handler=daily_percentage_volatility_handler,
+        redis_repository=redis_repository,
     )

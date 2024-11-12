@@ -7,7 +7,7 @@ from common.src.utils.cache_utils import convert_datetime_to_unix, get_series_ke
 NAME = "vol_attenutation"
 
 
-class GetVolAttenutationCache(GetCacheStatement):
+class GetVolAttenuationCache(GetCacheStatement):
     def __init__(self, symbol: str):
         super().__init__(parameter=symbol)
         self.name = NAME
@@ -17,9 +17,9 @@ class GetVolAttenutationCache(GetCacheStatement):
         return get_series_key(self.name, self.parameter)
 
 
-class SetVolAttenutationCache(SetCacheStatement):
-    def __init__(self, prices: pd.Series, symbol: str):
-        super().__init__(prices)
+class SetVolAttenuationCache(SetCacheStatement):
+    def __init__(self, values: pd.Series, symbol: str):
+        super().__init__(values)
         self.instrument_code = symbol
         self.name = NAME
 

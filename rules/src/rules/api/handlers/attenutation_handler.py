@@ -11,4 +11,5 @@ class AttenutationHandler:
 
     async def apply_attenutation_to_trading_signal_async(self, symbol: str, raw_signal: pd.Series) -> pd.Series:
         vol_attenutation = await self.raw_data_client.get_vol_attenutation_async(symbol)
-        return vol_attenutation.reindex(raw_signal.index, method="ffill")
+        attenuated_forecast = raw_signal * vol_attenutation
+        return attenuated_forecast.reindex(raw_signal.index, method="ffill")

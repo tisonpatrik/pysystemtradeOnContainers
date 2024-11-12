@@ -7,7 +7,7 @@ from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import Cu
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
-from common.src.cqrs.api_queries.get_vol_attenutation import GetVolAttenutationQuery
+from common.src.cqrs.api_queries.get_vol_attenuation import GetVolAttenuationQuery
 from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,
@@ -17,7 +17,7 @@ from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import
     GetNormalizedPriceForAssetClassCache,
     SetNormalizedPriceForAssetClassCache,
 )
-from common.src.cqrs.cache_queries.vol_attenutation_cache import GetVolAttenutationCache, SetVolAttenutationCache
+from common.src.cqrs.cache_queries.vol_attenuation_cache import GetVolAttenuationCache, SetVolAttenuationCache
 from common.src.http_client.rest_client import RestClient
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
@@ -26,7 +26,7 @@ from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDa
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 from common.src.validation.relative_skew_deviation import RelativeSkewDeviation
-from common.src.validation.vol_attenutation import VolAttenutation
+from common.src.validation.vol_attenuation import VolAttenuation
 
 
 class RawDataClient:
@@ -105,15 +105,15 @@ class RawDataClient:
         return RelativeSkewDeviation.from_api_to_series(raw_data)
 
     async def get_vol_attenutation_async(self, symbol: str) -> pd.Series:
-        cache_statement = GetVolAttenutationCache(symbol)
+        cache_statement = GetVolAttenuationCache(symbol)
         try:
             cached_data = await self.redis_repository.get_cache(cache_statement)
             if cached_data is not None:
-                return VolAttenutation.from_cache_to_series(cached_data)
-            query = GetVolAttenutationQuery(symbol=symbol)
+                return VolAttenuation.from_cache_to_series(cached_data)
+            query = GetVolAttenuationQuery(symbol=symbol)
             raw_data = await self.client.get_data_async(query)
-            data = VolAttenutation.from_api_to_series(raw_data)
-            cache_set_statement = SetVolAttenutationCache(prices=data, symbol=symbol)
+            data = VolAttenuation.from_api_to_series(raw_data)
+            cache_set_statement = SetVolAttenuationCache(values=data, symbol=symbol)
             cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
             self.background_tasks.add(cache_task)

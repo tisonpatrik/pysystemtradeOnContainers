@@ -16,7 +16,7 @@ def test_instrument_volatility():
     expected = load_csv_data("instrument_vol")
 
     estimator = InstrumentCurrencyVolService()
-    calculated_vol = estimator.calculate_instrument_vol_async(multiple_prices, daily_returns_vol, point_size=200)
+    calculated_vol = estimator.calculate_instrument_vol(multiple_prices, daily_returns_vol, point_size=200)
 
     # Ensure both are pd.Series
     assert isinstance(calculated_vol, pd.Series), "calculated_vol is not a pd.Series"
