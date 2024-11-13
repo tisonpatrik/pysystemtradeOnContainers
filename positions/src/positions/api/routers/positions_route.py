@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from common.src.cqrs.api_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
 from common.src.logging.logger import AppLogger
-from positions.api.dependencies.positions_dependencies import get_positions_handler
+from positions.api.dependencies.dependencies import get_positions_handler
 from positions.api.handlers.positions_handler import PositionsHandler
 
 router = APIRouter()

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
+from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_fx_prices_handler
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
@@ -16,7 +16,7 @@ logger = AppLogger.get_instance().get_logger()
     name="Get Fx prices for symbol",
 )
 async def get_fx_rate_for_instrument(
-    query: GetFxRateQuery = Depends(),
+    query: GetFxPricesQuery = Depends(),
     handler: FxPricesHandler = Depends(get_fx_prices_handler),
 ):
     try:

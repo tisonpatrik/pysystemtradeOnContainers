@@ -5,7 +5,7 @@ from pydantic import StringConstraints
 from common.src.http_client.requests.fetch_request import FetchRequest
 
 
-class GetFxRateQuery(FetchRequest):
+class GetFxPricesQuery(FetchRequest):
     symbol: Annotated[str, StringConstraints(max_length=30)]
     base_currency: Annotated[str, StringConstraints(max_length=3)]
 

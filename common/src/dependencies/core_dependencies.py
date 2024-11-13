@@ -1,6 +1,7 @@
 from fastapi import Depends, Request
 
 from common.src.clients.carry_client import CarryClient
+from common.src.clients.forecast_client import ForecastClient
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
@@ -54,3 +55,7 @@ def get_rules_signals_client(
     db_repository: Repository = Depends(get_db_repository),
 ) -> RulesSignalsClient:
     return RulesSignalsClient(db_repository=db_repository)
+
+
+def get_forecast_client() -> ForecastClient:
+    return ForecastClient()

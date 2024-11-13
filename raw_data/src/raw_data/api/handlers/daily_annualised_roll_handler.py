@@ -11,9 +11,9 @@ class DailyAnnualisedRollHandler:
         self.carry_client = carry_client
         self.raw_carry_service = RawCarryService()
 
-    async def get_daily_annualised_roll_async(self, instrument_code: str) -> pd.Series:
-        self.logger.info("Fetching Daily annualised roll for symbol %s", instrument_code)
-        raw_carry = await self.carry_client.get_carry_data_async(instrument_code)
+    async def get_daily_annualised_roll_async(self, symbol: str) -> pd.Series:
+        self.logger.info("Fetching Daily annualised roll for symbol %s", symbol)
+        raw_carry = await self.carry_client.get_carry_data_async(symbol)
         rolldiffs = self.raw_carry_service.get_roll_differentials(raw_carry)
         rawrollvalues = self.raw_carry_service.raw_futures_roll(raw_carry)
         annroll = rawrollvalues / rolldiffs

@@ -5,6 +5,7 @@ import pandas as pd
 from common.src.cqrs.api_queries.get_absolute_skew_deviation import GetAbsoluteSkewDeviationQuery
 from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
+from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
 from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
@@ -114,15 +115,16 @@ class RawDataClient:
         raw_data = await self.client.get_data_async(get_instrument_vol_query)
         return InstrumentCurrencyVol.from_api_to_series(raw_data)
 
-    async def get_fx_prices_async(self, symbol: str, conversion_currency: str) -> pd.Series:
-        cache_statement = GetFxPricesCache(symbol)
+    async def get_fx_prices_async(self, symbol: str, base_currency: str) -> pd.Series:
+        key = f"{symbol}_{base_currency}"
+        cache_statement = GetFxPricesCache(key)
         cached_data = await self.redis_repository.get_cache(cache_statement)
         if cached_data is not None:
             return FxPrices.from_cache_to_series(cached_data)
-        query = GetVolAttenuationQuery(symbol=symbol)
+        query = GetFxPricesQuery(symbol=symbol, base_currency=base_currency)
         raw_data = await self.client.get_data_async(query)
         data = FxPrices.from_api_to_series(raw_data)
-        cache_set_statement = SetFxPricesCache(values=data, symbol=symbol)
+        cache_set_statement = SetFxPricesCache(values=data, key=key)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
         self.background_tasks.add(cache_task)

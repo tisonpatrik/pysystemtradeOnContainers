@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
-from common.src.cqrs.api_queries.get_fx_rate import GetFxRateQuery
+from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
 from common.src.logging.logger import AppLogger
 from raw_data.constants import DEFAULT_CURRENCY
 from raw_data.services.fx_price_service import FxService
@@ -15,7 +15,7 @@ class FxPricesHandler:
         self.prices_client = prices_client
         self.fx_prices_service = FxService()
 
-    async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxRateQuery) -> pd.Series:
+    async def get_fx_prices_for_symbol_async(self, get_fx_rate_query: GetFxPricesQuery) -> pd.Series:
         self.logger.info("Fetching FX prices for symbol %s", get_fx_rate_query.symbol)
         instrument_currency = await self.instruments_client.get_instrument_currency_async(get_fx_rate_query.symbol)
         base_currency = get_fx_rate_query.base_currency

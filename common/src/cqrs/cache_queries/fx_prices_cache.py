@@ -8,8 +8,8 @@ NAME = "fx_prices"
 
 
 class GetFxPricesCache(GetCacheStatement):
-    def __init__(self, symbol: str):
-        super().__init__(parameter=symbol)
+    def __init__(self, key: str):
+        super().__init__(parameter=key)
         self.name = NAME
 
     @property
@@ -18,14 +18,14 @@ class GetFxPricesCache(GetCacheStatement):
 
 
 class SetFxPricesCache(SetCacheStatement):
-    def __init__(self, values: pd.Series, symbol: str):
+    def __init__(self, values: pd.Series, key: str):
         super().__init__(values)
-        self.instrument_code = symbol
+        self.symbol = key
         self.name = NAME
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.instrument_code)
+        return get_series_key(self.name, self.symbol)
 
     @property
     def cache_value(self) -> dict:

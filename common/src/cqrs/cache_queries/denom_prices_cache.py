@@ -8,8 +8,8 @@ NAME = "denom_prices"
 
 
 class GetDenomPricesCache(GetCacheStatement):
-    def __init__(self, instrument_code: str):
-        super().__init__(parameter=instrument_code)
+    def __init__(self, symbol: str):
+        super().__init__(parameter=symbol)
         self.name = NAME
 
     @property
@@ -18,14 +18,14 @@ class GetDenomPricesCache(GetCacheStatement):
 
 
 class SetDenomPricesCache(SetCacheStatement):
-    def __init__(self, prices: pd.Series, instrument_code: str):
+    def __init__(self, prices: pd.Series, symbol: str):
         super().__init__(prices)
-        self.instrument_code = instrument_code
+        self.symbol = symbol
         self.name = NAME
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.instrument_code)
+        return get_series_key(self.name, self.symbol)
 
     @property
     def cache_value(self) -> dict:

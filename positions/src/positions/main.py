@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 from common.src.middleware.logging import AppMiddleware
-from positions.api.dependencies.positions_dependencies import app_lifespan
+from positions.api.dependencies.dependencies import app_lifespan
 from positions.api.routers.positions_route import router as position_route
 
 app_configs = {

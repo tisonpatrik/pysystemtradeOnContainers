@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 from common.src.middleware.logging import AppMiddleware
-from forecast.api.dependencies.forecast_dependencies import app_lifespan
+from forecast.api.dependencies.dependencies import app_lifespan
 from forecast.api.routers.raw_forecast_router import router as raw_forecast_route
 
 app_configs = {

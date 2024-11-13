@@ -8,8 +8,8 @@ NAME = "daily_returns"
 
 
 class GetDailyReturnsCache(GetCacheStatement):
-    def __init__(self, instrument_code: str):
-        super().__init__(parameter=instrument_code)
+    def __init__(self, symbol: str):
+        super().__init__(parameter=symbol)
         self.name = NAME
 
     @property
@@ -20,12 +20,12 @@ class GetDailyReturnsCache(GetCacheStatement):
 class SetDailyReturnsCache(SetCacheStatement):
     def __init__(self, returns: pd.Series, symbol: str):
         super().__init__(returns)
-        self.instrument_code = symbol
+        self.symbol = symbol
         self.name = NAME
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.instrument_code)
+        return get_series_key(self.name, self.symbol)
 
     @property
     def cache_value(self) -> dict:

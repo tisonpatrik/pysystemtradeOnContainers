@@ -20,12 +20,12 @@ class GetVolAttenuationCache(GetCacheStatement):
 class SetVolAttenuationCache(SetCacheStatement):
     def __init__(self, values: pd.Series, symbol: str):
         super().__init__(values)
-        self.instrument_code = symbol
+        self.symbol = symbol
         self.name = NAME
 
     @property
     def cache_key(self) -> str:
-        return get_series_key(self.name, self.instrument_code)
+        return get_series_key(self.name, self.symbol)
 
     @property
     def cache_value(self) -> dict:

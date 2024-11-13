@@ -6,7 +6,7 @@ from common.src.cqrs.cache_queries.daily_prices_cache import GetDailyPricesCache
 from common.src.cqrs.cache_queries.denom_prices_cache import GetDenomPricesCache, SetDenomPricesCache
 from common.src.cqrs.db_queries.get_daily_prices import GetDailyPriceQuery
 from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
-from common.src.cqrs.db_queries.get_fx_prices import GetFxPricesQuery
+from common.src.cqrs.db_queries.get_fx_rates import GetFxRatesQuery
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
@@ -36,7 +36,7 @@ class PricesClient:
         prices = DailyPrices.from_db_to_series(prices_data)
 
         # Store the fetched data in Redis cache in the background (fire-and-forget)
-        cache_set_statement = SetDailyPricesCache(prices=prices, instrument_code=symbol)
+        cache_set_statement = SetDailyPricesCache(prices=prices, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
         self.background_tasks.add(cache_task)
@@ -57,7 +57,7 @@ class PricesClient:
         prices = DenomPrices.from_db_to_series(prices_data)
 
         # Store the fetched data in Redis cache in the background (fire-and-forget)
-        cache_set_statement = SetDenomPricesCache(prices=prices, instrument_code=symbol)
+        cache_set_statement = SetDenomPricesCache(prices=prices, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
         self.background_tasks.add(cache_task)
@@ -67,7 +67,7 @@ class PricesClient:
 
     async def get_fx_rates_async(self, instrument_currency: str, conversion_currency: str) -> pd.Series:
         symbol = f"{instrument_currency}{conversion_currency}"
-        statement = GetFxPricesQuery(symbol=symbol)
+        statement = GetFxRatesQuery(symbol=symbol)
         rates_data = await self.db_repository.fetch_many_async(statement)
         if not rates_data:
             raise ValueError(f"There are no data for FX symbol: {symbol}.")

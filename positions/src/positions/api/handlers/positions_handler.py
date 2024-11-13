@@ -1,32 +1,28 @@
 import pandas as pd
 
-from common.src.clients.raw_data_client import RawDataClient
+from common.src.clients.forecast_client import ForecastClient
 from common.src.cqrs.api_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
 from common.src.logging.logger import AppLogger
-from positions.services.cash_volatility_target_service import CashVolTargetService
+from positions.api.handlers.average_position_at_subsystem_level_handler import AveragePositionAtSubsystemLevelHandler
 
 
 class PositionsHandler:
-    def __init__(self, raw_data_client: RawDataClient):
+    def __init__(
+        self,
+        forecast_client: ForecastClient,
+        average_position_at_subsystem_level_handler: AveragePositionAtSubsystemLevelHandler,
+    ):
         self.logger = AppLogger.get_instance().get_logger()
-        self.cash_vol_target_service = CashVolTargetService()
-        self.raw_data_client = raw_data_client
+        self.forecast_client = forecast_client
+        self.average_position_at_subsystem_level_handler = average_position_at_subsystem_level_handler
 
     async def get_subsystem_position_async(self, request: GetSubsystemPositionForInstrument) -> pd.Series:
-        try:
-            self.logger.info("Starting to get average position at subsystem level.")
-
-            fx_rate = await self.raw_data_client.get_fx_prices_async(request.symbol, request.base_currency)
-            instr_ccy_vol = await self.raw_data_client.get_instrument_volatility_async(request.symbol)
-            indexed = fx_rate.reindex(instr_ccy_vol.index, method="ffill")
-            instr_value_vol = instr_ccy_vol.ffill() * indexed
-            cash_vol_target = self.cash_vol_target_service.get_daily_cash_vol_target(
-                request.notional_trading_capital, request.percentage_volatility_target
-            )
-            vol_scalar = cash_vol_target / instr_value_vol
-
-            self.logger.info("Successfully computed average position.")
-            return vol_scalar
-        except Exception:
-            self.logger.exception("Failed to compute average position")
-            raise
+        self.logger.info("Starting to get average position at subsystem level.")
+        vol_scalar = await self.average_position_at_subsystem_level_handler.get_average_position_at_subsystem_level_async(
+            request.symbol, request.base_currency, request.notional_trading_capital, request.percentage_volatility_target
+        )
+        forecast = await self.forecast_client.get_combinated_forecast(request.symbol)
+        vol_scalar = vol_scalar.reindex(forecast.index, method="ffill")
+        if vol_scalar.isnull():
+            pass
+        return vol_scalar
