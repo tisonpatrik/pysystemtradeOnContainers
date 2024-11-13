@@ -1,12 +1,12 @@
-from typing import Annotated
+from typing import Annotated, Any
 
-from pydantic import BaseModel, NonNegativeInt, StringConstraints
+from pydantic import BaseModel, Json, StringConstraints
 
 
 class Rule(BaseModel):
-    name: Annotated[str, StringConstraints(max_length=30)]
-    speed: NonNegativeInt
+    rule_name: Annotated[str, StringConstraints(max_length=30)]
+    rule_parameters: Json[dict[str, Any]]
+    scaling_factor: float
 
-    @property
-    def task(self) -> str:
-        return f"rules.{self.name}"
+    class Config:
+        orm_mode = True

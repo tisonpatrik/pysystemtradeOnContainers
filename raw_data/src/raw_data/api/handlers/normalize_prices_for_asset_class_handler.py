@@ -24,7 +24,7 @@ class NormalizedPricesForAssetClassHandler:
         asset_class = await self.instrument_repository.get_asset_class_async(query.symbol)
 
         normalized_price_for_asset_class = (
-            await self.daily_vol_normalized_price_for_asset_handler.daily_vol_normalized_price_for_asset_async(asset_class.asset_class)
+            await self.daily_vol_normalized_price_for_asset_handler.daily_vol_normalized_price_for_asset_async(asset_class)
         )
         normalized_price_this_instrument = (
             await self.cumulative_daily_vol_norm_returns_handler.get_cumulative_daily_vol_normalized_returns_async(query.symbol)

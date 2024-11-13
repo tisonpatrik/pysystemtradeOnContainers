@@ -5,14 +5,16 @@ from common.src.clients.raw_data_client import RawDataClient
 from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
+from rules.api.handlers.scaling_handler import ScalingHandler
 from rules.services.assettrend import AssettrendService
 
 
 class AssettrendHandler:
-    def __init__(self, raw_data_client: RawDataClient, attenuation_handler: AttenutationHandler):
+    def __init__(self, raw_data_client: RawDataClient, attenuation_handler: AttenutationHandler, scaling_handler: ScalingHandler):
         self.raw_data_client = raw_data_client
         self.attenuation_handler = attenuation_handler
         self.logger = AppLogger.get_instance().get_logger()
+        self.scaling_handler = scaling_handler
         self.assettrend_service = AssettrendService()
 
     async def get_assettrend_async(self, query: GetRuleForInstrumentQuery) -> pd.Series:

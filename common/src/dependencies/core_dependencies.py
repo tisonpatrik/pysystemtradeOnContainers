@@ -4,6 +4,7 @@ from common.src.clients.carry_client import CarryClient
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
+from common.src.clients.rules_signals_client import RulesSignalsClient
 from common.src.database.repository import Repository
 from common.src.http_client.rest_client import RestClient
 from common.src.redis.redis_repository import RedisRepository
@@ -47,3 +48,9 @@ def get_raw_data_client(
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> RawDataClient:
     return RawDataClient(rest_client=rest_client, redis_repository=redis_repository)
+
+
+def get_rules_signals_client(
+    db_repository: Repository = Depends(get_db_repository),
+) -> RulesSignalsClient:
+    return RulesSignalsClient(db_repository=db_repository)

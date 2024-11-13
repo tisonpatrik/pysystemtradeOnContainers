@@ -5,14 +5,16 @@ from common.src.clients.carry_client import CarryClient
 from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
+from rules.api.handlers.scaling_handler import ScalingHandler
 from rules.services.carry import CarryService
 
 
 class CarryHandler:
-    def __init__(self, carry_client: CarryClient, attenuation_handler: AttenutationHandler):
+    def __init__(self, carry_client: CarryClient, attenuation_handler: AttenutationHandler, scaling_handler: ScalingHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.attenuation_handler = attenuation_handler
         self.carry_client = carry_client
+        self.scaling_handler = scaling_handler
         self.carry_service = CarryService()
 
     async def get_carry_async(self, query: GetRuleForInstrumentQuery) -> pd.Series:
@@ -22,4 +24,6 @@ class CarryHandler:
         signal = carry.replace(0, np.nan)
         if query.use_attenuation:
             signal = await self.attenuation_handler.apply_attenutation_to_trading_signal_async(symbol=query.symbol, raw_signal=signal)
-        return signal
+        return await self.scaling_handler.apply_scaling_to_trading_signal_async(
+            scaling_factor=query.scaling_factor, raw_forecast=signal, scaling_type=query.scaling_type
+        )

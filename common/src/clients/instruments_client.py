@@ -17,62 +17,38 @@ class InstrumentsClient:
         self.repository = repository
         self.logger = AppLogger.get_instance().get_logger()
 
-    async def get_point_size_async(self, symbol: str) -> PointSize:
+    async def get_point_size_async(self, symbol: str) -> float:
         statement = GetPointSize(symbol=symbol)
-        try:
-            point_size_data = await self.repository.fetch_item_async(statement)
-            point_size = to_pydantic(point_size_data, PointSize)
-            if point_size is None:
-                raise ValueError(f"No data found for symbol {symbol}")
-            return point_size
-        except Exception:
-            self.logger.exception("Database error when fetching point size for symbol '%s'", symbol)
-            raise
+        point_size_data = await self.repository.fetch_item_async(statement)
+        point_size = to_pydantic(point_size_data, PointSize)
+        if point_size is None:
+            raise ValueError(f"No data found for symbol {symbol}")
+        return point_size.pointsize
 
-    async def get_asset_class_async(self, symbol: str) -> AssetClass:
+    async def get_asset_class_async(self, symbol: str) -> str:
         statement = GetAssetClass(symbol=symbol)
-        try:
-            asset_class_data = await self.repository.fetch_item_async(statement)
-            asset_class = to_pydantic(asset_class_data, AssetClass)
-            if asset_class is None:
-                raise ValueError(f"No data found for symbol {symbol}")
-            return asset_class
-        except Exception:
-            self.logger.exception("Database error when fetching asset class for symbol '%s'", symbol)
-            raise
+        asset_class_data = await self.repository.fetch_item_async(statement)
+        asset_class = to_pydantic(asset_class_data, AssetClass)
+        if asset_class is None:
+            raise ValueError(f"No data found for symbol {symbol}")
+        return asset_class.asset_class
 
     async def get_tradable_instruments_for_asset_class_async(self, asset_class: str) -> list:
         statement = GetTradableInstrumentsForAssetClass(asset_class=asset_class, is_tradable=True)
-        try:
-            instruments_data = await self.repository.fetch_many_async(statement)
-            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
-        except Exception:
-            self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
-            raise
+        instruments_data = await self.repository.fetch_many_async(statement)
+        return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
 
     async def get_all_instruments_for_asset_class_async(self, asset_class: str) -> list:
         statement = GetAllInstrumentsForAssetClass(asset_class=asset_class)
-        try:
-            instruments_data = await self.repository.fetch_many_async(statement)
-            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
-        except Exception:
-            self.logger.exception("Database error when fetching instruments for asset class '%s'", asset_class)
-            raise
+        instruments_data = await self.repository.fetch_many_async(statement)
+        return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
 
     async def get_tradable_instrument_async(self) -> list:
         statement = GetTradableInstruments(is_tradable=True)
-        try:
-            instruments_data = await self.repository.fetch_many_async(statement)
-            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
-        except Exception:
-            self.logger.exception("Database error when fetching all instruments")
-            raise
+        instruments_data = await self.repository.fetch_many_async(statement)
+        return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
 
     async def get_all_instrument_async(self) -> list:
         statement = GetAllInstruments()
-        try:
-            instruments_data = await self.repository.fetch_many_async(statement)
-            return [to_pydantic(instrument, Instrument) for instrument in instruments_data]
-        except Exception:
-            self.logger.exception("Database error when fetching all instruments")
-            raise
+        instruments_data = await self.repository.fetch_many_async(statement)
+        return [to_pydantic(instrument, Instrument) for instrument in instruments_data]

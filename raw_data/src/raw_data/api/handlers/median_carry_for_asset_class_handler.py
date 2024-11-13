@@ -19,7 +19,7 @@ class MedianCarryForAssetClassHandler:
         self.logger.info("Fetching Median Carry For Asset Class for symbol %s", symbol)
         carry = await self.raw_carry_handler.get_raw_carry_async(symbol)
         asset_class = await self.instrument_client.get_asset_class_async(symbol=symbol)
-        raw_median_carry = await self._by_asset_class_median_carry_for_asset_class(asset_class.asset_class)
+        raw_median_carry = await self._by_asset_class_median_carry_for_asset_class(asset_class)
         return raw_median_carry.reindex(carry.index).ffill()
 
     async def _by_asset_class_median_carry_for_asset_class(self, asset_class: str, smooth_days=90) -> pd.Series:
