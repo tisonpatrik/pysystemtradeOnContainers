@@ -5,13 +5,11 @@ from fastapi import Depends, FastAPI
 from common.src.clients.carry_client import CarryClient
 from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
-from common.src.clients.rules_signals_client import RulesSignalsClient
 from common.src.dependencies.core_dependencies import (
     get_carry_client,
     get_daily_prices_client,
     get_raw_data_client,
     get_redis,
-    get_rules_signals_client,
 )
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
@@ -25,9 +23,9 @@ from rules.api.handlers.carry_handler import CarryHandler
 from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
 from rules.api.handlers.momentum_handler import MomentumHandler
 from rules.api.handlers.momentum_rule_handler import MomentumRuleHandler
+from rules.api.handlers.normalization_handler import NormalizationHandler
 from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
-from rules.api.handlers.scaling_handler import ScalingHandler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
 from rules.api.handlers.skewrel_handler import SkewRelHandler
 
@@ -44,10 +42,8 @@ def get_attenuation_handler(
     return AttenutationHandler(raw_data_client=raw_data_client)
 
 
-def get_scaling_handler(
-    rules_signals_client: RulesSignalsClient = Depends(get_rules_signals_client),
-) -> ScalingHandler:
-    return ScalingHandler(rules_signals_client=rules_signals_client)
+def get_normalization_handler() -> NormalizationHandler:
+    return NormalizationHandler()
 
 
 def get_momentum_handler(
@@ -61,7 +57,7 @@ def get_momentum_handler(
 def get_momentum_rule_handler(
     momentum_handler: MomentumHandler = Depends(get_momentum_handler),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> MomentumRuleHandler:
     return MomentumRuleHandler(momentum_handler=momentum_handler, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -69,7 +65,7 @@ def get_momentum_rule_handler(
 def get_accel_handler(
     momentum_handler: MomentumHandler = Depends(get_momentum_handler),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> AccelHandler:
     return AccelHandler(momentum_handler=momentum_handler, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -77,7 +73,7 @@ def get_accel_handler(
 def get_breakout_handler(
     prices_client: PricesClient = Depends(get_daily_prices_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> BreakoutHandler:
     return BreakoutHandler(prices_client=prices_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -85,7 +81,7 @@ def get_breakout_handler(
 def get_asserttrend_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> AssettrendHandler:
     return AssettrendHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -93,7 +89,7 @@ def get_asserttrend_handler(
 def get_carry_handler(
     carry_client: CarryClient = Depends(get_carry_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> CarryHandler:
     return CarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -101,7 +97,7 @@ def get_carry_handler(
 def get_cs_mean_reversion_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> CSMeanReversionHandler:
     return CSMeanReversionHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -109,7 +105,7 @@ def get_cs_mean_reversion_handler(
 def get_relative_carry_handler(
     carry_client: CarryClient = Depends(get_carry_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> RelativeCarryHandler:
     return RelativeCarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -117,7 +113,7 @@ def get_relative_carry_handler(
 def get_relative_momentum_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> RelativeMomentumHandler:
     return RelativeMomentumHandler(
         raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler
@@ -127,7 +123,7 @@ def get_relative_momentum_handler(
 def get_skewabs_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> SkewAbsHandler:
     return SkewAbsHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)
 
@@ -135,6 +131,6 @@ def get_skewabs_handler(
 def get_skewrel_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
-    scaling_handler: ScalingHandler = Depends(get_scaling_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
 ) -> SkewRelHandler:
     return SkewRelHandler(raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler)

@@ -5,12 +5,12 @@ from common.src.clients.prices_client import PricesClient
 from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
-from rules.api.handlers.scaling_handler import ScalingHandler
+from rules.api.handlers.normalization_handler import NormalizationHandler
 from rules.services.breakout import BreakoutService
 
 
 class BreakoutHandler:
-    def __init__(self, prices_client: PricesClient, attenuation_handler: AttenutationHandler, scaling_handler: ScalingHandler):
+    def __init__(self, prices_client: PricesClient, attenuation_handler: AttenutationHandler, scaling_handler: NormalizationHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.attenuation_handler = attenuation_handler
@@ -25,6 +25,6 @@ class BreakoutHandler:
         signal = breakout.replace(0, np.nan)
         if query.use_attenuation:
             signal = await self.attenuation_handler.apply_attenutation_to_trading_signal_async(symbol=query.symbol, raw_signal=signal)
-        return await self.scaling_handler.apply_scaling_to_trading_signal_async(
+        return await self.scaling_handler.apply_normalization_signal_async(
             scaling_factor=query.scaling_factor, raw_forecast=signal, scaling_type=query.scaling_type
         )
