@@ -49,6 +49,8 @@ seed_raw_data:
 	@$(MAKE) seed_daily_denominator_prices
 	@$(MAKE) seed_multiple_prices
 	@$(MAKE) seed_fx_prices
+	@$(MAKE) seed_rules
+	@$(MAKE) seed_fixed_scaling_factor
 
 .PHONY:seed_config_data
 seed_config_data:
@@ -83,4 +85,11 @@ seed_fx_prices:
 	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/fx_prices/*.csv'); do \
 		echo "Processing file: $$file"; \
 		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY fx_prices FROM '$$file' DELIMITER ',' CSV HEADER"; \
+	done
+
+.PHONY: seed_rules
+seed_rules:
+	@for file in $$(docker exec -i $(DB_HOST) bash -c 'ls /data/rules/*.csv'); do \
+		echo "Processing file: $$file"; \
+		docker exec -i $(DB_HOST) psql -U $(DB_USER) -d $(DB_NAME) -c "\COPY rules FROM '$$file' DELIMITER ',' CSV HEADER"; \
 	done

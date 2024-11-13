@@ -1,5 +1,5 @@
 BEGIN;
 
 DROP TABLE IF EXISTS instrument_config;
-
+DROP TABLE IF EXISTS rules;
 COMMIT;
