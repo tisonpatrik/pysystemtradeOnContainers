@@ -1,7 +1,7 @@
 import pandas as pd
 
+from common.src.clients.raw_data_client import RawDataClient
 from common.src.logging.logger import AppLogger
-from common.src.repositories.raw_data_client import RawDataClient
 
 
 class AttenutationHandler:

@@ -2,21 +2,21 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
+from common.src.clients.carry_client import CarryClient
+from common.src.clients.instruments_client import InstrumentsClient
+from common.src.clients.prices_client import PricesClient
 from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
-    get_carry_repository,
-    get_daily_prices_repository,
+    get_carry_client,
+    get_daily_prices_client,
     get_db_repository,
-    get_instruments_repository,
+    get_instruments_client,
     get_redis,
 )
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.carry_client import CarryClient
-from common.src.repositories.instruments_client import InstrumentsClient
-from common.src.repositories.prices_client import PricesClient
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
@@ -57,54 +57,54 @@ async def app_lifespan(app: FastAPI):
 
 
 def get_daily_returns_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> DailyReturnsHandler:
-    return DailyReturnsHandler(prices_repository=prices_repository, redis_repository=redis_repository)
+    return DailyReturnsHandler(prices_client=prices_client, redis_repository=redis_repository)
 
 
 def get_daily_returns_vol_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     redis_repository: RedisRepository = Depends(get_redis),
     daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
 ) -> DailyReturnsVolHandler:
     return DailyReturnsVolHandler(
-        prices_repository=prices_repository, redis_repository=redis_repository, daily_returns_handler=daily_returns_handler
+        prices_client=prices_client, redis_repository=redis_repository, daily_returns_handler=daily_returns_handler
     )
 
 
 def get_daily_percentage_volatility_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     redis_repository: RedisRepository = Depends(get_redis),
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
 ) -> DailyPercentageVolatilityHandler:
     return DailyPercentageVolatilityHandler(
-        prices_repository=prices_repository,
+        prices_client=prices_client,
         redis_repository=redis_repository,
         daily_returns_vol_handler=daily_returns_vol_handler,
     )
 
 
 def get_instrument_vol_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
-    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
+    instruments_client: InstrumentsClient = Depends(get_instruments_client),
     daily_percentage_volatility_handler: DailyPercentageVolatilityHandler = Depends(get_daily_percentage_volatility_handler),
 ) -> InstrumentCurrencyVolHandler:
     return InstrumentCurrencyVolHandler(
-        prices_repository=prices_repository,
-        instruments_repository=instruments_repository,
+        prices_client=prices_client,
+        instruments_client=instruments_client,
         daily_percentage_volatility_handler=daily_percentage_volatility_handler,
     )
 
 
 def get_daily_vol_norm_returns_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
     redis_repository: RedisRepository = Depends(get_redis),
     daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
 ) -> DailyvolNormalizedReturnsHandler:
     return DailyvolNormalizedReturnsHandler(
-        prices_repository=prices_repository,
+        prices_client=prices_client,
         daily_returns_vol_handler=daily_returns_vol_handler,
         redis_repository=redis_repository,
         daily_returns_handler=daily_returns_handler,
@@ -112,7 +112,7 @@ def get_daily_vol_norm_returns_handler(
 
 
 def get_aggregated_returns_for_asset_class_handler(
-    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_client),
     daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
 ) -> AggregatedReturnsForAssetClassHandler:
     return AggregatedReturnsForAssetClassHandler(
@@ -140,7 +140,7 @@ def get_cumulative_daily_vol_norm_returns_handler(
 
 
 def get_normalized_price_for_asset_class_handler(
-    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
+    instruments_client: InstrumentsClient = Depends(get_instruments_client),
     daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = Depends(
         get_daily_vol_normalized_price_for_asset_class_handler
     ),
@@ -149,7 +149,7 @@ def get_normalized_price_for_asset_class_handler(
     ),
 ) -> NormalizedPricesForAssetClassHandler:
     return NormalizedPricesForAssetClassHandler(
-        instruments_repository=instruments_repository,
+        instruments_client=instruments_client,
         daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
         cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
     )
@@ -159,7 +159,7 @@ def get_fx_prices_handler(repository: Repository = Depends(get_db_repository)) -
     return FxPricesHandler(repository=repository)
 
 
-def get_annualised_roll_handler(carry_client: CarryClient = Depends(get_carry_repository)) -> DailyAnnualisedRollHandler:
+def get_annualised_roll_handler(carry_client: CarryClient = Depends(get_carry_client)) -> DailyAnnualisedRollHandler:
     return DailyAnnualisedRollHandler(carry_client=carry_client)
 
 
@@ -178,16 +178,16 @@ def get_smooth_carry_handler(
 
 def get_median_carry_for_asset_class_handler(
     raw_carry_handler: RawCarryHandler = Depends(get_raw_carry_handler),
-    instrument_repository: InstrumentsClient = Depends(get_instruments_repository),
+    instrument_repository: InstrumentsClient = Depends(get_instruments_client),
 ) -> MedianCarryForAssetClassHandler:
     return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=instrument_repository)
 
 
 def get_daily_percentage_returns_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
 ) -> DailyPercentageReturnsHandler:
-    return DailyPercentageReturnsHandler(prices_repository=prices_repository, daily_returns_handler=daily_returns_handler)
+    return DailyPercentageReturnsHandler(prices_client=prices_client, daily_returns_handler=daily_returns_handler)
 
 
 def get_skew_handler(
@@ -204,7 +204,7 @@ def get_negskew_over_instrument_list_handler(
 
 
 def get_negskew_all_instruments_handler(
-    instruments_client: InstrumentsClient = Depends(get_instruments_repository),
+    instruments_client: InstrumentsClient = Depends(get_instruments_client),
     negskew_over_instrument_list_handler: NegSkewOverInstrumentListHandler = Depends(get_negskew_over_instrument_list_handler),
 ) -> NegSkewAllInstrumentsHandler:
     return NegSkewAllInstrumentsHandler(
@@ -241,10 +241,10 @@ def get_absolute_skew_deviation_handler(
 
 def get_current_average_negskew_over_asset_class_handler(
     negskew_over_instrument_list_handler: NegSkewOverInstrumentListHandler = Depends(get_negskew_over_instrument_list_handler),
-    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
+    instruments_client: InstrumentsClient = Depends(get_instruments_client),
 ) -> CurrentAverageNegSkewOverAssetClassHandler:
     return CurrentAverageNegSkewOverAssetClassHandler(
-        instruments_repository=instruments_repository, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
+        instruments_client=instruments_client, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
     )
 
 
@@ -252,10 +252,10 @@ def get_average_neg_skew_in_asset_class_for_instrument_handler(
     current_average_negskew_over_asset_class_handler: CurrentAverageNegSkewOverAssetClassHandler = Depends(
         get_current_average_negskew_over_asset_class_handler
     ),
-    instruments_repository: InstrumentsClient = Depends(get_instruments_repository),
+    instruments_client: InstrumentsClient = Depends(get_instruments_client),
 ) -> AverageNegSkewInAssetClassForInstrumentHandler:
     return AverageNegSkewInAssetClassForInstrumentHandler(
-        instruments_repository=instruments_repository,
+        instruments_client=instruments_client,
         current_average_negskew_over_asset_class_handler=current_average_negskew_over_asset_class_handler,
     )
 

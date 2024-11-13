@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from common.src.clients.raw_data_client import RawDataClient
+from common.src.cqrs.api_queries.rule_queries.get_skew_rule_for_instrument import GetSkewRuleForInstrumentQuery
 from common.src.logging.logger import AppLogger
-from common.src.repositories.raw_data_client import RawDataClient
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.services.skew import SkewRuleService
 
@@ -14,11 +15,11 @@ class SkewAbsHandler:
         self.attenuation_handler = attenuation_handler
         self.skewabs_service = SkewRuleService()
 
-    async def get_skewabs_async(self, symbol: str, speed: int, lookback: int, use_attenuation: bool) -> pd.Series:
-        self.logger.info("Calculating SkewAbs rule for %s", symbol)
-        absolute_skew_deviation = await self.raw_data_client.absolute_skew_deviation_async(symbol, lookback)
-        skewabs = self.skewabs_service.calculate_skew(demean_factor_value=absolute_skew_deviation, smooth=speed)
+    async def get_skewabs_async(self, query: GetSkewRuleForInstrumentQuery) -> pd.Series:
+        self.logger.info("Calculating SkewAbs rule for %s", query.symbol)
+        absolute_skew_deviation = await self.raw_data_client.absolute_skew_deviation_async(query.symbol, query.lookback)
+        skewabs = self.skewabs_service.calculate_skew(demean_factor_value=absolute_skew_deviation, smooth=query.speed)
         signal = skewabs.replace(0, np.nan)
-        if use_attenuation:
-            signal = await self.attenuation_handler.apply_attenutation_to_trading_signal_async(symbol=symbol, raw_signal=signal)
+        if query.use_attenuation:
+            signal = await self.attenuation_handler.apply_attenutation_to_trading_signal_async(symbol=query.symbol, raw_signal=signal)
         return signal

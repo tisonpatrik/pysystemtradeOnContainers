@@ -1,14 +1,10 @@
-from typing import Annotated
+from pydantic import NonNegativeInt
 
-from pydantic import NonNegativeInt, StringConstraints
-
-from common.src.http_client.requests.fetch_request import FetchRequest
+from common.src.cqrs.api_queries.rule_queries.rule_request import RuleRequest
 
 
-class GetRuleForInstrumentQuery(FetchRequest):
-    symbol: Annotated[str, StringConstraints(max_length=30)]
+class GetRuleForInstrumentQuery(RuleRequest):
     speed: NonNegativeInt
-    use_attenuation: bool
 
     @property
     def url_string(self) -> str:

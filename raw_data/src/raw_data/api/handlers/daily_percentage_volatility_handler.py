@@ -2,13 +2,13 @@ import asyncio
 
 import pandas as pd
 
+from common.src.clients.prices_client import PricesClient
 from common.src.cqrs.cache_queries.daily_percentage_vol_cache import (
     GetDailyPercentageVolCache,
     SetDailyPercentageVolCache,
 )
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.prices_client import PricesClient
 from common.src.validation.daily_percentage_vol import DailyPercentageVo
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 
@@ -16,12 +16,12 @@ from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandl
 class DailyPercentageVolatilityHandler:
     def __init__(
         self,
-        prices_repository: PricesClient,
+        prices_client: PricesClient,
         redis_repository: RedisRepository,
         daily_returns_vol_handler: DailyReturnsVolHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
-        self.prices_repository = prices_repository
+        self.prices_client = prices_client
         self.redis_repository = redis_repository
         self.daily_returns_vol_handler = daily_returns_vol_handler
         self.background_tasks = set()
@@ -31,7 +31,7 @@ class DailyPercentageVolatilityHandler:
         cached_volatility = await self._get_cached_volatility(symbol)
         if cached_volatility is not None:
             return cached_volatility
-        denom_prices = await self.prices_repository.get_denom_prices_async(symbol)
+        denom_prices = await self.prices_client.get_denom_prices_async(symbol)
         daily_returns_vol = await self.daily_returns_vol_handler.get_daily_returns_vol_async(symbol)
         (denom_price, return_vol) = denom_prices.align(daily_returns_vol, join="right")
         daily_volatility = 100.0 * (return_vol / denom_price.ffill().abs())

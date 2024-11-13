@@ -2,11 +2,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
-from common.src.database.repository import Repository
+from common.src.clients.carry_client import CarryClient
+from common.src.clients.prices_client import PricesClient
+from common.src.clients.raw_data_client import RawDataClient
 from common.src.dependencies.core_dependencies import (
-    get_carry_repository,
-    get_daily_prices_repository,
-    get_db_repository,
+    get_carry_client,
+    get_daily_prices_client,
     get_raw_data_client,
     get_redis,
 )
@@ -14,9 +15,6 @@ from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.redis_setup import setup_async_redis
 from common.src.dependencies.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
-from common.src.repositories.carry_client import CarryClient
-from common.src.repositories.prices_client import PricesClient
-from common.src.repositories.raw_data_client import RawDataClient
 from rules.api.handlers.accel_handler import AccelHandler
 from rules.api.handlers.assettrend_handler import AssettrendHandler
 from rules.api.handlers.attenutation_handler import AttenutationHandler
@@ -27,7 +25,6 @@ from rules.api.handlers.momentum_handler import MomentumHandler
 from rules.api.handlers.momentum_rule_handler import MomentumRuleHandler
 from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
-from rules.api.handlers.rules_manager_handler import RulesManagerHandler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
 from rules.api.handlers.skewrel_handler import SkewRelHandler
 
@@ -38,10 +35,6 @@ async def app_lifespan(app: FastAPI):
         yield
 
 
-def get_rules_handler(repository: Repository = Depends(get_db_repository)) -> RulesManagerHandler:
-    return RulesManagerHandler(repository=repository)
-
-
 def get_attenuation_handler(
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
 ) -> AttenutationHandler:
@@ -49,11 +42,11 @@ def get_attenuation_handler(
 
 
 def get_momentum_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     raw_data_client: RawDataClient = Depends(get_raw_data_client),
     redis_repository: RedisRepository = Depends(get_redis),
 ) -> MomentumHandler:
-    return MomentumHandler(prices_repository=prices_repository, raw_data_client=raw_data_client, redis_repository=redis_repository)
+    return MomentumHandler(prices_client=prices_client, raw_data_client=raw_data_client, redis_repository=redis_repository)
 
 
 def get_momentum_rule_handler(
@@ -71,10 +64,10 @@ def get_accel_handler(
 
 
 def get_breakout_handler(
-    prices_repository: PricesClient = Depends(get_daily_prices_repository),
+    prices_client: PricesClient = Depends(get_daily_prices_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> BreakoutHandler:
-    return BreakoutHandler(prices_repository=prices_repository, attenuation_handler=attenuation_handler)
+    return BreakoutHandler(prices_client=prices_client, attenuation_handler=attenuation_handler)
 
 
 def get_asserttrend_handler(
@@ -85,7 +78,7 @@ def get_asserttrend_handler(
 
 
 def get_carry_handler(
-    carry_client: CarryClient = Depends(get_carry_repository),
+    carry_client: CarryClient = Depends(get_carry_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> CarryHandler:
     return CarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler)
@@ -99,7 +92,7 @@ def get_cs_mean_reversion_handler(
 
 
 def get_relative_carry_handler(
-    carry_client: CarryClient = Depends(get_carry_repository),
+    carry_client: CarryClient = Depends(get_carry_client),
     attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
 ) -> RelativeCarryHandler:
     return RelativeCarryHandler(carry_client=carry_client, attenuation_handler=attenuation_handler)

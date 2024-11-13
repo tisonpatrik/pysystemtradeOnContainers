@@ -11,7 +11,6 @@ from rules.api.routes.cs_mean_reversion_route import router as cd_mean_reversion
 from rules.api.routes.momentum_route import router as momentum_route
 from rules.api.routes.relative_carry_route import router as relative_carry_route
 from rules.api.routes.relative_momentum_route import router as relative_momentum_route
-from rules.api.routes.rules_manager_router import router as rules_manager_route
 from rules.api.routes.skewabs_route import router as skewabs_route
 from rules.api.routes.skewrel_route import router as skewrel_route
 
@@ -27,7 +26,6 @@ app_configs = {
 app = FastAPI(**app_configs)
 app.add_middleware(AppMiddleware)
 
-app.include_router(rules_manager_route, prefix="/rules_manager_route")
 app.include_router(accel_route, prefix="/accel_route")
 app.include_router(breakout_route, prefix="/breakout_route")
 app.include_router(assettrend_route, prefix="/assettrend_route")

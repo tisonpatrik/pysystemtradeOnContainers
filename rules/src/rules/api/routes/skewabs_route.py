@@ -20,9 +20,7 @@ async def get_skewabs_async(
     skewabs_handler: SkewAbsHandler = Depends(get_skewabs_handler),
 ):
     try:
-        result = await skewabs_handler.get_skewabs_async(
-            query.symbol, query.speed, lookback=query.lookback, use_attenuation=query.use_attenuation
-        )
+        result = await skewabs_handler.get_skewabs_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

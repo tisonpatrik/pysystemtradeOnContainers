@@ -20,7 +20,7 @@ async def get_momentum_async(
     handler: MomentumRuleHandler = Depends(get_momentum_rule_handler),
 ):
     try:
-        result = await handler.get_momentum_async(query.symbol, query.speed, query.use_attenuation)
+        result = await handler.get_momentum_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

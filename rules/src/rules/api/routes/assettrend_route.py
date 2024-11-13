@@ -20,7 +20,7 @@ async def get_breakout_async(
     handler: AssettrendHandler = Depends(get_asserttrend_handler),
 ):
     try:
-        result = await handler.get_assettrend_async(query.symbol, query.speed, query.use_attenuation)
+        result = await handler.get_assettrend_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

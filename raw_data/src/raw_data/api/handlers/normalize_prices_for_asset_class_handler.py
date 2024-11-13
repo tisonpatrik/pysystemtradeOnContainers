@@ -1,8 +1,8 @@
 import pandas as pd
 
+from common.src.clients.instruments_client import InstrumentsClient
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
-from common.src.repositories.instruments_client import InstrumentsClient
 from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import DailyVolNormalizedPriceForAssetHandler
 
@@ -10,12 +10,12 @@ from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import D
 class NormalizedPricesForAssetClassHandler:
     def __init__(
         self,
-        instruments_repository: InstrumentsClient,
+        instruments_client: InstrumentsClient,
         daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler,
         cumulative_daily_vol_norm_returns_handler: CumulativeDailyVolNormReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
-        self.instrument_repository = instruments_repository
+        self.instrument_repository = instruments_client
         self.daily_vol_normalized_price_for_asset_handler = daily_vol_normalized_price_for_asset_handler
         self.cumulative_daily_vol_norm_returns_handler = cumulative_daily_vol_norm_returns_handler
 
