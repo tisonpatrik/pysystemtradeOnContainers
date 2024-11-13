@@ -6,11 +6,13 @@ from common.src.cqrs.cache_queries.daily_prices_cache import GetDailyPricesCache
 from common.src.cqrs.cache_queries.denom_prices_cache import GetDenomPricesCache, SetDenomPricesCache
 from common.src.cqrs.db_queries.get_daily_prices import GetDailyPriceQuery
 from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
+from common.src.cqrs.db_queries.get_fx_prices import GetFxPricesQuery
 from common.src.database.repository import Repository
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisRepository
 from common.src.validation.daily_prices import DailyPrices
 from common.src.validation.denom_prices import DenomPrices
+from common.src.validation.fx_rates import FxRates
 
 
 class PricesClient:
@@ -62,3 +64,11 @@ class PricesClient:
         cache_task.add_done_callback(self.background_tasks.discard)
 
         return prices
+
+    async def get_fx_rates_async(self, instrument_currency: str, conversion_currency: str) -> pd.Series:
+        symbol = f"{instrument_currency}{conversion_currency}"
+        statement = GetFxPricesQuery(symbol=symbol)
+        rates_data = await self.db_repository.fetch_many_async(statement)
+        if not rates_data:
+            raise ValueError(f"There are no data for FX symbol: {symbol}.")
+        return FxRates.from_db_to_series(rates_data)

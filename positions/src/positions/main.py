@@ -6,7 +6,7 @@ from positions.api.dependencies.positions_dependencies import app_lifespan
 from positions.api.routers.positions_route import router as position_route
 
 app_configs = {
-    "title": "RawData API",
+    "title": "Positions API",
     "description": "Service to provide rules for trading strategies.",
     "version": "0.1.0",
     "redirect_slashes": False,

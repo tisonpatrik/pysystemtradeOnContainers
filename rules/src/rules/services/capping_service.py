@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from rules.constants import lower_floor, upper_cap
+from rules.constants import LOWER_CAP, UPPER_CAP
 
 
 class CappingService:
@@ -10,7 +10,7 @@ class CappingService:
 
     def apply_capping_to_signal(self, raw_forecast: pd.Series) -> pd.Series:
         try:
-            return raw_forecast.clip(upper=upper_cap, lower=lower_floor)
+            return raw_forecast.clip(upper=UPPER_CAP, lower=LOWER_CAP)
 
         except Exception as e:
             self.logger.exception("Error occurred in apply_capping_to_signal")

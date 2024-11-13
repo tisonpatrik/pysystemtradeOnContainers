@@ -5,6 +5,7 @@ import pandas as pd
 from common.src.cqrs.api_queries.get_absolute_skew_deviation import GetAbsoluteSkewDeviationQuery
 from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
+from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
 from common.src.cqrs.api_queries.get_vol_attenuation import GetVolAttenuationQuery
@@ -13,6 +14,7 @@ from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache impor
     SetCumulativeDailyVolNormReturnsCache,
 )
 from common.src.cqrs.cache_queries.daily_returns_vol_cache import GetDailyReturnsVolCache, SetDailyReturnsVolCache
+from common.src.cqrs.cache_queries.fx_prices_cache import GetFxPricesCache, SetFxPricesCache
 from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import (
     GetNormalizedPriceForAssetClassCache,
     SetNormalizedPriceForAssetClassCache,
@@ -23,6 +25,8 @@ from common.src.redis.redis_repository import RedisRepository
 from common.src.validation.absolute_skew_deviation import AbsoluteSkewDeviation
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from common.src.validation.daily_returns_vol import DailyReturnsVol
+from common.src.validation.fx_prices import FxPrices
+from common.src.validation.instrument_currency_vol import InstrumentCurrencyVol
 from common.src.validation.normalized_prices_for_asset_class import NormalizedPricesForAssetClass
 from common.src.validation.relative_skew_deviation import RelativeSkewDeviation
 from common.src.validation.vol_attenuation import VolAttenuation
@@ -99,6 +103,26 @@ class RawDataClient:
         raw_data = await self.client.get_data_async(query)
         data = VolAttenuation.from_api_to_series(raw_data)
         cache_set_statement = SetVolAttenuationCache(values=data, symbol=symbol)
+        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
+
+        self.background_tasks.add(cache_task)
+        cache_task.add_done_callback(self.background_tasks.discard)
+        return data
+
+    async def get_instrument_volatility_async(self, symbol: str) -> pd.Series:
+        get_instrument_vol_query = GetInstrumentCurrencyVolQuery(symbol=symbol)
+        raw_data = await self.client.get_data_async(get_instrument_vol_query)
+        return InstrumentCurrencyVol.from_api_to_series(raw_data)
+
+    async def get_fx_prices_async(self, symbol: str, conversion_currency: str) -> pd.Series:
+        cache_statement = GetFxPricesCache(symbol)
+        cached_data = await self.redis_repository.get_cache(cache_statement)
+        if cached_data is not None:
+            return FxPrices.from_cache_to_series(cached_data)
+        query = GetVolAttenuationQuery(symbol=symbol)
+        raw_data = await self.client.get_data_async(query)
+        data = FxPrices.from_api_to_series(raw_data)
+        cache_set_statement = SetFxPricesCache(values=data, symbol=symbol)
         cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_set_statement))
 
         self.background_tasks.add(cache_task)

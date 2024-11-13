@@ -5,11 +5,9 @@ from fastapi import Depends, FastAPI
 from common.src.clients.carry_client import CarryClient
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
-from common.src.database.repository import Repository
 from common.src.dependencies.core_dependencies import (
     get_carry_client,
     get_daily_prices_client,
-    get_db_repository,
     get_instruments_client,
     get_redis,
 )
@@ -155,8 +153,10 @@ def get_normalized_price_for_asset_class_handler(
     )
 
 
-def get_fx_prices_handler(repository: Repository = Depends(get_db_repository)) -> FxPricesHandler:
-    return FxPricesHandler(repository=repository)
+def get_fx_prices_handler(
+    instruments_client: InstrumentsClient = Depends(get_instruments_client), prices_client: PricesClient = Depends(get_daily_prices_client)
+) -> FxPricesHandler:
+    return FxPricesHandler(instruments_client=instruments_client, prices_client=prices_client)
 
 
 def get_annualised_roll_handler(carry_client: CarryClient = Depends(get_carry_client)) -> DailyAnnualisedRollHandler:

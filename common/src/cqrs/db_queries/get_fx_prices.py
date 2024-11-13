@@ -1,14 +1,14 @@
 from common.src.database.base_statements.fetch_statement import FetchStatement
 
 
-class GetDailyFxPrices(FetchStatement):
-    def __init__(self, fx_code: str):
+class GetFxPricesQuery(FetchStatement):
+    def __init__(self, symbol: str):
         self._query = """
         SELECT time, price
-        FROM daily_fx_prices
+        FROM fx_prices
         WHERE symbol = $1
         """
-        self._parameters = (fx_code,)
+        self._parameters = (symbol,)
 
     @property
     def parameters(self) -> tuple:

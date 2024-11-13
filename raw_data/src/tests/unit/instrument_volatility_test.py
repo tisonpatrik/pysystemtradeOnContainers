@@ -19,8 +19,8 @@ def test_instrument_volatility():
     calculated_vol = estimator.calculate_instrument_vol(multiple_prices, daily_returns_vol, point_size=200)
 
     # Ensure both are pd.Series
-    assert isinstance(calculated_vol, pd.Series), "calculated_vol is not a pd.Series"
-    assert isinstance(expected, pd.Series), "expected is not a pd.Series"
+    assert isinstance(calculated_vol, pd.Series), "calculated_vol is not a pd.Series"  # noqa: S101
+    assert isinstance(expected, pd.Series), "expected is not a pd.Series"  # noqa: S101
 
     # Compare the series
     pd.testing.assert_series_equal(
