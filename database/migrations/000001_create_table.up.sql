@@ -19,6 +19,7 @@ CREATE TABLE rules (
     rule_name VARCHAR,
     rule_parameters JSONB
     scaling_factor NUMERIC(25, 20),
+    use_attenuation BOOLEAN,
 );
 
 COMMIT;

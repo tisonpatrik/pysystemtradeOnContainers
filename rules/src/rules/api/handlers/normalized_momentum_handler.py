@@ -2,24 +2,24 @@ import numpy as np
 import pandas as pd
 
 from common.src.clients.raw_data_client import RawDataClient
-from common.src.cqrs.api_queries.rule_queries.get_assettrend import GetAssetTrendQuery
+from common.src.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
 from rules.services.ewmac_calc_vol_service import EwmacCalsVolService
 
 
-class AssettrendHandler:
+class NormalizedMomentumHandler:
     def __init__(self, raw_data_client: RawDataClient, attenuation_handler: AttenutationHandler, scaling_handler: NormalizationHandler):
+        self.logger = AppLogger.get_instance().get_logger()
         self.raw_data_client = raw_data_client
         self.attenuation_handler = attenuation_handler
-        self.logger = AppLogger.get_instance().get_logger()
         self.scaling_handler = scaling_handler
         self.assettrend_service = EwmacCalsVolService()
 
-    async def get_assettrend_async(self, query: GetAssetTrendQuery) -> pd.Series:
+    async def get_normalized_momentum_async(self, query: GetNormalizedMomentumQuery) -> pd.Series:
         self.logger.info("Calculating AssetTrend rule for %s by speed %d", query.symbol, query.lslow)
-        prices = await self.raw_data_client.get_normalized_prices_for_asset_class_async(query.symbol)
+        prices = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(query.symbol)
         assettrend = self.assettrend_service.calculate_ewmac_calc_vol(prices, query.lfast, query.lslow)
         assettrend = assettrend.replace(0, np.nan)
         signal = assettrend.replace(0, np.nan)

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_assettrend import GetAssetTrendQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_asserttrend_handler
 from rules.api.handlers.assettrend_handler import AssettrendHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_assettrend_route/",
+    "/get_assettrend/",
     status_code=status.HTTP_200_OK,
     name="Get Assettrend",
 )
 async def get_breakout_async(
-    query: GetRuleForInstrumentQuery = Depends(),
+    query: GetAssetTrendQuery = Depends(),
     handler: AssettrendHandler = Depends(get_asserttrend_handler),
 ):
     try:

@@ -24,6 +24,7 @@ from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
 from rules.api.handlers.momentum_handler import MomentumHandler
 from rules.api.handlers.momentum_rule_handler import MomentumRuleHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
+from rules.api.handlers.normalized_momentum_handler import NormalizedMomentumHandler
 from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
@@ -44,6 +45,16 @@ def get_attenuation_handler(
 
 def get_normalization_handler() -> NormalizationHandler:
     return NormalizationHandler()
+
+
+def get_normalized_momentum_handler(
+    raw_data_client: RawDataClient = Depends(get_raw_data_client),
+    attenuation_handler: AttenutationHandler = Depends(get_attenuation_handler),
+    scaling_handler: NormalizationHandler = Depends(get_normalization_handler),
+) -> NormalizedMomentumHandler:
+    return NormalizedMomentumHandler(
+        raw_data_client=raw_data_client, attenuation_handler=attenuation_handler, scaling_handler=scaling_handler
+    )
 
 
 def get_momentum_handler(

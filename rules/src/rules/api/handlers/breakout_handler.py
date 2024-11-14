@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from common.src.clients.prices_client import PricesClient
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_breakout import GetBreakoutQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
@@ -17,10 +17,10 @@ class BreakoutHandler:
         self.scaling_handler = scaling_handler
         self.breakout_service = BreakoutService()
 
-    async def get_breakout_async(self, query: GetRuleForInstrumentQuery) -> pd.Series:
-        self.logger.info("Calculating Breakout rule for %s by speed %d", query.symbol, query.speed)
+    async def get_breakout_async(self, query: GetBreakoutQuery) -> pd.Series:
+        self.logger.info("Calculating Breakout rule for %s by speed %d", query.symbol, query.lookback)
         daily_prices = await self.prices_client.get_daily_prices_async(query.symbol)
-        breakout = self.breakout_service.calculate_breakout(daily_prices, query.speed)
+        breakout = self.breakout_service.calculate_breakout(daily_prices, query.lookback)
         breakout = breakout.replace(0, np.nan)
         signal = breakout.replace(0, np.nan)
         if query.use_attenuation:

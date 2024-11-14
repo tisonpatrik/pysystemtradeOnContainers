@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_relative_momentum import GetRelativeMomentumQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_relative_momentum_handler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_relative_momentum_route/",
+    "/get_relative_momentum/",
     status_code=status.HTTP_200_OK,
     name="Get Relative Momentum",
 )
 async def get_momentum_async(
-    query: GetRuleForInstrumentQuery = Depends(),
+    query: GetRelativeMomentumQuery = Depends(),
     relative_momentum_handler: RelativeMomentumHandler = Depends(get_relative_momentum_handler),
 ):
     try:

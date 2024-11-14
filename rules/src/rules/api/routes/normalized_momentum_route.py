@@ -1,31 +1,31 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_relative_carry import GetRelativeCarry
+from common.src.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
 from common.src.logging.logger import AppLogger
-from rules.api.dependencies.dependencies import get_relative_carry_handler
-from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
+from rules.api.dependencies.dependencies import get_normalized_momentum_handler
+from rules.api.handlers.normalized_momentum_handler import NormalizedMomentumHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_relative_carry/",
+    "/get_normalized_momentum/",
     status_code=status.HTTP_200_OK,
-    name="Get Relative Carry",
+    name="Get Normalized Momentum",
 )
-async def get_carry_async(
-    query: GetRelativeCarry = Depends(),
-    relative_carry_handler: RelativeCarryHandler = Depends(get_relative_carry_handler),
+async def get_normalized_momentum_async(
+    query: GetNormalizedMomentumQuery = Depends(),
+    handler: NormalizedMomentumHandler = Depends(get_normalized_momentum_handler),
 ):
     try:
-        result = await relative_carry_handler.get_relative_carry_async(query)
+        result = await handler.get_normalized_momentum_async(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result
     except HTTPException as e:
-        logger.exception("An error occurred while trying to calculate relatives carry for symbol %s. Error: %s", query.symbol, e.detail)
+        logger.exception("An error occurred while trying to calculate normalized momentum for symbol %s. Error: %s", query.symbol, e.detail)
         raise
     except ValidationError as e:
         logger.exception("Validation error for symbol. Error: %s", e.json())

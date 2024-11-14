@@ -4,7 +4,7 @@ from common.src.database.base_statements.fetch_statement import FetchStatement
 class GetAllRules(FetchStatement):
     def __init__(self) -> None:
         self._query = """
-		SELECT name, speed
+		SELECT rule_variation_name, rule_name, rule_parameters, scaling_factor, use_attenuation
 		FROM rules
 		"""
 

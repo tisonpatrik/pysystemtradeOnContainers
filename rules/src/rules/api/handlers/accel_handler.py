@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_accel import GetAccelQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.momentum_handler import MomentumHandler
@@ -17,10 +17,11 @@ class AccelHandler:
         self.scaling_handler = scaling_handler
         self.accel_service = AccelService()
 
-    async def get_accel_async(self, query: GetRuleForInstrumentQuery) -> pd.Series:
-        self.logger.info("Calculating Accel rule for %s by speed %d", query.symbol, query.speed)
-        ewmac = await self.momentum_handler.get_momentum_signal_async(query.symbol, query.speed)
-        accel = self.accel_service.calculate_accel(ewmac, query.speed)
+    async def get_accel_async(self, query: GetAccelQuery) -> pd.Series:
+        self.logger.info("Calculating Accel rule for %s by speed %d", query.symbol, query.lfast)
+        lslow = query.lfast * 4
+        ewmac = await self.momentum_handler.get_momentum_signal_async(query.symbol, query.lfast, lslow)
+        accel = self.accel_service.calculate_accel(ewmac, query.lfast)
         signal = accel.replace(0, np.nan)
         if query.use_attenuation:
             signal = await self.attenuation_handler.apply_attenutation_to_trading_signal_async(symbol=query.symbol, raw_signal=signal)

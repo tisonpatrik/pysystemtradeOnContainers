@@ -10,8 +10,7 @@ class NormalizationHandler:
         self.scaling_service = ScalingService()
         self.capping_service = CappingService()
 
-    async def apply_normalization_signal_async(
-        self, scaling_factor: float, raw_forecast: pd.Series, scaling_type: ScalingType
-    ) -> pd.Series:
+    async def apply_normalization_signal_async(self, scaling_factor: float, raw_forecast: pd.Series, scaling_type: str) -> pd.Series:
+        scaling_type = ScalingType(scaling_type)
         scaled_signal = self.scaling_service.apply_scaling_factor_to_signal(scaling_factor, raw_forecast, scaling_type)
         return self.capping_service.apply_capping_to_signal(scaled_signal)

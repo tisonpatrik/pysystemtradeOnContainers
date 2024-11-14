@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from common.src.clients.raw_data_client import RawDataClient
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_relative_momentum import GetRelativeMomentumQuery
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
@@ -17,12 +17,12 @@ class RelativeMomentumHandler:
         self.scaling_handler = scaling_handler
         self.relative_momentum_service = RelativeMomentumService()
 
-    async def get_relative_momentum_async(self, query: GetRuleForInstrumentQuery) -> pd.Series:
+    async def get_relative_momentum_async(self, query: GetRelativeMomentumQuery) -> pd.Series:
         self.logger.info("Calculating Relative Momentum rule for %s", query.symbol)
         cumulative_daily_vol_norm_returns = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(query.symbol)
         normalized_prices_for_asset_class = await self.raw_data_client.get_normalized_prices_for_asset_class_async(query.symbol)
         relative_momentum = self.relative_momentum_service.calculate_relative_momentum(
-            cumulative_daily_vol_norm_returns, normalized_prices_for_asset_class, query.speed
+            cumulative_daily_vol_norm_returns, normalized_prices_for_asset_class, query.horizon
         )
         signal = relative_momentum.replace(0, np.nan)
         if query.use_attenuation:

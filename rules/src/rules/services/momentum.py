@@ -7,10 +7,9 @@ class MomentumService:
     def __init__(self):
         self.logger = AppLogger.get_instance().get_logger()
 
-    def calculate_ewmac(self, price: pd.Series, vol: pd.Series, Lfast: int):
+    def calculate_ewmac(self, price: pd.Series, vol: pd.Series, lfast: int, lslow: int):
         try:
-            lslow = Lfast * 4
-            fast_ewma = price.ewm(span=Lfast, min_periods=1).mean()
+            fast_ewma = price.ewm(span=lfast, min_periods=1).mean()
             slow_ewma = price.ewm(span=lslow, min_periods=1).mean()
             raw_ewmac = fast_ewma - slow_ewma
 

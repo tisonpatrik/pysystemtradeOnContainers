@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_carry import GetCarryQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_carry_handler
 from rules.api.handlers.carry_handler import CarryHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_carry_route/",
+    "/get_carry/",
     status_code=status.HTTP_200_OK,
     name="Get Carry",
 )
 async def get_carry_async(
-    query: GetRuleForInstrumentQuery = Depends(),
+    query: GetCarryQuery = Depends(),
     carry_handler: CarryHandler = Depends(get_carry_handler),
 ):
     try:

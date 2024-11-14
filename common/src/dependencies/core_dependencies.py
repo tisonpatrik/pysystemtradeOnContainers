@@ -53,8 +53,9 @@ def get_raw_data_client(
 
 def get_rules_signals_client(
     db_repository: Repository = Depends(get_db_repository),
+    rest_client: RestClient = Depends(get_client),
 ) -> RulesSignalsClient:
-    return RulesSignalsClient(db_repository=db_repository)
+    return RulesSignalsClient(db_repository=db_repository, rest_client=rest_client)
 
 
 def get_forecast_client() -> ForecastClient:

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_rule_for_instrument import GetRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_cross_sectional_mean_reversion import GetCrossSectionalMeanReversionQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_cs_mean_reversion_handler
 from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_cs_mean_reversion_route/",
+    "/get_cross_sectional_mean_reversion/",
     status_code=status.HTTP_200_OK,
     name="Get Cross Sectional Mean Reversion",
 )
 async def get_cs_mean_reversion_async(
-    query: GetRuleForInstrumentQuery = Depends(),
+    query: GetCrossSectionalMeanReversionQuery = Depends(),
     momentum_handler: CSMeanReversionHandler = Depends(get_cs_mean_reversion_handler),
 ):
     try:

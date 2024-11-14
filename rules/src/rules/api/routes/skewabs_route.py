@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_skew_rule_for_instrument import GetSkewRuleForInstrumentQuery
+from common.src.cqrs.api_queries.rule_queries.get_skewabs import GetSkewAbsQuery
 from common.src.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_skewabs_handler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
@@ -11,12 +11,12 @@ logger = AppLogger.get_instance().get_logger()
 
 
 @router.get(
-    "/get_skewabs_route/",
+    "/get_skewabs/",
     status_code=status.HTTP_200_OK,
     name="Get SkewAbs",
 )
 async def get_skewabs_async(
-    query: GetSkewRuleForInstrumentQuery = Depends(),
+    query: GetSkewAbsQuery = Depends(),
     skewabs_handler: SkewAbsHandler = Depends(get_skewabs_handler),
 ):
     try:

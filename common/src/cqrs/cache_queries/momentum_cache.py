@@ -8,8 +8,8 @@ NAME = "momentum_cache"
 
 
 class GetMomentumCache(GetCacheStatement):
-    def __init__(self, symbol: str, speed: int):
-        parameter = f"{symbol}_{speed}"
+    def __init__(self, symbol: str, lslow: int):
+        parameter = f"{symbol}_{lslow}"
         super().__init__(parameter=parameter)
         self.name = NAME
 
@@ -19,9 +19,9 @@ class GetMomentumCache(GetCacheStatement):
 
 
 class SetMomentumCache(SetCacheStatement):
-    def __init__(self, signal: pd.Series, symbol: str, speed: int):
+    def __init__(self, signal: pd.Series, symbol: str, lslow: int):
         super().__init__(signal)
-        self.parameter = f"{symbol}_{speed}"
+        self.parameter = f"{symbol}_{lslow}"
         self.name = NAME
 
     @property
