@@ -15,12 +15,12 @@ class RulesSignalsClient:
         self.repository = db_repository
         self.client = rest_client
 
-    async def get_trading_rule_list_async(self, symbol: str) -> list:
+    async def get_trading_rule_list_async(self) -> list:
         statement = GetAllRules()
-        instruments_data = await self.repository.fetch_many_async(statement)
-        if instruments_data is None:
+        traging_rules = await self.repository.fetch_many_async(statement)
+        if traging_rules is None:
             raise ValueError("No data found for instruments ")
-        return [to_pydantic(instrument, Rule) for instrument in instruments_data]
+        return [to_pydantic(rule, Rule) for rule in traging_rules]
 
     async def get_forecast_by_rule_async(self, symbol: str, rule: Rule) -> pd.Series:
         rule_query_factory = RuleQueryFactory(ScalingType.FIXED)
