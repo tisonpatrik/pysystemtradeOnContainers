@@ -2,10 +2,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
+from common.src.clients.account_client import AccountClient
 from common.src.clients.rules_signals_client import RulesSignalsClient
-from common.src.dependencies.core_dependencies import get_rules_signals_client
+from common.src.dependencies.core_dependencies import get_account_client, get_rules_signals_client
 from common.src.dependencies.db_setup import setup_async_database
 from common.src.dependencies.rest_client_setup import setup_async_client
+from forecast.api.handlers.cheap_trading_rules_handler import CheapTradingRulesHandler
 from forecast.api.handlers.combined_forecast_handler import CombineForecastHandler
 from forecast.api.handlers.combined_forecast_without_multiplier_handler import CombinedForecastWithoutMultiplierHandler
 from forecast.api.handlers.expensive_trading_rules_post_processing_handler import ExpensiveTradingRulesPostProcessingHandler
@@ -31,10 +33,20 @@ def get_forecasts_given_rule_list_handler(
     return ForecastGivenRuleListHandler(rules_signals_client=rules_signals_client)
 
 
+def get_cheap_trading_rules_handler(
+    rules_signals_client: RulesSignalsClient = Depends(get_rules_signals_client),
+    account_client: AccountClient = Depends(get_account_client),
+) -> CheapTradingRulesHandler:
+    return CheapTradingRulesHandler(rules_signals_client=rules_signals_client, account_client=account_client)
+
+
 def get_expensive_trading_rules_post_processing_handler(
     rules_signals_client: RulesSignalsClient = Depends(get_rules_signals_client),
+    cheap_trading_rules_handler: CheapTradingRulesHandler = Depends(get_cheap_trading_rules_handler),
 ) -> ExpensiveTradingRulesPostProcessingHandler:
-    return ExpensiveTradingRulesPostProcessingHandler(rules_signals_client=rules_signals_client)
+    return ExpensiveTradingRulesPostProcessingHandler(
+        rules_signals_client=rules_signals_client, cheap_trading_rules_handler=cheap_trading_rules_handler
+    )
 
 
 def get_fixed_forecast_weights_as_dict_handler(

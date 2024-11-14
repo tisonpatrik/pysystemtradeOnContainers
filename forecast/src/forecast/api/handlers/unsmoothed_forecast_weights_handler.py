@@ -14,14 +14,4 @@ class UnsmoothedForecastWeightsHandler:
         # from fixed weights
         # These are monthly to save space, or possibly even only 2 rows long
         monthly_forecast_weights = await self.raw_monthly_forecast_weights_handler.get_raw_monthly_forecast_weights_async(instrument_code)
-        return pd.DataFrame()
-        # # fix to forecast time series
-        # forecast_weights_fixed_to_forecasts = self._fix_weights_to_forecasts(
-        #     instrument_code=instrument_code,
-        #     monthly_forecast_weights=monthly_forecast_weights,
-        # )
-
-        # # Remap to business day frequency so the smoothing makes sense also space saver
-        # daily_forecast_weights_fixed_to_forecasts_unsmoothed = forecast_weights_fixed_to_forecasts.resample("1B").mean()
-
-        # return daily_forecast_weights_fixed_to_forecasts_unsmoothed
+        raise NotImplementedError("This method should be implemented in a subclass")

@@ -13,4 +13,4 @@ class RawCombineForecastHandler:
         raw_combined_forecast = await self.combined_forecast_without_multiplier_handler.get_combined_forecast_without_multiplier_async(
             symbol
         )
-        return raw_combined_forecast
+        raise NotImplementedError("This method should be implemented in a subclass")

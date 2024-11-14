@@ -11,4 +11,4 @@ class FixedForecastWeightsAsDictHandler:
         expensive_trading_rules_post_processing = (
             await self.expensive_trading_rules_post_processing_handler.expensive_trading_rules_post_processing_async(instrument_code)
         )
-        return {}
+        raise NotImplementedError("This method should be implemented in a subclass")

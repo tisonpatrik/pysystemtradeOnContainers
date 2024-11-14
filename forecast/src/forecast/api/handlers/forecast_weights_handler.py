@@ -14,10 +14,4 @@ class ForecastWeightsHandler:
         daily_forecast_weights_fixed_to_forecasts_unsmoothed = (
             await self.unsmoothed_forecast_weights_handler.get_unsmoothed_forecast_weights_async(instrument_code)
         )
-        return pd.DataFrame()
-        # # smooth out weights
-        # forecast_smoothing_ewma_span = self.config.forecast_weight_ewma_span
-        # smoothed_daily_forecast_weights = daily_forecast_weights_fixed_to_forecasts_unsmoothed.ewm(span=forecast_smoothing_ewma_span).mean()
-
-        # # change rows so weights add to one (except for special case where all zeros)
-        # return weights_sum_to_one(smoothed_daily_forecast_weights)
+        raise NotImplementedError("This method should be implemented in a subclass")

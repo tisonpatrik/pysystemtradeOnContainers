@@ -27,9 +27,3 @@ class RulesSignalsClient:
         query = rule_query_factory.create_rule_query(symbol, rule)
         rule_signal_data = await self.client.get_data_async(query)
         return RuleSignal.from_api_to_series(rule_signal_data)
-
-    async def get_forecast_weights_async(self, symbol: str) -> pd.DataFrame:
-        return pd.DataFrame()
-
-    async def get_estimated_scaling_factor_async(self) -> pd.Series:
-        return pd.Series()

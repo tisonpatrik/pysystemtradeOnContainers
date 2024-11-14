@@ -12,4 +12,4 @@ class CombineForecastHandler:
     async def get_combined_forecast_async(self, symbol: str) -> pd.Series:
         self.logger.info("Getting combined forecast for symbol %s", symbol)
         raw_multiplied_combined_forecast = await self.raw_combined_forecast_handler.get_raw_combined_forecast_before_mappin_async(symbol)
-        return raw_multiplied_combined_forecast
+        raise NotImplementedError("This method should be implemented in a subclass")

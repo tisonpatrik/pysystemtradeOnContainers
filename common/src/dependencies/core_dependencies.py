@@ -1,5 +1,6 @@
 from fastapi import Depends, Request
 
+from common.src.clients.account_client import AccountClient
 from common.src.clients.carry_client import CarryClient
 from common.src.clients.forecast_client import ForecastClient
 from common.src.clients.instruments_client import InstrumentsClient
@@ -21,6 +22,12 @@ def get_client(request: Request) -> RestClient:
 
 def get_redis(request: Request) -> RedisRepository:
     return RedisRepository(request.app.state.redis_pool)
+
+
+def get_account_client(
+    rest_client: RestClient = Depends(get_client),
+) -> AccountClient:
+    return AccountClient(rest_client=rest_client)
 
 
 def get_daily_prices_client(

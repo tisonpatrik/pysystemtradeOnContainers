@@ -16,6 +16,4 @@ class RawMonthlyForecastWeightsHandler:
             raise NotImplementedError("Estimated weights not implemented")
         ## will come back as 2*N data frame
         forecast_weights = await self.raw_fixed_forecast_weights_handlers.get_raw_fixed_forecast_weights_async(instrument_code)
-        return pd.DataFrame()
-        # ## FIXME NEED THIS TO APPLY TO GROUPINGS
-        # return self._remove_expensive_rules_from_weights(instrument_code, forecast_weights)
+        raise NotImplementedError("This method should be implemented in a subclass")
