@@ -1,6 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from common.src.logging.logger import AppLogger
 from common.src.middleware.logging import AppMiddleware
 from rules.api.dependencies.dependencies import app_lifespan
 from rules.api.routes.accel_route import router as accel_route
@@ -14,6 +17,8 @@ from rules.api.routes.relative_carry_route import router as relative_carry_route
 from rules.api.routes.relative_momentum_route import router as relative_momentum_route
 from rules.api.routes.skewabs_route import router as skewabs_route
 from rules.api.routes.skewrel_route import router as skewrel_route
+
+logger = AppLogger.get_instance().get_logger()
 
 app_configs = {
     "title": "Rules API",
@@ -38,3 +43,21 @@ app.include_router(relative_momentum_route, prefix="/relative_momentum_route")
 app.include_router(skewabs_route, prefix="/skewabs_route")
 app.include_router(skewrel_route, prefix="/skewrel_route")
 app.include_router(normalized_momentum_route, prefix="/normalized_momentum_route")
+
+
+@app.exception_handler(RequestValidationError)
+def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.exception("Request validation error: %s", exc.errors())
+    return ORJSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()})
+
+
+@app.exception_handler(StarletteHTTPException)
+def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    logger.exception("HTTP error occurred: %s", exc.detail)
+    return ORJSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+
+@app.exception_handler(Exception)
+def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled server error: %s", str(exc))
+    return ORJSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"detail": "Internal server error"})
