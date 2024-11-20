@@ -4,8 +4,8 @@ from asyncio import Task
 import pandas as pd
 
 from common.src.cqrs.api_queries.get_median_carry_for_asset_class import GetMedianCarryForAssetClassQuery
-from common.src.cqrs.api_queries.get_raw_carry import GetRawCarryQuery
-from common.src.cqrs.api_queries.get_smoothed_carry import GetSmoothedCarryQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_raw_carry import GetRawCarryQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_smoothed_carry import GetSmoothedCarryQuery
 from common.src.cqrs.cache_queries.median_carry_for_asset_class_cache import (
     GetMedianCarryForAssetClassCache,
     SetMedianCarryForAssetClassCache,

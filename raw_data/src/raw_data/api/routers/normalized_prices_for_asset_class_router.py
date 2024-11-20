@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_normalized_price_for_asset_class_handler
 from raw_data.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler

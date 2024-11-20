@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_vol_attenuation import GetVolAttenuationQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_vol_attenuation import GetVolAttenuationQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_vol_attenuation_handler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler

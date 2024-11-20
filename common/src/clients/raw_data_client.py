@@ -8,9 +8,9 @@ from common.src.cqrs.api_queries.get_cumulative_daily_vol_norm_returns import Cu
 from common.src.cqrs.api_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
 from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
-from common.src.cqrs.api_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
-from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
-from common.src.cqrs.api_queries.get_vol_attenuation import GetVolAttenuationQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_vol_attenuation import GetVolAttenuationQuery
 from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,

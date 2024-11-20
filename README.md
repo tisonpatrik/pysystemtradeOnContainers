@@ -32,22 +32,24 @@ Please note that this list is not exhaustive. Services like portfolios, strategi
 Before you proceed, it's crucial that you have a solid understanding of the original pysystemtrade project.
 
 Familiarity with its structure and functionality will greatly help you in working with this fork.
+
+
 ### Prerequisites
-- Install python 3.12, idally using [uv](https://github.com/astral-sh/uv)
+- Install python 3.12, ideally using [uv](https://github.com/astral-sh/uv)
 - Install [go](https://go.dev/) for project init
 - Install [Docker](https://www.docker.com/) with docker compose
-- Install make (we will move to Just in the future)
+- Install [just](https://github.com/casey/just?tab=readme-ov-file)
 
 ### Running the project
 To start the project, run the following command in your terminal:
 ```bash
-make init
+just init
 ```
 
 Then you can start the project by running the following command in your terminal:
 
 ```bash
-make run
+just run
 ```
 This command will:
 
@@ -64,7 +66,7 @@ For more details about port configurations, refer to the Docker Compose file.
 
 #### Troubleshoting
 Sometimes the migrate tool fails to connect to the database, if this happens, you can run init command again (mostly works),
-or run migrations and seeds manualy by commands in databse/Makefile
+or run migrations and seeds manualy by commands in databse/justfile
 
 
 ## Why all of this?

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_raw_carry import GetRawCarryQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_raw_carry import GetRawCarryQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_raw_carry_handler
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler

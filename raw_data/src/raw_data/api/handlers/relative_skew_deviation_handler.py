@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.cqrs.api_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
