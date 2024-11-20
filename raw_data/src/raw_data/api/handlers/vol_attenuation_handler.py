@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -16,7 +17,7 @@ class VolAttenuationHandler:
         self.daily_percentage_volatility_handler = daily_percentage_volatility_handler
         self.redis_repository = redis_repository
         self.vol_attenuation_service = VolAttenuationService()
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_vol_attenuation_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching volatility attenuation for symbol %s", symbol)

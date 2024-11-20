@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -26,7 +27,7 @@ class CarryClient:
         self.client = rest_client
         self.db_repository = db_repository
         self.redis_repository = redis_repository
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_carry_data_async(self, symbol: str) -> pd.DataFrame:
         statement = GetCarryDataQuery(symbol=symbol)

@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -18,7 +19,7 @@ class MomentumHandler:
         self.raw_data_client = raw_data_client
         self.redis_repository = redis_repository
         self.momentum_service = MomentumService()
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_momentum_signal_async(self, symbol: str, lfast: int, lslow: int) -> pd.Series:
         self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, lslow)

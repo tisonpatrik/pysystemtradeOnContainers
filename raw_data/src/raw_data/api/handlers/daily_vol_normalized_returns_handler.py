@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -30,7 +31,7 @@ class DailyvolNormalizedReturnsHandler:
         self.daily_returns_handler = daily_returns_handler
 
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching Daily volatility normalized returns for %s", symbol)

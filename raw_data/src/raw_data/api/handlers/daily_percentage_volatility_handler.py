@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -24,7 +25,7 @@ class DailyPercentageVolatilityHandler:
         self.prices_client = prices_client
         self.redis_repository = redis_repository
         self.daily_returns_vol_handler = daily_returns_vol_handler
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_daily_percentage_volatility_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching daily percentage volatility for %s.", symbol)

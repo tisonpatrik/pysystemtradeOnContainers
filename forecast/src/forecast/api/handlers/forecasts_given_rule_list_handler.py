@@ -18,6 +18,6 @@ class ForecastGivenRuleListHandler:
             forecasts.append(forecast)
             rule_variation_names.append(rule_variation.rule_variation_name)
 
-        forecasts = pd.concat(forecasts, axis=1)
-        forecasts.columns = rule_variation_names
-        return forecasts.ffill()
+        contacted = pd.concat(forecasts, axis=1)
+        contacted.columns = pd.Index(rule_variation_names)
+        return contacted.ffill()

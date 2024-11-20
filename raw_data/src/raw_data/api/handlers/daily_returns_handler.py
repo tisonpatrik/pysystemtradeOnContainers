@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -14,7 +15,7 @@ class DailyReturnsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.redis_repository = redis_repository
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_daily_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching to get daily returns for %s.", symbol)

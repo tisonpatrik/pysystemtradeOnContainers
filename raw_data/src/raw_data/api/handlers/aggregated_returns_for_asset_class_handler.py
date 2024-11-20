@@ -5,6 +5,7 @@ import pandas as pd
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.logging.logger import AppLogger
 from common.src.utils.bounded_task_group import BoundedTaskGroup
+from common.src.validation.instrument import Instrument
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
@@ -25,14 +26,14 @@ class AggregatedReturnsForAssetClassHandler:
         aggregate_returns = await self._fetch_returns_for_instruments(instruments)
         return self._calculate_median_returns(aggregate_returns)
 
-    async def _get_instruments_for_asset_class(self, asset_class: str) -> list:
+    async def _get_instruments_for_asset_class(self, asset_class: str) -> list[Instrument]:
         instruments = await self.instrument_repository.get_tradable_instruments_for_asset_class_async(asset_class)
         if not instruments:
             self.logger.warning("No instruments found for asset class: %s", asset_class)
             raise ValueError(f"No instruments found for asset class: {asset_class}")
         return instruments
 
-    async def _fetch_returns_for_instruments(self, instruments: list) -> list:
+    async def _fetch_returns_for_instruments(self, instruments: list[Instrument]) -> list[pd.Series]:
         aggregate_returns = []
         async with BoundedTaskGroup(max_parallelism=self.max_concurrent_tasks) as tg:
             tasks = [tg.create_task(self._fetch_return_for_instrument(instrument)) for instrument in instruments]

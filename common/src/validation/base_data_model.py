@@ -33,7 +33,7 @@ class BaseDataFrameModel(DataFrameModel, Generic[T]):
         try:
             columns_names = list(cls.__annotations__.keys())
             data = pd.DataFrame(items)
-            data.columns = columns_names
+            data.columns = pd.Index(columns_names)
 
             data[index_column] = pd.to_numeric(data[index_column])
             data[index_column] = pd.to_datetime(data[index_column], errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S")
@@ -50,7 +50,7 @@ class BaseDataFrameModel(DataFrameModel, Generic[T]):
         try:
             columns_names = list(cls.__annotations__.keys())
             data = pd.DataFrame(items)
-            data.columns = columns_names
+            data.columns = pd.Index(columns_names)
 
             data[index_column] = pd.to_numeric(data[index_column])
             data[index_column] = pd.to_datetime(data[index_column], errors="coerce").dt.strftime("%Y-%m-%d %H:%M:%S")

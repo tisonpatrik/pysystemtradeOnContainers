@@ -4,6 +4,7 @@ from common.src.logging.logger import AppLogger
 from raw_data.api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.services.raw_carry_service import RawCarryService
+from raw_data.utils.carry import get_raw_carry
 
 
 class RawCarryHandler:
@@ -17,4 +18,4 @@ class RawCarryHandler:
         self.logger.info("Fetching Raw Carry for symbol %s", symbol)
         annroll = await self.daily_annualised_roll_handler.get_daily_annualised_roll_async(symbol)
         daily_returns_vol = await self.daily_returns_vol_handler.get_daily_returns_vol_async(symbol)
-        return self.raw_carry_service.get_raw_carry(annroll, daily_returns_vol)
+        return get_raw_carry(annroll, daily_returns_vol)

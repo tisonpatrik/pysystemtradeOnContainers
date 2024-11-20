@@ -89,7 +89,7 @@ This is a prioritized list of issues and areas for improvement:
 - Testing: currently it does not exist
 - Performance Optimization: Switching from Pandas to Polars for faster data processing.
 - Refactoring Plans: Breaking down raw_data service into smaller, more manageable components.
-- Logging: Currently, logging happens only in the terminal. A proper logging solution should be implemented for better traceability and debugging.1
+- Logging: Currently, logging happens only in the terminal. A proper logging solution should be implemented for better traceability and debugging.
 - Monitoring: Monitoring does not exist and needs to be established for better observability of trading system.
 - CI/CD Pipeline: Setting up a continuous integration and deployment pipeline.
 - Infrastructure: moving towards a Kubernetes-based infrastructure.

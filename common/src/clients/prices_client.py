@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -20,7 +21,7 @@ class PricesClient:
         self.db_repository = db_repository
         self.redis_repository = redis_repository
         self.logger = AppLogger.get_instance().get_logger()
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_daily_prices_async(self, symbol: str) -> pd.Series:
         cache_statement = GetDailyPricesCache(symbol)

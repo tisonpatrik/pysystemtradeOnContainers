@@ -3,6 +3,7 @@ import pandas as pd
 from common.src.clients.carry_client import CarryClient
 from common.src.logging.logger import AppLogger
 from raw_data.services.raw_carry_service import RawCarryService
+from raw_data.utils.carry import raw_futures_roll
 
 
 class DailyAnnualisedRollHandler:
@@ -15,6 +16,6 @@ class DailyAnnualisedRollHandler:
         self.logger.info("Fetching Daily annualised roll for symbol %s", symbol)
         raw_carry = await self.carry_client.get_carry_data_async(symbol)
         rolldiffs = self.raw_carry_service.get_roll_differentials(raw_carry)
-        rawrollvalues = self.raw_carry_service.raw_futures_roll(raw_carry)
+        rawrollvalues = raw_futures_roll(raw_carry)
         annroll = rawrollvalues / rolldiffs
         return annroll.resample("1B").mean()

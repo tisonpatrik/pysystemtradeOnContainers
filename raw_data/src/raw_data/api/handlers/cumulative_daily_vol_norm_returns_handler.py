@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -17,7 +18,7 @@ class CumulativeDailyVolNormReturnsHandler:
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.redis_repository = redis_repository
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_cumulative_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching cumulative daily vol normalized returns for asset class %s", symbol)

@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -37,7 +38,7 @@ class RawDataClient:
     def __init__(self, rest_client: RestClient, redis_repository: RedisRepository):
         self.client = rest_client
         self.redis_repository = redis_repository
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_daily_returns_vol_async(self, symbol: str) -> pd.Series:
         cache_statement = GetDailyReturnsVolCache(symbol)

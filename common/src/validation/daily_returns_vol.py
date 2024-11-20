@@ -2,7 +2,7 @@ from typing import TypeVar
 
 import pandas as pd
 from pandera import Field
-from pandera.dtypes import Float, Timestamp
+from pandera.dtypes import Float
 
 from common.src.validation.base_data_model import BaseDataFrameModel
 
@@ -10,7 +10,6 @@ T = TypeVar("T", bound="DailyReturnsVol")
 
 
 class DailyReturnsVol(BaseDataFrameModel[T]):
-    time: Timestamp = Field(coerce=True)  # type: ignore[assignment]
     vol: Float = Field(coerce=True, nullable=True)
 
     @classmethod

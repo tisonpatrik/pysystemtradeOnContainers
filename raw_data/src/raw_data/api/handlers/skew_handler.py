@@ -1,4 +1,5 @@
 import asyncio
+from asyncio import Task
 
 import pandas as pd
 
@@ -16,7 +17,7 @@ class SkewHandler:
         self.daily_percentage_returns_handler = daily_percentage_returns_handler
         self.redis_repository = redis_repository
         self.skew_service = SkewService()
-        self.background_tasks = set()
+        self.background_tasks: set[Task] = set()
 
     async def get_skew_async(self, symbol: str, lookback: int) -> pd.Series:
         self.logger.info("Fetching skew for symbol %s", symbol)
