@@ -14,19 +14,16 @@ class NegSkewOverInstrumentListHandler:
         self.skew_handler = skew_handler
         self.max_concurrent_tasks = 8
 
-    async def get_factor_values_over_instrument_list_async(self, instrument_list: list[Instrument], lookback: int) -> pd.DataFrame:
+    async def get_negskew_over_instrument_list_async(self, instrument_list: list[Instrument], lookback: int) -> pd.DataFrame:
         self.logger.info("Fetching factor values for instruments")
         async with BoundedTaskGroup(max_parallelism=self.max_concurrent_tasks) as tg:
-            # Schedule the tasks without awaiting, collecting coroutine objects instead
             tasks = [tg.create_task(self._get_skew_task(instrument, lookback)) for instrument in instrument_list]
 
-        # Await all tasks to resolve the coroutines into DataFrames or Series
         all_factor_values = await asyncio.gather(*tasks)
 
-        # Build DataFrame from the results
         instrument_symbols = [instrument.symbol for instrument in instrument_list]
         all_factor_values_df = pd.concat(all_factor_values, axis=1)
-        all_factor_values_df.columns = instrument_symbols
+        all_factor_values_df.columns = pd.Index(instrument_symbols)
         return all_factor_values_df
 
     def _get_skew_task(self, instrument: Instrument, lookback: int):

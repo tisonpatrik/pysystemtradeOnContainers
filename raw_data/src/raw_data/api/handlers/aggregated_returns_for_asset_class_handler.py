@@ -24,7 +24,8 @@ class AggregatedReturnsForAssetClassHandler:
         self.logger.info("Fetching aggregated returns for asset class %s", asset_class)
         instruments = await self._get_instruments_for_asset_class(asset_class)
         aggregate_returns = await self._fetch_returns_for_instruments(instruments)
-        return self._calculate_median_returns(aggregate_returns)
+        aggregated_data = pd.concat(aggregate_returns, axis=1)
+        return aggregated_data.median(axis=1)
 
     async def _get_instruments_for_asset_class(self, asset_class: str) -> list[Instrument]:
         instruments = await self.instrument_repository.get_tradable_instruments_for_asset_class_async(asset_class)
@@ -51,7 +52,3 @@ class AggregatedReturnsForAssetClassHandler:
         except Exception as e:
             self.logger.exception("Error fetching returns for instrument: %s", instrument.symbol)
             raise RuntimeError(f"Failed to fetch returns for instrument {instrument.symbol}") from e
-
-    def _calculate_median_returns(self, aggregate_returns: list) -> pd.Series:
-        aggregated_data = pd.concat(aggregate_returns, axis=1)
-        return aggregated_data.median(axis=1)

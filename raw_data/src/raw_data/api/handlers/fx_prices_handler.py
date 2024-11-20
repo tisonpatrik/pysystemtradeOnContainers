@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
-from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_fx_prices import GetFxPricesQuery
 from common.src.logging.logger import AppLogger
 from raw_data.constants import DEFAULT_CURRENCY
 from raw_data.services.fx_price_service import FxService
