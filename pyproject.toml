@@ -13,9 +13,6 @@ dependencies = [
     "pandera[mypy]>=0.20.4",
     "pydantic>=2.9.2",
     "pydantic-settings>=2.5.2",
-    "pytest-asyncio>=0.24.0",
-    "pytest-cov>=5.0.0",
-    "pytest-xdist>=3.6.1",
     "redis>=5.0.8",
     "rich>=13.8.1",
 ]
@@ -135,14 +132,14 @@ docstring-code-line-length = "dynamic"
 
 [tool.mypy]
 ignore_missing_imports = true
-# no_site_packages = true
+no_site_packages = true
 
-# warn_redundant_casts = true
-# warn_unused_ignores = true
-# disallow_any_generics = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+disallow_any_generics = false
 check_untyped_defs = true
-# no_implicit_reexport = true
-# disallow_untyped_defs = true
+no_implicit_reexport = true
+disallow_untyped_defs = false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
@@ -153,6 +150,9 @@ warn_required_dynamic_aliases = true
 dev = [
     "mypy>=1.13.0",
     "mypy-protobuf>=3.6.0",
+    "pytest-cov>=6.0.0",
     "pytest>=8.3.3",
     "ruff>=0.7.4",
+    "pytest-xdist>=3.6.1",
+    "pytest-asyncio>=0.24.0",
 ]
