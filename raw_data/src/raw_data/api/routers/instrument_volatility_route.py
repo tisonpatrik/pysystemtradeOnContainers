@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_instrument_currency_vol import GetInstrumentCurrencyVolQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_instrument_vol_handler
 from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler

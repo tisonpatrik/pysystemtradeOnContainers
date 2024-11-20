@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_fx_prices import GetFxPricesQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_fx_prices import GetFxPricesQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_fx_prices_handler
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler

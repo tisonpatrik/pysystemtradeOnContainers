@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from common.src.utils.resampler import resample_prices_to_business_day_index
+from common.src.utils.pd_utils import resample_prices_to_business_day_index
 from rules.utils.ewmac import simple_ewvol_calc
 
 

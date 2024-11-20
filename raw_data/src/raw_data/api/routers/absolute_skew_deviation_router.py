@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.get_absolute_skew_deviation import GetAbsoluteSkewDeviationQuery
+from common.src.cqrs.api_queries.raw_data_queries.get_absolute_skew_deviation import GetAbsoluteSkewDeviationQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_absolute_skew_deviation_handler
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
