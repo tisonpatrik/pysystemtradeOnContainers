@@ -11,6 +11,6 @@ message AbsoluteSkewDeviationResponse {
     bytes series = 1;
 }
 
-service AbsoluteSkewDeviationService {
+service AbsoluteSkewDeviationHandler {
     rpc GetAbsoluteSkewDeviation (AbsoluteSkewDeviationRequest) returns (AbsoluteSkewDeviationResponse);
 }

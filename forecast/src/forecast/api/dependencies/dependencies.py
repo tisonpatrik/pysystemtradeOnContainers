@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from common.src.clients.account_client import AccountClient
-from common.src.clients.rules_signals_client import RulesSignalsClient
 from common.src.clients.dependencies import get_account_client, get_rules_signals_client
+from common.src.clients.rules_signals_client import RulesSignalsClient
 from common.src.database.postgres_setup import setup_async_database
 from common.src.http_client.rest_client_setup import setup_async_client
 from forecast.api.handlers.cheap_trading_rules_handler import CheapTradingRulesHandler
@@ -113,7 +113,7 @@ def get_raw_combined_forecast_handler(
     return RawCombineForecastHandler(combined_forecast_without_multiplier_handler=combined_forecast_without_multiplier_handler)
 
 
-async def get_combined_forecast_handler(
+def get_combined_forecast_handler(
     raw_combined_forecast_handler: RawCombineForecastHandler = Depends(get_raw_combined_forecast_handler),
 ) -> CombineForecastHandler:
     return CombineForecastHandler(raw_combined_forecast_handler=raw_combined_forecast_handler)

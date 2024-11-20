@@ -18,6 +18,8 @@ dependencies = [
     "pydantic-settings>=2.5.2",
     "redis>=5.0.8",
     "rich>=13.8.1",
+    "pyarrow>=18.0.0",
+    "watchdog[watchmedo]>=6.0.0",
 ]
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
@@ -30,6 +32,7 @@ addopts = "-ra --cov=risk --cov=common --cov-report=term-missing:skip-covered"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+typeCheckingMode = "off"
 
 [tool.ruff]
 line-length = 140

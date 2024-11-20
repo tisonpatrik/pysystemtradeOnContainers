@@ -3,18 +3,18 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from common.src.clients.carry_client import CarryClient
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.clients.prices_client import PricesClient
 from common.src.clients.dependencies import (
     get_carry_client,
     get_daily_prices_client,
     get_instruments_client,
     get_redis,
 )
+from common.src.clients.instruments_client import InstrumentsClient
+from common.src.clients.prices_client import PricesClient
 from common.src.database.postgres_setup import setup_async_database
-from common.src.redis.redis_setup import setup_async_redis
 from common.src.http_client.rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_setup import setup_async_redis
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler

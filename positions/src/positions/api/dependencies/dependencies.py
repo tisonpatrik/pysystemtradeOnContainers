@@ -2,12 +2,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
+from common.src.clients.dependencies import get_forecast_client, get_raw_data_client
 from common.src.clients.forecast_client import ForecastClient
 from common.src.clients.raw_data_client import RawDataClient
-from common.src.clients.dependencies import get_forecast_client, get_raw_data_client
 from common.src.database.postgres_setup import setup_async_database
-from common.src.redis.redis_setup import setup_async_redis
 from common.src.http_client.rest_client_setup import setup_async_client
+from common.src.redis.redis_setup import setup_async_redis
 from positions.api.handlers.average_position_at_subsystem_level_handler import AveragePositionAtSubsystemLevelHandler
 from positions.api.handlers.instrument_value_vol_handler import InstrumentValueVolHandler
 from positions.api.handlers.positions_handler import PositionsHandler

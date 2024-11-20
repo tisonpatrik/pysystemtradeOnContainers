@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class AbsoluteSkewDeviationServiceStub(object):
+class AbsoluteSkewDeviationHandlerStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,13 +35,13 @@ class AbsoluteSkewDeviationServiceStub(object):
             channel: A grpc.Channel.
         """
         self.GetAbsoluteSkewDeviation = channel.unary_unary(
-                '/absolute_skew_deviation.AbsoluteSkewDeviationService/GetAbsoluteSkewDeviation',
+                '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/GetAbsoluteSkewDeviation',
                 request_serializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationRequest.SerializeToString,
                 response_deserializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationResponse.FromString,
                 _registered_method=True)
 
 
-class AbsoluteSkewDeviationServiceServicer(object):
+class AbsoluteSkewDeviationHandlerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetAbsoluteSkewDeviation(self, request, context):
@@ -51,7 +51,7 @@ class AbsoluteSkewDeviationServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_AbsoluteSkewDeviationServiceServicer_to_server(servicer, server):
+def add_AbsoluteSkewDeviationHandlerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetAbsoluteSkewDeviation': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAbsoluteSkewDeviation,
@@ -60,13 +60,13 @@ def add_AbsoluteSkewDeviationServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'absolute_skew_deviation.AbsoluteSkewDeviationService', rpc_method_handlers)
+            'absolute_skew_deviation.AbsoluteSkewDeviationHandler', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('absolute_skew_deviation.AbsoluteSkewDeviationService', rpc_method_handlers)
+    server.add_registered_method_handlers('absolute_skew_deviation.AbsoluteSkewDeviationHandler', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class AbsoluteSkewDeviationService(object):
+class AbsoluteSkewDeviationHandler(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -83,7 +83,7 @@ class AbsoluteSkewDeviationService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/absolute_skew_deviation.AbsoluteSkewDeviationService/GetAbsoluteSkewDeviation',
+            '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/GetAbsoluteSkewDeviation',
             absolute__skew__deviation__pb2.AbsoluteSkewDeviationRequest.SerializeToString,
             absolute__skew__deviation__pb2.AbsoluteSkewDeviationResponse.FromString,
             options,
