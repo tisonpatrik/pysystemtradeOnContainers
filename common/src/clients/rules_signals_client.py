@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.cqrs.db_queries.get_all_rules import GetAllRules
-from common.src.database.repository import Repository
+from common.src.database.repository import PostgresClient
 from common.src.http_client.rest_client import RestClient
 from common.src.utils.convertors import to_pydantic
 from common.src.utils.rule_query_factory import RuleQueryFactory
@@ -11,7 +11,7 @@ from common.src.validation.scaling_type import ScalingType
 
 
 class RulesSignalsClient:
-    def __init__(self, db_repository: Repository, rest_client: RestClient):
+    def __init__(self, db_repository: PostgresClient, rest_client: RestClient):
         self.repository = db_repository
         self.client = rest_client
 

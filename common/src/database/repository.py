@@ -12,7 +12,7 @@ from common.src.database.errors.repository_errors import FetchError, InsertError
 from common.src.logging.logger import AppLogger
 
 
-class Repository:
+class PostgresClient:
     def __init__(self, pool: Pool):
         self.pool = pool
         self.logger = AppLogger.get_instance().get_logger()

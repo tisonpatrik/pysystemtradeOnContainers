@@ -5,7 +5,7 @@ from common.src.cqrs.db_queries.get_instrument_currency import GetInstrumentCurr
 from common.src.cqrs.db_queries.get_point_size import GetPointSize
 from common.src.cqrs.db_queries.get_tradable_instruments import GetTradableInstruments
 from common.src.cqrs.db_queries.get_tradable_instruments_for_asset_class import GetTradableInstrumentsForAssetClass
-from common.src.database.repository import Repository
+from common.src.database.repository import PostgresClient
 from common.src.logging.logger import AppLogger
 from common.src.utils.convertors import to_pydantic
 from common.src.validation.asset_class import AssetClass
@@ -15,7 +15,7 @@ from common.src.validation.point_size import PointSize
 
 
 class InstrumentsClient:
-    def __init__(self, repository: Repository):
+    def __init__(self, repository: PostgresClient):
         self.repository = repository
         self.logger = AppLogger.get_instance().get_logger()
 

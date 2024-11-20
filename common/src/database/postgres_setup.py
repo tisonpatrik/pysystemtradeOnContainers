@@ -5,9 +5,9 @@ from functools import lru_cache
 import asyncpg
 from fastapi import FastAPI
 
-from common.src.database.db_settings import get_settings
-from common.src.dependencies.errors.dependencies_errors import DatabaseInitializationError
+from common.src.database.errors.dependencies_errors import DatabaseInitializationError
 from common.src.logging.logger import AppLogger
+from common.src.setup import get_settings
 
 logger = AppLogger.get_instance().get_logger()
 
@@ -20,17 +20,7 @@ async def setup_async_database(app: FastAPI):
     try:
         # Create an asyncpg connection pool
         app.state.async_pool = await asyncpg.create_pool(
-            host=settings.DB_HOST,
-            port=settings.DB_PORT,
-            user=settings.DB_USER,
-            password=settings.DB_PASSWORD,
-            database=settings.DB_NAME,
-            min_size=settings.min_connections,
-            max_size=settings.max_connections,
-            command_timeout=settings.connection_timeout,
-            statement_cache_size=settings.statement_cache_size,
-            max_queries=settings.max_queries,
-            max_inactive_connection_lifetime=settings.max_inactive_connection_lifetime,
+            host=settings.DB_HOST, port=settings.DB_PORT, user=settings.DB_USER, password=settings.DB_PASSWORD, database=settings.DB_NAME
         )
         logger.info("Asyncpg connection pool initialized successfully.")
         yield

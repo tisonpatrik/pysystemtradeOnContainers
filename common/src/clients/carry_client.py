@@ -13,7 +13,7 @@ from common.src.cqrs.cache_queries.median_carry_for_asset_class_cache import (
 from common.src.cqrs.cache_queries.raw_carry_cache import GetRawCarryCache, SetRawCarryCache
 from common.src.cqrs.cache_queries.smoothed_carry_cache import GetSmoothedCarryCache, SetSmoothedCarryCache
 from common.src.cqrs.db_queries.get_carry_data import GetCarryDataQuery
-from common.src.database.repository import Repository
+from common.src.database.repository import PostgresClient
 from common.src.http_client.rest_client import RestClient
 from common.src.redis.redis_repository import RedisRepository
 from common.src.validation.carry_data import CarryData
@@ -23,7 +23,7 @@ from common.src.validation.smoothed_carry import SmoothedCarry
 
 
 class CarryClient:
-    def __init__(self, db_repository: Repository, rest_client: RestClient, redis_repository: RedisRepository):
+    def __init__(self, db_repository: PostgresClient, rest_client: RestClient, redis_repository: RedisRepository):
         self.client = rest_client
         self.db_repository = db_repository
         self.redis_repository = redis_repository

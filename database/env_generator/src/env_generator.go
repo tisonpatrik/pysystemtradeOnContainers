@@ -35,6 +35,7 @@ func getEnvVariables() map[string]string {
 		"DB_PASSWORD": promptEnvVariable("DB_PASSWORD", "postgres"),
 		"DB_HOST":     promptEnvVariable("DB_HOST", "172.18.0.3"),
 		"DB_PORT":     promptEnvVariableInt("DB_PORT", 5432),
+		"REDIS":       promptEnvVariable("REDIS", "redis://redis:6379"),
 	}
 }
 

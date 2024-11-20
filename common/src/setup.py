@@ -14,13 +14,7 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_HOST: str
     DB_PORT: str
-
-    max_connections: int = 17
-    min_connections: int = 2
-    connection_timeout: int = 5
-    statement_cache_size: int = 1000
-    max_queries: int = 10000
-    max_inactive_connection_lifetime: float = 60.0
+    REDIS: str
 
     class Config:
         env_file = ".env"
