@@ -8,10 +8,12 @@ services:
     depends_on:
       - db_postgres
     ports:
-      - "8000:8000"
+      - "50051:50051"
     volumes:
       - ./raw_data/src/raw_data:/app/raw_data
       - ./common:/app/common
+    command: watchmedo auto-restart --recursive --pattern="*.py" --directory="/app/" -- python -m raw_data.main
+
 
   rules:
     build:

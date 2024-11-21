@@ -3,10 +3,10 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from common.src.clients.account_client import AccountClient
-from common.src.clients.dependencies import get_account_client, get_rules_signals_client
+from common.src.clients.old_dependencies import get_account_client, get_rules_signals_client
 from common.src.clients.rules_signals_client import RulesSignalsClient
-from common.src.database.postgres_setup import setup_async_database
-from common.src.http_client.rest_client_setup import setup_async_client
+from common.src.database.old_postgres_setup import setup_async_database
+from common.src.http_client.old_rest_client_setup import setup_async_client
 from forecast.api.handlers.cheap_trading_rules_handler import CheapTradingRulesHandler
 from forecast.api.handlers.combined_forecast_handler import CombineForecastHandler
 from forecast.api.handlers.combined_forecast_without_multiplier_handler import CombinedForecastWithoutMultiplierHandler

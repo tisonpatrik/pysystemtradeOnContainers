@@ -7,7 +7,7 @@ from common.src.protobufs.absolute_skew_deviation_pb2_grpc import (
 from raw_data.dependencies import get_absolute_skew_deviation_handler
 
 
-def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
+async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     """
     Creates a mapping of gRPC service registration methods to handler instances.
 
@@ -15,7 +15,7 @@ def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
         A dictionary mapping gRPC service registration functions to handler instances.
     """
     # Initialize service handlers
-    absolute_skew_deviation_handler = get_absolute_skew_deviation_handler()
+    absolute_skew_deviation_handler = await get_absolute_skew_deviation_handler()
 
     # Build the service mapping
     return {

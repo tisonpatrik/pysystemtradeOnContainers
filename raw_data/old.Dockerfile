@@ -20,23 +20,24 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 FROM uv AS dev
 WORKDIR /app
-COPY rules/pyproject.toml rules/uv.lock ./
+COPY raw_data/pyproject.toml raw_data/uv.lock ./
 RUN uv sync --frozen # --no-install-project
 
 FROM uv AS prod
 ENV UV_COMPILE_BYTECODE=1
 WORKDIR /app
-COPY rules/pyproject.toml rules/uv.lock ./
+COPY raw_data/pyproject.toml raw_data/uv.lock ./
 
 RUN uv sync --no-dev
 
-COPY common/ ./common/
-COPY rules/src/rules/ /app/rules
+COPY common/ ./common
+COPY raw_data/src/raw_data/ /app/raw_data
 COPY .env ./
 
+# Set a non-root user for security
 RUN adduser --disabled-password --gecos '' myuser
 RUN chown -R myuser:myuser /app
 
 USER myuser
 
-CMD ["uvicorn", "rules.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop", "--reload"]
+CMD ["uvicorn", "raw_data.main:app", "--host", "0.0.0.0", "--port", "8000","--loop", "uvloop", "--reload"]

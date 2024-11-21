@@ -5,15 +5,15 @@ from fastapi import Depends, FastAPI
 from common.src.clients.carry_client import CarryClient
 from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
-from common.src.clients.dependencies import (
+from common.src.clients.old_dependencies import (
     get_carry_client,
     get_daily_prices_client,
     get_raw_data_client,
     get_redis,
 )
-from common.src.database.postgres_setup import setup_async_database
-from common.src.redis.redis_setup import setup_async_redis
-from common.src.http_client.rest_client_setup import setup_async_client
+from common.src.database.old_postgres_setup import setup_async_database
+from common.src.redis.old_redis_setup import setup_async_redis
+from common.src.http_client.old_rest_client_setup import setup_async_client
 from common.src.redis.redis_repository import RedisRepository
 from rules.api.handlers.accel_handler import AccelHandler
 from rules.api.handlers.assettrend_handler import AssettrendHandler

@@ -34,8 +34,8 @@ class AbsoluteSkewDeviationHandlerStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAbsoluteSkewDeviation = channel.unary_unary(
-                '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/GetAbsoluteSkewDeviation',
+        self.get_absolute_skew_deviation = channel.unary_unary(
+                '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/get_absolute_skew_deviation',
                 request_serializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationRequest.SerializeToString,
                 response_deserializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationResponse.FromString,
                 _registered_method=True)
@@ -44,7 +44,7 @@ class AbsoluteSkewDeviationHandlerStub(object):
 class AbsoluteSkewDeviationHandlerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetAbsoluteSkewDeviation(self, request, context):
+    def get_absolute_skew_deviation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -53,8 +53,8 @@ class AbsoluteSkewDeviationHandlerServicer(object):
 
 def add_AbsoluteSkewDeviationHandlerServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAbsoluteSkewDeviation': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAbsoluteSkewDeviation,
+            'get_absolute_skew_deviation': grpc.unary_unary_rpc_method_handler(
+                    servicer.get_absolute_skew_deviation,
                     request_deserializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationRequest.FromString,
                     response_serializer=absolute__skew__deviation__pb2.AbsoluteSkewDeviationResponse.SerializeToString,
             ),
@@ -70,7 +70,7 @@ class AbsoluteSkewDeviationHandler(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetAbsoluteSkewDeviation(request,
+    def get_absolute_skew_deviation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -83,7 +83,7 @@ class AbsoluteSkewDeviationHandler(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/GetAbsoluteSkewDeviation',
+            '/absolute_skew_deviation.AbsoluteSkewDeviationHandler/get_absolute_skew_deviation',
             absolute__skew__deviation__pb2.AbsoluteSkewDeviationRequest.SerializeToString,
             absolute__skew__deviation__pb2.AbsoluteSkewDeviationResponse.FromString,
             options,

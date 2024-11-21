@@ -12,5 +12,5 @@ message AbsoluteSkewDeviationResponse {
 }
 
 service AbsoluteSkewDeviationHandler {
-    rpc GetAbsoluteSkewDeviation (AbsoluteSkewDeviationRequest) returns (AbsoluteSkewDeviationResponse);
+    rpc get_absolute_skew_deviation (AbsoluteSkewDeviationRequest) returns (AbsoluteSkewDeviationResponse);
 }

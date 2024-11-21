@@ -1,4 +1,5 @@
 import httpx
+from httpx import AsyncClient
 
 from common.src.http_client.errors.http_errors import HttpRequestError, HttpStatusError, HttpUnexpectedError
 from common.src.http_client.requests.fetch_request import FetchRequest
@@ -7,7 +8,7 @@ from common.src.logging.logger import AppLogger
 
 
 class RestClient:
-    def __init__(self, client: httpx.AsyncClient):
+    def __init__(self, client: AsyncClient):
         self.client = client
         self.logger = AppLogger.get_instance().get_logger()
 
