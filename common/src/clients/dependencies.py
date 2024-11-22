@@ -11,7 +11,7 @@ from common.src.database.postgres_setup import setup_async_database
 from common.src.database.repository import PostgresClient
 from common.src.http_client.rest_client import RestClient
 from common.src.http_client.rest_client_setup import setup_async_client
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.redis.redis_setup import setup_async_redis
 
 
@@ -25,9 +25,9 @@ async def get_rest_client_async() -> RestClient:
     return RestClient(pool)
 
 
-async def get_redis_async() -> RedisRepository:
-    pool = await setup_async_redis()
-    return RedisRepository(pool)
+def get_redis() -> RedisClient:
+    pool = setup_async_redis()
+    return RedisClient(pool)
 
 
 def get_account_client(
@@ -36,28 +36,25 @@ def get_account_client(
     return AccountClient(rest_client=rest_client)
 
 
-async def get_daily_prices_client_async() -> PricesClient:
-    db_repository = await get_database_async()
-    redis_repository = await get_redis_async()
-    return PricesClient(db_repository=db_repository, redis_repository=redis_repository)
+def get_daily_prices_client(postgres: PostgresClient, redis: RedisClient) -> PricesClient:
+    return PricesClient(postgres=postgres, redis=redis)
 
 
 def get_carry_client(
     db_repository: PostgresClient = Depends(get_database_async),
-    redis_repository: RedisRepository = Depends(get_redis_async),
+    redis_repository: RedisClient = Depends(get_redis),
     rest_client: RestClient = Depends(get_rest_client_async),
 ) -> CarryClient:
     return CarryClient(db_repository=db_repository, redis_repository=redis_repository, rest_client=rest_client)
 
 
-async def get_instruments_client_async() -> InstrumentsClient:
-    repository = await get_database_async()
-    return InstrumentsClient(repository=repository)
+def get_instruments_client(postgres: PostgresClient) -> InstrumentsClient:
+    return InstrumentsClient(repository=postgres)
 
 
 def get_raw_data_client(
     rest_client: RestClient = Depends(get_rest_client_async),
-    redis_repository: RedisRepository = Depends(get_redis_async),
+    redis_repository: RedisClient = Depends(get_redis),
 ) -> RawDataClient:
     return RawDataClient(rest_client=rest_client, redis_repository=redis_repository)
 

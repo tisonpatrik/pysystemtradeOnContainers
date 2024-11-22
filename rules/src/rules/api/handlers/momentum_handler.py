@@ -7,13 +7,13 @@ from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
 from common.src.cqrs.cache_queries.momentum_cache import GetMomentumCache, SetMomentumCache
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from rules.services.momentum import MomentumService
 from rules.validation.ewmac_signal import EwmacSignal
 
 
 class MomentumHandler:
-    def __init__(self, prices_client: PricesClient, raw_data_client: RawDataClient, redis_repository: RedisRepository):
+    def __init__(self, prices_client: PricesClient, raw_data_client: RawDataClient, redis_repository: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.raw_data_client = raw_data_client

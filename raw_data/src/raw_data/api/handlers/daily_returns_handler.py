@@ -6,15 +6,15 @@ import pandas as pd
 from common.src.clients.prices_client import PricesClient
 from common.src.cqrs.cache_queries.daily_returns_cache import GetDailyReturnsCache, SetDailyReturnsCache
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.daily_returns import DailyReturns
 
 
 class DailyReturnsHandler:
-    def __init__(self, prices_client: PricesClient, redis_repository: RedisRepository):
+    def __init__(self, prices_client: PricesClient, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
-        self.redis_repository = redis_repository
+        self.redis_repository = redis
         self.background_tasks: set[Task] = set()
 
     async def get_daily_returns_async(self, symbol: str) -> pd.Series:

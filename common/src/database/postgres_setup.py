@@ -31,6 +31,3 @@ async def setup_async_database() -> Pool:
     except Exception as e:
         logger.exception("Unexpected error during Asyncpg connection pool initialization.")
         raise DatabaseInitializationError("Unexpected error during database initialization.") from e
-    finally:
-        await pool.close()
-        logger.info("Asyncpg connection pool closed successfully.")

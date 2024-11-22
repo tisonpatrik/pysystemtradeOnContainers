@@ -5,14 +5,14 @@ import pandas as pd
 
 from common.src.cqrs.cache_queries.vol_attenuation_cache import GetVolAttenuationCache, SetVolAttenuationCache
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.vol_attenuation import VolAttenuation
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.services.vol_attenuation_service import VolAttenuationService
 
 
 class VolAttenuationHandler:
-    def __init__(self, daily_percentage_volatility_handler: DailyPercentageVolatilityHandler, redis_repository: RedisRepository):
+    def __init__(self, daily_percentage_volatility_handler: DailyPercentageVolatilityHandler, redis_repository: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_percentage_volatility_handler = daily_percentage_volatility_handler
         self.redis_repository = redis_repository

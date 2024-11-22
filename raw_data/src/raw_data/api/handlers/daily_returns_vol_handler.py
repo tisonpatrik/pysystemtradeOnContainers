@@ -6,14 +6,14 @@ import pandas as pd
 from common.src.clients.prices_client import PricesClient
 from common.src.cqrs.cache_queries.daily_returns_vol_cache import GetDailyReturnsVolCache, SetDailyReturnsVolCache
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.daily_returns_vol import DailyReturnsVol
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolHandler:
-    def __init__(self, prices_client: PricesClient, redis_repository: RedisRepository, daily_returns_handler: DailyReturnsHandler):
+    def __init__(self, prices_client: PricesClient, redis_repository: RedisClient, daily_returns_handler: DailyReturnsHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.redis_repository = redis_repository

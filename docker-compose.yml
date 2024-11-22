@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: raw_data/Dockerfile
     hostname: raw_data
-    container_name: raw_data
     depends_on:
       - db_postgres
     ports:
@@ -20,7 +19,6 @@ services:
       context: .
       dockerfile: rules/Dockerfile
     hostname: rules
-    container_name: rules
     depends_on:
       - db_postgres
     ports:
@@ -34,7 +32,6 @@ services:
       context: .
       dockerfile: positions/Dockerfile
     hostname: positions
-    container_name: positions
     depends_on:
       - db_postgres
     ports:
@@ -48,7 +45,6 @@ services:
       context: .
       dockerfile: forecast/Dockerfile
     hostname: forecast
-    container_name: forecast
     depends_on:
       - db_postgres
     ports:
@@ -59,7 +55,6 @@ services:
 
   db_postgres:
     image: timescale/timescaledb:latest-pg16
-    container_name: postgres
     hostname: ${DB_HOST}
     restart: on-failure
     environment:
@@ -74,8 +69,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: "redis"
-    hostname: "redis"
+    hostname: redis
     restart: always
     ports:
       - 6380:6379

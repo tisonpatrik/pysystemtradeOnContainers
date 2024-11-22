@@ -10,16 +10,16 @@ from common.src.cqrs.db_queries.get_denom_prices import GetDenomPriceQuery
 from common.src.cqrs.db_queries.get_fx_rates import GetFxRatesQuery
 from common.src.database.repository import PostgresClient
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.daily_prices import DailyPrices
 from common.src.validation.denom_prices import DenomPrices
 from common.src.validation.fx_rates import FxRates
 
 
 class PricesClient:
-    def __init__(self, db_repository: PostgresClient, redis_repository: RedisRepository):
-        self.db_repository = db_repository
-        self.redis_repository = redis_repository
+    def __init__(self, postgres: PostgresClient, redis: RedisClient):
+        self.db_repository = postgres
+        self.redis_repository = redis
         self.logger = AppLogger.get_instance().get_logger()
         self.background_tasks: set[Task] = set()
 

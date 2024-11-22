@@ -9,7 +9,7 @@ from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
     SetDailyvolNormalizedReturnsCache,
 )
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.services.daily_vol_normalized_returns_service import DailyVolnormalizedReturnsService
@@ -21,7 +21,7 @@ class DailyvolNormalizedReturnsHandler:
         self,
         prices_client: PricesClient,
         daily_returns_vol_handler: DailyReturnsVolHandler,
-        redis_repository: RedisRepository,
+        redis_repository: RedisClient,
         daily_returns_handler: DailyReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()

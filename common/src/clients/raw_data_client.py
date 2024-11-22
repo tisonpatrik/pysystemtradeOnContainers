@@ -23,7 +23,7 @@ from common.src.cqrs.cache_queries.normalized_price_for_asset_class_cache import
 )
 from common.src.cqrs.cache_queries.vol_attenuation_cache import GetVolAttenuationCache, SetVolAttenuationCache
 from common.src.http_client.rest_client import RestClient
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.absolute_skew_deviation import AbsoluteSkewDeviation
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from common.src.validation.daily_returns_vol import DailyReturnsVol
@@ -35,7 +35,7 @@ from common.src.validation.vol_attenuation import VolAttenuation
 
 
 class RawDataClient:
-    def __init__(self, rest_client: RestClient, redis_repository: RedisRepository):
+    def __init__(self, rest_client: RestClient, redis_repository: RedisClient):
         self.client = rest_client
         self.redis_repository = redis_repository
         self.background_tasks: set[Task] = set()

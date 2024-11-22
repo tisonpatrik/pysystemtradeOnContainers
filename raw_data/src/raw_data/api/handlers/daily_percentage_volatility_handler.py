@@ -9,7 +9,7 @@ from common.src.cqrs.cache_queries.daily_percentage_vol_cache import (
     SetDailyPercentageVolCache,
 )
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.daily_percentage_vol import DailyPercentageVo
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 
@@ -18,7 +18,7 @@ class DailyPercentageVolatilityHandler:
     def __init__(
         self,
         prices_client: PricesClient,
-        redis_repository: RedisRepository,
+        redis_repository: RedisClient,
         daily_returns_vol_handler: DailyReturnsVolHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()

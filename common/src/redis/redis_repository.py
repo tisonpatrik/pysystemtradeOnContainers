@@ -8,7 +8,7 @@ from common.src.redis.base_statements.get_cache_statement import GetCacheStateme
 from common.src.redis.base_statements.set_cache_statement import SetCacheStatement
 
 
-class RedisRepository:
+class RedisClient:
     def __init__(self, pool: ConnectionPool):
         self.redis_client = Redis(connection_pool=pool)
         self.logger = AppLogger.get_instance().get_logger()

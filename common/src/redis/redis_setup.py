@@ -7,15 +7,12 @@ from common.src.setup import get_settings
 logger = AppLogger.get_instance().get_logger()
 
 
-async def setup_async_redis() -> ConnectionPool:
+def setup_async_redis() -> ConnectionPool:
+    settings = get_settings()
     try:
-        settings = get_settings()
         pool = redis.ConnectionPool.from_url(settings.REDIS)
         logger.info("Redis connection pool initialized successfully.")
         return pool
     except redis.ConnectionError:
         logger.exception("Failed to initialize Redis connection pool: ")
         raise
-    finally:
-        await pool.aclose()
-        logger.info("Redis connection pool closed successfully.")

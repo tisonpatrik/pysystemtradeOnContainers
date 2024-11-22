@@ -5,17 +5,17 @@ import pandas as pd
 
 from common.src.cqrs.cache_queries.negskew_cache import GetNegSkewCache, SetNegSkewCache
 from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisRepository
+from common.src.redis.redis_repository import RedisClient
 from common.src.validation.negskew import NegSkew
 from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
 from raw_data.services.skew_service import SkewService
 
 
 class SkewHandler:
-    def __init__(self, daily_percentage_returns_handler: DailyPercentageReturnsHandler, redis_repository: RedisRepository):
+    def __init__(self, daily_percentage_returns_handler: DailyPercentageReturnsHandler, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_percentage_returns_handler = daily_percentage_returns_handler
-        self.redis_repository = redis_repository
+        self.redis_repository = redis
         self.skew_service = SkewService()
         self.background_tasks: set[Task] = set()
 
