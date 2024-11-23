@@ -15,13 +15,9 @@ from common.src.database.old_postgres_setup import setup_async_database
 from common.src.http_client.old_rest_client_setup import setup_async_client
 from common.src.redis.old_redis_setup import setup_async_redis
 from common.src.redis.redis_repository import RedisClient
-from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
 from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
-from raw_data.api.handlers.current_average_negskew_over_all_assets_handler import (
-    CurrentAverageNegSkewOverAllAssetsHandler,
-)
 from raw_data.api.handlers.current_average_negskew_over_asset_class_handler import CurrentAverageNegSkewOverAssetClassHandler
 from raw_data.api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
@@ -32,13 +28,9 @@ from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
-from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
-from raw_data.api.handlers.historic_average_negskew_all_assets_handler import (
-    HistoricAverageNegSkewAllAssetsHandler,
-)
+from raw_data.src.raw_data.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
-from raw_data.api.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
 from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
 from raw_data.api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
@@ -46,6 +38,13 @@ from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDe
 from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
+from raw_data.handlers.current_average_negskew_over_all_assets_handler import (
+    CurrentAverageNegSkewOverAllAssetsHandler,
+)
+from raw_data.handlers.historic_average_negskew_all_assets_handler import (
+    HistoricAverageNegSkewAllAssetsHandler,
+)
+from raw_data.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
 
 
 @asynccontextmanager
@@ -225,17 +224,6 @@ def get_historic_average_negskew_all_assets_handler(
 ) -> HistoricAverageNegSkewAllAssetsHandler:
     return HistoricAverageNegSkewAllAssetsHandler(
         current_average_negskew_over_all_assets_handler=current_average_negskew_over_all_assets_handler
-    )
-
-
-def get_absolute_skew_deviation_handler(
-    historic_negskew_value_all_assets_handler: HistoricAverageNegSkewAllAssetsHandler = Depends(
-        get_historic_average_negskew_all_assets_handler
-    ),
-    skew_handler: SkewHandler = Depends(get_skew_handler),
-) -> AbsoluteSkewDeviationHandler:
-    return AbsoluteSkewDeviationHandler(
-        historic_negskew_value_all_assets_handler=historic_negskew_value_all_assets_handler, skew_handler=skew_handler
     )
 
 

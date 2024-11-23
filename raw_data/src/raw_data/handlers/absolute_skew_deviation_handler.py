@@ -4,8 +4,8 @@ from common.src.logging.logger import AppLogger
 from common.src.protobufs.absolute_skew_deviation_pb2 import AbsoluteSkewDeviationRequest, AbsoluteSkewDeviationResponse
 from common.src.protobufs.absolute_skew_deviation_pb2_grpc import AbsoluteSkewDeviationHandlerServicer
 from common.src.utils.convertors import convert_pandas_to_bytes
-from raw_data.api.handlers.historic_average_negskew_all_assets_handler import HistoricAverageNegSkewAllAssetsHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
+from raw_data.handlers.historic_average_negskew_all_assets_handler import HistoricAverageNegSkewAllAssetsHandler
 
 
 class AbsoluteSkewDeviationHandler(AbsoluteSkewDeviationHandlerServicer):

@@ -6,9 +6,6 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from common.src.logging.logger import AppLogger
 from common.src.middleware.logging import AppMiddleware
 from raw_data.api.dependencies.dependencies import app_lifespan
-from raw_data.api.routers.absolute_skew_deviation_router import (
-    router as absolute_skew_deviation_route,
-)
 from raw_data.api.routers.cumulative_daily_vol_normalised_returns_router import (
     router as cumulative_daily_vol_normalised_returns_route,
 )
@@ -46,7 +43,6 @@ app.include_router(raw_carry_route, prefix="/raw_carry_route")
 app.include_router(daily_returns_vol_route, prefix="/daily_returns_vol_route")
 app.include_router(smooth_carry_route, prefix="/smooth_carry_route")
 app.include_router(median_carry_for_asset_class_route, prefix="/median_carry_for_asset_class_route")
-app.include_router(absolute_skew_deviation_route, prefix="/absolute_skew_deviation_route")
 app.include_router(relative_skew_deviation_route, prefix="/relative_skew_deviation_route")
 app.include_router(vol_attenuation_route, prefix="/vol_attenuation_route")
 
