@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from common.src.database.errors.dependencies_errors import DatabaseInitializationError
 from common.src.logging.logger import AppLogger
-from common.src.setup import get_settings
+from common.src.app_settings import get_settings
 
 logger = AppLogger.get_instance().get_logger()
 

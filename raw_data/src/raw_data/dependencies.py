@@ -12,6 +12,7 @@ from raw_data.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviat
 from raw_data.handlers.current_average_negskew_over_all_assets_handler import (
     CurrentAverageNegSkewOverAllAssetsHandler,
 )
+from raw_data.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.handlers.historic_average_negskew_all_assets_handler import (
     HistoricAverageNegSkewAllAssetsHandler,
 )
@@ -72,3 +73,9 @@ def get_absolute_skew_deviation_handler(postgres: PostgresClient, redis: RedisCl
         historic_negskew_value_all_assets_handler=historic_negskew_value_all_assets_handler,
         skew_handler=skew_handler,
     )
+
+
+def get_fx_prices_handler(postgres: PostgresClient, redis: RedisClient) -> FxPricesHandler:
+    instruments_client = get_instruments_client(postgres=postgres)
+    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
+    return FxPricesHandler(instruments_client=instruments_client, prices_client=prices_client)

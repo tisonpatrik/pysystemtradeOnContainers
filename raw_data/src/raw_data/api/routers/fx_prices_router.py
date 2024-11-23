@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from common.src.cqrs.api_queries.raw_data_queries.get_fx_prices import GetFxPricesQuery
 from common.src.logging.logger import AppLogger
 from raw_data.api.dependencies.dependencies import get_fx_prices_handler
-from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
+from raw_data.handlers.fx_prices_handler import FxPricesHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()
@@ -20,7 +20,7 @@ async def get_fx_rate_for_instrument(
     handler: FxPricesHandler = Depends(get_fx_prices_handler),
 ):
     try:
-        result = await handler.get_fx_prices_for_symbol_async(query)
+        result = await handler.get_fx_prices(query)
         if result is None:
             raise HTTPException(status_code=404, detail="No data found for the given parameters")
         return result

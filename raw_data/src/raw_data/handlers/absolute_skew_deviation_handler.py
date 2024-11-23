@@ -1,7 +1,10 @@
 from grpc import ServicerContext, StatusCode
 
 from common.src.logging.logger import AppLogger
-from common.src.protobufs.absolute_skew_deviation_pb2 import AbsoluteSkewDeviationRequest, AbsoluteSkewDeviationResponse
+from common.src.protobufs.absolute_skew_deviation_pb2 import (
+    AbsoluteSkewDeviationRequest,
+    AbsoluteSkewDeviationResponse,
+)
 from common.src.protobufs.absolute_skew_deviation_pb2_grpc import AbsoluteSkewDeviationHandlerServicer
 from common.src.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.skew_handler import SkewHandler
@@ -37,7 +40,7 @@ class AbsoluteSkewDeviationHandler(AbsoluteSkewDeviationHandlerServicer):
             aligned_avg_neg_skew = historic_avg_neg_skew.reindex(neg_skew.index).ffill()
             abs_skew_deviation = neg_skew - aligned_avg_neg_skew
 
-            response = convert_pandas_to_bytes(abs_skew_deviation.head())
+            response = convert_pandas_to_bytes(abs_skew_deviation)
             return AbsoluteSkewDeviationResponse(series=response)
 
         except Exception as e:

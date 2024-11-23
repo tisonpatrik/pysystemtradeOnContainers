@@ -28,7 +28,7 @@ from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
-from raw_data.src.raw_data.api.handlers.fx_prices_handler import FxPricesHandler
+from raw_data.src.raw_data.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
