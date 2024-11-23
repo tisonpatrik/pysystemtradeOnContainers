@@ -52,18 +52,18 @@ app.include_router(vol_attenuation_route, prefix="/vol_attenuation_route")
 
 
 @app.exception_handler(RequestValidationError)
-def validation_exception_handler(request: Request, exc: RequestValidationError):
+def validation_exception_handler(request: Request, exc: RequestValidationError) -> ORJSONResponse:
     logger.exception("Request validation error: %s", exc.errors())
     return ORJSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content={"detail": exc.errors()})
 
 
 @app.exception_handler(StarletteHTTPException)
-def http_exception_handler(request: Request, exc: StarletteHTTPException):
+def http_exception_handler(request: Request, exc: StarletteHTTPException) -> ORJSONResponse:
     logger.exception("HTTP error occurred: %s", exc.detail)
     return ORJSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 
 @app.exception_handler(Exception)
-def unhandled_exception_handler(request: Request, exc: Exception):
+def unhandled_exception_handler(request: Request, exc: Exception) -> ORJSONResponse:
     logger.exception("Unhandled server error: %s", str(exc))
     return ORJSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"detail": "Internal server error"})

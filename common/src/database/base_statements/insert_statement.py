@@ -9,7 +9,7 @@ class InsertManyStatement:
         self._table_name = table_name
         self._data = data
 
-    def get_records(self):
+    def get_records(self) -> pd.DataFrame | pd.Series:
         """Converts the data to a numpy array for insertion purposes."""
         return self._data.to_numpy()
 
@@ -40,6 +40,6 @@ class InsertStatement:
     def get_insert_query(self) -> tuple[str, list]:
         """Returns the SQL insert query string and the values as a tuple."""
         columns = ", ".join(self.get_columns())
-        values_placeholders = ", ".join(f"${i+1}" for i in range(len(self.get_values())))
+        values_placeholders = ", ".join(f"${i + 1}" for i in range(len(self.get_values())))
         query = f"INSERT INTO {self._table_name} ({columns}) VALUES ({values_placeholders})"
         return query, self.get_values()

@@ -16,7 +16,7 @@ class AbsoluteSkewDeviationHandler(AbsoluteSkewDeviationHandlerServicer):
         self.historic_negskew_value_all_assets_handler = historic_negskew_value_all_assets_handler
         self.skew_handler = skew_handler
 
-    async def GetAbsoluteSkewDeviation(self, request: AbsoluteSkewDeviationRequest, context: ServicerContext):
+    async def getAbsoluteSkewDeviation(self, request: AbsoluteSkewDeviationRequest, context: ServicerContext):
         try:
             self.logger.info("Fetching absolute skew deviation for symbol: %s", request.symbol)
 
@@ -37,7 +37,7 @@ class AbsoluteSkewDeviationHandler(AbsoluteSkewDeviationHandlerServicer):
             abs_skew_deviation = neg_skew - aligned_avg_neg_skew
             response = convert_pandas_to_bytes(abs_skew_deviation)
 
-            return AbsoluteSkewDeviationResponse(response)
+            return AbsoluteSkewDeviationResponse(series=response)
         except Exception:
             self.logger.exception("Error processing request")
             context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")

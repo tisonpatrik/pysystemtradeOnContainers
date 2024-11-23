@@ -12,7 +12,7 @@ class AbsoluteSkewDeviationHandler:
         self.historic_negskew_value_all_assets_handler = historic_negskew_value_all_assets_handler
         self.skew_handler = skew_handler
 
-    async def get_absolute_skew_deviation(self, query: GetAbsoluteSkewDeviationQuery) -> pd.Series:
+    async def get_absolute_skew_deviation_async(self, query: GetAbsoluteSkewDeviationQuery) -> pd.Series:
         self.logger.info("Fetching absolute skew deviaton for symbol: %s", query.symbol)
         historic_avg_neg_skew = await self.historic_negskew_value_all_assets_handler.get_historic_avg_factor_value_for_all_assets_async(
             lookback=query.lookback

@@ -1,14 +1,16 @@
+from typing import Any
+
 import grpc
 
 from common.src.logging.logger import AppLogger
 
 
 class GRPCServer:
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = AppLogger.get_instance().get_logger()
         self.server = grpc.aio.server()
 
-    async def run_server(self, port, service_mapping):
+    async def run_server(self, port: int, service_mapping: dict[(Any, Any)]) -> None:
         try:
             for service_adder, servicer in service_mapping.items():
                 service_adder(servicer, self.server)
@@ -20,7 +22,7 @@ class GRPCServer:
             self.logger.exception("Failed to start server on port %s:", port)
             raise
 
-    async def stop_server(self, grace=0):
+    async def stop_server(self, grace: int) -> None:
         try:
             await self.server.stop(grace)
             self.logger.info("Server stopped successfully")
@@ -28,7 +30,7 @@ class GRPCServer:
             self.logger.exception("Error while stopping the server")
             raise
 
-    async def wait_for_termination(self):
+    async def wait_for_termination(self) -> None:
         try:
             await self.server.wait_for_termination()
             self.logger.info("Server has terminated")

@@ -8,7 +8,7 @@ from raw_data.service_mapping import create_service_mapping
 logger = AppLogger.get_instance().get_logger()
 
 
-async def main():
+async def main() -> None:
     grpc_server = GRPCServer()
     service_mapping = None
     port = 50051
@@ -26,7 +26,8 @@ async def main():
         logger.exception("Unexpected error in gRPC server lifecycle.")
     finally:
         # Stop gRPC server and cleanup resources
-        await grpc_server.stop_server()
+        grace = 1
+        await grpc_server.stop_server(grace)
         if service_mapping:
             for handler in service_mapping.values():
                 if hasattr(handler, "close"):

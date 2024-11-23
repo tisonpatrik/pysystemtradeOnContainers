@@ -6,7 +6,7 @@ class FetchStatement(ABC):
     """Abstract class for encapsulating data fetching parameters.
     This class must be extended with specific implementations that format or validate queries."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._query = ""
         self._parameters: tuple[Any, ...] = tuple()
         self.batch_size = 10000  # Default batch size

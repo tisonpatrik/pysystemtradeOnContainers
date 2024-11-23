@@ -14,5 +14,5 @@ class ExpensiveTradingRulesPostProcessingHandler:
         cheap_rule_names = await self.cheap_trading_rules_handler.cheap_trading_rules_post_processing_async(instrument_code)
         return self.list_difference(rules, cheap_rule_names)
 
-    def list_difference(self, list1, list2):
+    def list_difference(self, list1: list, list2: list) -> list:
         raise NotImplementedError("This method should be implemented in a subclass")
