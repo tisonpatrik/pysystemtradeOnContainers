@@ -19,6 +19,8 @@ def convert_dataframe_to_series(data_frame: pd.DataFrame, index: str, values: st
 
 
 def convert_pandas_to_bytes(df: pd.DataFrame | pd.Series) -> bytes:
+    if isinstance(df, pd.Series):
+        df = df.to_frame()
     table = pa.Table.from_pandas(df)
     sink = pa.BufferOutputStream()
     writer = pa.ipc.new_file(sink, table.schema)

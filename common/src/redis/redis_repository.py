@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from redis import ConnectionPool, Redis
+import redis.asyncio as redis
 
 from common.src.logging.logger import AppLogger
 from common.src.redis.base_statements.get_cache_statement import GetCacheStatement
@@ -9,8 +9,8 @@ from common.src.redis.base_statements.set_cache_statement import SetCacheStateme
 
 
 class RedisClient:
-    def __init__(self, pool: ConnectionPool):
-        self.redis_client = Redis(connection_pool=pool)
+    def __init__(self, pool: redis.ConnectionPool):
+        self.redis_client = redis.Redis(connection_pool=pool)
         self.logger = AppLogger.get_instance().get_logger()
 
     async def get_cache(self, statement: GetCacheStatement) -> dict | None:
