@@ -2,8 +2,8 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
-from common.src.clients.carry_client import CarryClient
 from common.src.clients.instruments_client import InstrumentsClient
+from common.src.clients.old_carry_client import CarryClient
 from common.src.clients.old_dependencies import (
     get_carry_client,
     get_daily_prices_client,
@@ -15,20 +15,20 @@ from common.src.database.old_postgres_setup import setup_async_database
 from common.src.http_client.old_rest_client_setup import setup_async_client
 from common.src.redis.old_redis_setup import setup_async_redis
 from common.src.redis.redis_repository import RedisClient
+from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
+from raw_data.api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
+from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
+from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.old_api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
-from raw_data.old_api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
 from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
-from raw_data.old_api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.old_api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
-from raw_data.old_api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
-from raw_data.src.raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
-from raw_data.src.raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 
 @asynccontextmanager

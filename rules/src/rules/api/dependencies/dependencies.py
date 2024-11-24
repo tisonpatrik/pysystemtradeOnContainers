@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
 
-from common.src.clients.carry_client import CarryClient
+from common.src.clients.old_carry_client import CarryClient
 from common.src.clients.old_dependencies import (
     get_carry_client,
     get_daily_prices_client,

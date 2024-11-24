@@ -5,7 +5,7 @@ import pandas as pd
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.logging.logger import AppLogger
 from common.src.utils.bounded_task_group import BoundedTaskGroup
-from raw_data.old_api.handlers.raw_carry_handler import RawCarryHandler
+from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 
 
 class MedianCarryForAssetClassHandler:
@@ -30,7 +30,6 @@ class MedianCarryForAssetClassHandler:
             tasks = [tg.create_task(self._fetch_raw_carry(instrument.symbol)) for instrument in instruments_in_asset_class]
             raw_carry_across_asset_class = await asyncio.gather(*tasks)
 
-        # Build DataFrame from the results
         raw_carry_across_asset_class_pd = pd.concat(raw_carry_across_asset_class, axis=1)
         smoothed_carrys_across_asset_class = raw_carry_across_asset_class_pd.ewm(smooth_days).mean()
         return smoothed_carrys_across_asset_class.median(axis=1)

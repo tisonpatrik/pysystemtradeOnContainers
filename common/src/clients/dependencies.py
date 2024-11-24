@@ -1,3 +1,4 @@
+from common.src.clients.carry_client import CarryClient
 from common.src.clients.forecast_client import ForecastClient
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.clients.prices_client import PricesClient
@@ -26,6 +27,10 @@ def get_redis() -> RedisClient:
 
 def get_daily_prices_client(postgres: PostgresClient, redis: RedisClient) -> PricesClient:
     return PricesClient(postgres=postgres, redis=redis)
+
+
+def get_carry_client(postgres: PostgresClient) -> CarryClient:
+    return CarryClient(postgres=postgres)
 
 
 def get_instruments_client(postgres: PostgresClient) -> InstrumentsClient:

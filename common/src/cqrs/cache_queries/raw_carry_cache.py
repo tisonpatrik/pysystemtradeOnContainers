@@ -18,8 +18,8 @@ class GetRawCarryCache(GetCacheStatement):
 
 
 class SetRawCarryCache(SetCacheStatement):
-    def __init__(self, daily_roll: pd.Series, symbol: str):
-        super().__init__(daily_roll)
+    def __init__(self, cache: pd.Series, symbol: str):
+        super().__init__(cache)
         self.asset_class = symbol
         self.name = NAME
 

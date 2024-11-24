@@ -3,7 +3,7 @@ import pandas as pd
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.cqrs.api_queries.raw_data_queries.get_normalized_price_for_asset_class import GetNormalizedPriceForAssetClassQuery
 from common.src.logging.logger import AppLogger
-from raw_data.src.raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
+from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler import DailyVolNormalizedPriceForAssetHandler
 
 

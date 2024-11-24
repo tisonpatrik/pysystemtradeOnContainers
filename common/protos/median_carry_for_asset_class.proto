@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package raw_data;
+
+message MedianCarryRequest {
+    string symbol = 1;
+}
+
+message MedianCarryResponse {
+    bytes series = 1;
+}
+
+service MedianCarry {
+    rpc get_median_carry (MedianCarryRequest) returns (MedianCarryResponse);
+}

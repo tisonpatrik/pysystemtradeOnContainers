@@ -9,6 +9,8 @@ from common.src.protobufs.cumulative_daily_vol_norm_returns_pb2_grpc import add_
 from common.src.protobufs.daily_returns_vol_pb2_grpc import add_DailyReturnsVolServicer_to_server
 from common.src.protobufs.fx_prices_pb2_grpc import add_FxPricesServicer_to_server
 from common.src.protobufs.instrument_currency_vol_pb2_grpc import add_InstrumentCurrencyVolServicer_to_server
+from common.src.protobufs.median_carry_for_asset_class_pb2_grpc import add_MedianCarryServicer_to_server
+from common.src.protobufs.raw_carry_pb2_grpc import add_RawCarryServicer_to_server
 from common.src.protobufs.relative_skew_deviation_pb2_grpc import add_RelativeSkewDeviationServicer_to_server
 from common.src.protobufs.vol_attenuation_pb2_grpc import add_VolAttenuationServicer_to_server
 from raw_data.api.dependencies.endpoints import (
@@ -17,6 +19,8 @@ from raw_data.api.dependencies.endpoints import (
     get_daily_returns_vol,
     get_fx_prices,
     get_instrument_currency_vol,
+    get_median_carry_for_asset_class,
+    get_raw_carry,
     get_relative_skew_deviation,
     get_vol_attenuation,
 )
@@ -37,6 +41,9 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     daily_returns_vol = get_daily_returns_vol(postgres, redis)
     fx_prices = get_fx_prices(postgres, redis)
     instrument_currency_vol = get_instrument_currency_vol(postgres, redis)
+    median_carry_for_asset_class = get_median_carry_for_asset_class(postgres, redis)
+    raw_carry = get_raw_carry(postgres, redis)
+
     relative_skew_deviation = get_relative_skew_deviation(postgres, redis)
     vol_attenuation = get_vol_attenuation(postgres, redis)
 
@@ -47,6 +54,8 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
         add_DailyReturnsVolServicer_to_server: daily_returns_vol,
         add_FxPricesServicer_to_server: fx_prices,
         add_InstrumentCurrencyVolServicer_to_server: instrument_currency_vol,
+        add_MedianCarryServicer_to_server: median_carry_for_asset_class,
+        add_RawCarryServicer_to_server: raw_carry,
         add_RelativeSkewDeviationServicer_to_server: relative_skew_deviation,
         add_VolAttenuationServicer_to_server: vol_attenuation,
     }

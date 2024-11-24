@@ -6,7 +6,7 @@ from common.src.clients.instruments_client import InstrumentsClient
 from common.src.logging.logger import AppLogger
 from common.src.utils.bounded_task_group import BoundedTaskGroup
 from common.src.validation.instrument import Instrument
-from raw_data.src.raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
+from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 
 class AggregatedReturnsForAssetClassHandler:

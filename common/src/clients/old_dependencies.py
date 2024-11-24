@@ -1,9 +1,9 @@
 from fastapi import Depends, Request
 
 from common.src.clients.account_client import AccountClient
-from common.src.clients.carry_client import CarryClient
 from common.src.clients.forecast_client import ForecastClient
 from common.src.clients.instruments_client import InstrumentsClient
+from common.src.clients.old_carry_client import CarryClient
 from common.src.clients.prices_client import PricesClient
 from common.src.clients.raw_data_client import RawDataClient
 from common.src.clients.rules_signals_client import RulesSignalsClient
@@ -38,11 +38,11 @@ def get_daily_prices_client(
 
 
 def get_carry_client(
-    db_repository: PostgresClient = Depends(get_database),
+    postgres: PostgresClient = Depends(get_database),
     redis_repository: RedisClient = Depends(get_redis),
     rest_client: RestClient = Depends(get_rest_client),
 ) -> CarryClient:
-    return CarryClient(db_repository=db_repository, redis_repository=redis_repository, rest_client=rest_client)
+    return CarryClient(postgres=postgres, redis=redis_repository, rest_client=rest_client)
 
 
 def get_instruments_client(

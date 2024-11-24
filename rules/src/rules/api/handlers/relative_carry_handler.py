@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from common.src.clients.carry_client import CarryClient
+from common.src.clients.old_carry_client import CarryClient
 from common.src.cqrs.api_queries.rule_queries.get_relative_carry import GetRelativeCarry
 from common.src.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
