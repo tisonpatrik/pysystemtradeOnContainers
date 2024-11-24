@@ -1,2 +1,4 @@
 UPPER_CAP = 20
 LOWER_CAP = -20
+
+VOL_DAYS = 35

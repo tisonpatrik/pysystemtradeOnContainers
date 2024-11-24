@@ -13,8 +13,8 @@ class VolAttenuationService:
         try:
             normalised_vol_quantile = calculate_quantile_of_points_in_data_series(normalised_vol)
             vol_attenuation = multiplier_function(normalised_vol_quantile)
-            return vol_attenuation.ewm(span=10).mean()
+            attenuntation: pd.Series = vol_attenuation.ewm(span=10).mean()
+            return attenuntation
         except Exception:
             self.logger.exception("Error in calculating volatility attenuation")
             raise
-

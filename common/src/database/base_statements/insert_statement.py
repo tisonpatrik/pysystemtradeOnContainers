@@ -1,4 +1,5 @@
 import pandas as pd
+from numpy import ndarray
 from pydantic import BaseModel
 
 
@@ -9,7 +10,7 @@ class InsertManyStatement:
         self._table_name = table_name
         self._data = data
 
-    def get_records(self) -> pd.DataFrame | pd.Series:
+    def get_records(self) -> ndarray:
         """Converts the data to a numpy array for insertion purposes."""
         return self._data.to_numpy()
 

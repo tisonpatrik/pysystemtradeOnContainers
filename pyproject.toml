@@ -25,18 +25,10 @@ dependencies = [
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-typeCheckingMode = "off"
+typeCheckingMode = "basic"
 
 [tool.mypy]
-ignore_missing_imports = true
-no_site_packages = true
 
-warn_redundant_casts = true
-warn_unused_ignores = false
-disallow_any_generics = false
-check_untyped_defs = true
-no_implicit_reexport = true
-disallow_untyped_defs = false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
@@ -54,4 +46,5 @@ dev = [
     "mypy-protobuf>=3.6.0",
     "types-protobuf>=5.28.3.20241030",
     "grpc-stubs>=1.53.0.5",
+    "asyncpg-stubs>=0.29.1",
 ]
