@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.clients.instruments_client import InstrumentsClient
 from common.src.logging.logger import AppLogger
-from raw_data.old_api.handlers.current_average_negskew_over_asset_class_handler import CurrentAverageNegSkewOverAssetClassHandler
+from raw_data.api.handlers.current_average_negskew_over_asset_class_handler import CurrentAverageNegSkewOverAssetClassHandler
 
 
 class AverageNegSkewInAssetClassForInstrumentHandler:

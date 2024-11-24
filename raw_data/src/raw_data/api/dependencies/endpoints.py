@@ -5,12 +5,14 @@ from raw_data.api.dependencies.handlers import (
     get_daily_returns_vol_handler,
     get_fx_prices_handler,
     get_instrument_currency_vol_handler,
+    get_relative_skew_deviation_handler,
     get_vol_attenuation_handler,
 )
 from raw_data.api.endpoints.absolute_skew_deviation import AbsoluteSkewDeviation
 from raw_data.api.endpoints.daily_returns_vol import DailyReturnsVol
 from raw_data.api.endpoints.fx_prices import FxPrices
 from raw_data.api.endpoints.instrument_currency_vol import InstrumentCurrencyVol
+from raw_data.api.endpoints.relative_skew_deviation import RelativeSkewDeviation
 from raw_data.api.endpoints.vol_attenuation import VolAttenuation
 
 
@@ -37,3 +39,8 @@ def get_instrument_currency_vol(postgres: PostgresClient, redis: RedisClient) ->
 def get_vol_attenuation(postgres: PostgresClient, redis: RedisClient) -> VolAttenuation:
     handler = get_vol_attenuation_handler(postgres=postgres, redis=redis)
     return VolAttenuation(vol_attenuation_handler=handler)
+
+
+def get_relative_skew_deviation(postgres: PostgresClient, redis: RedisClient) -> RelativeSkewDeviation:
+    handler = get_relative_skew_deviation_handler(postgres=postgres, redis=redis)
+    return RelativeSkewDeviation(relative_skew_deviation_handler=handler)

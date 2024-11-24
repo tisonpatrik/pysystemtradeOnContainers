@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.clients.prices_client import PricesClient
 from common.src.logging.logger import AppLogger
-from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
+from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 
 
 class DailyPercentageReturnsHandler:

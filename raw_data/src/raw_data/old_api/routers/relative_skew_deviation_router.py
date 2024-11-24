@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from common.src.cqrs.api_queries.raw_data_queries.get_relative_skew_deviation import GetRelativeSkewDeviationQuery
 from common.src.logging.logger import AppLogger
 from raw_data.old_api.dependencies.dependencies import get_relative_skew_deviation_handler
-from raw_data.old_api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
+from raw_data.src.raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

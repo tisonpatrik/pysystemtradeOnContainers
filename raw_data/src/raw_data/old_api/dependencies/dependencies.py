@@ -16,26 +16,19 @@ from common.src.http_client.old_rest_client_setup import setup_async_client
 from common.src.redis.old_redis_setup import setup_async_redis
 from common.src.redis.redis_repository import RedisClient
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
+from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
-from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.old_api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
-from raw_data.old_api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
 from raw_data.old_api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
-from raw_data.old_api.handlers.current_average_negskew_over_asset_class_handler import CurrentAverageNegSkewOverAssetClassHandler
 from raw_data.old_api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
-from raw_data.old_api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
-from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from raw_data.old_api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
-from raw_data.old_api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
 from raw_data.old_api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.old_api.handlers.raw_carry_handler import RawCarryHandler
-from raw_data.old_api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
-from raw_data.src.raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 
 @asynccontextmanager
@@ -151,66 +144,3 @@ def get_median_carry_for_asset_class_handler(
     instrument_repository: InstrumentsClient = Depends(get_instruments_client),
 ) -> MedianCarryForAssetClassHandler:
     return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=instrument_repository)
-
-
-def get_daily_percentage_returns_handler(
-    prices_client: PricesClient = Depends(get_daily_prices_client),
-    daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
-) -> DailyPercentageReturnsHandler:
-    return DailyPercentageReturnsHandler(prices_client=prices_client, daily_returns_handler=daily_returns_handler)
-
-
-def get_skew_handler(
-    daily_percentage_returns_handler: DailyPercentageReturnsHandler = Depends(get_daily_percentage_returns_handler),
-    redis_repository: RedisClient = Depends(get_redis),
-) -> SkewHandler:
-    return SkewHandler(daily_percentage_returns_handler=daily_percentage_returns_handler, redis=redis_repository)
-
-
-def get_negskew_over_instrument_list_handler(
-    skew_handler: SkewHandler = Depends(get_skew_handler),
-) -> NegSkewOverInstrumentListHandler:
-    return NegSkewOverInstrumentListHandler(skew_handler=skew_handler)
-
-
-def get_current_average_negskew_over_asset_class_handler(
-    negskew_over_instrument_list_handler: NegSkewOverInstrumentListHandler = Depends(get_negskew_over_instrument_list_handler),
-    instruments_client: InstrumentsClient = Depends(get_instruments_client),
-) -> CurrentAverageNegSkewOverAssetClassHandler:
-    return CurrentAverageNegSkewOverAssetClassHandler(
-        instruments_client=instruments_client, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
-    )
-
-
-def get_average_neg_skew_in_asset_class_for_instrument_handler(
-    current_average_negskew_over_asset_class_handler: CurrentAverageNegSkewOverAssetClassHandler = Depends(
-        get_current_average_negskew_over_asset_class_handler
-    ),
-    instruments_client: InstrumentsClient = Depends(get_instruments_client),
-) -> AverageNegSkewInAssetClassForInstrumentHandler:
-    return AverageNegSkewInAssetClassForInstrumentHandler(
-        instruments_client=instruments_client,
-        current_average_negskew_over_asset_class_handler=current_average_negskew_over_asset_class_handler,
-    )
-
-
-def get_relative_skew_deviation_handler(
-    average_neg_skew_in_asset_class_for_instrument_handler: AverageNegSkewInAssetClassForInstrumentHandler = Depends(
-        get_average_neg_skew_in_asset_class_for_instrument_handler
-    ),
-    skew_handler: SkewHandler = Depends(get_skew_handler),
-) -> RelativeSkewDeviationHandler:
-    return RelativeSkewDeviationHandler(
-        average_neg_skew_in_asset_class_for_instrument_handler=average_neg_skew_in_asset_class_for_instrument_handler,
-        skew_handler=skew_handler,
-    )
-
-
-def get_vol_attenuation_handler(
-    daily_percentage_volatility_handler: DailyPercentageVolatilityHandler = Depends(get_daily_percentage_volatility_handler),
-    redis_repository: RedisClient = Depends(get_redis),
-) -> VolAttenuationHandler:
-    return VolAttenuationHandler(
-        daily_percentage_volatility_handler=daily_percentage_volatility_handler,
-        redis=redis_repository,
-    )

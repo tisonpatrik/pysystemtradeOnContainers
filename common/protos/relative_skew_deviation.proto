@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package raw_data;
+
+message RelativeSkewDeviationRequest {
+    string symbol = 1;
+    int32 lookback = 2;
+}
+
+message RelativeSkewDeviationResponse {
+    bytes series = 1;
+}
+
+service RelativeSkewDeviation {
+    rpc get_relative_skew_deviation (RelativeSkewDeviationRequest) returns (RelativeSkewDeviationResponse);
+}
