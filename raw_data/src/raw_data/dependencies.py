@@ -4,10 +4,10 @@ from common.src.clients.dependencies import (
 )
 from common.src.database.repository import PostgresClient
 from common.src.redis.redis_repository import RedisClient
-from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
-from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
-from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
-from raw_data.api.handlers.skew_handler import SkewHandler
+from raw_data.old_api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
+from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
+from raw_data.old_api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
+from raw_data.old_api.handlers.skew_handler import SkewHandler
 from raw_data.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.handlers.current_average_negskew_over_all_assets_handler import (
     CurrentAverageNegSkewOverAllAssetsHandler,
