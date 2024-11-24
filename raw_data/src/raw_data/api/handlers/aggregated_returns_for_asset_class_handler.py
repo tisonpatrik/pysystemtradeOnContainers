@@ -12,11 +12,11 @@ from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolN
 class AggregatedReturnsForAssetClassHandler:
     def __init__(
         self,
-        instrument_repository: InstrumentsClient,
+        instruments_client: InstrumentsClient,
         daily_vol_normalized_returns_handler: DailyVolNormalizedReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
-        self.instrument_repository = instrument_repository
+        self.instrument_client = instruments_client
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.max_concurrent_tasks = 8
 
@@ -28,7 +28,7 @@ class AggregatedReturnsForAssetClassHandler:
         return aggregated_data.median(axis=1)
 
     async def _get_instruments_for_asset_class(self, asset_class: str) -> list[Instrument]:
-        instruments = await self.instrument_repository.get_tradable_instruments_for_asset_class_async(asset_class)
+        instruments = await self.instrument_client.get_tradable_instruments_for_asset_class_async(asset_class)
         if not instruments:
             self.logger.warning("No instruments found for asset class: %s", asset_class)
             raise ValueError(f"No instruments found for asset class: {asset_class}")

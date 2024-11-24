@@ -7,6 +7,7 @@ from raw_data.api.dependencies.handlers import (
     get_fx_prices_handler,
     get_instrument_currency_vol_handler,
     get_median_carry_for_asset_class_handler,
+    get_normalized_prices_handler,
     get_raw_carry_handler,
     get_relative_skew_deviation_handler,
     get_smooth_carry_handler,
@@ -17,7 +18,8 @@ from raw_data.api.endpoints.cumulative_daily_vol_norm_returns import CumulativeD
 from raw_data.api.endpoints.daily_returns_vol import DailyReturnsVol
 from raw_data.api.endpoints.fx_prices import FxPrices
 from raw_data.api.endpoints.instrument_currency_vol import InstrumentCurrencyVol
-from raw_data.api.endpoints.median_carry_for_asset_class import MedianCarryForAssetClass
+from raw_data.api.endpoints.median_carry import MedianCarry
+from raw_data.api.endpoints.normalized_prices import NormalizedPrices
 from raw_data.api.endpoints.raw_carry import RawCarry
 from raw_data.api.endpoints.relative_skew_deviation import RelativeSkewDeviation
 from raw_data.api.endpoints.smooth_carry import SmoothCarry
@@ -64,11 +66,16 @@ def get_raw_carry(postgres: PostgresClient, redis: RedisClient) -> RawCarry:
     return RawCarry(raw_carry_handler=handler)
 
 
-def get_median_carry_for_asset_class(postgres: PostgresClient, redis: RedisClient) -> MedianCarryForAssetClass:
+def get_median_carry_for_asset_class(postgres: PostgresClient, redis: RedisClient) -> MedianCarry:
     handler = get_median_carry_for_asset_class_handler(postgres=postgres, redis=redis)
-    return MedianCarryForAssetClass(median_carry_for_asset_class_handler=handler)
+    return MedianCarry(median_carry_for_asset_class_handler=handler)
 
 
 def get_smooth_carry(postgres: PostgresClient, redis: RedisClient) -> SmoothCarry:
     handler = get_smooth_carry_handler(postgres=postgres, redis=redis)
     return SmoothCarry(smooth_carry_handler=handler)
+
+
+def get_normalized_prices(postgres: PostgresClient, redis: RedisClient) -> NormalizedPrices:
+    handler = get_normalized_prices_handler(postgres=postgres, redis=redis)
+    return NormalizedPrices(normalized_prices_handler=handler)

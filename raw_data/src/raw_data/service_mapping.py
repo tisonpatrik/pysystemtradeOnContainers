@@ -10,6 +10,7 @@ from common.src.protobufs.daily_returns_vol_pb2_grpc import add_DailyReturnsVolS
 from common.src.protobufs.fx_prices_pb2_grpc import add_FxPricesServicer_to_server
 from common.src.protobufs.instrument_currency_vol_pb2_grpc import add_InstrumentCurrencyVolServicer_to_server
 from common.src.protobufs.median_carry_for_asset_class_pb2_grpc import add_MedianCarryServicer_to_server
+from common.src.protobufs.normalized_prices_pb2_grpc import add_NormalizedPricesServicer_to_server
 from common.src.protobufs.raw_carry_pb2_grpc import add_RawCarryServicer_to_server
 from common.src.protobufs.relative_skew_deviation_pb2_grpc import add_RelativeSkewDeviationServicer_to_server
 from common.src.protobufs.smooth_carry_pb2_grpc import add_SmoothCarryServicer_to_server
@@ -21,6 +22,7 @@ from raw_data.api.dependencies.endpoints import (
     get_fx_prices,
     get_instrument_currency_vol,
     get_median_carry_for_asset_class,
+    get_normalized_prices,
     get_raw_carry,
     get_relative_skew_deviation,
     get_smooth_carry,
@@ -44,6 +46,7 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     fx_prices = get_fx_prices(postgres, redis)
     instrument_currency_vol = get_instrument_currency_vol(postgres, redis)
     median_carry_for_asset_class = get_median_carry_for_asset_class(postgres, redis)
+    normalized_prices = get_normalized_prices(postgres, redis)
     raw_carry = get_raw_carry(postgres, redis)
 
     relative_skew_deviation = get_relative_skew_deviation(postgres, redis)
@@ -58,6 +61,7 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
         add_FxPricesServicer_to_server: fx_prices,
         add_InstrumentCurrencyVolServicer_to_server: instrument_currency_vol,
         add_MedianCarryServicer_to_server: median_carry_for_asset_class,
+        add_NormalizedPricesServicer_to_server: normalized_prices,
         add_RawCarryServicer_to_server: raw_carry,
         add_RelativeSkewDeviationServicer_to_server: relative_skew_deviation,
         add_SmoothCarryServicer_to_server: smooth_carry,

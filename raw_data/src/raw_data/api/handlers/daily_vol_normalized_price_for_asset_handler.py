@@ -1,7 +1,7 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
-from raw_data.old_api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
+from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 
 
 class DailyVolNormalizedPriceForAssetHandler:

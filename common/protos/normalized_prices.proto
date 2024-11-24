@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package raw_data;
+
+message NormalizedPricesRequest {
+    string symbol = 1;
+}
+
+message NormalizedPricesResponse {
+    bytes series = 1;
+}
+
+service NormalizedPrices {
+    rpc get_normalized_prices (NormalizedPricesRequest) returns (NormalizedPricesResponse);
+}

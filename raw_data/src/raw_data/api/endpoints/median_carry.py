@@ -10,7 +10,7 @@ from common.src.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 
 
-class MedianCarryForAssetClass(MedianCarryServicer):
+class MedianCarry(MedianCarryServicer):
     def __init__(
         self,
         median_carry_for_asset_class_handler: MedianCarryForAssetClassHandler,

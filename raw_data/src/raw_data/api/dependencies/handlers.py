@@ -1,7 +1,9 @@
 from common.src.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client
+from common.src.clients.instruments_client import InstrumentsClient
 from common.src.database.repository import PostgresClient
 from common.src.redis.redis_repository import RedisClient
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
+from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import (
     AverageNegSkewInAssetClassForInstrumentHandler,
 )
@@ -15,6 +17,7 @@ from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercenta
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import DailyVolNormalizedPriceForAssetHandler
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.api.handlers.historic_average_negskew_all_assets_handler import (
@@ -24,6 +27,7 @@ from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurr
 from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.api.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
 from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
+from raw_data.api.handlers.normalized_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
@@ -200,3 +204,33 @@ def get_median_carry_for_asset_class_handler(postgres: PostgresClient, redis: Re
 def get_smooth_carry_handler(postgres: PostgresClient, redis: RedisClient) -> SmoothCarryHandler:
     raw_carry_handler = get_raw_carry_handler(postgres=postgres, redis=redis)
     return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)
+
+
+def get_aggregated_returns_for_asset_handler(postgres: PostgresClient, redis: RedisClient) -> AggregatedReturnsForAssetClassHandler:
+    instruments_client = get_instruments_client(postgres=postgres)
+    daily_vol_normalized_returns_handler = get_daily_vol_normalized_returns_handler(postgres=postgres, redis=redis)
+    return AggregatedReturnsForAssetClassHandler(
+        instruments_client=instruments_client, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
+    )
+
+
+def get_daily_vol_normalized_price_for_asset_handler(
+    postgres: PostgresClient, redis: RedisClient
+) -> DailyVolNormalizedPriceForAssetHandler:
+    aggregated_returns_for_asset_handler = get_aggregated_returns_for_asset_handler(postgres=postgres, redis=redis)
+    return DailyVolNormalizedPriceForAssetHandler(aggregated_returns_for_asset_handler=aggregated_returns_for_asset_handler)
+
+
+def get_normalized_prices_handler(postgres: PostgresClient, redis: RedisClient) -> NormalizedPricesForAssetClassHandler:
+    instruments_client: InstrumentsClient = get_instruments_client(postgres=postgres)
+    daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = get_daily_vol_normalized_price_for_asset_handler(
+        postgres=postgres, redis=redis
+    )
+    cumulative_daily_vol_norm_returns_handler: CumulativeDailyVolNormReturnsHandler = get_cumulative_daily_vol_norm_returns_handler(
+        postgres=postgres, redis=redis
+    )
+    return NormalizedPricesForAssetClassHandler(
+        instruments_client=instruments_client,
+        daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
+        cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
+    )
