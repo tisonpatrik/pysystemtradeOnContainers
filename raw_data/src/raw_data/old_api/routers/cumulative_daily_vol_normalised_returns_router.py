@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from common.src.cqrs.api_queries.raw_data_queries.get_cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturnsQuery
 from common.src.logging.logger import AppLogger
 from raw_data.old_api.dependencies.dependencies import get_cumulative_daily_vol_norm_returns_handler
-from raw_data.old_api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
+from raw_data.src.raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

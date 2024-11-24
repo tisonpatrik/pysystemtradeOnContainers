@@ -8,6 +8,7 @@ from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDe
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import (
     AverageNegSkewInAssetClassForInstrumentHandler,
 )
+from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 from raw_data.api.handlers.current_average_negskew_over_all_assets_handler import (
     CurrentAverageNegSkewOverAllAssetsHandler,
 )
@@ -26,6 +27,7 @@ from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOv
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
+from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
 def get_daily_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsHandler:
@@ -153,3 +155,21 @@ def get_relative_skew_deviation_handler(postgres: PostgresClient, redis: RedisCl
         average_neg_skew_in_asset_class_for_instrument_handler=average_neg_skew_in_asset_class_for_instrument_handler,
         skew_handler=skew_handler,
     )
+
+
+def get_daily_vol_normalized_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyvolNormalizedReturnsHandler:
+    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
+    daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
+    daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
+
+    return DailyvolNormalizedReturnsHandler(
+        prices_client=prices_client,
+        daily_returns_vol_handler=daily_returns_vol_handler,
+        redis=redis,
+        daily_returns_handler=daily_returns_handler,
+    )
+
+
+def get_cumulative_daily_vol_norm_returns_handler(postgres: PostgresClient, redis: RedisClient) -> CumulativeDailyVolNormReturnsHandler:
+    daily_vol_normalized_returns_handler = get_daily_vol_normalized_returns_handler(postgres=postgres, redis=redis)
+    return CumulativeDailyVolNormReturnsHandler(daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler, redis=redis)

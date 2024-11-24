@@ -2,6 +2,7 @@ from common.src.database.repository import PostgresClient
 from common.src.redis.redis_repository import RedisClient
 from raw_data.api.dependencies.handlers import (
     get_absolute_skew_deviation_handler,
+    get_cumulative_daily_vol_norm_returns_handler,
     get_daily_returns_vol_handler,
     get_fx_prices_handler,
     get_instrument_currency_vol_handler,
@@ -9,6 +10,7 @@ from raw_data.api.dependencies.handlers import (
     get_vol_attenuation_handler,
 )
 from raw_data.api.endpoints.absolute_skew_deviation import AbsoluteSkewDeviation
+from raw_data.api.endpoints.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from raw_data.api.endpoints.daily_returns_vol import DailyReturnsVol
 from raw_data.api.endpoints.fx_prices import FxPrices
 from raw_data.api.endpoints.instrument_currency_vol import InstrumentCurrencyVol
@@ -44,3 +46,8 @@ def get_vol_attenuation(postgres: PostgresClient, redis: RedisClient) -> VolAtte
 def get_relative_skew_deviation(postgres: PostgresClient, redis: RedisClient) -> RelativeSkewDeviation:
     handler = get_relative_skew_deviation_handler(postgres=postgres, redis=redis)
     return RelativeSkewDeviation(relative_skew_deviation_handler=handler)
+
+
+def get_cumulative_daily_vol_norm_returns(postgres: PostgresClient, redis: RedisClient) -> CumulativeDailyVolNormReturns:  # noqa: F821
+    handler = get_cumulative_daily_vol_norm_returns_handler(postgres=postgres, redis=redis)
+    return CumulativeDailyVolNormReturns(cumulative_daily_vol_norm_returns_handler=handler)

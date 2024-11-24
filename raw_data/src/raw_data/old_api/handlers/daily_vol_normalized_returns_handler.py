@@ -21,13 +21,13 @@ class DailyvolNormalizedReturnsHandler:
         self,
         prices_client: PricesClient,
         daily_returns_vol_handler: DailyReturnsVolHandler,
-        redis_repository: RedisClient,
+        redis: RedisClient,
         daily_returns_handler: DailyReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.daily_returns_vol_handler = daily_returns_vol_handler
-        self.redis_repository = redis_repository
+        self.redis_repository = redis
         self.daily_returns_handler = daily_returns_handler
 
         self.daily_vol_normalized_returns_service = DailyVolnormalizedReturnsService()

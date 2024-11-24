@@ -14,7 +14,6 @@ from raw_data.old_api.routers.normalized_prices_for_asset_class_router import (
     router as normalized_prices_for_asset_class_route,
 )
 from raw_data.old_api.routers.raw_carry_router import router as raw_carry_route
-from raw_data.old_api.routers.relative_skew_deviation_router import router as relative_skew_deviation_route
 from raw_data.old_api.routers.smooth_carry_router import router as smooth_carry_route
 
 logger = AppLogger.get_instance().get_logger()
@@ -36,7 +35,6 @@ app.include_router(cumulative_daily_vol_normalised_returns_route, prefix="/cumul
 app.include_router(raw_carry_route, prefix="/raw_carry_route")
 app.include_router(smooth_carry_route, prefix="/smooth_carry_route")
 app.include_router(median_carry_for_asset_class_route, prefix="/median_carry_for_asset_class_route")
-app.include_router(relative_skew_deviation_route, prefix="/relative_skew_deviation_route")
 
 
 @app.exception_handler(RequestValidationError)

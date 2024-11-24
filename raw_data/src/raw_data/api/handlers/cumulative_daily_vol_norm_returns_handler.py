@@ -14,13 +14,13 @@ from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import Daily
 
 
 class CumulativeDailyVolNormReturnsHandler:
-    def __init__(self, daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler, redis_repository: RedisClient):
+    def __init__(self, daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
-        self.redis_repository = redis_repository
+        self.redis_repository = redis
         self.background_tasks: set[Task] = set()
 
-    async def get_cumulative_daily_vol_normalized_returns_async(self, symbol: str) -> pd.Series:
+    async def get_cumulative_daily_vol_norm_returns_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching cumulative daily vol normalized returns for asset class %s", symbol)
         cached_returns = await self._get_cached_returns(symbol)
         if cached_returns is not None:
