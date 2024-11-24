@@ -12,10 +12,10 @@ from raw_data.services.vol_attenuation_service import VolAttenuationService
 
 
 class VolAttenuationHandler:
-    def __init__(self, daily_percentage_volatility_handler: DailyPercentageVolatilityHandler, redis_repository: RedisClient):
+    def __init__(self, daily_percentage_volatility_handler: DailyPercentageVolatilityHandler, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_percentage_volatility_handler = daily_percentage_volatility_handler
-        self.redis_repository = redis_repository
+        self.redis = redis
         self.vol_attenuation_service = VolAttenuationService()
         self.background_tasks: set[Task] = set()
 
@@ -34,7 +34,7 @@ class VolAttenuationHandler:
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetVolAttenuationCache(symbol)
-        cached_data = await self.redis_repository.get_cache(cache_statement)
+        cached_data = await self.redis.get_cache(cache_statement)
         if cached_data is not None:
             self.logger.info("Cache hit for asset class: %s", symbol)
             return VolAttenuation.from_cache_to_series(cached_data)
@@ -42,6 +42,6 @@ class VolAttenuationHandler:
 
     def _cache_aggregated_returns(self, vol_attenuation: pd.Series, symbol: str) -> None:
         cache_statement = SetVolAttenuationCache(values=vol_attenuation, symbol=symbol)
-        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
+        cache_task = asyncio.create_task(self.redis.set_cache(cache_statement))
         self.background_tasks.add(cache_task)
         cache_task.add_done_callback(self.background_tasks.discard)

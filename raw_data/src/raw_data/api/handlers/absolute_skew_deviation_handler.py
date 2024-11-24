@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.src.logging.logger import AppLogger
 from raw_data.api.handlers.historic_average_negskew_all_assets_handler import HistoricAverageNegSkewAllAssetsHandler
-from raw_data.old_api.handlers.skew_handler import SkewHandler
+from raw_data.api.handlers.skew_handler import SkewHandler
 
 
 class AbsoluteSkewDeviationHandler:

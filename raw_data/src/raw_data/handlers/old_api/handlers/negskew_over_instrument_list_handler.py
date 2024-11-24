@@ -5,7 +5,7 @@ import pandas as pd
 from common.src.logging.logger import AppLogger
 from common.src.utils.bounded_task_group import BoundedTaskGroup
 from common.src.validation.instrument import Instrument
-from raw_data.api.handlers.skew_handler import SkewHandler
+from raw_data.src.raw_data.api.handlers.skew_handler import SkewHandler
 
 
 class NegSkewOverInstrumentListHandler:

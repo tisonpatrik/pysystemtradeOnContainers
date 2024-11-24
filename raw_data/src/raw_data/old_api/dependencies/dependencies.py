@@ -17,6 +17,7 @@ from common.src.redis.old_redis_setup import setup_async_redis
 from common.src.redis.redis_repository import RedisClient
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.old_api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.old_api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
 from raw_data.old_api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
@@ -33,9 +34,8 @@ from raw_data.old_api.handlers.negskew_over_instrument_list_handler import NegSk
 from raw_data.old_api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.old_api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.old_api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
-from raw_data.old_api.handlers.skew_handler import SkewHandler
 from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
-from raw_data.old_api.handlers.vol_attenuation_handler import VolAttenuationHandler
+from raw_data.src.raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 
 @asynccontextmanager
@@ -212,5 +212,5 @@ def get_vol_attenuation_handler(
 ) -> VolAttenuationHandler:
     return VolAttenuationHandler(
         daily_percentage_volatility_handler=daily_percentage_volatility_handler,
-        redis_repository=redis_repository,
+        redis=redis_repository,
     )

@@ -16,10 +16,11 @@ from raw_data.api.handlers.historic_average_negskew_all_assets_handler import (
 )
 from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.api.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
+from raw_data.api.handlers.skew_handler import SkewHandler
+from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 from raw_data.old_api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
 from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.old_api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
-from raw_data.old_api.handlers.skew_handler import SkewHandler
 
 
 def get_daily_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsHandler:
@@ -109,3 +110,8 @@ def get_instrument_currency_vol_handler(postgres: PostgresClient, redis: RedisCl
         instruments_client=instruments_client,
         daily_percentage_volatility_handler=daily_percentage_volatility_handler,
     )
+
+
+def get_vol_attenuation_handler(postgres: PostgresClient, redis: RedisClient) -> VolAttenuationHandler:
+    daily_percentage_volatility_handler = get_daily_percentage_volatility_handler(postgres=postgres, redis=redis)
+    return VolAttenuationHandler(daily_percentage_volatility_handler=daily_percentage_volatility_handler, redis=redis)
