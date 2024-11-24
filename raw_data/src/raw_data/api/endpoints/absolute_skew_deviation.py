@@ -29,10 +29,10 @@ class AbsoluteSkewDeviation(AbsoluteSkewDeviationServicer):
             return AbsoluteSkewDeviationResponse()
 
         try:
-            abs_skew_deviation = await self.absolute_skew_deviation_handler.get_absolute_skew_deviation_async(
+            results = await self.absolute_skew_deviation_handler.get_absolute_skew_deviation_async(
                 symbol=request.symbol, lookback=request.lookback
             )
-            response = convert_pandas_to_bytes(abs_skew_deviation)
+            response = convert_pandas_to_bytes(results)
             return AbsoluteSkewDeviationResponse(series=response)
 
         except Exception as e:

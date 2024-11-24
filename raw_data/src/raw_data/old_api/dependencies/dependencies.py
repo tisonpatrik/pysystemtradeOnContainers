@@ -15,6 +15,7 @@ from common.src.database.old_postgres_setup import setup_async_database
 from common.src.http_client.old_rest_client_setup import setup_async_client
 from common.src.redis.old_redis_setup import setup_async_redis
 from common.src.redis.redis_repository import RedisClient
+from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.old_api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.old_api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import AverageNegSkewInAssetClassForInstrumentHandler
 from raw_data.old_api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
@@ -23,7 +24,6 @@ from raw_data.old_api.handlers.daily_annualised_roll_handler import DailyAnnuali
 from raw_data.old_api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
 from raw_data.old_api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
-from raw_data.old_api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
@@ -57,9 +57,7 @@ def get_daily_returns_vol_handler(
     redis_repository: RedisClient = Depends(get_redis),
     daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
 ) -> DailyReturnsVolHandler:
-    return DailyReturnsVolHandler(
-        prices_client=prices_client, redis_repository=redis_repository, daily_returns_handler=daily_returns_handler
-    )
+    return DailyReturnsVolHandler(prices_client=prices_client, redis=redis_repository, daily_returns_handler=daily_returns_handler)
 
 
 def get_daily_percentage_volatility_handler(

@@ -26,8 +26,8 @@ class FxPrices(FxPricesServicer):
             return FxPricesResponse()
         try:
             fx_data = await self.fx_prices_handler.get_fx_prices(request.symbol, request.base_currency)
-            response = convert_pandas_to_bytes(fx_data)
-            return FxPricesResponse(series=response)
+            results = convert_pandas_to_bytes(fx_data)
+            return FxPricesResponse(series=results)
         except Exception as e:
             self.logger.exception("Error processing request: %s", str(e))
             context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")

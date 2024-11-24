@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from common.src.cqrs.api_queries.raw_data_queries.get_daily_returns_vol import GetDailyReturnsVolQuery
 from common.src.logging.logger import AppLogger
 from raw_data.old_api.dependencies.dependencies import get_daily_returns_vol_handler
-from raw_data.old_api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from raw_data.src.raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

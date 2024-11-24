@@ -13,10 +13,10 @@ from raw_data.services.daily_returns_vol_service import DailyReturnsVolService
 
 
 class DailyReturnsVolHandler:
-    def __init__(self, prices_client: PricesClient, redis_repository: RedisClient, daily_returns_handler: DailyReturnsHandler):
+    def __init__(self, prices_client: PricesClient, redis: RedisClient, daily_returns_handler: DailyReturnsHandler):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
-        self.redis_repository = redis_repository
+        self.redis = redis
         self.daily_returns_handler = daily_returns_handler
         self.daily_returns_vol_service = DailyReturnsVolService()
         self.background_tasks: set[Task] = set()
@@ -34,7 +34,7 @@ class DailyReturnsVolHandler:
 
     async def _get_cached_returns(self, symbol: str) -> pd.Series | None:
         cache_statement = GetDailyReturnsVolCache(symbol)
-        cached_data = await self.redis_repository.get_cache(cache_statement)
+        cached_data = await self.redis.get_cache(cache_statement)
         if cached_data is not None:
             self.logger.info("Cache hit for asset class: %s", symbol)
             return DailyReturnsVol.from_cache_to_series(cached_data)
@@ -42,6 +42,6 @@ class DailyReturnsVolHandler:
 
     def _cache_aggregated_returns(self, vol: pd.Series, symbol: str) -> None:
         cache_statement = SetDailyReturnsVolCache(vol=vol, symbol=symbol)
-        cache_task = asyncio.create_task(self.redis_repository.set_cache(cache_statement))
+        cache_task = asyncio.create_task(self.redis.set_cache(cache_statement))
         self.background_tasks.add(cache_task)
         cache_task.add_done_callback(self.background_tasks.discard)
