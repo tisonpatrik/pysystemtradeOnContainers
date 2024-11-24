@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from common.src.cqrs.api_queries.raw_data_queries.get_raw_carry import GetRawCarryQuery
 from common.src.logging.logger import AppLogger
 from raw_data.old_api.dependencies.dependencies import get_smooth_carry_handler
-from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
+from raw_data.src.raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 
 router = APIRouter()
 logger = AppLogger.get_instance().get_logger()

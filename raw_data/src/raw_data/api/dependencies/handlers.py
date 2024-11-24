@@ -27,6 +27,7 @@ from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOv
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
+from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 
@@ -194,3 +195,8 @@ def get_median_carry_for_asset_class_handler(postgres: PostgresClient, redis: Re
     raw_carry_handler = get_raw_carry_handler(postgres=postgres, redis=redis)
     instrument_repository = get_instruments_client(postgres=postgres)
     return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=instrument_repository)
+
+
+def get_smooth_carry_handler(postgres: PostgresClient, redis: RedisClient) -> SmoothCarryHandler:
+    raw_carry_handler = get_raw_carry_handler(postgres=postgres, redis=redis)
+    return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)

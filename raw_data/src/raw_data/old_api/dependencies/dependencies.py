@@ -28,7 +28,7 @@ from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler impo
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.old_api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
-from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
+from raw_data.src.raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 
 
 @asynccontextmanager

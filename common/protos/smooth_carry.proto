@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package raw_data;
+
+message SmoothCarryRequest {
+    string symbol = 1;
+}
+
+message SmoothCarryResponse {
+    bytes series = 1;
+}
+
+service SmoothCarry {
+    rpc get_smooth_carry (SmoothCarryRequest) returns (SmoothCarryResponse);
+}

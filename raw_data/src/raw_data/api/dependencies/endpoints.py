@@ -9,6 +9,7 @@ from raw_data.api.dependencies.handlers import (
     get_median_carry_for_asset_class_handler,
     get_raw_carry_handler,
     get_relative_skew_deviation_handler,
+    get_smooth_carry_handler,
     get_vol_attenuation_handler,
 )
 from raw_data.api.endpoints.absolute_skew_deviation import AbsoluteSkewDeviation
@@ -19,6 +20,7 @@ from raw_data.api.endpoints.instrument_currency_vol import InstrumentCurrencyVol
 from raw_data.api.endpoints.median_carry_for_asset_class import MedianCarryForAssetClass
 from raw_data.api.endpoints.raw_carry import RawCarry
 from raw_data.api.endpoints.relative_skew_deviation import RelativeSkewDeviation
+from raw_data.api.endpoints.smooth_carry import SmoothCarry
 from raw_data.api.endpoints.vol_attenuation import VolAttenuation
 
 
@@ -65,3 +67,8 @@ def get_raw_carry(postgres: PostgresClient, redis: RedisClient) -> RawCarry:
 def get_median_carry_for_asset_class(postgres: PostgresClient, redis: RedisClient) -> MedianCarryForAssetClass:
     handler = get_median_carry_for_asset_class_handler(postgres=postgres, redis=redis)
     return MedianCarryForAssetClass(median_carry_for_asset_class_handler=handler)
+
+
+def get_smooth_carry(postgres: PostgresClient, redis: RedisClient) -> SmoothCarry:
+    handler = get_smooth_carry_handler(postgres=postgres, redis=redis)
+    return SmoothCarry(smooth_carry_handler=handler)
