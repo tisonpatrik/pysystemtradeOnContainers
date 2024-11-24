@@ -17,6 +17,7 @@ from raw_data.api.handlers.daily_percentage_returns_handler import DailyPercenta
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
+from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.api.handlers.historic_average_negskew_all_assets_handler import (
     HistoricAverageNegSkewAllAssetsHandler,
@@ -27,7 +28,6 @@ from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOv
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 from raw_data.api.handlers.skew_handler import SkewHandler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
-from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 
 
 def get_daily_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsHandler:
@@ -157,12 +157,12 @@ def get_relative_skew_deviation_handler(postgres: PostgresClient, redis: RedisCl
     )
 
 
-def get_daily_vol_normalized_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyvolNormalizedReturnsHandler:
+def get_daily_vol_normalized_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyVolNormalizedReturnsHandler:
     prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
     daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
     daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
 
-    return DailyvolNormalizedReturnsHandler(
+    return DailyVolNormalizedReturnsHandler(
         prices_client=prices_client,
         daily_returns_vol_handler=daily_returns_vol_handler,
         redis=redis,

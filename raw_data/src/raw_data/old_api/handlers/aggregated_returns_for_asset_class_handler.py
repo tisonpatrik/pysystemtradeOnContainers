@@ -6,14 +6,14 @@ from common.src.clients.instruments_client import InstrumentsClient
 from common.src.logging.logger import AppLogger
 from common.src.utils.bounded_task_group import BoundedTaskGroup
 from common.src.validation.instrument import Instrument
-from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.src.raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 
 class AggregatedReturnsForAssetClassHandler:
     def __init__(
         self,
         instrument_repository: InstrumentsClient,
-        daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler,
+        daily_vol_normalized_returns_handler: DailyVolNormalizedReturnsHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.instrument_repository = instrument_repository

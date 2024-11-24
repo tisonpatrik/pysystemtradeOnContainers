@@ -16,7 +16,7 @@ from raw_data.services.daily_vol_normalized_returns_service import DailyVolnorma
 from raw_data.validation.daily_vol_normalized_returns import DailyVolNormalizedReturns
 
 
-class DailyvolNormalizedReturnsHandler:
+class DailyVolNormalizedReturnsHandler:
     def __init__(
         self,
         prices_client: PricesClient,

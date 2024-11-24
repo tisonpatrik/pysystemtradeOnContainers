@@ -23,12 +23,12 @@ from raw_data.old_api.handlers.daily_annualised_roll_handler import DailyAnnuali
 from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler import (
     DailyVolNormalizedPriceForAssetHandler,
 )
-from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
 from raw_data.old_api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.old_api.handlers.normalize_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 from raw_data.old_api.handlers.raw_carry_handler import RawCarryHandler
 from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
 from raw_data.src.raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
+from raw_data.src.raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 
 @asynccontextmanager
@@ -69,8 +69,8 @@ def get_daily_vol_norm_returns_handler(
     daily_returns_vol_handler: DailyReturnsVolHandler = Depends(get_daily_returns_vol_handler),
     redis_repository: RedisClient = Depends(get_redis),
     daily_returns_handler: DailyReturnsHandler = Depends(get_daily_returns_handler),
-) -> DailyvolNormalizedReturnsHandler:
-    return DailyvolNormalizedReturnsHandler(
+) -> DailyVolNormalizedReturnsHandler:
+    return DailyVolNormalizedReturnsHandler(
         prices_client=prices_client,
         daily_returns_vol_handler=daily_returns_vol_handler,
         redis=redis_repository,
@@ -80,7 +80,7 @@ def get_daily_vol_norm_returns_handler(
 
 def get_aggregated_returns_for_asset_class_handler(
     instrument_repository: InstrumentsClient = Depends(get_instruments_client),
-    daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
+    daily_vol_normalized_returns_handler: DailyVolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
 ) -> AggregatedReturnsForAssetClassHandler:
     return AggregatedReturnsForAssetClassHandler(
         instrument_repository=instrument_repository,
@@ -97,7 +97,7 @@ def get_daily_vol_normalized_price_for_asset_class_handler(
 
 
 def get_cumulative_daily_vol_norm_returns_handler(
-    get_daily_vol_norm_returns_handler: DailyvolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
+    get_daily_vol_norm_returns_handler: DailyVolNormalizedReturnsHandler = Depends(get_daily_vol_norm_returns_handler),
     redis_repository: RedisClient = Depends(get_redis),
 ) -> CumulativeDailyVolNormReturnsHandler:
     return CumulativeDailyVolNormReturnsHandler(

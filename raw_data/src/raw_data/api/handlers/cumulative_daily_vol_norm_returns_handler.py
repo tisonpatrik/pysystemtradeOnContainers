@@ -10,11 +10,11 @@ from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache impor
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisClient
 from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
-from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
+from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 
 class CumulativeDailyVolNormReturnsHandler:
-    def __init__(self, daily_vol_normalized_returns_handler: DailyvolNormalizedReturnsHandler, redis: RedisClient):
+    def __init__(self, daily_vol_normalized_returns_handler: DailyVolNormalizedReturnsHandler, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.daily_vol_normalized_returns_handler = daily_vol_normalized_returns_handler
         self.redis_repository = redis
