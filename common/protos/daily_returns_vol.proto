@@ -10,6 +10,6 @@ message DailyReturnsVolResponse {
     bytes series = 1;
 }
 
-service DailyReturnsVolHandler {
+service DailyReturnsVol{
     rpc get_daily_returns_vol (DailyReturnsVolRequest) returns (DailyReturnsVolResponse);
 }

@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class FxPricesHandlerStub(object):
+class FxPricesStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,13 +35,13 @@ class FxPricesHandlerStub(object):
             channel: A grpc.Channel.
         """
         self.get_fx_prices = channel.unary_unary(
-                '/absolute_skew_deviation.FxPricesHandler/get_fx_prices',
+                '/absolute_skew_deviation.FxPrices/get_fx_prices',
                 request_serializer=fx__prices__pb2.FxPricesRequest.SerializeToString,
                 response_deserializer=fx__prices__pb2.FxPricesResponse.FromString,
                 _registered_method=True)
 
 
-class FxPricesHandlerServicer(object):
+class FxPricesServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def get_fx_prices(self, request, context):
@@ -51,7 +51,7 @@ class FxPricesHandlerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_FxPricesHandlerServicer_to_server(servicer, server):
+def add_FxPricesServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_fx_prices': grpc.unary_unary_rpc_method_handler(
                     servicer.get_fx_prices,
@@ -60,13 +60,13 @@ def add_FxPricesHandlerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'absolute_skew_deviation.FxPricesHandler', rpc_method_handlers)
+            'absolute_skew_deviation.FxPrices', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('absolute_skew_deviation.FxPricesHandler', rpc_method_handlers)
+    server.add_registered_method_handlers('absolute_skew_deviation.FxPrices', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class FxPricesHandler(object):
+class FxPrices(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -83,7 +83,7 @@ class FxPricesHandler(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/absolute_skew_deviation.FxPricesHandler/get_fx_prices',
+            '/absolute_skew_deviation.FxPrices/get_fx_prices',
             fx__prices__pb2.FxPricesRequest.SerializeToString,
             fx__prices__pb2.FxPricesResponse.FromString,
             options,

@@ -10,6 +10,6 @@ message InstrumentCurrencyVolResponse {
     bytes series = 1;
 }
 
-service InstrumentCurrencyVolHandler {
+service InstrumentCurrency {
     rpc get_instrument_currency_vol (InstrumentCurrencyVolRequest) returns (InstrumentCurrencyVolResponse);
 }

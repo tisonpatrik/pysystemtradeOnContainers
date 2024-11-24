@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class VolAttenuationHandlerStub(object):
+class VolAttenuationStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,13 +35,13 @@ class VolAttenuationHandlerStub(object):
             channel: A grpc.Channel.
         """
         self.get_vol_attenuation = channel.unary_unary(
-                '/raw_data.VolAttenuationHandler/get_vol_attenuation',
+                '/raw_data.VolAttenuation/get_vol_attenuation',
                 request_serializer=vol__attenuation__pb2.VolAttenuationRequest.SerializeToString,
                 response_deserializer=vol__attenuation__pb2.VolAttenuationResponse.FromString,
                 _registered_method=True)
 
 
-class VolAttenuationHandlerServicer(object):
+class VolAttenuationServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def get_vol_attenuation(self, request, context):
@@ -51,7 +51,7 @@ class VolAttenuationHandlerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_VolAttenuationHandlerServicer_to_server(servicer, server):
+def add_VolAttenuationServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_vol_attenuation': grpc.unary_unary_rpc_method_handler(
                     servicer.get_vol_attenuation,
@@ -60,13 +60,13 @@ def add_VolAttenuationHandlerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'raw_data.VolAttenuationHandler', rpc_method_handlers)
+            'raw_data.VolAttenuation', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('raw_data.VolAttenuationHandler', rpc_method_handlers)
+    server.add_registered_method_handlers('raw_data.VolAttenuation', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class VolAttenuationHandler(object):
+class VolAttenuation(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -83,7 +83,7 @@ class VolAttenuationHandler(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/raw_data.VolAttenuationHandler/get_vol_attenuation',
+            '/raw_data.VolAttenuation/get_vol_attenuation',
             vol__attenuation__pb2.VolAttenuationRequest.SerializeToString,
             vol__attenuation__pb2.VolAttenuationResponse.FromString,
             options,

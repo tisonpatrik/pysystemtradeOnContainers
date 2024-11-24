@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x64\x61ily_returns_vol.proto\x12\x08raw_data\"(\n\x16\x44\x61ilyReturnsVolRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\")\n\x17\x44\x61ilyReturnsVolResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32v\n\x16\x44\x61ilyReturnsVolHandler\x12\\\n\x15get_daily_returns_vol\x12 .raw_data.DailyReturnsVolRequest\x1a!.raw_data.DailyReturnsVolResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x64\x61ily_returns_vol.proto\x12\x08raw_data\"(\n\x16\x44\x61ilyReturnsVolRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\")\n\x17\x44\x61ilyReturnsVolResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32o\n\x0f\x44\x61ilyReturnsVol\x12\\\n\x15get_daily_returns_vol\x12 .raw_data.DailyReturnsVolRequest\x1a!.raw_data.DailyReturnsVolResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_DAILYRETURNSVOLREQUEST']._serialized_end=77
   _globals['_DAILYRETURNSVOLRESPONSE']._serialized_start=79
   _globals['_DAILYRETURNSVOLRESPONSE']._serialized_end=120
-  _globals['_DAILYRETURNSVOLHANDLER']._serialized_start=122
-  _globals['_DAILYRETURNSVOLHANDLER']._serialized_end=240
+  _globals['_DAILYRETURNSVOL']._serialized_start=122
+  _globals['_DAILYRETURNSVOL']._serialized_end=233
 # @@protoc_insertion_point(module_scope)

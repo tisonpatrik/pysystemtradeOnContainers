@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class DailyReturnsVolHandlerStub(object):
+class DailyReturnsVolStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,13 +35,13 @@ class DailyReturnsVolHandlerStub(object):
             channel: A grpc.Channel.
         """
         self.get_daily_returns_vol = channel.unary_unary(
-                '/raw_data.DailyReturnsVolHandler/get_daily_returns_vol',
+                '/raw_data.DailyReturnsVol/get_daily_returns_vol',
                 request_serializer=daily__returns__vol__pb2.DailyReturnsVolRequest.SerializeToString,
                 response_deserializer=daily__returns__vol__pb2.DailyReturnsVolResponse.FromString,
                 _registered_method=True)
 
 
-class DailyReturnsVolHandlerServicer(object):
+class DailyReturnsVolServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def get_daily_returns_vol(self, request, context):
@@ -51,7 +51,7 @@ class DailyReturnsVolHandlerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_DailyReturnsVolHandlerServicer_to_server(servicer, server):
+def add_DailyReturnsVolServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_daily_returns_vol': grpc.unary_unary_rpc_method_handler(
                     servicer.get_daily_returns_vol,
@@ -60,13 +60,13 @@ def add_DailyReturnsVolHandlerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'raw_data.DailyReturnsVolHandler', rpc_method_handlers)
+            'raw_data.DailyReturnsVol', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('raw_data.DailyReturnsVolHandler', rpc_method_handlers)
+    server.add_registered_method_handlers('raw_data.DailyReturnsVol', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class DailyReturnsVolHandler(object):
+class DailyReturnsVol(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -83,7 +83,7 @@ class DailyReturnsVolHandler(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/raw_data.DailyReturnsVolHandler/get_daily_returns_vol',
+            '/raw_data.DailyReturnsVol/get_daily_returns_vol',
             daily__returns__vol__pb2.DailyReturnsVolRequest.SerializeToString,
             daily__returns__vol__pb2.DailyReturnsVolResponse.FromString,
             options,

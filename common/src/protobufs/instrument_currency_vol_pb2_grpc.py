@@ -25,7 +25,7 @@ if _version_not_supported:
     )
 
 
-class InstrumentCurrencyVolHandlerStub(object):
+class InstrumentCurrencyStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,13 +35,13 @@ class InstrumentCurrencyVolHandlerStub(object):
             channel: A grpc.Channel.
         """
         self.get_instrument_currency_vol = channel.unary_unary(
-                '/raw_data.InstrumentCurrencyVolHandler/get_instrument_currency_vol',
+                '/raw_data.InstrumentCurrency/get_instrument_currency_vol',
                 request_serializer=instrument__currency__vol__pb2.InstrumentCurrencyVolRequest.SerializeToString,
                 response_deserializer=instrument__currency__vol__pb2.InstrumentCurrencyVolResponse.FromString,
                 _registered_method=True)
 
 
-class InstrumentCurrencyVolHandlerServicer(object):
+class InstrumentCurrencyServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def get_instrument_currency_vol(self, request, context):
@@ -51,7 +51,7 @@ class InstrumentCurrencyVolHandlerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_InstrumentCurrencyVolHandlerServicer_to_server(servicer, server):
+def add_InstrumentCurrencyServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'get_instrument_currency_vol': grpc.unary_unary_rpc_method_handler(
                     servicer.get_instrument_currency_vol,
@@ -60,13 +60,13 @@ def add_InstrumentCurrencyVolHandlerServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'raw_data.InstrumentCurrencyVolHandler', rpc_method_handlers)
+            'raw_data.InstrumentCurrency', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('raw_data.InstrumentCurrencyVolHandler', rpc_method_handlers)
+    server.add_registered_method_handlers('raw_data.InstrumentCurrency', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class InstrumentCurrencyVolHandler(object):
+class InstrumentCurrency(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -83,7 +83,7 @@ class InstrumentCurrencyVolHandler(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/raw_data.InstrumentCurrencyVolHandler/get_instrument_currency_vol',
+            '/raw_data.InstrumentCurrency/get_instrument_currency_vol',
             instrument__currency__vol__pb2.InstrumentCurrencyVolRequest.SerializeToString,
             instrument__currency__vol__pb2.InstrumentCurrencyVolResponse.FromString,
             options,

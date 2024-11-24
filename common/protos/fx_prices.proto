@@ -11,6 +11,6 @@ message FxPricesResponse {
     bytes series = 1;
 }
 
-service FxPricesHandler {
+service FxPrices {
     rpc get_fx_prices (FxPricesRequest) returns (FxPricesResponse);
 }

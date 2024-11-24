@@ -10,6 +10,6 @@ message VolAttenuationResponse {
     bytes series = 1;
 }
 
-service VolAttenuationHandler {
+service VolAttenuation {
     rpc get_vol_attenuation (VolAttenuationRequest) returns (VolAttenuationResponse);
 }

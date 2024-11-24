@@ -28,7 +28,6 @@ from raw_data.old_api.handlers.daily_vol_normalized_price_for_asset_handler impo
     DailyVolNormalizedPriceForAssetHandler,
 )
 from raw_data.old_api.handlers.daily_vol_normalized_returns_handler import DailyvolNormalizedReturnsHandler
-from raw_data.src.raw_data.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.old_api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.old_api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 from raw_data.old_api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
@@ -38,13 +37,6 @@ from raw_data.old_api.handlers.relative_skew_deviation_handler import RelativeSk
 from raw_data.old_api.handlers.skew_handler import SkewHandler
 from raw_data.old_api.handlers.smooth_carry_handler import SmoothCarryHandler
 from raw_data.old_api.handlers.vol_attenuation_handler import VolAttenuationHandler
-from raw_data.handlers.current_average_negskew_over_all_assets_handler import (
-    CurrentAverageNegSkewOverAllAssetsHandler,
-)
-from raw_data.handlers.historic_average_negskew_all_assets_handler import (
-    HistoricAverageNegSkewAllAssetsHandler,
-)
-from raw_data.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
 
 
 @asynccontextmanager
@@ -152,12 +144,6 @@ def get_normalized_price_for_asset_class_handler(
     )
 
 
-def get_fx_prices_handler(
-    instruments_client: InstrumentsClient = Depends(get_instruments_client), prices_client: PricesClient = Depends(get_daily_prices_client)
-) -> FxPricesHandler:
-    return FxPricesHandler(instruments_client=instruments_client, prices_client=prices_client)
-
-
 def get_annualised_roll_handler(carry_client: CarryClient = Depends(get_carry_client)) -> DailyAnnualisedRollHandler:
     return DailyAnnualisedRollHandler(carry_client=carry_client)
 
@@ -200,31 +186,6 @@ def get_negskew_over_instrument_list_handler(
     skew_handler: SkewHandler = Depends(get_skew_handler),
 ) -> NegSkewOverInstrumentListHandler:
     return NegSkewOverInstrumentListHandler(skew_handler=skew_handler)
-
-
-def get_negskew_all_instruments_handler(
-    instruments_client: InstrumentsClient = Depends(get_instruments_client),
-    negskew_over_instrument_list_handler: NegSkewOverInstrumentListHandler = Depends(get_negskew_over_instrument_list_handler),
-) -> NegSkewAllInstrumentsHandler:
-    return NegSkewAllInstrumentsHandler(
-        instruments_client=instruments_client, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
-    )
-
-
-def get_current_average_negskew_over_all_assets_handler(
-    negskew_all_instruments_handler: NegSkewAllInstrumentsHandler = Depends(get_negskew_all_instruments_handler),
-) -> CurrentAverageNegSkewOverAllAssetsHandler:
-    return CurrentAverageNegSkewOverAllAssetsHandler(negskew_all_instruments_handler=negskew_all_instruments_handler)
-
-
-def get_historic_average_negskew_all_assets_handler(
-    current_average_negskew_over_all_assets_handler: CurrentAverageNegSkewOverAllAssetsHandler = Depends(
-        get_current_average_negskew_over_all_assets_handler
-    ),
-) -> HistoricAverageNegSkewAllAssetsHandler:
-    return HistoricAverageNegSkewAllAssetsHandler(
-        current_average_negskew_over_all_assets_handler=current_average_negskew_over_all_assets_handler
-    )
 
 
 def get_current_average_negskew_over_asset_class_handler(

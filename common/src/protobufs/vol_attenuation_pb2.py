@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15vol_attenuation.proto\x12\x08raw_data\"\'\n\x15VolAttenuationRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\"(\n\x16VolAttenuationResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32q\n\x15VolAttenuationHandler\x12X\n\x13get_vol_attenuation\x12\x1f.raw_data.VolAttenuationRequest\x1a .raw_data.VolAttenuationResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15vol_attenuation.proto\x12\x08raw_data\"\'\n\x15VolAttenuationRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\"(\n\x16VolAttenuationResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32j\n\x0eVolAttenuation\x12X\n\x13get_vol_attenuation\x12\x1f.raw_data.VolAttenuationRequest\x1a .raw_data.VolAttenuationResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_VOLATTENUATIONREQUEST']._serialized_end=74
   _globals['_VOLATTENUATIONRESPONSE']._serialized_start=76
   _globals['_VOLATTENUATIONRESPONSE']._serialized_end=116
-  _globals['_VOLATTENUATIONHANDLER']._serialized_start=118
-  _globals['_VOLATTENUATIONHANDLER']._serialized_end=231
+  _globals['_VOLATTENUATION']._serialized_start=118
+  _globals['_VOLATTENUATION']._serialized_end=224
 # @@protoc_insertion_point(module_scope)

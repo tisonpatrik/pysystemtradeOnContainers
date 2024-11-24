@@ -1,6 +1,5 @@
 import asyncio
 
-from common.src.clients.dependencies import get_database_async, get_redis
 from common.src.grpc.grpc_server import GRPCServer
 from common.src.logging.logger import AppLogger
 from raw_data.service_mapping import create_service_mapping
@@ -14,10 +13,8 @@ async def main() -> None:
     port = 50051
 
     try:
-        redis = get_redis()
-        postgres = await get_database_async()
         # Initialize service mapping
-        service_mapping = create_service_mapping(postgres=postgres, redis=redis)
+        service_mapping = await create_service_mapping()
 
         # Start gRPC server
         await grpc_server.run_server(port, service_mapping)
