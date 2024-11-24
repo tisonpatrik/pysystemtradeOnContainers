@@ -10,8 +10,8 @@ from common.src.cqrs.cache_queries.daily_vol_normalized_returns_cache import (
 )
 from common.src.logging.logger import AppLogger
 from common.src.redis.redis_repository import RedisClient
+from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
-from raw_data.src.raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.services.daily_vol_normalized_returns_service import DailyVolnormalizedReturnsService
 from raw_data.validation.daily_vol_normalized_returns import DailyVolNormalizedReturns
 

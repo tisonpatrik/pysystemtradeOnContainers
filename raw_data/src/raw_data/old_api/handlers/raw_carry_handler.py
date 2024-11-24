@@ -1,8 +1,8 @@
 import pandas as pd
 
 from common.src.logging.logger import AppLogger
+from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.old_api.handlers.daily_annualised_roll_handler import DailyAnnualisedRollHandler
-from raw_data.src.raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.services.raw_carry_service import RawCarryService
 from raw_data.utils.carry import get_raw_carry
 

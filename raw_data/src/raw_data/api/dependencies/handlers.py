@@ -8,11 +8,13 @@ from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDe
 from raw_data.api.handlers.current_average_negskew_over_all_assets_handler import (
     CurrentAverageNegSkewOverAllAssetsHandler,
 )
+from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.api.handlers.daily_returns_vol_handler import DailyReturnsVolHandler
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
 from raw_data.api.handlers.historic_average_negskew_all_assets_handler import (
     HistoricAverageNegSkewAllAssetsHandler,
 )
+from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 from raw_data.api.handlers.neg_skew_all_instruments_handler import NegSkewAllInstrumentsHandler
 from raw_data.old_api.handlers.daily_percentage_returns_handler import DailyPercentageReturnsHandler
 from raw_data.old_api.handlers.daily_returns_handler import DailyReturnsHandler
@@ -86,3 +88,24 @@ def get_daily_returns_vol_handler(postgres: PostgresClient, redis: RedisClient) 
     prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
     daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
     return DailyReturnsVolHandler(prices_client=prices_client, redis=redis, daily_returns_handler=daily_returns_handler)
+
+
+def get_daily_percentage_volatility_handler(postgres: PostgresClient, redis: RedisClient) -> DailyPercentageVolatilityHandler:
+    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
+    daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
+    return DailyPercentageVolatilityHandler(
+        prices_client=prices_client,
+        redis_repository=redis,
+        daily_returns_vol_handler=daily_returns_vol_handler,
+    )
+
+
+def get_instrument_currency_vol_handler(postgres: PostgresClient, redis: RedisClient) -> InstrumentCurrencyVolHandler:
+    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
+    instruments_client = get_instruments_client(postgres=postgres)
+    daily_percentage_volatility_handler = get_daily_percentage_volatility_handler(postgres=postgres, redis=redis)
+    return InstrumentCurrencyVolHandler(
+        prices_client=prices_client,
+        instruments_client=instruments_client,
+        daily_percentage_volatility_handler=daily_percentage_volatility_handler,
+    )

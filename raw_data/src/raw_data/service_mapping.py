@@ -7,7 +7,13 @@ from common.src.protobufs.absolute_skew_deviation_pb2_grpc import (
 )
 from common.src.protobufs.daily_returns_vol_pb2_grpc import add_DailyReturnsVolServicer_to_server
 from common.src.protobufs.fx_prices_pb2_grpc import add_FxPricesServicer_to_server
-from raw_data.api.dependencies.endpoints import get_absolute_skew_deviation, get_fx_prices, get_daily_returns_vol
+from common.src.protobufs.instrument_currency_vol_pb2_grpc import add_InstrumentCurrencyVolServicer_to_server
+from raw_data.api.dependencies.endpoints import (
+    get_absolute_skew_deviation,
+    get_daily_returns_vol,
+    get_fx_prices,
+    get_instrument_currency_vol,
+)
 
 
 async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
@@ -23,10 +29,12 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     absolute_skew_deviation = get_absolute_skew_deviation(postgres, redis)
     daily_returns_vol = get_daily_returns_vol(postgres, redis)
     fx_prices = get_fx_prices(postgres, redis)
+    instrument_currency_vol = get_instrument_currency_vol(postgres, redis)
 
     # Build the service mapping
     return {
         add_AbsoluteSkewDeviationServicer_to_server: absolute_skew_deviation,
         add_FxPricesServicer_to_server: fx_prices,
         add_DailyReturnsVolServicer_to_server: daily_returns_vol,
+        add_InstrumentCurrencyVolServicer_to_server: instrument_currency_vol,
     }

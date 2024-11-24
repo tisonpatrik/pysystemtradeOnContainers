@@ -20,7 +20,7 @@ class InstrumentCurrencyVolHandler:
         self.instruments_client = instruments_client
         self.instrument_vol_service = InstrumentCurrencyVolService()
 
-    async def get_instrument_vol_for_symbol_async(self, symbol: str) -> pd.Series:
+    async def get_instrument_currency_vol_async(self, symbol: str) -> pd.Series:
         self.logger.info("Fetching instrument currency volatility for %s.", symbol)
         denom_prices = await self.prices_client.get_denom_prices_async(symbol)
         point_size = await self.instruments_client.get_point_size_async(symbol)

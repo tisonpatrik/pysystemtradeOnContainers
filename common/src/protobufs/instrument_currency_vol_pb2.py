@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1dinstrument_currency_vol.proto\x12\x08raw_data\".\n\x1cInstrumentCurrencyVolRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\"/\n\x1dInstrumentCurrencyVolResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32\x84\x01\n\x12InstrumentCurrency\x12n\n\x1bget_instrument_currency_vol\x12&.raw_data.InstrumentCurrencyVolRequest\x1a\'.raw_data.InstrumentCurrencyVolResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1dinstrument_currency_vol.proto\x12\x08raw_data\".\n\x1cInstrumentCurrencyVolRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\"/\n\x1dInstrumentCurrencyVolResponse\x12\x0e\n\x06series\x18\x01 \x01(\x0c\x32\x87\x01\n\x15InstrumentCurrencyVol\x12n\n\x1bget_instrument_currency_vol\x12&.raw_data.InstrumentCurrencyVolRequest\x1a\'.raw_data.InstrumentCurrencyVolResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,6 +35,6 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_INSTRUMENTCURRENCYVOLREQUEST']._serialized_end=89
   _globals['_INSTRUMENTCURRENCYVOLRESPONSE']._serialized_start=91
   _globals['_INSTRUMENTCURRENCYVOLRESPONSE']._serialized_end=138
-  _globals['_INSTRUMENTCURRENCY']._serialized_start=141
-  _globals['_INSTRUMENTCURRENCY']._serialized_end=273
+  _globals['_INSTRUMENTCURRENCYVOL']._serialized_start=141
+  _globals['_INSTRUMENTCURRENCYVOL']._serialized_end=276
 # @@protoc_insertion_point(module_scope)
