@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package raw_data;
+
+message DailyReturnsVolRequest {
+    string symbol = 1;
+}
+
+message DailyReturnsVolResponse {
+    bytes series = 1;
+}
+
+service DailyReturnsVolHandler {
+    rpc get_daily_returns_vol (DailyReturnsVolRequest) returns (DailyReturnsVolResponse);
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package raw_data;
+
+message VolAttenuationRequest {
+    string symbol = 1;
+}
+
+message VolAttenuationResponse {
+    bytes series = 1;
+}
+
+service VolAttenuationHandler {
+    rpc get_vol_attenuation (VolAttenuationRequest) returns (VolAttenuationResponse);
+}
