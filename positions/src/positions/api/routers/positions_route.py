@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.positions_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
-from common.src.logging.logger import AppLogger
+from common.cqrs.api_queries.positions_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
+from common.logging.logger import AppLogger
 from positions.api.dependencies.dependencies import get_positions_handler
 from positions.api.handlers.positions_handler import PositionsHandler
 

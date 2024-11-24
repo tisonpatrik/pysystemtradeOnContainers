@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from forecast.api.handlers.fixed_forecast_weights_as_dict_handler import FixedForecastWeightsAsDictHandler
 
 

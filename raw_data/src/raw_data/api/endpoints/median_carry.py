@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.median_carry_for_asset_class_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.median_carry_for_asset_class_pb2 import (
     MedianCarryRequest,
     MedianCarryResponse,
 )
-from common.src.protobufs.median_carry_for_asset_class_pb2_grpc import MedianCarryServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.median_carry_for_asset_class_pb2_grpc import MedianCarryServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.median_carry_for_asset_class_handler import MedianCarryForAssetClassHandler
 
 

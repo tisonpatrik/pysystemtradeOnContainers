@@ -1,6 +1,6 @@
-from common.src.clients.account_client import AccountClient
-from common.src.clients.rules_signals_client import RulesSignalsClient
-from common.src.logging.logger import AppLogger
+from common.clients.account_client import AccountClient
+from common.clients.rules_signals_client import RulesSignalsClient
+from common.logging.logger import AppLogger
 from forecast.constants import CEILING_COST_SR
 
 

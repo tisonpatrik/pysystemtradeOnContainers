@@ -3,8 +3,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from common.src.logging.logger import AppLogger
-from common.src.middleware.logging import AppMiddleware
+from common.logging.logger import AppLogger
+from common.middleware.logging import AppMiddleware
 from positions.api.dependencies.dependencies import app_lifespan
 from positions.api.routers.positions_route import router as position_route
 

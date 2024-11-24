@@ -1,7 +1,7 @@
-from common.src.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.database.repository import PostgresClient
-from common.src.redis.redis_repository import RedisClient
+from common.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client
+from common.clients.instruments_client import InstrumentsClient
+from common.database.repository import PostgresClient
+from common.redis.redis_repository import RedisClient
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import (

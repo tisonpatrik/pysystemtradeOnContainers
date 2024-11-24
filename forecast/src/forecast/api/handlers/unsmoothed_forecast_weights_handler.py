@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from forecast.api.handlers.raw_monthly_forecast_weights_handler import RawMonthlyForecastWeightsHandler
 
 

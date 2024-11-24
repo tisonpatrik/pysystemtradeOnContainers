@@ -1,8 +1,8 @@
 import pandas as pd
 
-from common.src.clients.forecast_client import ForecastClient
-from common.src.cqrs.api_queries.positions_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
-from common.src.logging.logger import AppLogger
+from common.clients.forecast_client import ForecastClient
+from common.cqrs.api_queries.positions_queries.get_subsystem_positions import GetSubsystemPositionForInstrument
+from common.logging.logger import AppLogger
 from positions.api.handlers.average_position_at_subsystem_level_handler import AveragePositionAtSubsystemLevelHandler
 
 

@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from common.src.clients.prices_client import PricesClient
-from common.src.cqrs.api_queries.rule_queries.get_breakout import GetBreakoutQuery
-from common.src.logging.logger import AppLogger
+from common.clients.prices_client import PricesClient
+from common.cqrs.api_queries.rule_queries.get_breakout import GetBreakoutQuery
+from common.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
 from rules.services.breakout import BreakoutService

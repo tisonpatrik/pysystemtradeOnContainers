@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from rules.constants import LOWER_CAP, UPPER_CAP
 
 

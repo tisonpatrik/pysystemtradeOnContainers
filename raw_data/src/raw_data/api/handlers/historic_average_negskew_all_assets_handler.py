@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-from common.src.utils.constants import get_bdays_inyear
+from common.logging.logger import AppLogger
+from common.utils.constants import get_bdays_inyear
 from raw_data.api.handlers.current_average_negskew_over_all_assets_handler import CurrentAverageNegSkewOverAllAssetsHandler
 
 

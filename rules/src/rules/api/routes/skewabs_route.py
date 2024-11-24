@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_skewabs import GetSkewAbsQuery
-from common.src.logging.logger import AppLogger
+from common.cqrs.api_queries.rule_queries.get_skewabs import GetSkewAbsQuery
+from common.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_skewabs_handler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
 

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from forecast.api.handlers.weighted_forecasts_without_multiplier_handler import WeightedForecastsWithoutMultiplierHandler
 
 

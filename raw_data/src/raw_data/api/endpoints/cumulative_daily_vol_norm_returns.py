@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.cumulative_daily_vol_norm_returns_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.cumulative_daily_vol_norm_returns_pb2 import (
     CumulativeDailyVolNormReturnsRequest,
     CumulativeDailyVolNormReturnsResponse,
 )
-from common.src.protobufs.cumulative_daily_vol_norm_returns_pb2_grpc import CumulativeDailyVolNormReturnsServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.cumulative_daily_vol_norm_returns_pb2_grpc import CumulativeDailyVolNormReturnsServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 
 

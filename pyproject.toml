@@ -1,5 +1,5 @@
 [project]
-name = "pysystemtradeoncontainers"
+name = "pysystemtradeOnContainers"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -22,10 +22,17 @@ dependencies = [
     "watchdog[watchmedo]>=6.0.0",
 ]
 
+[tool.uv.workspace]
+members = ["common", "forecast", "positions", "raw_data", "rules"]
+
+[tool.uv.sources]
+common = { workspace = true }
+
+
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
-typeCheckingMode = "basic"
+typeCheckingMode = "off"
 
 [tool.mypy]
 

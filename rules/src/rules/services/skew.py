@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from rules.services.momentum import MomentumService
 from rules.utils.robust_vol_calc import robust_vol_calc
 

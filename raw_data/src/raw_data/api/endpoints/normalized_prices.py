@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.normalized_prices_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.normalized_prices_pb2 import (
     NormalizedPricesRequest,
     NormalizedPricesResponse,
 )
-from common.src.protobufs.normalized_prices_pb2_grpc import NormalizedPricesServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.normalized_prices_pb2_grpc import NormalizedPricesServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.normalized_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 
 

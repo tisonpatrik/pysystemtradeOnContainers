@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from raw_data.utils.quantiles import calculate_quantile_of_points_in_data_series, multiplier_function
 
 

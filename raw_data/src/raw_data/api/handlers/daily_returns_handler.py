@@ -3,11 +3,11 @@ from asyncio import Task
 
 import pandas as pd
 
-from common.src.clients.prices_client import PricesClient
-from common.src.cqrs.cache_queries.daily_returns_cache import GetDailyReturnsCache, SetDailyReturnsCache
-from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisClient
-from common.src.validation.daily_returns import DailyReturns
+from common.clients.prices_client import PricesClient
+from common.cqrs.cache_queries.daily_returns_cache import GetDailyReturnsCache, SetDailyReturnsCache
+from common.logging.logger import AppLogger
+from common.redis.redis_repository import RedisClient
+from common.validation.daily_returns import DailyReturns
 
 
 class DailyReturnsHandler:

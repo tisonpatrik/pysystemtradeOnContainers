@@ -1,8 +1,8 @@
 import pandas as pd
 
-from common.src.clients.rules_signals_client import RulesSignalsClient
-from common.src.logging.logger import AppLogger
-from common.src.validation.rule import Rule
+from common.clients.rules_signals_client import RulesSignalsClient
+from common.logging.logger import AppLogger
+from common.validation.rule import Rule
 
 
 class ForecastGivenRuleListHandler:

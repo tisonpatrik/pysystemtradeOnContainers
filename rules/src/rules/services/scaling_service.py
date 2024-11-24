@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-from common.src.validation.scaling_type import ScalingType
+from common.logging.logger import AppLogger
+from common.validation.scaling_type import ScalingType
 
 
 class ScalingService:

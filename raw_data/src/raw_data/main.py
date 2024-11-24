@@ -1,7 +1,7 @@
 import asyncio
 
-from common.src.grpc.grpc_server import GRPCServer
-from common.src.logging.logger import AppLogger
+from common.grpc.grpc_server import GRPCServer
+from common.logging.logger import AppLogger
 from raw_data.service_mapping import create_service_mapping
 
 logger = AppLogger.get_instance().get_logger()

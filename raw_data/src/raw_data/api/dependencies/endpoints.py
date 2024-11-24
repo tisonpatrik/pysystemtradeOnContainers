@@ -1,5 +1,5 @@
-from common.src.database.repository import PostgresClient
-from common.src.redis.redis_repository import RedisClient
+from common.database.repository import PostgresClient
+from common.redis.redis_repository import RedisClient
 from raw_data.api.dependencies.handlers import (
     get_absolute_skew_deviation_handler,
     get_cumulative_daily_vol_norm_returns_handler,

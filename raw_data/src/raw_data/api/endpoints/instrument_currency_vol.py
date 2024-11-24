@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.instrument_currency_vol_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.instrument_currency_vol_pb2 import (
     InstrumentCurrencyVolRequest,
     InstrumentCurrencyVolResponse,
 )
-from common.src.protobufs.instrument_currency_vol_pb2_grpc import InstrumentCurrencyVolServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.instrument_currency_vol_pb2_grpc import InstrumentCurrencyVolServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.instrument_currency_vol_handler import InstrumentCurrencyVolHandler
 
 

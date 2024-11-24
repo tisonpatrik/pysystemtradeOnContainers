@@ -1,8 +1,8 @@
 import pandas as pd
 
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.clients.prices_client import PricesClient
-from common.src.logging.logger import AppLogger
+from common.clients.instruments_client import InstrumentsClient
+from common.clients.prices_client import PricesClient
+from common.logging.logger import AppLogger
 from raw_data.constants import DEFAULT_CURRENCY
 from raw_data.services.fx_price_service import FxService
 

@@ -2,9 +2,9 @@ import asyncio
 
 import pandas as pd
 
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.logging.logger import AppLogger
-from common.src.utils.bounded_task_group import BoundedTaskGroup
+from common.clients.instruments_client import InstrumentsClient
+from common.logging.logger import AppLogger
+from common.utils.bounded_task_group import BoundedTaskGroup
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 
 

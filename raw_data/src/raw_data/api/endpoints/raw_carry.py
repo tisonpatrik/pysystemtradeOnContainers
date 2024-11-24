@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.raw_carry_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.raw_carry_pb2 import (
     RawCarryRequest,
     RawCarryResponse,
 )
-from common.src.protobufs.raw_carry_pb2_grpc import RawCarryServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.raw_carry_pb2_grpc import RawCarryServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 
 

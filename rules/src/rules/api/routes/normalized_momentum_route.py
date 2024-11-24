@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
-from common.src.logging.logger import AppLogger
+from common.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
+from common.logging.logger import AppLogger
 from rules.api.dependencies.dependencies import get_normalized_momentum_handler
 from rules.api.handlers.normalized_momentum_handler import NormalizedMomentumHandler
 

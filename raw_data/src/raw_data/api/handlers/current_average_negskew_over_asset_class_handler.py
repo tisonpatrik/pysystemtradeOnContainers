@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.logging.logger import AppLogger
+from common.clients.instruments_client import InstrumentsClient
+from common.logging.logger import AppLogger
 from raw_data.api.handlers.negskew_over_instrument_list_handler import NegSkewOverInstrumentListHandler
 
 

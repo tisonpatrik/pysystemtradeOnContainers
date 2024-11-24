@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.logging.logger import AppLogger
+from common.clients.instruments_client import InstrumentsClient
+from common.logging.logger import AppLogger
 from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 from raw_data.api.handlers.daily_vol_normalized_price_for_asset_handler import DailyVolNormalizedPriceForAssetHandler
 

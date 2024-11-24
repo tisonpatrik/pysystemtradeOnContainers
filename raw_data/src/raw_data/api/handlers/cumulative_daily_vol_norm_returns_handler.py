@@ -3,13 +3,13 @@ from asyncio import Task
 
 import pandas as pd
 
-from common.src.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
+from common.cqrs.cache_queries.cumulative_daily_vol_norm_returns_cache import (
     GetCumulativeDailyVolNormReturnsCache,
     SetCumulativeDailyVolNormReturnsCache,
 )
-from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisClient
-from common.src.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
+from common.logging.logger import AppLogger
+from common.redis.redis_repository import RedisClient
+from common.validation.cumulative_daily_vol_norm_returns import CumulativeDailyVolNormReturns
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 

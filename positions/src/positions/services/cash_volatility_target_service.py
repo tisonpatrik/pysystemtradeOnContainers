@@ -1,5 +1,5 @@
-from common.src.logging.logger import AppLogger
-from common.src.utils.constants import get_root_bdays_inyear
+from common.logging.logger import AppLogger
+from common.utils.constants import get_root_bdays_inyear
 
 
 class CashVolTargetService:

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import ValidationError
 
-from common.src.cqrs.api_queries.forecast_queries.get_forecast_for_symbol_query import GetForecastForSymbolQuery
-from common.src.logging.logger import AppLogger
+from common.cqrs.api_queries.forecast_queries.get_forecast_for_symbol_query import GetForecastForSymbolQuery
+from common.logging.logger import AppLogger
 from forecast.api.dependencies.dependencies import get_combined_forecast_handler
 from forecast.api.handlers.combined_forecast_handler import CombineForecastHandler
 

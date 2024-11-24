@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.smooth_carry_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.smooth_carry_pb2 import (
     SmoothCarryRequest,
     SmoothCarryResponse,
 )
-from common.src.protobufs.smooth_carry_pb2_grpc import SmoothCarryServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.smooth_carry_pb2_grpc import SmoothCarryServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 
 

@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.relative_skew_deviation_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.relative_skew_deviation_pb2 import (
     RelativeSkewDeviationRequest,
     RelativeSkewDeviationResponse,
 )
-from common.src.protobufs.relative_skew_deviation_pb2_grpc import RelativeSkewDeviationServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.relative_skew_deviation_pb2_grpc import RelativeSkewDeviationServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 
 

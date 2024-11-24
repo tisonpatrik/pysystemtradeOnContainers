@@ -3,11 +3,11 @@ from asyncio import Task
 
 import pandas as pd
 
-from common.src.clients.prices_client import PricesClient
-from common.src.clients.raw_data_client import RawDataClient
-from common.src.cqrs.cache_queries.momentum_cache import GetMomentumCache, SetMomentumCache
-from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisClient
+from common.clients.prices_client import PricesClient
+from common.clients.raw_data_client import RawDataClient
+from common.cqrs.cache_queries.momentum_cache import GetMomentumCache, SetMomentumCache
+from common.logging.logger import AppLogger
+from common.redis.redis_repository import RedisClient
 from rules.services.momentum import MomentumService
 from rules.validation.ewmac_signal import EwmacSignal
 

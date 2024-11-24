@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.validation.scaling_type import ScalingType
+from common.validation.scaling_type import ScalingType
 from rules.services.capping_service import CappingService
 from rules.services.scaling_service import ScalingService
 

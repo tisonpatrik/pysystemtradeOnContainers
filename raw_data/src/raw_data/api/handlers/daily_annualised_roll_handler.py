@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.clients.carry_client import CarryClient
-from common.src.logging.logger import AppLogger
+from common.clients.carry_client import CarryClient
+from common.logging.logger import AppLogger
 from raw_data.services.raw_carry_service import RawCarryService
 from raw_data.utils.carry import raw_futures_roll
 

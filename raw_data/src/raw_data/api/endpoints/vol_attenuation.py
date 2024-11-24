@@ -1,12 +1,12 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.vol_attenuation_pb2 import (
+from common.logging.logger import AppLogger
+from common.protobufs.vol_attenuation_pb2 import (
     VolAttenuationRequest,
     VolAttenuationResponse,
 )
-from common.src.protobufs.vol_attenuation_pb2_grpc import VolAttenuationServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.protobufs.vol_attenuation_pb2_grpc import VolAttenuationServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 

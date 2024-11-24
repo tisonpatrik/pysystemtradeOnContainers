@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from common.src.cqrs.api_queries.rule_queries.get_accel import GetAccelQuery
-from common.src.logging.logger import AppLogger
+from common.cqrs.api_queries.rule_queries.get_accel import GetAccelQuery
+from common.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.momentum_handler import MomentumHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler

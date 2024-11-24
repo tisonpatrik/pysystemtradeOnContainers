@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from positions.api.handlers.instrument_value_vol_handler import InstrumentValueVolHandler
 from positions.services.cash_volatility_target_service import CashVolTargetService
 

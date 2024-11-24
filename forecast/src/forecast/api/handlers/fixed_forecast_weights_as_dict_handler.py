@@ -1,4 +1,4 @@
-from common.src.logging.logger import AppLogger
+from common.logging.logger import AppLogger
 from forecast.api.handlers.expensive_trading_rules_post_processing_handler import ExpensiveTradingRulesPostProcessingHandler
 
 

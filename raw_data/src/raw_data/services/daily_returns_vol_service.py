@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.logging.logger import AppLogger
-from common.src.utils.volatility import mixed_vol_calc
+from common.logging.logger import AppLogger
+from common.utils.volatility import mixed_vol_calc
 
 
 class DailyReturnsVolService:

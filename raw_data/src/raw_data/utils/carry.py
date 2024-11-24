@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from common.src.utils.constants import get_root_bdays_inyear
-from common.src.utils.pd_utils import uniquets_series
+from common.utils.constants import get_root_bdays_inyear
+from common.utils.pd_utils import uniquets_series
 
 
 def get_raw_carry(daily_ann_roll: pd.Series, daily_returns_vol: pd.Series) -> pd.Series:

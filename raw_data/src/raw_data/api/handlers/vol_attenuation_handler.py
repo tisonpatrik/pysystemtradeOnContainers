@@ -3,10 +3,10 @@ from asyncio import Task
 
 import pandas as pd
 
-from common.src.cqrs.cache_queries.vol_attenuation_cache import GetVolAttenuationCache, SetVolAttenuationCache
-from common.src.logging.logger import AppLogger
-from common.src.redis.redis_repository import RedisClient
-from common.src.validation.vol_attenuation import VolAttenuation
+from common.cqrs.cache_queries.vol_attenuation_cache import GetVolAttenuationCache, SetVolAttenuationCache
+from common.logging.logger import AppLogger
+from common.redis.redis_repository import RedisClient
+from common.validation.vol_attenuation import VolAttenuation
 from raw_data.api.handlers.daily_percentage_volatility_handler import DailyPercentageVolatilityHandler
 from raw_data.services.vol_attenuation_service import VolAttenuationService
 

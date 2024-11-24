@@ -4,7 +4,7 @@ import pandas as pd
 from pandera import Field
 from pandera.dtypes import Float
 
-from common.src.validation.base_data_model import BaseDataFrameModel
+from common.validation.base_data_model import BaseDataFrameModel
 
 T = TypeVar("T", bound="DailyVolNormalizedReturns")
 

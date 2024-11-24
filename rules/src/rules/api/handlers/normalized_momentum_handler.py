@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from common.src.clients.raw_data_client import RawDataClient
-from common.src.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
-from common.src.logging.logger import AppLogger
+from common.clients.raw_data_client import RawDataClient
+from common.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
+from common.logging.logger import AppLogger
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.normalization_handler import NormalizationHandler
 from rules.services.ewmac_calc_vol_service import EwmacCalsVolService

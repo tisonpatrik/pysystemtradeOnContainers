@@ -2,10 +2,10 @@ import asyncio
 
 import pandas as pd
 
-from common.src.clients.instruments_client import InstrumentsClient
-from common.src.logging.logger import AppLogger
-from common.src.utils.bounded_task_group import BoundedTaskGroup
-from common.src.validation.instrument import Instrument
+from common.clients.instruments_client import InstrumentsClient
+from common.logging.logger import AppLogger
+from common.utils.bounded_task_group import BoundedTaskGroup
+from common.validation.instrument import Instrument
 from raw_data.api.handlers.daily_vol_normalized_returns_handler import DailyVolNormalizedReturnsHandler
 
 

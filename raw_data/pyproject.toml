@@ -1,5 +1,5 @@
 [project]
-name = "raw_data_service"
+name = "raw_data"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

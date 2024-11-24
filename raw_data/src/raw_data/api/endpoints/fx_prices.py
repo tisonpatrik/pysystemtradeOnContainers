@@ -1,9 +1,9 @@
 from grpc import ServicerContext, StatusCode
 
-from common.src.logging.logger import AppLogger
-from common.src.protobufs.fx_prices_pb2 import FxPricesRequest, FxPricesResponse
-from common.src.protobufs.fx_prices_pb2_grpc import FxPricesServicer
-from common.src.utils.convertors import convert_pandas_to_bytes
+from common.logging.logger import AppLogger
+from common.protobufs.fx_prices_pb2 import FxPricesRequest, FxPricesResponse
+from common.protobufs.fx_prices_pb2_grpc import FxPricesServicer
+from common.utils.convertors import convert_pandas_to_bytes
 from raw_data.api.handlers.fx_prices_handler import FxPricesHandler
 
 

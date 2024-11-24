@@ -1,7 +1,7 @@
 import pandas as pd
 
-from common.src.clients.prices_client import PricesClient
-from common.src.logging.logger import AppLogger
+from common.clients.prices_client import PricesClient
+from common.logging.logger import AppLogger
 from raw_data.api.handlers.daily_returns_handler import DailyReturnsHandler
 
 
