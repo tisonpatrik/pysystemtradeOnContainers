@@ -29,7 +29,6 @@ exclude = [
 line-length = 140
 indent-width = 4
 target-version = "py312"
-fixable = ["ALL"]
 
 [lint]
 select = ["E4", "E7", "E9", "F"]

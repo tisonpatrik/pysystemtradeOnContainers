@@ -1,7 +1,7 @@
 from typing import TypeVar
 
 import pandas as pd
-import pyarrow as pa
+import pyarrow as pa  # type: ignore
 from pydantic import BaseModel
 
 T = TypeVar("T", bound=BaseModel)

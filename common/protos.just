@@ -1,8 +1,8 @@
 set quiet := true
 
-PROTO_SRC_DIR := source_directory() + "/protos"
+PROTO_SRC_DIR := source_directory() + "/src/protos"
 
-PROTO_OUT_DIR := source_directory() + '/src/protobufs/'
+PROTO_OUT_DIR := source_directory() + '/src/common/protobufs/'
 PROTOC := "python -m grpc_tools.protoc"
 PROTOC_GEN_MYPY := "python -m mypy_protobuf.main"
 

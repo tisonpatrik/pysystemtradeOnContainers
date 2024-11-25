@@ -19,15 +19,15 @@ dependencies = [
     "redis>=5.0.8",
     "rich>=13.8.1",
     "pyarrow>=18.0.0",
-    "watchdog[watchmedo]>=6.0.0",
 ]
+
+[tool.mypy]
+exclude = "src/common/protobufs"
 
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
 typeCheckingMode = "off"
-
-[tool.mypy]
 
 
 [tool.pydantic-mypy]

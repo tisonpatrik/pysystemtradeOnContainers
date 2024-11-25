@@ -62,9 +62,7 @@ class PostgresClient:
             raise InsertError(f"Unexpected error: {err}") from err
 
     async def insert_item_async(self, statement: InsertStatement) -> None:
-        query = statement.get_insert_query()
-        values = statement.get_values()
-
+        query, values = statement.get_insert_query()
         try:
             async with self.pool.acquire() as connection, connection.transaction():
                 await connection.execute(query, *values)

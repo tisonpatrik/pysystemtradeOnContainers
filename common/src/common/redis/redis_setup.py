@@ -1,7 +1,7 @@
 import redis.asyncio as redis
 from redis.asyncio import ConnectionPool
 
-from common.common.app_settings import get_settings
+from common.app_settings import get_settings
 from common.logging.logger import AppLogger
 
 logger = AppLogger.get_instance().get_logger()

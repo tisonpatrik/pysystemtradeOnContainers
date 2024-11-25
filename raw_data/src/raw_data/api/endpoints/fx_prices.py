@@ -19,9 +19,9 @@ class FxPrices(FxPricesServicer):
         self.logger.info("Fetching FX prices for symbol %s with base currency %s", request.symbol, request.base_currency)
 
         if not request.symbol or not request.base_currency:
-            self.logger.error("Invalid request: Symbol or base currency is empty.")
+            self.logger.error("Symbol: %s or base currency: %s cannot be empty.",request.symbol,request.base_currency)
             context.abort(
-                StatusCode.INVALID_ARGUMENT, "Symbol: %s or base currency: % cannot be empty.", request.symbol, request.base_currency
+                code=StatusCode.INVALID_ARGUMENT,details= "Invalid request: Symbol or base currency is empty."
             )
             return FxPricesResponse()
         try:
