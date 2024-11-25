@@ -16,16 +16,16 @@ class RestClient:
         try:
             response = await self.client.get(request.url_string, params=request.params, timeout=60.0)
             response.raise_for_status()
-            self.logger.info("GET request successful to %s", request.url_string)
+            self.logger.info('GET request successful to %s', request.url_string)
             return response.json()
         except httpx.HTTPStatusError as exc:
-            self.logger.exception("HTTP status error occurred: %s - %s", exc.response.status_code, exc.response.text)
+            self.logger.exception('HTTP status error occurred: %s - %s', exc.response.status_code, exc.response.text)
             raise HttpStatusError(exc.response.status_code, exc.response.text) from exc
         except httpx.RequestError as exc:
-            self.logger.exception("An error occurred while requesting %r", exc.request.url)
+            self.logger.exception('An error occurred while requesting %r', exc.request.url)
             raise HttpRequestError(str(exc.request.url), str(exc)) from exc
         except Exception as exc:
-            self.logger.exception("Failed to complete GET request to %s", request.url_string)
+            self.logger.exception('Failed to complete GET request to %s', request.url_string)
             raise HttpUnexpectedError(str(exc)) from exc
 
     async def post_data_async(self, request: PostRequest) -> dict:
@@ -36,14 +36,14 @@ class RestClient:
                 timeout=20.0,  # Přidání timeout pro konzistenci
             )
             response.raise_for_status()
-            self.logger.info("POST request successful to %s", request.url_string)
+            self.logger.info('POST request successful to %s', request.url_string)
             return response.json()
         except httpx.HTTPStatusError as exc:
-            self.logger.exception("HTTP status error occurred: %s - %s", exc.response.status_code, exc.response.text)
+            self.logger.exception('HTTP status error occurred: %s - %s', exc.response.status_code, exc.response.text)
             raise HttpStatusError(exc.response.status_code, exc.response.text) from exc
         except httpx.RequestError as exc:
-            self.logger.exception("An error occurred while requesting %r", exc.request.url)
+            self.logger.exception('An error occurred while requesting %r', exc.request.url)
             raise HttpRequestError(str(exc.request.url), str(exc)) from exc
         except Exception as exc:
-            self.logger.exception("Failed to complete POST request to %s", request.url_string)
+            self.logger.exception('Failed to complete POST request to %s', request.url_string)
             raise HttpUnexpectedError(str(exc)) from exc

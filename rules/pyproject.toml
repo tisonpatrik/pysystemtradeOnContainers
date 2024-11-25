@@ -18,15 +18,37 @@ dependencies = [
     "rich>=13.8.1",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "off"
 
-[tool.uv.sources]
-commom = { workspace = true }
-common = { path = "../common" }
+[tool.mypy]
+exclude = "src/common/protobufs"
+check_untyped_defs = true     # Kontroluje tělo funkcí bez anotací
+follow_imports= "normal"
+warn_unused_configs = true    # Upozorní na nepoužité části konfigurace
+warn_redundant_casts = true   # Upozorní na zbytečné přetypování
+warn_unused_ignores = true    # Upozorní na nepoužité ignorování
+warn_no_return = true         # Upozorní na chybějící návratové hodnoty
+warn_return_any = false        # Upozorní na chybějící návratový typ
+warn_unreachable= true        # Upozorní na nedosažitelný kód
 
-[tool.uv.workspace]
-members = [
-  "commom"
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[dependency-groups]
+dev = [
+    "mypy>=1.13.0",
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.3",
+    "ruff>=0.7.4",
+    "pytest-xdist>=3.6.1",
+    "pytest-asyncio>=0.24.0",
+    "mypy-protobuf>=3.6.0",
+    "types-protobuf>=5.28.3.20241030",
+    "grpc-stubs>=1.53.0.5",
+    "asyncpg-stubs>=0.29.1",
 ]

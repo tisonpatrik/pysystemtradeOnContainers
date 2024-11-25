@@ -2,6 +2,7 @@ from common.clients.dependencies import get_carry_client, get_daily_prices_clien
 from common.clients.instruments_client import InstrumentsClient
 from common.database.repository import PostgresClient
 from common.redis.redis_repository import RedisClient
+
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
 from raw_data.api.handlers.average_neg_skew_in_asset_class_for_instrument_handler import (
@@ -98,9 +99,8 @@ def get_fx_prices_handler(postgres: PostgresClient, redis: RedisClient) -> FxPri
 
 
 def get_daily_returns_vol_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsVolHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
     daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
-    return DailyReturnsVolHandler(prices_client=prices_client, redis=redis, daily_returns_handler=daily_returns_handler)
+    return DailyReturnsVolHandler(redis=redis, daily_returns_handler=daily_returns_handler)
 
 
 def get_daily_percentage_volatility_handler(postgres: PostgresClient, redis: RedisClient) -> DailyPercentageVolatilityHandler:
@@ -163,12 +163,10 @@ def get_relative_skew_deviation_handler(postgres: PostgresClient, redis: RedisCl
 
 
 def get_daily_vol_normalized_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyVolNormalizedReturnsHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
     daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
     daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
 
     return DailyVolNormalizedReturnsHandler(
-        prices_client=prices_client,
         daily_returns_vol_handler=daily_returns_vol_handler,
         redis=redis,
         daily_returns_handler=daily_returns_handler,
