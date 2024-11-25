@@ -16,53 +16,53 @@ services:
       - ./common:/app/common
     command: watchmedo auto-restart --recursive --pattern="*.py" --directory="/app/" -- python -m raw_data.main
 
-  rules:
-    build:
-      context: .
-      dockerfile: rules/Dockerfile
-    hostname: rules
-    depends_on:
-      db_postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "8100:8000"
-    volumes:
-      - ./rules/src/rules:/app/rules
-      - ./common:/app/common
+  # rules:
+  #   build:
+  #     context: .
+  #     dockerfile: rules/Dockerfile
+  #   hostname: rules
+  #   depends_on:
+  #     db_postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8100:8000"
+  #   volumes:
+  #     - ./rules/src/rules:/app/rules
+  #     - ./common:/app/common
 
-  positions:
-    build:
-      context: .
-      dockerfile: positions/Dockerfile
-    hostname: positions
-    depends_on:
-      db_postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "8200:8000"
-    volumes:
-      - ./positions/src/positions:/app/positions
-      - ./common:/app/common
+  # positions:
+  #   build:
+  #     context: .
+  #     dockerfile: positions/Dockerfile
+  #   hostname: positions
+  #   depends_on:
+  #     db_postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8200:8000"
+  #   volumes:
+  #     - ./positions/src/positions:/app/positions
+  #     - ./common:/app/common
 
-  forecast:
-    build:
-      context: .
-      dockerfile: forecast/Dockerfile
-    hostname: forecast
-    depends_on:
-      db_postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "8300:8000"
-    volumes:
-      - ./forecast/src/forecast:/app/forecast
-      - ./common:/app/common
+  # forecast:
+  #   build:
+  #     context: .
+  #     dockerfile: forecast/Dockerfile
+  #   hostname: forecast
+  #   depends_on:
+  #     db_postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   ports:
+  #     - "8300:8000"
+  #   volumes:
+  #     - ./forecast/src/forecast:/app/forecast
+  #     - ./common:/app/common
 
   db_postgres:
     image: timescale/timescaledb:latest-pg16

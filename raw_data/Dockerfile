@@ -20,17 +20,18 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 FROM uv AS dev
 WORKDIR /app
-COPY raw_data/pyproject.toml raw_data/uv.lock ./
+COPY raw_data/pyproject.toml raw_data/uv.lock raw_data/README.md ./
+
 RUN uv sync --frozen
 
 FROM uv AS prod
 WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1
-COPY raw_data/pyproject.toml raw_data/uv.lock ./
+COPY raw_data/pyproject.toml raw_data/uv.lock raw_data/README.md ./
 
+COPY common/ /common/
 RUN uv sync --no-dev
 
-COPY common/ ./common/
 COPY raw_data/src/raw_data/ /app/raw_data
 COPY .env ./
 

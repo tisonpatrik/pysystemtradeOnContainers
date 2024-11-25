@@ -1,7 +1,7 @@
 import asyncio
 
 import asyncpg
-from asyncpg import Pool, Record
+from asyncpg import Pool
 from asyncpg.exceptions import CannotConnectNowError
 
 from common.app_settings import get_settings
@@ -11,7 +11,7 @@ from common.logging.logger import AppLogger
 logger = AppLogger.get_instance().get_logger()
 
 
-async def setup_async_database(retries: int = 5, delay: int = 2) -> Pool[Record]:
+async def setup_async_database(retries: int = 5, delay: int = 2) -> Pool:
     settings = get_settings()
     for attempt in range(retries):
         try:

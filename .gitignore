@@ -135,3 +135,8 @@ data
 main
 *.exe
 *.out
+
+
+common/uv.lock
+raw_data/uv.lock
+raw_data/raw_data.code-workspace
