@@ -1,7 +1,5 @@
-from common.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client
-from common.clients.instruments_client import InstrumentsClient
+from common.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client, get_redis
 from common.database.repository import PostgresClient
-from common.redis.redis_repository import RedisClient
 
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
 from raw_data.api.handlers.aggregated_returns_for_asset_class_handler import AggregatedReturnsForAssetClassHandler
@@ -36,199 +34,159 @@ from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 from raw_data.api.handlers.vol_attenuation_handler import VolAttenuationHandler
 
 
-def get_daily_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
-    return DailyReturnsHandler(prices_client=prices_client, redis=redis)
+class HandlerFactory:
+    def __init__(self, postgres: PostgresClient):
+        self.redis = get_redis()
+        self.postgres = postgres
+        self.prices_client = get_daily_prices_client(postgres=self.postgres, redis=self.redis)
+        self.instruments_client = get_instruments_client(postgres=self.postgres)
+        self.instrument_repository = get_instruments_client(postgres=self.postgres)
+        self.carry_client = get_carry_client(postgres=self.postgres)
 
+    def get_daily_returns_handler(self) -> DailyReturnsHandler:
+        return DailyReturnsHandler(prices_client=self.prices_client, redis=self.redis)
 
-def get_daily_percentage_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyPercentageReturnsHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
-    daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
-    return DailyPercentageReturnsHandler(prices_client=prices_client, daily_returns_handler=daily_returns_handler)
+    def get_daily_percentage_returns_handler(self) -> DailyPercentageReturnsHandler:
+        daily_returns_handler = self.get_daily_returns_handler()
+        return DailyPercentageReturnsHandler(prices_client=self.prices_client, daily_returns_handler=daily_returns_handler)
 
+    def get_skew_handler(self) -> SkewHandler:
+        daily_percentage_returns_handler = self.get_daily_percentage_returns_handler()
+        return SkewHandler(daily_percentage_returns_handler=daily_percentage_returns_handler, redis=self.redis)
 
-def get_skew_handler(postgres: PostgresClient, redis: RedisClient) -> SkewHandler:
-    daily_percentage_returns_handler = get_daily_percentage_returns_handler(postgres=postgres, redis=redis)
-    return SkewHandler(
-        daily_percentage_returns_handler=daily_percentage_returns_handler,
-        redis=redis,
-    )
+    def get_negskew_over_instrument_list_handler(self) -> NegSkewOverInstrumentListHandler:
+        skew_handler = self.get_skew_handler()
+        return NegSkewOverInstrumentListHandler(skew_handler=skew_handler)
 
+    def get_negskew_all_instruments_handler(self) -> NegSkewAllInstrumentsHandler:
+        negskew_over_instrument_list_handler = self.get_negskew_over_instrument_list_handler()
+        return NegSkewAllInstrumentsHandler(
+            instruments_client=self.instruments_client,
+            negskew_over_instrument_list_handler=negskew_over_instrument_list_handler,
+        )
 
-def get_negskew_over_instrument_list_handler(postgres: PostgresClient, redis: RedisClient) -> NegSkewOverInstrumentListHandler:
-    skew_handler = get_skew_handler(postgres=postgres, redis=redis)
-    return NegSkewOverInstrumentListHandler(skew_handler=skew_handler)
+    def get_current_average_negskew_over_all_assets_handler(self) -> CurrentAverageNegSkewOverAllAssetsHandler:
+        negskew_all_instruments_handler = self.get_negskew_all_instruments_handler()
+        return CurrentAverageNegSkewOverAllAssetsHandler(negskew_all_instruments_handler=negskew_all_instruments_handler)
 
+    def get_historic_average_negskew_all_assets_handler(self) -> HistoricAverageNegSkewAllAssetsHandler:
+        current_average_negskew_over_all_assets_handler = self.get_current_average_negskew_over_all_assets_handler()
+        return HistoricAverageNegSkewAllAssetsHandler(
+            current_average_negskew_over_all_assets_handler=current_average_negskew_over_all_assets_handler
+        )
 
-def get_negskew_all_instruments_handler(postgres: PostgresClient, redis: RedisClient) -> NegSkewAllInstrumentsHandler:
-    instruments_client = get_instruments_client(postgres=postgres)
-    negskew_over_instrument_list_handler = get_negskew_over_instrument_list_handler(postgres=postgres, redis=redis)
-    return NegSkewAllInstrumentsHandler(
-        instruments_client=instruments_client,
-        negskew_over_instrument_list_handler=negskew_over_instrument_list_handler,
-    )
+    def get_absolute_skew_deviation_handler(self) -> AbsoluteSkewDeviationHandler:
+        historic_negskew_value_all_assets_handler = self.get_historic_average_negskew_all_assets_handler()
+        skew_handler = self.get_skew_handler()
+        return AbsoluteSkewDeviationHandler(
+            historic_negskew_value_all_assets_handler=historic_negskew_value_all_assets_handler,
+            skew_handler=skew_handler,
+        )
 
+    def get_fx_prices_handler(self) -> FxPricesHandler:
+        instruments_client = get_instruments_client(postgres=self.postgres)
+        return FxPricesHandler(instruments_client=instruments_client, prices_client=self.prices_client)
 
-def get_current_average_negskew_over_all_assets_handler(
-    postgres: PostgresClient, redis: RedisClient
-) -> CurrentAverageNegSkewOverAllAssetsHandler:
-    negskew_all_instruments_handler = get_negskew_all_instruments_handler(postgres=postgres, redis=redis)
-    return CurrentAverageNegSkewOverAllAssetsHandler(negskew_all_instruments_handler=negskew_all_instruments_handler)
+    def get_daily_returns_vol_handler(self) -> DailyReturnsVolHandler:
+        daily_returns_handler = self.get_daily_returns_handler()
+        return DailyReturnsVolHandler(redis=self.redis, daily_returns_handler=daily_returns_handler)
 
+    def get_daily_percentage_volatility_handler(self) -> DailyPercentageVolatilityHandler:
+        daily_returns_vol_handler = self.get_daily_returns_vol_handler()
+        return DailyPercentageVolatilityHandler(
+            prices_client=self.prices_client,
+            redis=self.redis,
+            daily_returns_vol_handler=daily_returns_vol_handler,
+        )
 
-def get_historic_average_negskew_all_assets_handler(postgres: PostgresClient, redis: RedisClient) -> HistoricAverageNegSkewAllAssetsHandler:
-    current_average_negskew_over_all_assets_handler = get_current_average_negskew_over_all_assets_handler(postgres=postgres, redis=redis)
-    return HistoricAverageNegSkewAllAssetsHandler(
-        current_average_negskew_over_all_assets_handler=current_average_negskew_over_all_assets_handler
-    )
+    def get_instrument_currency_vol_handler(self) -> InstrumentCurrencyVolHandler:
+        daily_percentage_volatility_handler = self.get_daily_percentage_volatility_handler()
+        return InstrumentCurrencyVolHandler(
+            prices_client=self.prices_client,
+            instruments_client=self.instruments_client,
+            daily_percentage_volatility_handler=daily_percentage_volatility_handler,
+        )
 
+    def get_vol_attenuation_handler(self) -> VolAttenuationHandler:
+        daily_percentage_volatility_handler = self.get_daily_percentage_volatility_handler()
+        return VolAttenuationHandler(daily_percentage_volatility_handler=daily_percentage_volatility_handler, redis=self.redis)
 
-def get_absolute_skew_deviation_handler(postgres: PostgresClient, redis: RedisClient) -> AbsoluteSkewDeviationHandler:
-    historic_negskew_value_all_assets_handler = get_historic_average_negskew_all_assets_handler(postgres=postgres, redis=redis)
-    skew_handler = get_skew_handler(postgres=postgres, redis=redis)
-    return AbsoluteSkewDeviationHandler(
-        historic_negskew_value_all_assets_handler=historic_negskew_value_all_assets_handler,
-        skew_handler=skew_handler,
-    )
+    def get_current_average_negskew_over_asset_class_handler(self) -> CurrentAverageNegSkewOverAssetClassHandler:
+        negskew_over_instrument_list_handler = self.get_negskew_over_instrument_list_handler()
+        return CurrentAverageNegSkewOverAssetClassHandler(
+            instruments_client=self.instruments_client, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
+        )
 
+    def get_average_neg_skew_in_asset_class_for_instrument_handler(self) -> AverageNegSkewInAssetClassForInstrumentHandler:
+        current_average_negskew_over_asset_class_handler = self.get_current_average_negskew_over_asset_class_handler()
+        return AverageNegSkewInAssetClassForInstrumentHandler(
+            instruments_client=self.instruments_client,
+            current_average_negskew_over_asset_class_handler=current_average_negskew_over_asset_class_handler,
+        )
 
-def get_fx_prices_handler(postgres: PostgresClient, redis: RedisClient) -> FxPricesHandler:
-    instruments_client = get_instruments_client(postgres=postgres)
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
-    return FxPricesHandler(instruments_client=instruments_client, prices_client=prices_client)
+    def get_relative_skew_deviation_handler(self) -> RelativeSkewDeviationHandler:
+        average_neg_skew_in_asset_class_for_instrument_handler = self.get_average_neg_skew_in_asset_class_for_instrument_handler()
+        skew_handler = self.get_skew_handler()
+        return RelativeSkewDeviationHandler(
+            average_neg_skew_in_asset_class_for_instrument_handler=average_neg_skew_in_asset_class_for_instrument_handler,
+            skew_handler=skew_handler,
+        )
 
+    def get_daily_vol_normalized_returns_handler(self) -> DailyVolNormalizedReturnsHandler:
+        daily_returns_vol_handler = self.get_daily_returns_vol_handler()
+        daily_returns_handler = self.get_daily_returns_handler()
 
-def get_daily_returns_vol_handler(postgres: PostgresClient, redis: RedisClient) -> DailyReturnsVolHandler:
-    daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
-    return DailyReturnsVolHandler(redis=redis, daily_returns_handler=daily_returns_handler)
+        return DailyVolNormalizedReturnsHandler(
+            daily_returns_vol_handler=daily_returns_vol_handler,
+            redis=self.redis,
+            daily_returns_handler=daily_returns_handler,
+        )
 
+    def get_cumulative_daily_vol_norm_returns_handler(self) -> CumulativeDailyVolNormReturnsHandler:
+        daily_vol_normalized_returns_handler = self.get_daily_vol_normalized_returns_handler()
+        return CumulativeDailyVolNormReturnsHandler(
+            daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler, redis=self.redis
+        )
 
-def get_daily_percentage_volatility_handler(postgres: PostgresClient, redis: RedisClient) -> DailyPercentageVolatilityHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
-    daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
-    return DailyPercentageVolatilityHandler(
-        prices_client=prices_client,
-        redis_repository=redis,
-        daily_returns_vol_handler=daily_returns_vol_handler,
-    )
+    def get_daily_annualised_roll_handler(self) -> DailyAnnualisedRollHandler:
+        return DailyAnnualisedRollHandler(carry_client=self.carry_client)
 
+    def get_raw_carry_handler(self) -> RawCarryHandler:
+        daily_annualised_roll_handler = self.get_daily_annualised_roll_handler()
+        daily_returns_vol_handler = self.get_daily_returns_vol_handler()
+        return RawCarryHandler(
+            redis=self.redis,
+            daily_annualised_roll_handler=daily_annualised_roll_handler,
+            daily_returns_vol_handler=daily_returns_vol_handler,
+        )
 
-def get_instrument_currency_vol_handler(postgres: PostgresClient, redis: RedisClient) -> InstrumentCurrencyVolHandler:
-    prices_client = get_daily_prices_client(postgres=postgres, redis=redis)
-    instruments_client = get_instruments_client(postgres=postgres)
-    daily_percentage_volatility_handler = get_daily_percentage_volatility_handler(postgres=postgres, redis=redis)
-    return InstrumentCurrencyVolHandler(
-        prices_client=prices_client,
-        instruments_client=instruments_client,
-        daily_percentage_volatility_handler=daily_percentage_volatility_handler,
-    )
+    def get_median_carry_for_asset_class_handler(self) -> MedianCarryForAssetClassHandler:
+        raw_carry_handler = self.get_raw_carry_handler()
+        return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=self.instrument_repository)
 
+    def get_smooth_carry_handler(self) -> SmoothCarryHandler:
+        raw_carry_handler = self.get_raw_carry_handler()
+        return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)
 
-def get_vol_attenuation_handler(postgres: PostgresClient, redis: RedisClient) -> VolAttenuationHandler:
-    daily_percentage_volatility_handler = get_daily_percentage_volatility_handler(postgres=postgres, redis=redis)
-    return VolAttenuationHandler(daily_percentage_volatility_handler=daily_percentage_volatility_handler, redis=redis)
+    def get_aggregated_returns_for_asset_handler(self) -> AggregatedReturnsForAssetClassHandler:
+        daily_vol_normalized_returns_handler = self.get_daily_vol_normalized_returns_handler()
+        return AggregatedReturnsForAssetClassHandler(
+            instruments_client=self.instruments_client, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
+        )
 
+    def get_daily_vol_normalized_price_for_asset_handler(self) -> DailyVolNormalizedPriceForAssetHandler:
+        aggregated_returns_for_asset_handler = self.get_aggregated_returns_for_asset_handler()
+        return DailyVolNormalizedPriceForAssetHandler(aggregated_returns_for_asset_handler=aggregated_returns_for_asset_handler)
 
-def get_current_average_negskew_over_asset_class_handler(
-    postgres: PostgresClient, redis: RedisClient
-) -> CurrentAverageNegSkewOverAssetClassHandler:
-    instruments_client = get_instruments_client(postgres=postgres)
-    negskew_over_instrument_list_handler = get_negskew_over_instrument_list_handler(postgres=postgres, redis=redis)
-    return CurrentAverageNegSkewOverAssetClassHandler(
-        instruments_client=instruments_client, negskew_over_instrument_list_handler=negskew_over_instrument_list_handler
-    )
-
-
-def get_average_neg_skew_in_asset_class_for_instrument_handler(
-    postgres: PostgresClient,
-    redis: RedisClient,
-) -> AverageNegSkewInAssetClassForInstrumentHandler:
-    instruments_client = get_instruments_client(postgres=postgres)
-    current_average_negskew_over_asset_class_handler = get_current_average_negskew_over_asset_class_handler(postgres=postgres, redis=redis)
-    return AverageNegSkewInAssetClassForInstrumentHandler(
-        instruments_client=instruments_client,
-        current_average_negskew_over_asset_class_handler=current_average_negskew_over_asset_class_handler,
-    )
-
-
-def get_relative_skew_deviation_handler(postgres: PostgresClient, redis: RedisClient) -> RelativeSkewDeviationHandler:
-    average_neg_skew_in_asset_class_for_instrument_handler = get_average_neg_skew_in_asset_class_for_instrument_handler(
-        postgres=postgres, redis=redis
-    )
-    skew_handler = get_skew_handler(postgres=postgres, redis=redis)
-    return RelativeSkewDeviationHandler(
-        average_neg_skew_in_asset_class_for_instrument_handler=average_neg_skew_in_asset_class_for_instrument_handler,
-        skew_handler=skew_handler,
-    )
-
-
-def get_daily_vol_normalized_returns_handler(postgres: PostgresClient, redis: RedisClient) -> DailyVolNormalizedReturnsHandler:
-    daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
-    daily_returns_handler = get_daily_returns_handler(postgres=postgres, redis=redis)
-
-    return DailyVolNormalizedReturnsHandler(
-        daily_returns_vol_handler=daily_returns_vol_handler,
-        redis=redis,
-        daily_returns_handler=daily_returns_handler,
-    )
-
-
-def get_cumulative_daily_vol_norm_returns_handler(postgres: PostgresClient, redis: RedisClient) -> CumulativeDailyVolNormReturnsHandler:
-    daily_vol_normalized_returns_handler = get_daily_vol_normalized_returns_handler(postgres=postgres, redis=redis)
-    return CumulativeDailyVolNormReturnsHandler(daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler, redis=redis)
-
-
-def get_daily_annualised_roll_handler(postgres: PostgresClient) -> DailyAnnualisedRollHandler:
-    carry_client = get_carry_client(postgres=postgres)
-    return DailyAnnualisedRollHandler(carry_client=carry_client)
-
-
-def get_raw_carry_handler(postgres: PostgresClient, redis: RedisClient) -> RawCarryHandler:
-    daily_annualised_roll_handler = get_daily_annualised_roll_handler(postgres=postgres)
-    daily_returns_vol_handler = get_daily_returns_vol_handler(postgres=postgres, redis=redis)
-    return RawCarryHandler(
-        redis=redis,
-        daily_annualised_roll_handler=daily_annualised_roll_handler,
-        daily_returns_vol_handler=daily_returns_vol_handler,
-    )
-
-
-def get_median_carry_for_asset_class_handler(postgres: PostgresClient, redis: RedisClient) -> MedianCarryForAssetClassHandler:
-    raw_carry_handler = get_raw_carry_handler(postgres=postgres, redis=redis)
-    instrument_repository = get_instruments_client(postgres=postgres)
-    return MedianCarryForAssetClassHandler(raw_carry_handler=raw_carry_handler, instrument_client=instrument_repository)
-
-
-def get_smooth_carry_handler(postgres: PostgresClient, redis: RedisClient) -> SmoothCarryHandler:
-    raw_carry_handler = get_raw_carry_handler(postgres=postgres, redis=redis)
-    return SmoothCarryHandler(raw_carry_handler=raw_carry_handler)
-
-
-def get_aggregated_returns_for_asset_handler(postgres: PostgresClient, redis: RedisClient) -> AggregatedReturnsForAssetClassHandler:
-    instruments_client = get_instruments_client(postgres=postgres)
-    daily_vol_normalized_returns_handler = get_daily_vol_normalized_returns_handler(postgres=postgres, redis=redis)
-    return AggregatedReturnsForAssetClassHandler(
-        instruments_client=instruments_client, daily_vol_normalized_returns_handler=daily_vol_normalized_returns_handler
-    )
-
-
-def get_daily_vol_normalized_price_for_asset_handler(
-    postgres: PostgresClient, redis: RedisClient
-) -> DailyVolNormalizedPriceForAssetHandler:
-    aggregated_returns_for_asset_handler = get_aggregated_returns_for_asset_handler(postgres=postgres, redis=redis)
-    return DailyVolNormalizedPriceForAssetHandler(aggregated_returns_for_asset_handler=aggregated_returns_for_asset_handler)
-
-
-def get_normalized_prices_handler(postgres: PostgresClient, redis: RedisClient) -> NormalizedPricesForAssetClassHandler:
-    instruments_client: InstrumentsClient = get_instruments_client(postgres=postgres)
-    daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = get_daily_vol_normalized_price_for_asset_handler(
-        postgres=postgres, redis=redis
-    )
-    cumulative_daily_vol_norm_returns_handler: CumulativeDailyVolNormReturnsHandler = get_cumulative_daily_vol_norm_returns_handler(
-        postgres=postgres, redis=redis
-    )
-    return NormalizedPricesForAssetClassHandler(
-        instruments_client=instruments_client,
-        daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
-        cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
-    )
+    def get_normalized_prices_handler(self) -> NormalizedPricesForAssetClassHandler:
+        daily_vol_normalized_price_for_asset_handler: DailyVolNormalizedPriceForAssetHandler = (
+            self.get_daily_vol_normalized_price_for_asset_handler()
+        )
+        cumulative_daily_vol_norm_returns_handler: CumulativeDailyVolNormReturnsHandler = (
+            self.get_cumulative_daily_vol_norm_returns_handler()
+        )
+        return NormalizedPricesForAssetClassHandler(
+            instruments_client=self.instruments_client,
+            daily_vol_normalized_price_for_asset_handler=daily_vol_normalized_price_for_asset_handler,
+            cumulative_daily_vol_norm_returns_handler=cumulative_daily_vol_norm_returns_handler,
+        )

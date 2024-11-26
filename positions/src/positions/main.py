@@ -19,7 +19,7 @@ app_configs = {
     "default_response_class": ORJSONResponse,
 }
 
-app = FastAPI(**app_configs)
+app = FastAPI(**app_configs)  # type: ignore
 app.add_middleware(AppMiddleware)
 
 app.include_router(position_route, prefix="/position_route")

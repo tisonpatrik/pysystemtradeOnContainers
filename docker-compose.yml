@@ -16,21 +16,22 @@ services:
       - ./common:/app/common
     command: watchmedo auto-restart --recursive --pattern="*.py" --directory="/app/" -- python -m raw_data.main
 
-  # rules:
-  #   build:
-  #     context: .
-  #     dockerfile: rules/Dockerfile
-  #   hostname: rules
-  #   depends_on:
-  #     db_postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8100:8000"
-  #   volumes:
-  #     - ./rules/src/rules:/app/rules
-  #     - ./common:/app/common
+  rules:
+    build:
+      context: .
+      dockerfile: rules/Dockerfile
+    hostname: rules
+    depends_on:
+      db_postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "50151:50051"
+    volumes:
+      - ./rules/src/rules:/app/rules
+      - ./common:/app/common
+    command: watchmedo auto-restart --recursive --pattern="*.py" --directory="/app/" -- python -m rules.main
 
   # positions:
   #   build:

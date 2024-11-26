@@ -1,7 +1,6 @@
 from collections.abc import Callable
 from typing import Any
 
-from common.clients.dependencies import get_database_async, get_redis
 from common.protobufs.absolute_skew_deviation_pb2_grpc import (
     add_AbsoluteSkewDeviationServicer_to_server,
 )
@@ -15,19 +14,8 @@ from common.protobufs.raw_carry_pb2_grpc import add_RawCarryServicer_to_server
 from common.protobufs.relative_skew_deviation_pb2_grpc import add_RelativeSkewDeviationServicer_to_server
 from common.protobufs.smooth_carry_pb2_grpc import add_SmoothCarryServicer_to_server
 from common.protobufs.vol_attenuation_pb2_grpc import add_VolAttenuationServicer_to_server
-from raw_data.api.dependencies.endpoints import (
-    get_absolute_skew_deviation,
-    get_cumulative_daily_vol_norm_returns,
-    get_daily_returns_vol,
-    get_fx_prices,
-    get_instrument_currency_vol,
-    get_median_carry_for_asset_class,
-    get_normalized_prices,
-    get_raw_carry,
-    get_relative_skew_deviation,
-    get_smooth_carry,
-    get_vol_attenuation,
-)
+
+from raw_data.api.dependencies.endpoints import EndpointFactory
 
 
 async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
@@ -37,21 +25,19 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     Returns:
         A dictionary mapping gRPC service registration functions to handler instances.
     """
-    redis = get_redis()
-    postgres = await get_database_async()
+    endpoint_factory = await EndpointFactory.create()
     # Initialize endpoints
-    absolute_skew_deviation = get_absolute_skew_deviation(postgres, redis)
-    cumulative_daily_vol_norm_returns = get_cumulative_daily_vol_norm_returns(postgres, redis)
-    daily_returns_vol = get_daily_returns_vol(postgres, redis)
-    fx_prices = get_fx_prices(postgres, redis)
-    instrument_currency_vol = get_instrument_currency_vol(postgres, redis)
-    median_carry_for_asset_class = get_median_carry_for_asset_class(postgres, redis)
-    normalized_prices = get_normalized_prices(postgres, redis)
-    raw_carry = get_raw_carry(postgres, redis)
-
-    relative_skew_deviation = get_relative_skew_deviation(postgres, redis)
-    smooth_carry = get_smooth_carry(postgres, redis)
-    vol_attenuation = get_vol_attenuation(postgres, redis)
+    absolute_skew_deviation = endpoint_factory.get_absolute_skew_deviation()
+    cumulative_daily_vol_norm_returns = endpoint_factory.get_cumulative_daily_vol_norm_returns()
+    daily_returns_vol = endpoint_factory.get_daily_returns_vol()
+    fx_prices = endpoint_factory.get_fx_prices()
+    instrument_currency_vol = endpoint_factory.get_instrument_currency_vol()
+    median_carry_for_asset_class = endpoint_factory.get_median_carry_for_asset_class()
+    normalized_prices = endpoint_factory.get_normalized_prices()
+    raw_carry = endpoint_factory.get_raw_carry()
+    relative_skew_deviation = endpoint_factory.get_relative_skew_deviation()
+    smooth_carry = endpoint_factory.get_smooth_carry()
+    vol_attenuation = endpoint_factory.get_vol_attenuation()
 
     # Build the service mapping
     return {

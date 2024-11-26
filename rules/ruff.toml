@@ -26,7 +26,7 @@ exclude = [
     "site-packages",
     "venv",
 ]
-line-length = 140
+line-length = 130
 indent-width = 4
 target-version = "py312"
 

@@ -10,7 +10,6 @@ dependencies = [
     "pandas>=2.2.2",
     "protobuf>=5.28.3",
     "rich>=13.8.1",
-    "pyarrow>=18.0.0",
     "watchdog[watchmedo]>=6.0.0",
     "common",
 ]
@@ -31,15 +30,14 @@ venv = ".venv"
 typeCheckingMode = "off"
 
 [tool.mypy]
-exclude = "src/common/protobufs"
-check_untyped_defs = true     # Kontroluje tělo funkcí bez anotací
+check_untyped_defs = true
 follow_imports= "normal"
-warn_unused_configs = true    # Upozorní na nepoužité části konfigurace
-warn_redundant_casts = true   # Upozorní na zbytečné přetypování
-warn_unused_ignores = true    # Upozorní na nepoužité ignorování
-warn_no_return = true         # Upozorní na chybějící návratové hodnoty
-warn_return_any = false        # Upozorní na chybějící návratový typ
-warn_unreachable= true        # Upozorní na nedosažitelný kód
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = false
+warn_unreachable= false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

@@ -2,27 +2,27 @@ import asyncio
 from asyncio import Task
 
 import pandas as pd
-
 from common.clients.prices_client import PricesClient
 from common.clients.raw_data_client import RawDataClient
 from common.cqrs.cache_queries.momentum_cache import GetMomentumCache, SetMomentumCache
 from common.logging.logger import AppLogger
 from common.redis.redis_repository import RedisClient
+
 from rules.services.momentum import MomentumService
 from rules.validation.ewmac_signal import EwmacSignal
 
 
 class MomentumHandler:
-    def __init__(self, prices_client: PricesClient, raw_data_client: RawDataClient, redis_repository: RedisClient):
+    def __init__(self, prices_client: PricesClient, raw_data_client: RawDataClient, redis: RedisClient):
         self.logger = AppLogger.get_instance().get_logger()
         self.prices_client = prices_client
         self.raw_data_client = raw_data_client
-        self.redis_repository = redis_repository
+        self.redis_repository = redis
         self.momentum_service = MomentumService()
         self.background_tasks: set[Task] = set()
 
     async def get_momentum_signal_async(self, symbol: str, lfast: int, lslow: int) -> pd.Series:
-        self.logger.info("Calculating Momentum rule for %s with Lfast %d", symbol, lslow)
+        self.logger.info('Calculating Momentum rule for %s with Lfast %d', symbol, lslow)
         cached_signal = await self._get_cached_signal(symbol, lslow)
         if cached_signal is not None:
             return cached_signal
