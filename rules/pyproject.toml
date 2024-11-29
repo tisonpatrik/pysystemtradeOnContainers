@@ -31,6 +31,9 @@ venv = ".venv"
 typeCheckingMode = "off"
 
 [tool.mypy]
+plugins = [
+  "pydantic.mypy"
+]
 check_untyped_defs = true
 follow_imports= "normal"
 warn_unused_configs = true
@@ -44,6 +47,7 @@ warn_unreachable= false
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+warn_untyped_fields = true
 
 [dependency-groups]
 dev = [

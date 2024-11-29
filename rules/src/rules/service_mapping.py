@@ -7,7 +7,7 @@ from common.protobufs.breakout_pb2_grpc import add_BreakoutServicer_to_server
 from common.protobufs.carry_pb2_grpc import add_CarryServicer_to_server
 from common.protobufs.cs_mean_reversion_pb2_grpc import add_CSMeanReversionServicer_to_server
 
-from rules.api.dependencies.endpoints import EndpointFactory
+from rules.dependencies.endpoints import EndpointFactory
 
 
 async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:

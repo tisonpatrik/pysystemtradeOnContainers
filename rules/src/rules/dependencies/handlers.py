@@ -8,7 +8,7 @@ from common.clients.old_dependencies import (
 from common.clients.prices_client import PricesClient
 from common.clients.raw_data_client import RawDataClient
 
-from rules.api.handlers.accel_handler import AccelHandler
+from rules.api.accel.handler import AccelHandler
 from rules.api.handlers.asserttrend_handler import AssertTrendHandler
 from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.api.handlers.breakout_handler import BreakoutHandler

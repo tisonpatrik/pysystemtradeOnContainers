@@ -20,7 +20,7 @@ from common.validation.fx_rates import FxRates
 
 class PricesClient:
     def __init__(self, postgres: PostgresClient, redis: RedisClient):
-        self.db_repository = postgres
+        self.postgres = postgres
         self.redis_repository = redis
         self.logger = AppLogger.get_instance().get_logger()
         self.background_tasks: set[Task] = set()
@@ -33,7 +33,7 @@ class PricesClient:
 
         # If cache miss, fetch from database
         statement = GetDailyPriceQuery(symbol=symbol)
-        prices_data = await self.db_repository.fetch_many_async(statement)
+        prices_data = await self.postgres.fetch_many_async(statement)
         if not prices_data:
             raise ValueError('The provided data list is empty.')
         prices = DailyPrices.from_db_to_series(prices_data)
@@ -54,7 +54,7 @@ class PricesClient:
             return DenomPrices.from_cache_to_series(cached_data)
         # If cache miss, fetch from database
         statement = GetDenomPriceQuery(symbol=symbol)
-        prices_data = await self.db_repository.fetch_many_async(statement)
+        prices_data = await self.postgres.fetch_many_async(statement)
         if not prices_data:
             raise ValueError('There are no data for symbol: %s.', symbol)
         prices = DenomPrices.from_db_to_series(prices_data)
@@ -71,7 +71,7 @@ class PricesClient:
     async def get_fx_rates_async(self, instrument_currency: str, conversion_currency: str) -> pd.Series:
         symbol = f'{instrument_currency}{conversion_currency}'
         statement = GetFxRatesQuery(symbol=symbol)
-        rates_data = await self.db_repository.fetch_many_async(statement)
+        rates_data = await self.postgres.fetch_many_async(statement)
         if not rates_data:
             raise ValueError(f'There are no data for FX symbol: {symbol}.')
         return FxRates.from_db_to_series(rates_data)

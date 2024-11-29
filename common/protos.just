@@ -15,3 +15,4 @@ generate_protos:
     --grpc_python_out={{PROTO_OUT_DIR}} \
     --mypy_out={{PROTO_OUT_DIR}} \
     {} \;
+

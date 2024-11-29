@@ -7,7 +7,8 @@ from common.protobufs.accel_pb2_grpc import AccelServicer
 from common.utils.convertors import convert_pandas_to_bytes
 from grpc import ServicerContext, StatusCode
 
-from rules.api.handlers.accel_handler import AccelHandler
+from rules.api.accel.handler import AccelHandler
+from rules.api.accel.request import AccelQuery
 
 
 class Accel(AccelServicer):
@@ -20,20 +21,15 @@ class Accel(AccelServicer):
 
     async def get_accel(self, request: AccelRequest, context: ServicerContext) -> AccelResponse:
         self.logger.info('Fetching absolute skew deviation for symbol: %s', request.symbol)
-
-        if not request.symbol:
-            self.logger.error('Invalid request: Symbol or lookback is empty.')
-            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol or lookback cannot be empty.')
-            return AccelResponse()
-
+        query = AccelQuery(
+            symbol=request.symbol,
+            lfast=request.lfast,
+            use_attenuation=request.use_attenuation,
+            scaling_factor=request.scaling_factor,
+            scaling_type=request.scaling_type,
+        )
         try:
-            results = await self.accel_handler.get_accel_async(
-                symbol=request.symbol,
-                lfast=request.lfast,
-                use_attenuation=request.use_attenuation,
-                scaling_factor=request.scaling_factor,
-                scaling_type=request.scaling_type,
-            )
+            results = await self.accel_handler.get_accel_async(query)
             response = convert_pandas_to_bytes(results)
             return AccelResponse(series=response)
 

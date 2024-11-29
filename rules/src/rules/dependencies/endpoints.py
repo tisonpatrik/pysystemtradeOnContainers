@@ -1,9 +1,9 @@
-from rules.api.dependencies.handlers import HandlerFactory
-from rules.api.endpoints.accel import Accel
+from rules.api.accel.endpoint import Accel
 from rules.api.endpoints.assettrend import AssertTrend
 from rules.api.endpoints.breakout import Breakout
 from rules.api.endpoints.carry import Carry
 from rules.api.endpoints.cs_mean_reversion import CSMeanReversion
+from rules.dependencies.handlers import HandlerFactory
 
 
 class EndpointFactory:
