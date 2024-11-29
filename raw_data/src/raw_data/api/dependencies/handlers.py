@@ -1,4 +1,4 @@
-from common.clients.dependencies import get_carry_client, get_daily_prices_client, get_instruments_client, get_redis
+from common.clients.dependencies import get_daily_prices_client, get_instruments_client, get_redis
 from common.database.repository import PostgresClient
 
 from raw_data.api.handlers.absolute_skew_deviation_handler import AbsoluteSkewDeviationHandler
@@ -41,7 +41,6 @@ class HandlerFactory:
         self.prices_client = get_daily_prices_client(postgres=self.postgres, redis=self.redis)
         self.instruments_client = get_instruments_client(postgres=self.postgres)
         self.instrument_repository = get_instruments_client(postgres=self.postgres)
-        self.carry_client = get_carry_client(postgres=self.postgres)
 
     def get_daily_returns_handler(self) -> DailyReturnsHandler:
         return DailyReturnsHandler(prices_client=self.prices_client, redis=self.redis)
@@ -149,7 +148,7 @@ class HandlerFactory:
         )
 
     def get_daily_annualised_roll_handler(self) -> DailyAnnualisedRollHandler:
-        return DailyAnnualisedRollHandler(carry_client=self.carry_client)
+        return DailyAnnualisedRollHandler(prices_client=self.prices_client)
 
     def get_raw_carry_handler(self) -> RawCarryHandler:
         daily_annualised_roll_handler = self.get_daily_annualised_roll_handler()
