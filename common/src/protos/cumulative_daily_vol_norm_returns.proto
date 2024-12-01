@@ -12,4 +12,4 @@ message CumulativeDailyVolNormReturnsResponse {
 
 service CumulativeDailyVolNormReturns {
     rpc get_cumulative_daily_vol_norm_returns (CumulativeDailyVolNormReturnsRequest) returns (CumulativeDailyVolNormReturnsResponse);
-}3
+}

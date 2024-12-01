@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package rules;
+
+
+message Accel {
+    string symbol = 1;
+    int32 lfast = 2;
+    bool use_attenuation = 3;
+    float scaling_factor = 4;
+    string scaling_type = 5;
+}
+
+message AssertTrend {
+    string symbol = 1;
+    int32 lfast = 2;
+    int32 lslow = 3;
+    bool use_attenuation = 4;
+    float scaling_factor = 5;
+    string scaling_type = 6;
+}
+
+message Breakout {
+    string symbol = 1;
+    int32 lookback = 2;
+    bool use_attenuation = 3;
+    float scaling_factor = 4;
+    string scaling_type = 5;
+}
+
+message Carry {
+    string symbol = 1;
+    int32 smooth_days = 2;
+    bool use_attenuation = 3;
+    float scaling_factor = 4;
+    string scaling_type = 5;
+}
+
+message CSMeanReversion {
+    string symbol = 1;
+    int32 horizon = 2;
+    bool use_attenuation = 3;
+    float scaling_factor = 4;
+    string scaling_type = 5;
+}
+
+message Momentum {
+    string symbol = 1;
+    int32 lfast = 2;
+    int32 lslow = 3;
+    bool use_attenuation = 4;
+    float scaling_factor = 5;
+    string scaling_type = 6;
+}
+
+// Generic rule request (for different types of rules)
+message RuleRequest {
+    oneof rule {
+        Accel accel = 1;
+        AssertTrend assert_trend = 2;
+        Breakout breakout = 3;
+        Carry carry = 4;
+        CSMeanReversion cs_mean_reversion = 5;
+        Momentum momentum = 6;
+
+    }
+}
+
+// Main request containing multiple rules and variants
+message RulesBatchRequest {
+    repeated RuleRequest rules = 1; // Multiple rules
+}
+
+// Main response containing a single combined result
+message RulesBatchResponse {
+    bytes series = 1; // Combined result for all rules
+}
+
+// Centralized service
+service RulesProcessor {
+    rpc process_rules (RulesBatchRequest) returns (RulesBatchResponse);
+}

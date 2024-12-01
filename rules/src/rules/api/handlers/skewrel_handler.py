@@ -4,9 +4,9 @@ from common.clients.raw_data_client import RawDataClient
 from common.cqrs.api_queries.rule_queries.get_skewrel import GetSkewRelQuery
 from common.logging.logger import AppLogger
 
-from rules.api.handlers.attenutation_handler import AttenutationHandler
 from rules.services.normalization_service import NormalizationService
 from rules.services.skew import SkewRuleService
+from rules.shared.attenutation_handler import AttenutationHandler
 
 
 class SkewRelHandler:

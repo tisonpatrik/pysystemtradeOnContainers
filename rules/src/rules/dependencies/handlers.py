@@ -9,18 +9,18 @@ from common.clients.prices_client import PricesClient
 from common.clients.raw_data_client import RawDataClient
 
 from rules.api.accel.handler import AccelHandler
-from rules.api.handlers.asserttrend_handler import AssertTrendHandler
-from rules.api.handlers.attenutation_handler import AttenutationHandler
-from rules.api.handlers.breakout_handler import BreakoutHandler
-from rules.api.handlers.carry_handler import CarryHandler
-from rules.api.handlers.cs_mean_reversion_handler import CSMeanReversionHandler
-from rules.api.handlers.momentum_handler import MomentumHandler
-from rules.api.handlers.momentum_rule_handler import MomentumRuleHandler
+from rules.api.asserttrend.handler import AssertTrendHandler
+from rules.api.breakout.handler import BreakoutHandler
+from rules.api.carry.handler import CarryHandler
+from rules.api.csmeanreversion.handler import CSMeanReversionHandler
 from rules.api.handlers.normalized_momentum_handler import NormalizedMomentumHandler
 from rules.api.handlers.relative_carry_handler import RelativeCarryHandler
 from rules.api.handlers.relative_momentum_handler import RelativeMomentumHandler
 from rules.api.handlers.skewabs_handler import SkewAbsHandler
 from rules.api.handlers.skewrel_handler import SkewRelHandler
+from rules.api.momentum.handler import MomentumRuleHandler
+from rules.shared.attenutation_handler import AttenutationHandler
+from rules.shared.momentum_handler import MomentumHandler
 
 
 class HandlerFactory:
