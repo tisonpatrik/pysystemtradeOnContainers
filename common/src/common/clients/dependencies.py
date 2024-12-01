@@ -1,4 +1,3 @@
-from common.clients.forecast_client import ForecastClient
 from common.clients.instruments_client import InstrumentsClient
 from common.clients.prices_client import PricesClient
 from common.database.postgres_setup import setup_async_database
@@ -30,7 +29,3 @@ def get_daily_prices_client(postgres: PostgresClient, redis: RedisClient) -> Pri
 
 def get_instruments_client(postgres: PostgresClient) -> InstrumentsClient:
     return InstrumentsClient(repository=postgres)
-
-
-def get_forecast_client() -> ForecastClient:
-    return ForecastClient()

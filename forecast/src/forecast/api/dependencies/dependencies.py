@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 
 from common.clients.account_client import AccountClient
 from common.clients.old_dependencies import get_account_client, get_rules_signals_client
-from common.clients.rules_signals_client import RulesSignalsClient
+from common.clients.old_rules_signals_client import RulesSignalsClient
 from common.database.old_postgres_setup import setup_async_database
 from common.http_client.old_rest_client_setup import setup_async_client
 from forecast.api.handlers.cheap_trading_rules_handler import CheapTradingRulesHandler

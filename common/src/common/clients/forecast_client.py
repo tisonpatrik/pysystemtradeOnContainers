@@ -6,4 +6,4 @@ class ForecastClient:
         pass
 
     async def get_combinated_forecast(self, symbol: str) -> pd.Series:
-        return pd.Series()
+        raise NotImplementedError('Method not implemented')

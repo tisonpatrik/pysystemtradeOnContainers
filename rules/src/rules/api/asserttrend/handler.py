@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from common.clients.raw_data_client import RawDataClient
+from common.clients.old_raw_data_client import RawDataClient
 from common.logging.logger import AppLogger
 
 from rules.api.asserttrend.request import AssetTrendQuery

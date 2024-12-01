@@ -6,7 +6,7 @@ from common.clients.old_dependencies import (
     get_raw_data_client,
 )
 from common.clients.prices_client import PricesClient
-from common.clients.raw_data_client import RawDataClient
+from common.clients.old_raw_data_client import RawDataClient
 
 from rules.api.accel.handler import AccelHandler
 from rules.api.asserttrend.handler import AssertTrendHandler

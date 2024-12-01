@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 
 from common.clients.forecast_client import ForecastClient
 from common.clients.old_dependencies import get_forecast_client, get_raw_data_client
-from common.clients.raw_data_client import RawDataClient
+from common.clients.old_raw_data_client import RawDataClient
 from common.database.old_postgres_setup import setup_async_database
 from common.http_client.old_rest_client_setup import setup_async_client
 from common.redis.old_redis_setup import setup_async_redis

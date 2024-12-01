@@ -12,11 +12,9 @@ from common.cqrs.cache_queries.median_carry_for_asset_class_cache import (
 )
 from common.cqrs.cache_queries.raw_carry_cache import GetRawCarryCache, SetRawCarryCache
 from common.cqrs.cache_queries.smoothed_carry_cache import GetSmoothedCarryCache, SetSmoothedCarryCache
-from common.cqrs.db_queries.get_carry_data import GetCarryDataQuery
 from common.database.repository import PostgresClient
 from common.http_client.rest_client import RestClient
 from common.redis.redis_repository import RedisClient
-from common.validation.carry_data import CarryData
 from common.validation.median_carry_for_asset_class import MedianCarryForAssetClass
 from common.validation.raw_carry import RawCarry
 from common.validation.smoothed_carry import SmoothedCarry
@@ -28,11 +26,6 @@ class CarryClient:
         self.db_repository = postgres
         self.redis_repository = redis
         self.background_tasks: set[Task] = set()
-
-    async def get_carry_data_async(self, symbol: str) -> pd.DataFrame:
-        statement = GetCarryDataQuery(symbol=symbol)
-        carry_data = await self.db_repository.fetch_many_async(statement)
-        return CarryData.from_db_to_dataframe(carry_data)
 
     async def get_raw_carry_async(self, symbol: str) -> pd.Series:
         cache_statement = GetRawCarryCache(symbol)

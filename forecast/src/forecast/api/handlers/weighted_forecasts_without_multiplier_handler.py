@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.clients.rules_signals_client import RulesSignalsClient
+from common.clients.old_rules_signals_client import RulesSignalsClient
 from common.logging.logger import AppLogger
 from forecast.api.handlers.forecast_weights_handler import ForecastWeightsHandler
 from forecast.api.handlers.forecasts_given_rule_list_handler import ForecastGivenRuleListHandler

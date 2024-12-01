@@ -117,7 +117,7 @@ class RawDataClient:
         return InstrumentCurrencyVol.from_api_to_series(raw_data)
 
     async def get_fx_prices_async(self, symbol: str, base_currency: str) -> pd.Series:
-        key = f"{symbol}_{base_currency}"
+        key = f'{symbol}_{base_currency}'
         cache_statement = GetFxPricesCache(key)
         cached_data = await self.redis_repository.get_cache(cache_statement)
         if cached_data is not None:

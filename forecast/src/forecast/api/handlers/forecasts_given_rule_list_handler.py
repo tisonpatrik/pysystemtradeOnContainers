@@ -1,6 +1,6 @@
 import pandas as pd
 
-from common.clients.rules_signals_client import RulesSignalsClient
+from common.clients.old_rules_signals_client import RulesSignalsClient
 from common.logging.logger import AppLogger
 from common.validation.rule import Rule
 

@@ -3,7 +3,7 @@ from asyncio import Task
 
 import pandas as pd
 from common.clients.prices_client import PricesClient
-from common.clients.raw_data_client import RawDataClient
+from common.clients.old_raw_data_client import RawDataClient
 from common.cqrs.cache_queries.momentum_cache import GetMomentumCache, SetMomentumCache
 from common.logging.logger import AppLogger
 from common.redis.redis_repository import RedisClient

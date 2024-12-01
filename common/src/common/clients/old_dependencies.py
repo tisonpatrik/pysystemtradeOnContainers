@@ -5,8 +5,8 @@ from common.clients.forecast_client import ForecastClient
 from common.clients.instruments_client import InstrumentsClient
 from common.clients.old_carry_client import CarryClient
 from common.clients.prices_client import PricesClient
-from common.clients.raw_data_client import RawDataClient
-from common.clients.rules_signals_client import RulesSignalsClient
+from common.clients.old_raw_data_client import RawDataClient
+from common.clients.old_rules_signals_client import RulesSignalsClient
 from common.database.repository import PostgresClient
 from common.http_client.rest_client import RestClient
 from common.redis.redis_repository import RedisClient

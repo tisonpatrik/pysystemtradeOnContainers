@@ -1,4 +1,4 @@
-from common.clients.rules_signals_client import RulesSignalsClient
+from common.clients.old_rules_signals_client import RulesSignalsClient
 from common.logging.logger import AppLogger
 from forecast.api.handlers.cheap_trading_rules_handler import CheapTradingRulesHandler
 

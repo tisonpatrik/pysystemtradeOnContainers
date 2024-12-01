@@ -19,7 +19,7 @@ class RulesSignalsClient:
         statement = GetAllRules()
         traging_rules = await self.repository.fetch_many_async(statement)
         if traging_rules is None:
-            raise ValueError("No data found for instruments ")
+            raise ValueError('No data found for instruments ')
         return [to_pydantic(rule, Rule) for rule in traging_rules]
 
     async def get_forecast_by_rule_async(self, symbol: str, rule: Rule) -> pd.Series:
