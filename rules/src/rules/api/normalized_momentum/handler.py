@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from common.clients.raw_data_client import RawDataClient
-from common.cqrs.api_queries.rule_queries.get_normalized_momentum import GetNormalizedMomentumQuery
 from common.logging.logger import AppLogger
 
+from rules.api.normalized_momentum.request import NormalizedMomentumQuery
 from rules.services.ewmac_calc_vol_service import EwmacCalsVolService
 from rules.shared.attenutation_handler import AttenutationHandler
 
@@ -15,7 +15,7 @@ class NormalizedMomentumHandler:
         self.attenuation_handler = attenuation_handler
         self.assettrend_service = EwmacCalsVolService()
 
-    async def get_normalized_momentum_async(self, query: GetNormalizedMomentumQuery) -> pd.Series:
+    async def get_normalized_momentum_async(self, query: NormalizedMomentumQuery) -> pd.Series:
         self.logger.info('Calculating AssetTrend rule for %s by speed %d', query.symbol, query.lslow)
         prices = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(query.symbol)
         assettrend = self.assettrend_service.calculate_ewmac_calc_vol(prices, query.lfast, query.lslow)

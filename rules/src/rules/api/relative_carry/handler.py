@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from common.clients.old_carry_client import CarryClient
-from common.cqrs.api_queries.rule_queries.get_relative_carry import GetRelativeCarry
 from common.logging.logger import AppLogger
 
+from rules.api.relative_carry.request import RelativeCarryQuery
 from rules.services.carry import CarryService
 from rules.services.normalization_service import NormalizationService
 from rules.shared.attenutation_handler import AttenutationHandler
@@ -17,7 +17,7 @@ class RelativeCarryHandler:
         self.normalization_service = NormalizationService()
         self.carry_service = CarryService()
 
-    async def get_relative_carry_async(self, query: GetRelativeCarry) -> pd.Series:
+    async def get_relative_carry_async(self, query: RelativeCarryQuery) -> pd.Series:
         self.logger.info('Calculating Relative carry rule for %s', query.symbol)
         smoothed_carry = await self.carry_client.get_smoothed_carry_async(query.symbol)
         median_carry_for_asset_class = await self.carry_client.get_median_carry_for_asset_class_async(query.symbol)

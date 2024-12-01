@@ -17,6 +17,12 @@ from rules.api.csmeanreversion.handler import CSMeanReversionHandler
 from rules.api.csmeanreversion.request import CSMeanReversionQuery
 from rules.api.momentum.handler import MomentumRuleHandler
 from rules.api.momentum.request import MomentumQuery
+from rules.api.normalized_momentum.handler import NormalizedMomentumHandler
+from rules.api.normalized_momentum.request import NormalizedMomentumQuery
+from rules.api.relative_carry.handler import RelativeCarryHandler
+from rules.api.relative_carry.request import RelativeCarryQuery
+from rules.api.relative_momentum.handler import RelativeMomentumHandler
+from rules.api.relative_momentum.request import RelativeMomentumQuery
 from rules.utils.rule_query_factory import RuleQueryFactory
 
 
@@ -29,6 +35,9 @@ class RulesProcessor(RulesProcessorServicer):
         carry_handler: CarryHandler,
         cs_mean_reversion_handler: CSMeanReversionHandler,
         momentum_handler: MomentumRuleHandler,
+        normalized_momentum_handler: NormalizedMomentumHandler,
+        relative_carry_handler: RelativeCarryHandler,
+        relative_momentum_handler: RelativeMomentumHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.rule_query_factory = RuleQueryFactory()
@@ -39,6 +48,9 @@ class RulesProcessor(RulesProcessorServicer):
         self.carry_handler = carry_handler
         self.cs_mean_reversion_handler = cs_mean_reversion_handler
         self.momentum_handler = momentum_handler
+        self.normalized_momentum_handler = normalized_momentum_handler
+        self.relative_carry_handler = relative_carry_handler
+        self.relative_momentum_handler = relative_momentum_handler
 
     async def process_rules(self, request: RulesBatchRequest, context: ServicerContext) -> RulesBatchResponse:
         self.logger.info('Processing batch of %d rules', len(request.rules))
@@ -62,6 +74,12 @@ class RulesProcessor(RulesProcessorServicer):
                     results = await self.cs_mean_reversion_handler.get_cs_mean_reversion_async(query)
                 elif isinstance(query, MomentumQuery):
                     results = await self.momentum_handler.get_momentum_async(query)
+                elif isinstance(query, NormalizedMomentumQuery):
+                    results = await self.normalized_momentum_handler.get_normalized_momentum_async(query)
+                elif isinstance(query, RelativeCarryQuery):
+                    results = await self.relative_carry_handler.get_relative_carry_async(query)
+                elif isinstance(query, RelativeMomentumQuery):
+                    results = await self.relative_momentum_handler.get_relative_momentum_async(query)
                 else:
                     self.logger.warning('Unrecognized query type in factory dispatch.')
                     continue

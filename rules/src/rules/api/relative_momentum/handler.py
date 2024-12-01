@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from common.clients.raw_data_client import RawDataClient
-from common.cqrs.api_queries.rule_queries.get_relative_momentum import GetRelativeMomentumQuery
 from common.logging.logger import AppLogger
 
+from rules.api.relative_momentum.request import RelativeMomentumQuery
 from rules.services.normalization_service import NormalizationService
 from rules.services.relative_momentum import RelativeMomentumService
 from rules.shared.attenutation_handler import AttenutationHandler
@@ -17,7 +17,7 @@ class RelativeMomentumHandler:
         self.normalization_service = NormalizationService()
         self.relative_momentum_service = RelativeMomentumService()
 
-    async def get_relative_momentum_async(self, query: GetRelativeMomentumQuery) -> pd.Series:
+    async def get_relative_momentum_async(self, query: RelativeMomentumQuery) -> pd.Series:
         self.logger.info('Calculating Relative Momentum rule for %s', query.symbol)
         cumulative_daily_vol_norm_returns = await self.raw_data_client.get_cumulative_daily_vol_normalised_returns_async(
             query.symbol

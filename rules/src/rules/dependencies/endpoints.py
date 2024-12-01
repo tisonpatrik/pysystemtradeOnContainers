@@ -13,6 +13,10 @@ class EndpointFactory:
         carry_handler = self.handler_factory.get_carry_handler()
         csmeanreversion_handler = self.handler_factory.get_cs_mean_reversion_handler()
         momentum_handler = self.handler_factory.get_momentum_rule_handler()
+        normalized_momentum_handler = self.handler_factory.get_normalized_momentum_handler()
+        relative_carry_handler = self.handler_factory.get_relative_carry_handler()
+        relative_momentum_handler = self.handler_factory.get_relative_momentum_handler()
+
         return RulesProcessor(
             accel_handler=accel_handler,
             assert_trend_handler=assert_trend_handler,
@@ -20,4 +24,7 @@ class EndpointFactory:
             carry_handler=carry_handler,
             cs_mean_reversion_handler=csmeanreversion_handler,
             momentum_handler=momentum_handler,
+            normalized_momentum_handler=normalized_momentum_handler,
+            relative_carry_handler=relative_carry_handler,
+            relative_momentum_handler=relative_momentum_handler,
         )
