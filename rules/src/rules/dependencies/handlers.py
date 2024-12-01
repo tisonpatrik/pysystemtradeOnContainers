@@ -13,12 +13,12 @@ from rules.api.asserttrend.handler import AssertTrendHandler
 from rules.api.breakout.handler import BreakoutHandler
 from rules.api.carry.handler import CarryHandler
 from rules.api.csmeanreversion.handler import CSMeanReversionHandler
-from rules.api.handlers.skewabs_handler import SkewAbsHandler
-from rules.api.handlers.skewrel_handler import SkewRelHandler
 from rules.api.momentum.handler import MomentumRuleHandler
 from rules.api.normalized_momentum.handler import NormalizedMomentumHandler
 from rules.api.relative_carry.handler import RelativeCarryHandler
 from rules.api.relative_momentum.handler import RelativeMomentumHandler
+from rules.api.skewabs.handler import SkewAbsHandler
+from rules.api.skewrel.handler import SkewRelHandler
 from rules.shared.attenutation_handler import AttenutationHandler
 from rules.shared.momentum_handler import MomentumHandler
 

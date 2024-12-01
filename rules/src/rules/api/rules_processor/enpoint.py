@@ -23,6 +23,10 @@ from rules.api.relative_carry.handler import RelativeCarryHandler
 from rules.api.relative_carry.request import RelativeCarryQuery
 from rules.api.relative_momentum.handler import RelativeMomentumHandler
 from rules.api.relative_momentum.request import RelativeMomentumQuery
+from rules.api.skewabs.handler import SkewAbsHandler
+from rules.api.skewabs.request import SkewAbsQuery
+from rules.api.skewrel.handler import SkewRelHandler
+from rules.api.skewrel.request import SkewRelQuery
 from rules.utils.rule_query_factory import RuleQueryFactory
 
 
@@ -38,6 +42,8 @@ class RulesProcessor(RulesProcessorServicer):
         normalized_momentum_handler: NormalizedMomentumHandler,
         relative_carry_handler: RelativeCarryHandler,
         relative_momentum_handler: RelativeMomentumHandler,
+        skewabs_handler: SkewAbsHandler,
+        skewrel_handler: SkewRelHandler,
     ):
         self.logger = AppLogger.get_instance().get_logger()
         self.rule_query_factory = RuleQueryFactory()
@@ -51,6 +57,8 @@ class RulesProcessor(RulesProcessorServicer):
         self.normalized_momentum_handler = normalized_momentum_handler
         self.relative_carry_handler = relative_carry_handler
         self.relative_momentum_handler = relative_momentum_handler
+        self.skewabs_handler = skewabs_handler
+        self.skewrel_handler = skewrel_handler
 
     async def process_rules(self, request: RulesBatchRequest, context: ServicerContext) -> RulesBatchResponse:
         self.logger.info('Processing batch of %d rules', len(request.rules))
@@ -80,6 +88,10 @@ class RulesProcessor(RulesProcessorServicer):
                     results = await self.relative_carry_handler.get_relative_carry_async(query)
                 elif isinstance(query, RelativeMomentumQuery):
                     results = await self.relative_momentum_handler.get_relative_momentum_async(query)
+                elif isinstance(query, SkewAbsQuery):
+                    results = await self.skewabs_handler.get_skewabs_async(query)
+                elif isinstance(query, SkewRelQuery):
+                    results = await self.skewrel_handler.get_skewrel_async(query)
                 else:
                     self.logger.warning('Unrecognized query type in factory dispatch.')
                     continue

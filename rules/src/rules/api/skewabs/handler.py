@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from common.clients.raw_data_client import RawDataClient
-from common.cqrs.api_queries.rule_queries.get_skewabs import GetSkewAbsQuery
 from common.logging.logger import AppLogger
 
+from rules.api.skewabs.request import SkewAbsQuery
 from rules.services.normalization_service import NormalizationService
 from rules.services.skew import SkewRuleService
 from rules.shared.attenutation_handler import AttenutationHandler
@@ -17,7 +17,7 @@ class SkewAbsHandler:
         self.normalization_service = NormalizationService()
         self.skewabs_service = SkewRuleService()
 
-    async def get_skewabs_async(self, query: GetSkewAbsQuery) -> pd.Series:
+    async def get_skewabs_async(self, query: SkewAbsQuery) -> pd.Series:
         self.logger.info('Calculating SkewAbs rule for %s with smooth %d', query.symbol, query.smooth)
         absolute_skew_deviation = await self.raw_data_client.absolute_skew_deviation_async(query.symbol, query.lookback)
         skewabs = self.skewabs_service.calculate_skew(demean_factor_value=absolute_skew_deviation, smooth=query.smooth)

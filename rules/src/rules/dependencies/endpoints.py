@@ -16,6 +16,8 @@ class EndpointFactory:
         normalized_momentum_handler = self.handler_factory.get_normalized_momentum_handler()
         relative_carry_handler = self.handler_factory.get_relative_carry_handler()
         relative_momentum_handler = self.handler_factory.get_relative_momentum_handler()
+        skewabs_handler = self.handler_factory.get_skewabs_handler()
+        skewrel_handler = self.handler_factory.get_skewrel_handler()
 
         return RulesProcessor(
             accel_handler=accel_handler,
@@ -27,4 +29,6 @@ class EndpointFactory:
             normalized_momentum_handler=normalized_momentum_handler,
             relative_carry_handler=relative_carry_handler,
             relative_momentum_handler=relative_momentum_handler,
+            skewabs_handler=skewabs_handler,
+            skewrel_handler=skewrel_handler,
         )
