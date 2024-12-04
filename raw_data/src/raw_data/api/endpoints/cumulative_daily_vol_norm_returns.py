@@ -1,12 +1,12 @@
-from grpc import ServicerContext, StatusCode
-
 from common.logging.logger import AppLogger
-from common.protobufs.cumulative_daily_vol_norm_returns_pb2 import (
+from common.protobufs.raw_data_pb2 import (
     CumulativeDailyVolNormReturnsRequest,
     CumulativeDailyVolNormReturnsResponse,
 )
-from common.protobufs.cumulative_daily_vol_norm_returns_pb2_grpc import CumulativeDailyVolNormReturnsServicer
+from common.protobufs.raw_data_pb2_grpc import CumulativeDailyVolNormReturnsServicer
 from common.utils.convertors import convert_pandas_to_bytes
+from grpc import ServicerContext, StatusCode
+
 from raw_data.api.handlers.cumulative_daily_vol_norm_returns_handler import CumulativeDailyVolNormReturnsHandler
 
 
@@ -21,11 +21,11 @@ class CumulativeDailyVolNormReturns(CumulativeDailyVolNormReturnsServicer):
     async def get_cumulative_daily_vol_norm_returns(
         self, request: CumulativeDailyVolNormReturnsRequest, context: ServicerContext
     ) -> CumulativeDailyVolNormReturnsResponse:
-        self.logger.info("Fetching cumulative daily vol normalized returns for symbol: %s", request.symbol)
+        self.logger.info('Fetching cumulative daily vol normalized returns for symbol: %s', request.symbol)
 
         if not request.symbol:
-            self.logger.error("Invalid request: Symbol is empty.")
-            context.abort(StatusCode.INVALID_ARGUMENT, "Symbol cannot be empty.")
+            self.logger.error('Invalid request: Symbol is empty.')
+            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol cannot be empty.')
             return CumulativeDailyVolNormReturnsResponse()
 
         try:
@@ -36,6 +36,6 @@ class CumulativeDailyVolNormReturns(CumulativeDailyVolNormReturnsServicer):
             return CumulativeDailyVolNormReturnsResponse(series=response)
 
         except Exception as e:
-            self.logger.exception("Error processing request: %s", str(e))
-            context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")
+            self.logger.exception('Error processing request: %s', str(e))
+            context.abort(StatusCode.INTERNAL, 'An unexpected error occurred.')
             return CumulativeDailyVolNormReturnsResponse()

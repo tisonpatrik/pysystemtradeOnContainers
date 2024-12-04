@@ -1,12 +1,12 @@
-from grpc import ServicerContext, StatusCode
-
 from common.logging.logger import AppLogger
-from common.protobufs.raw_carry_pb2 import (
+from common.protobufs.raw_data_pb2 import (
     RawCarryRequest,
     RawCarryResponse,
 )
-from common.protobufs.raw_carry_pb2_grpc import RawCarryServicer
+from common.protobufs.raw_data_pb2_grpc import RawCarryServicer
 from common.utils.convertors import convert_pandas_to_bytes
+from grpc import ServicerContext, StatusCode
+
 from raw_data.api.handlers.raw_carry_handler import RawCarryHandler
 
 
@@ -19,11 +19,11 @@ class RawCarry(RawCarryServicer):
         self.raw_carry_handler = raw_carry_handler
 
     async def get_raw_carry(self, request: RawCarryRequest, context: ServicerContext) -> RawCarryResponse:
-        self.logger.info("Fetching raw carry data for symbol: %s", request.symbol)
+        self.logger.info('Fetching raw carry data for symbol: %s', request.symbol)
 
         if not request.symbol:
-            self.logger.error("Invalid request: Symbol is empty.")
-            context.abort(StatusCode.INVALID_ARGUMENT, "Symbol cannot be empty.")
+            self.logger.error('Invalid request: Symbol is empty.')
+            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol cannot be empty.')
             return RawCarryResponse()
 
         try:
@@ -32,6 +32,6 @@ class RawCarry(RawCarryServicer):
             return RawCarryResponse(series=response)
 
         except Exception as e:
-            self.logger.exception("Error processing request: %s", str(e))
-            context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")
+            self.logger.exception('Error processing request: %s', str(e))
+            context.abort(StatusCode.INTERNAL, 'An unexpected error occurred.')
             return RawCarryResponse()

@@ -1,12 +1,12 @@
-from grpc import ServicerContext, StatusCode
-
 from common.logging.logger import AppLogger
-from common.protobufs.normalized_prices_pb2 import (
+from common.protobufs.raw_data_pb2 import (
     NormalizedPricesRequest,
     NormalizedPricesResponse,
 )
-from common.protobufs.normalized_prices_pb2_grpc import NormalizedPricesServicer
+from common.protobufs.raw_data_pb2_grpc import NormalizedPricesServicer
 from common.utils.convertors import convert_pandas_to_bytes
+from grpc import ServicerContext, StatusCode
+
 from raw_data.api.handlers.normalized_prices_for_asset_class_handler import NormalizedPricesForAssetClassHandler
 
 
@@ -19,11 +19,11 @@ class NormalizedPrices(NormalizedPricesServicer):
         self.normalized_prices_for_asset_class_handler = normalized_prices_handler
 
     async def get_normalized_prices(self, request: NormalizedPricesRequest, context: ServicerContext) -> NormalizedPricesResponse:
-        self.logger.info("Fetching normalized prices for asset class with symbol: %s", request.symbol)
+        self.logger.info('Fetching normalized prices for asset class with symbol: %s', request.symbol)
 
         if not request.symbol:
-            self.logger.error("Invalid request: Symbol is empty.")
-            context.abort(StatusCode.INVALID_ARGUMENT, "Symbol cannot be empty.")
+            self.logger.error('Invalid request: Symbol is empty.')
+            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol cannot be empty.')
             return NormalizedPricesResponse()
 
         try:
@@ -32,6 +32,6 @@ class NormalizedPrices(NormalizedPricesServicer):
             return NormalizedPricesResponse(series=response)
 
         except Exception as e:
-            self.logger.exception("Error processing request: %s", str(e))
-            context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")
+            self.logger.exception('Error processing request: %s', str(e))
+            context.abort(StatusCode.INTERNAL, 'An unexpected error occurred.')
             return NormalizedPricesResponse()

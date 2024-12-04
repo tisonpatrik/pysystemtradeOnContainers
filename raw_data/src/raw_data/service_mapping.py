@@ -1,19 +1,19 @@
 from collections.abc import Callable
 from typing import Any
 
-from common.protobufs.absolute_skew_deviation_pb2_grpc import (
+from common.protobufs.raw_data_pb2_grpc import (
     add_AbsoluteSkewDeviationServicer_to_server,
+    add_CumulativeDailyVolNormReturnsServicer_to_server,
+    add_DailyReturnsVolServicer_to_server,
+    add_FxPricesServicer_to_server,
+    add_InstrumentCurrencyVolServicer_to_server,
+    add_MedianCarryServicer_to_server,
+    add_NormalizedPricesServicer_to_server,
+    add_RawCarryServicer_to_server,
+    add_RelativeSkewDeviationServicer_to_server,
+    add_SmoothCarryServicer_to_server,
+    add_VolAttenuationServicer_to_server,
 )
-from common.protobufs.cumulative_daily_vol_norm_returns_pb2_grpc import add_CumulativeDailyVolNormReturnsServicer_to_server
-from common.protobufs.daily_returns_vol_pb2_grpc import add_DailyReturnsVolServicer_to_server
-from common.protobufs.fx_prices_pb2_grpc import add_FxPricesServicer_to_server
-from common.protobufs.instrument_currency_vol_pb2_grpc import add_InstrumentCurrencyVolServicer_to_server
-from common.protobufs.median_carry_for_asset_class_pb2_grpc import add_MedianCarryServicer_to_server
-from common.protobufs.normalized_prices_pb2_grpc import add_NormalizedPricesServicer_to_server
-from common.protobufs.raw_carry_pb2_grpc import add_RawCarryServicer_to_server
-from common.protobufs.relative_skew_deviation_pb2_grpc import add_RelativeSkewDeviationServicer_to_server
-from common.protobufs.smooth_carry_pb2_grpc import add_SmoothCarryServicer_to_server
-from common.protobufs.vol_attenuation_pb2_grpc import add_VolAttenuationServicer_to_server
 
 from raw_data.api.dependencies.endpoints import EndpointFactory
 

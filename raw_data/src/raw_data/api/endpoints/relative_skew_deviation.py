@@ -1,12 +1,12 @@
-from grpc import ServicerContext, StatusCode
-
 from common.logging.logger import AppLogger
-from common.protobufs.relative_skew_deviation_pb2 import (
+from common.protobufs.raw_data_pb2 import (
     RelativeSkewDeviationRequest,
     RelativeSkewDeviationResponse,
 )
-from common.protobufs.relative_skew_deviation_pb2_grpc import RelativeSkewDeviationServicer
+from common.protobufs.raw_data_pb2_grpc import RelativeSkewDeviationServicer
 from common.utils.convertors import convert_pandas_to_bytes
+from grpc import ServicerContext, StatusCode
+
 from raw_data.api.handlers.relative_skew_deviation_handler import RelativeSkewDeviationHandler
 
 
@@ -21,11 +21,11 @@ class RelativeSkewDeviation(RelativeSkewDeviationServicer):
     async def get_relative_skew_deviation(
         self, request: RelativeSkewDeviationRequest, context: ServicerContext
     ) -> RelativeSkewDeviationResponse:
-        self.logger.info("Fetching relative skew deviation for symbol: %s", request.symbol)
+        self.logger.info('Fetching relative skew deviation for symbol: %s', request.symbol)
 
         if not request.symbol or not request.lookback:
-            self.logger.error("Invalid request: Symbol or lookback is empty.")
-            context.abort(StatusCode.INVALID_ARGUMENT, "Symbol or lookback cannot be empty.")
+            self.logger.error('Invalid request: Symbol or lookback is empty.')
+            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol or lookback cannot be empty.')
             return RelativeSkewDeviationResponse()
 
         try:
@@ -36,6 +36,6 @@ class RelativeSkewDeviation(RelativeSkewDeviationServicer):
             return RelativeSkewDeviationResponse(series=response)
 
         except Exception as e:
-            self.logger.exception("Error processing request: %s", str(e))
-            context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")
+            self.logger.exception('Error processing request: %s', str(e))
+            context.abort(StatusCode.INTERNAL, 'An unexpected error occurred.')
             return RelativeSkewDeviationResponse()

@@ -1,12 +1,12 @@
-from grpc import ServicerContext, StatusCode
-
 from common.logging.logger import AppLogger
-from common.protobufs.smooth_carry_pb2 import (
+from common.protobufs.raw_data_pb2 import (
     SmoothCarryRequest,
     SmoothCarryResponse,
 )
-from common.protobufs.smooth_carry_pb2_grpc import SmoothCarryServicer
+from common.protobufs.raw_data_pb2_grpc import SmoothCarryServicer
 from common.utils.convertors import convert_pandas_to_bytes
+from grpc import ServicerContext, StatusCode
+
 from raw_data.api.handlers.smooth_carry_handler import SmoothCarryHandler
 
 
@@ -19,11 +19,11 @@ class SmoothCarry(SmoothCarryServicer):
         self.smooth_carry_handler = smooth_carry_handler
 
     async def get_smooth_carry(self, request: SmoothCarryRequest, context: ServicerContext) -> SmoothCarryResponse:
-        self.logger.info("Fetching smooth carry data for symbol: %s", request.symbol)
+        self.logger.info('Fetching smooth carry data for symbol: %s', request.symbol)
 
         if not request.symbol:
-            self.logger.error("Invalid request: Symbol is empty.")
-            context.abort(StatusCode.INVALID_ARGUMENT, "Symbol cannot be empty.")
+            self.logger.error('Invalid request: Symbol is empty.')
+            context.abort(StatusCode.INVALID_ARGUMENT, 'Symbol cannot be empty.')
             return SmoothCarryResponse()
 
         try:
@@ -32,6 +32,6 @@ class SmoothCarry(SmoothCarryServicer):
             return SmoothCarryResponse(series=response)
 
         except Exception as e:
-            self.logger.exception("Error processing request: %s", str(e))
-            context.abort(StatusCode.INTERNAL, "An unexpected error occurred.")
+            self.logger.exception('Error processing request: %s', str(e))
+            context.abort(StatusCode.INTERNAL, 'An unexpected error occurred.')
             return SmoothCarryResponse()

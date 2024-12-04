@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package raw_data;
+
+// --------------------
+// Messages
+// --------------------
+
+// SmoothCarry service
+message SmoothCarryRequest {
+    string symbol = 1;
+}
+
+message SmoothCarryResponse {
+    bytes series = 1;
+}
+
+// VolAttenuation service
+message VolAttenuationRequest {
+    string symbol = 1;
+}
+
+message VolAttenuationResponse {
+    bytes series = 1;
+}
+
+// FxPrices service
+message FxPricesRequest {
+    string symbol = 1;
+    string base_currency = 2;
+}
+
+message FxPricesResponse {
+    bytes series = 1;
+}
+
+// InstrumentCurrencyVol service
+message InstrumentCurrencyVolRequest {
+    string symbol = 1;
+}
+
+message InstrumentCurrencyVolResponse {
+    bytes series = 1;
+}
+
+// MedianCarry service
+message MedianCarryRequest {
+    string symbol = 1;
+}
+
+message MedianCarryResponse {
+    bytes series = 1;
+}
+
+// NormalizedPrices service
+message NormalizedPricesRequest {
+    string symbol = 1;
+}
+
+message NormalizedPricesResponse {
+    bytes series = 1;
+}
+
+// RawCarry service
+message RawCarryRequest {
+    string symbol = 1;
+}
+
+message RawCarryResponse {
+    bytes series = 1;
+}
+
+// RelativeSkewDeviation service
+message RelativeSkewDeviationRequest {
+    string symbol = 1;
+    int32 lookback = 2;
+}
+
+message RelativeSkewDeviationResponse {
+    bytes series = 1;
+}
+
+// AbsoluteSkewDeviation service
+message AbsoluteSkewDeviationRequest {
+    string symbol = 1;
+    int32 lookback = 2;
+}
+
+message AbsoluteSkewDeviationResponse {
+    bytes series = 1;
+}
+
+// CumulativeDailyVolNormReturns service
+message CumulativeDailyVolNormReturnsRequest {
+    string symbol = 1;
+}
+
+message CumulativeDailyVolNormReturnsResponse {
+    bytes series = 1;
+}
+
+// DailyReturnsVol service
+message DailyReturnsVolRequest {
+    string symbol = 1;
+}
+
+message DailyReturnsVolResponse {
+    bytes series = 1;
+}
+
+// --------------------
+// Services
+// --------------------
+
+// SmoothCarry service
+service SmoothCarry {
+    rpc get_smooth_carry (SmoothCarryRequest) returns (SmoothCarryResponse);
+}
+
+// VolAttenuation service
+service VolAttenuation {
+    rpc get_vol_attenuation (VolAttenuationRequest) returns (VolAttenuationResponse);
+}
+
+// FxPrices service
+service FxPrices {
+    rpc get_fx_prices (FxPricesRequest) returns (FxPricesResponse);
+}
+
+// InstrumentCurrencyVol service
+service InstrumentCurrencyVol {
+    rpc get_instrument_currency_vol (InstrumentCurrencyVolRequest) returns (InstrumentCurrencyVolResponse);
+}
+
+// MedianCarry service
+service MedianCarry {
+    rpc get_median_carry (MedianCarryRequest) returns (MedianCarryResponse);
+}
+
+// NormalizedPrices service
+service NormalizedPrices {
+    rpc get_normalized_prices (NormalizedPricesRequest) returns (NormalizedPricesResponse);
+}
+
+// RawCarry service
+service RawCarry {
+    rpc get_raw_carry (RawCarryRequest) returns (RawCarryResponse);
+}
+
+// RelativeSkewDeviation service
+service RelativeSkewDeviation {
+    rpc get_relative_skew_deviation (RelativeSkewDeviationRequest) returns (RelativeSkewDeviationResponse);
+}
+
+// AbsoluteSkewDeviation service
+service AbsoluteSkewDeviation {
+    rpc get_absolute_skew_deviation (AbsoluteSkewDeviationRequest) returns (AbsoluteSkewDeviationResponse);
+}
+
+// CumulativeDailyVolNormReturns service
+service CumulativeDailyVolNormReturns {
+    rpc get_cumulative_daily_vol_norm_returns (CumulativeDailyVolNormReturnsRequest) returns (CumulativeDailyVolNormReturnsResponse);
+}
+
+// DailyReturnsVol service
+service DailyReturnsVol {
+    rpc get_daily_returns_vol (DailyReturnsVolRequest) returns (DailyReturnsVolResponse);
+}
