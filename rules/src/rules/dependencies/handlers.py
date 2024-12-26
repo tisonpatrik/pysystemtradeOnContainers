@@ -1,11 +1,10 @@
-from common.clients.dependencies import get_redis
-from common.clients.old_carry_client import CarryClient
-from common.clients.old_dependencies import (
-    get_carry_client,
+from common.clients.dependencies import (
     get_daily_prices_client,
+    get_redis,
 )
 from common.clients.prices_client import PricesClient
 from common.clients.raw_data_client import RawDataClient
+from common.database.repository import PostgresClient
 from grpc.aio import Channel
 
 from rules.api.accel.handler import AccelHandler
@@ -24,16 +23,15 @@ from rules.shared.momentum_handler import MomentumHandler
 
 
 class HandlerFactory:
-    def __init__(self, raw_data_channel: Channel):
+    def __init__(self, raw_data_channel: Channel, postgres: PostgresClient):
         self.raw_data_channel = raw_data_channel
         self.raw_data_client: RawDataClient = self._get_raw_data_client()
         self.redis = get_redis()
-        self.prices_client: PricesClient = get_daily_prices_client()
-        self.carry_client: CarryClient = get_carry_client()
+        self.prices_client: PricesClient = get_daily_prices_client(postgres=postgres, redis=self.redis)
         self.attenuation_handler: AttenutationHandler = AttenutationHandler(raw_data_client=self.raw_data_client)
 
     def _get_raw_data_client(self) -> RawDataClient:
-        return RawDataClient(grpc_channel=self.raw_data_channel, redis_repository=self.redis)
+        return RawDataClient(grpc_channel=self.raw_data_channel, redis=self.redis)
 
     def get_momentum_handler(self) -> MomentumHandler:
         return MomentumHandler(prices_client=self.prices_client, raw_data_client=self.raw_data_client, redis=self.redis)
@@ -54,13 +52,13 @@ class HandlerFactory:
         return AssertTrendHandler(raw_data_client=self.raw_data_client, attenuation_handler=self.attenuation_handler)
 
     def get_carry_handler(self) -> CarryHandler:
-        return CarryHandler(carry_client=self.carry_client, attenuation_handler=self.attenuation_handler)
+        return CarryHandler(raw_data_client=self.raw_data_client, attenuation_handler=self.attenuation_handler)
 
     def get_cs_mean_reversion_handler(self) -> CSMeanReversionHandler:
         return CSMeanReversionHandler(raw_data_client=self.raw_data_client, attenuation_handler=self.attenuation_handler)
 
     def get_relative_carry_handler(self) -> RelativeCarryHandler:
-        return RelativeCarryHandler(carry_client=self.carry_client, attenuation_handler=self.attenuation_handler)
+        return RelativeCarryHandler(raw_data_client=self.raw_data_client, attenuation_handler=self.attenuation_handler)
 
     def get_relative_momentum_handler(self) -> RelativeMomentumHandler:
         return RelativeMomentumHandler(raw_data_client=self.raw_data_client, attenuation_handler=self.attenuation_handler)

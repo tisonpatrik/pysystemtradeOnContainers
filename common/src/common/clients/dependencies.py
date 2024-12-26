@@ -37,7 +37,7 @@ async def get_raw_data_channel() -> Channel:
 async def get_raw_data_client() -> RawDataClient:
     channel = await get_raw_data_channel()
     redis = get_redis()
-    return RawDataClient(grpc_channel=channel, redis_repository=redis)
+    return RawDataClient(grpc_channel=channel, redis=redis)
 
 
 def get_daily_prices_client(postgres: PostgresClient, redis: RedisClient) -> PricesClient:

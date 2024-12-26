@@ -1,4 +1,5 @@
-from common.clients.dependencies import get_raw_data_channel
+from common.clients.dependencies import get_database_async, get_raw_data_channel
+from common.database.repository import PostgresClient
 from grpc.aio import Channel
 
 from rules.api.rules_processor.enpoint import RulesProcessor
@@ -6,13 +7,14 @@ from rules.dependencies.handlers import HandlerFactory
 
 
 class EndpointFactory:
-    def __init__(self, raw_data_channel: Channel):
-        self.handler_factory = HandlerFactory(raw_data_channel=raw_data_channel)
+    def __init__(self, raw_data_channel: Channel, postgres: PostgresClient):
+        self.handler_factory = HandlerFactory(raw_data_channel=raw_data_channel, postgres=postgres)
 
     @staticmethod
     async def create() -> 'EndpointFactory':
         channel = await get_raw_data_channel()
-        return EndpointFactory(channel)
+        postgres = await get_database_async()
+        return EndpointFactory(channel, postgres)
 
     def get_rules_processor(self):
         accel_handler = self.handler_factory.get_accel_handler()
