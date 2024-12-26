@@ -1,10 +1,18 @@
+from common.clients.dependencies import get_raw_data_channel
+from grpc.aio import Channel
+
 from rules.api.rules_processor.enpoint import RulesProcessor
 from rules.dependencies.handlers import HandlerFactory
 
 
 class EndpointFactory:
-    def __init__(self):
-        self.handler_factory = HandlerFactory()
+    def __init__(self, raw_data_channel: Channel):
+        self.handler_factory = HandlerFactory(raw_data_channel=raw_data_channel)
+
+    @staticmethod
+    async def create() -> 'EndpointFactory':
+        channel = await get_raw_data_channel()
+        return EndpointFactory(channel)
 
     def get_rules_processor(self):
         accel_handler = self.handler_factory.get_accel_handler()

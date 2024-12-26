@@ -13,7 +13,7 @@ async def create_service_mapping() -> dict[Callable[[Any, Any], None], Any]:
     Returns:
         A dictionary mapping gRPC service registration functions to handler instances.
     """
-    endpoints_factory = EndpointFactory()
+    endpoints_factory = await EndpointFactory.create()
 
     rules_processor = endpoints_factory.get_rules_processor()
     # Build the service mapping

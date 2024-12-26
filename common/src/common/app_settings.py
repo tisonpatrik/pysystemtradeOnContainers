@@ -2,6 +2,10 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings
 
+GRPC_CHANNEL_RETRIES = 3
+GRPC_CHANNEL_RETRY_DELAY = 3
+GRPC_GRACE = 5
+
 
 class Settings(BaseSettings):
     """
@@ -14,7 +18,12 @@ class Settings(BaseSettings):
     DB_NAME: str
     DB_HOST: str
     DB_PORT: str
+
     REDIS: str
+    TTL: int
+
+    RAW_DATA_SERVICE_ADDRESS: str
+    RULES_SERVICE_ADDRESS: str
 
     class Config:
         env_file = '.env'

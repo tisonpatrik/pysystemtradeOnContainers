@@ -5,7 +5,7 @@ from pandera import DataFrameModel, Field
 from pandera.dtypes import Timestamp
 from pandera.errors import SchemaError
 
-from common.utils.class_utils import geT_all_annotations
+from common.utils.class_utils import get_all_annotations
 from common.utils.convertors import convert_dataframe_to_series
 from common.utils.pd_utils import rename_columns
 
@@ -43,7 +43,7 @@ class BaseDataFrameModel(DataFrameModel, Generic[T]):
     @classmethod
     def from_db_to_dataframe(cls: type['BaseDataFrameModel'], items: list[dict]) -> pd.DataFrame:
         try:
-            columns_names = geT_all_annotations(cls)
+            columns_names = get_all_annotations(cls)
             data = pd.DataFrame(items)
             data = rename_columns(data, columns_names)
 

@@ -1,13 +1,17 @@
 from abc import ABC, abstractmethod
 
+from common.app_settings import get_settings
+
+settings = get_settings()
+
 
 class SetCacheStatement(ABC):
     """Abstract class for setting cache key and value."""
 
     def __init__(self, values):
         self.values = values
-        self.name = ""
-        self._time_to_live = 300  # default TTL in seconds
+        self.name = ''
+        self._time_to_live = settings.TTL
 
     @property
     @abstractmethod
