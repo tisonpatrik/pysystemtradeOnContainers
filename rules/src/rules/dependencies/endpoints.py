@@ -14,6 +14,7 @@ class EndpointFactory:
     async def create() -> 'EndpointFactory':
         channel = await get_raw_data_channel()
         postgres = await get_database_async()
+
         return EndpointFactory(channel, postgres)
 
     def get_rules_processor(self):

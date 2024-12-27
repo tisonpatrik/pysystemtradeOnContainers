@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: raw_data/Dockerfile
     hostname: raw_data
+    restart: always
     depends_on:
       db_postgres:
         condition: service_healthy
@@ -21,11 +22,14 @@ services:
       context: .
       dockerfile: rules/Dockerfile
     hostname: rules
+    restart: always
     depends_on:
       db_postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      raw_data:
+        condition: service_started
     ports:
       - "50151:50051"
     volumes:

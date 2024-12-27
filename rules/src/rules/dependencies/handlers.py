@@ -25,8 +25,9 @@ from rules.shared.momentum_handler import MomentumHandler
 class HandlerFactory:
     def __init__(self, raw_data_channel: Channel, postgres: PostgresClient):
         self.raw_data_channel = raw_data_channel
-        self.raw_data_client: RawDataClient = self._get_raw_data_client()
         self.redis = get_redis()
+
+        self.raw_data_client: RawDataClient = self._get_raw_data_client()
         self.prices_client: PricesClient = get_daily_prices_client(postgres=postgres, redis=self.redis)
         self.attenuation_handler: AttenutationHandler = AttenutationHandler(raw_data_client=self.raw_data_client)
 

@@ -7,8 +7,6 @@ from common.clients.raw_data_client import RawDataClient
 from common.database.postgres_setup import setup_async_database
 from common.database.repository import PostgresClient
 from common.grpc.grpc_setup import setup_grpc_channel
-from common.http_client.rest_client import RestClient
-from common.http_client.rest_client_setup import setup_async_client
 from common.redis.redis_repository import RedisClient
 from common.redis.redis_setup import setup_async_redis
 
@@ -16,11 +14,6 @@ from common.redis.redis_setup import setup_async_redis
 async def get_database_async() -> PostgresClient:
     pool = await setup_async_database()
     return PostgresClient(pool)
-
-
-async def get_rest_client_async() -> RestClient:
-    pool = await setup_async_client()
-    return RestClient(pool)
 
 
 def get_redis() -> RedisClient:
