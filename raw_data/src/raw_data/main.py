@@ -16,8 +16,8 @@ async def main() -> None:
 
     server = grpc.aio.server()
     try:
-        for service_adder, servicer in service_mapping.items():
-            service_adder(servicer, server)
+        for service, servicer in service_mapping.items():
+            service(servicer, server)
 
         server.add_insecure_port(f'[::]:{port}')
         await server.start()
