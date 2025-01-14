@@ -1,5 +1,5 @@
 import 'common/protos.just'
-# import 'database/database.just'
+import 'database/database.just'
 
 cheers:
     @echo "Na zdraví! 🍺🍺🍺🍺🍺"
@@ -30,16 +30,16 @@ protos:
     @just generate_protos
 
 dev:
-    @docker compose -f docker-compose.yml up --build
+    @docker compose -f compose.yml up --build
 
 run:
-    @docker compose -f docker-compose.yml up --build -d
+    @docker compose -f compose.yml up --build -d
 
 stop:
-    @docker compose -f docker-compose.yml down
+    @docker compose -f compose.yml down
 
 down:
-    @docker compose -f docker-compose.yml down --remove-orphans
+    @docker compose -f compose.yml down --remove-orphans
 
 tests:
     @echo "IMPLEMENT IT"
